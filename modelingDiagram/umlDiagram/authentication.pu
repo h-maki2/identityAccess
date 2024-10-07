@@ -1,0 +1,10 @@
+@startuml
+title 認証関連
+left to right direction
+actor ユーザー
+rectangle {
+    ユーザー --> (ログイン)
+    ユーザー --> (ログアウト)
+    ユーザー --> (退会)
+}
+@enduml
