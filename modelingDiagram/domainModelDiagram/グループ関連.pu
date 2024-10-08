@@ -1,0 +1,65 @@
+@startuml グループ関連
+
+title グループ関連
+
+package "グループ集約(GroupAggregation)" {
+    class Group << (R,red) RootEntity >> {
+        groupId: GroupId
+        hostUser: UserId
+        groupName: GroupName
+        publicationId 外部公開用のID: PublicationId
+        participants 参加者: Participant[]
+    }
+
+    class GroupId {
+        - value: string
+    }
+
+    class GroupName {
+        - value: string
+    }
+
+    class PublicationId {
+        - value: string
+    }
+
+    class "Participant\n参加者" as Participant {
+        userId: UserId
+        groupId: GroupId
+        inviteStatus 招待ステータス: InviteStatus
+    }
+
+    class "InviteStatus\n招待ステータス" as InviteStatus {
+        + value: Enum { invited(招待済み), uninvited(未招待)}
+    }
+
+    note bottom of Group
+        ・グループの参加者のステータスが「未招待」の参加者は、まだグループへの参加が済んでいない
+        ・ホストのみグループ名の変更とグループの削除が行える
+        ・ホストは特定の参加者の強制退出が行える
+        ・参加者は自由にグループから退出できる
+    end note
+
+    note bottom of GroupName
+        グループ名は1文字以上30文字以下
+        空文字列での登録は行えない
+    end note
+
+    note bottom of GroupId
+        GroupIdはULIDやUUIDv7などの時系列ソート可能なIDを用いる
+    end note
+
+    note bottom of InviteStatus
+    　　・初期値は「未招待」
+    　　・参加者がグループへの参加を了承した段階では「未招待」
+    　　・グループのホストのみが「未招待」から「招待済み」に変更できる
+    end note
+
+    note bottom of PublicationId
+        ・外部公開用のID
+        ・UUID
+        ・ユーザーを招待するときにもこのIDを用いる
+    end note
+}
+
+@enduml
