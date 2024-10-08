@@ -1,6 +1,6 @@
-@startuml UserProfileAggregation
+@startuml 認証関連
 
-title ユーザープロフィール(UserProfile Aggregation)
+title 認証関連
 
 package "ユーザープロフィール集約(UserProfileAggregation)" {
     class "UserProfile\nユーザープロフィール" as UserProfile << (R,red) RootEntity >> {
@@ -58,3 +58,25 @@ package "ユーザープロフィール集約(UserProfileAggregation)" {
     UserProfile *-down- Password
     UserProfile *-down- VerificationStatus
 }
+
+package "認証確認(AuthenticationConfirmation)" {
+    class "AuthenticationConfirmation\n認証確認" as AuthenticationConfirmation {
+        temporarytoken: Temporarytoken
+        userId: UserId
+    }
+
+    class "Temporarytoken\n一時的なトークン" as Temporarytoken {
+        - value: string
+    }
+
+    note bottom of Temporarytoken
+        ・ULIDをJWT(JSON Web Token)を使ってエンコードしたもの
+        ・認証確認URLのクエリパラメータに追加される
+        ・認証確認が済んだら削除する
+    end note
+
+    AuthenticationConfirmation *-down- Temporarytoken
+    AuthenticationConfirmation -down-> UserProfile.UserId
+}
+
+@enduml
