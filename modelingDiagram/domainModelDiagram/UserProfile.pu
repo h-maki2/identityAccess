@@ -1,0 +1,60 @@
+@startuml UserProfileAggregation
+
+title ユーザープロフィール(UserProfile Aggregation)
+
+package "ユーザープロフィール集約(UserProfileAggregation)" {
+    class "UserProfile\nユーザープロフィール" as UserProfile << (R,red) RootEntity >> {
+        userId: UserId
+        userName: UserName
+        email: Email
+        password: Password
+        verificationStatus 認証済みかどうか: VerificationStatus
+    }
+
+    class UserId {
+        - value: string
+    }
+
+    class UserName {
+        - value: string
+    }
+
+    class Email {
+        - value: string
+    }
+
+    class Password {
+        - value: string
+    }
+
+    class "VerificationStatus\n認証済みの有無" as VerificationStatus {
+        + value: Enum { Verified(認証済み), Unverified(未認証)}
+    }
+
+    note bottom of UserProfile
+        「認証済みの有無」が「認証済み」の場合のみ、ログインが行える
+    end note
+
+    note bottom of UserId
+        userIdはULIDやUUIDv7などの時系列ソート可能なIDを用いる
+    end note
+
+    note bottom of UserName
+        ・ユーザー名は変更可能
+        ・空文字列は受け付けない
+        ・1文字以上20文字以下の文字列
+        ・ユーザー名の初期値はメールアドレスのローカル部
+        ・もしローカル部が20文字以上だった場合、20文字に切り取られる
+    end note
+
+    note bottom of VerificationStatus
+        ・「認証済み」と「未認証」がある
+        ・認証確認メールでの認証が済んだら「認証済み」になる
+    end note
+
+    UserProfile *-down- UserId
+    UserProfile *-down- UserName
+    UserProfile *-down- Email
+    UserProfile *-down- Password
+    UserProfile *-down- VerificationStatus
+}
