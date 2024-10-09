@@ -1,0 +1,22 @@
+@startuml 認証関連
+
+title 認証関連
+
+package "認証(authentication)" {
+    class Refreshtoken {
+        - value: string
+    }
+
+    class AccessToken {
+        - value: string
+    }
+
+    note bottom of AccessToken
+        UserIDをJWT(JSON Web Token)を使ってエンコードしたもの
+    end note
+
+    note bottom of Refreshtoken
+        ・ULIDをJWT(JSON Web Token)を使ってエンコードしたもの
+        ・UserIDと一緒に永続化層に保存する
+    end note
+}

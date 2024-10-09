@@ -52,6 +52,10 @@ package "ユーザープロフィール集約(UserProfileAggregation)" {
         ・認証確認メールでの認証が済んだら「認証済み」になる
     end note
 
+    note bottom of Password
+        パスワードはArgon2アルゴリズムを用いてハッシュ化する
+    end note
+
     UserProfile *-down- UserId
     UserProfile *-down- UserName
     UserProfile *-down- Email

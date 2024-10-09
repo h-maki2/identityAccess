@@ -1,0 +1,20 @@
+@startuml identityManagement
+
+entity "ユーザープロフィール\nuser_profiles" as user_profiles {
+    user_id: CHAR(26)
+    --
+    username: VARCHAR(20)
+    email: VARCHAR(M)
+    password: VARCHAR(255)
+    verification_status: bool
+}
+
+entity "認証情報\nauth_confirmations" as auth_confirmations {
+    temp_token: CHAR(26)
+    user_id(FK): CHAR(26)
+    --
+}
+
+user_profiles ||--o| auth_confirmations
+
+@enduml
