@@ -1,6 +1,6 @@
-@startuml 認証関連
+@startuml ユーザープロフィール関連
 
-title 認証関連
+title ユーザープロフィール関連
 
 package "ユーザープロフィール集約(UserProfileAggregation)" {
     class "UserProfile\nユーザープロフィール" as UserProfile << (R,red) RootEntity >> {
@@ -28,7 +28,7 @@ package "ユーザープロフィール集約(UserProfileAggregation)" {
     }
 
     class "VerificationStatus\n認証済みの有無" as VerificationStatus {
-        + value: Enum { Verified(認証済み), Unverified(未認証)}
+        + value: Enum { verified(認証済み), unverified(未認証)}
     }
 
     note bottom of UserProfile
