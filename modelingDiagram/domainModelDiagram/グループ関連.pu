@@ -7,7 +7,6 @@ package "グループ集約(GroupAggregation)" {
         groupId: GroupId
         groupHostUser: UserId
         groupName: GroupName
-        publicationId 外部公開用のID: PublicationId
         groupMemberList : GroupMemberList
     }
 
@@ -16,10 +15,6 @@ package "グループ集約(GroupAggregation)" {
     }
 
     class GroupName {
-        - value: string
-    }
-
-    class PublicationId {
         - value: string
     }
 
@@ -58,19 +53,14 @@ package "グループ集約(GroupAggregation)" {
     end note
 
     note bottom of GroupId
-        GroupIdはULIDやUUIDv7などの時系列ソート可能なIDを用いる
+        ・GroupIdはULIDやUUIDv7などの時系列ソート可能なIDを用いる
+        ・グループを他のユーザーの共有する際は、GroupIdをJWT(JSON Web Token)を使って暗号化したものを共有する
     end note
 
     note bottom of InviteStatus
     　　・初期値は「未招待」
     　　・グループメンバーがグループへの参加を了承した段階では「未招待」
     　　・グループのホストのみが「未招待」から「招待済み」に変更できる
-    end note
-
-    note bottom of PublicationId
-        ・外部公開用のID
-        ・UUID
-        ・ユーザーを招待するときにもこのIDを用いる
     end note
 
     Group *-down- GroupId
