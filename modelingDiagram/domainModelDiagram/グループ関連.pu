@@ -30,7 +30,7 @@ package "グループ集約(GroupAggregation)" {
     }
 
     class "InviteStatus\n招待ステータス" as InviteStatus {
-        + value: Enum { invited(招待済み), uninvited(未招待)}
+        - value: Enum { invited(招待済み), uninvited(未招待)}
     }
 
     note bottom of Group
@@ -42,7 +42,7 @@ package "グループ集約(GroupAggregation)" {
         ・ホストのみがユーザーをグループに招待できる
         ・グループメンバーのステータスが「未招待」のメンバーは、まだグループへの参加が済んでいない
         ・ホストがグループメンバーのステータスを「未招待」から「招待済み」に変更したときに
-        　正式にグループに参加済みになる
+        　グループメンバーは正式にグループに参加済みになる
         ・ホストは特定の参加者の強制退出が行える
         ・参加者は自由にグループから退出できる
     end note
@@ -54,7 +54,7 @@ package "グループ集約(GroupAggregation)" {
 
     note bottom of GroupId
         ・GroupIdはULIDやUUIDv7などの時系列ソート可能なIDを用いる
-        ・グループを他のユーザーの共有する際は、GroupIdをJWT(JSON Web Token)を使って暗号化したものを共有する
+        ・グループを他のユーザーに共有する際は、GroupIdをJWT(JSON Web Token)を使って暗号化したものを共有する
     end note
 
     note bottom of InviteStatus
