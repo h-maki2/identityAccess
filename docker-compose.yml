@@ -1,40 +1,36 @@
+version: '3.8'
+
 services:
-  web:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: laravel_app
-    ports:
-      - "8080:80"
+    working_dir: /var/www
     volumes:
-      - ./:/var/www/html
+      - ./src:/var/www
     networks:
-      - laravel-network
+      - app-network
     extra_hosts:
       - "identity.todoapp.local:127.0.0.1"
-    depends_on:
-      - db
-    environment:
-      - APP_ENV=development
-    command: bash -c "./update_hosts.sh && php artisan key:generate && apache2-foreground"
-
+    ports:
+      - "80:80"
+      
   db:
     image: mysql:8.0
-    container_name: laravel_db
+    container_name: mysql_db
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: laravel
-      MYSQL_USER: laravel
-      MYSQL_PASSWORD: laravelpassword
-    ports:
-      - "3306:3306"
+      MYSQL_USER: laravel_user
+      MYSQL_PASSWORD: secret
     volumes:
-      - db_data:/var/lib/mysql
+      - dbdata:/var/lib/mysql
     networks:
-      - laravel-network
-
-volumes:
-  db_data:
+      - app-network
 
 networks:
-  laravel-network:
+  app-network:
+
+volumes:
+  dbdata:
