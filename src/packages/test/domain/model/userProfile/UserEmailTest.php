@@ -49,7 +49,8 @@ class UserEmailTest extends TestCase
             ['@example.com'],
             ['　@example.com'],
             [' @example.com'],
-            ['aaaaaa']
+            ['aaaaaa'],
+            ['aaaa@aaa.c']
         ];
     }
 }
