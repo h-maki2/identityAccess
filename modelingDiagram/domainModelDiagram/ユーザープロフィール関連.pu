@@ -49,7 +49,7 @@ package "ユーザープロフィール集約(UserProfileAggregation)" {
 
     note bottom of VerificationStatus
         ・「認証済み」と「未認証」がある
-        ・認証確認メールでの認証が済んだら「認証済み」になる
+        ・認証確認メールでの認証が済んだら「認証済み」になる 
     end note
 
     note bottom of Password
@@ -77,6 +77,7 @@ package "認証確認(AuthenticationConfirmation)" {
         ・ULIDをJWT(JSON Web Token)を使ってエンコードしたもの
         ・認証確認URLのクエリパラメータに追加される
         ・認証確認が済んだら削除する
+        ・有効期限は24時間
     end note
 
     AuthenticationConfirmation *-down- Temporarytoken
