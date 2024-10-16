@@ -6,7 +6,7 @@ use InvalidArgumentException;
 
 class UserName
 {
-    private readonly string $value;
+    readonly string $value;
 
     public function __construct(string $value) {
         if ($this->invalidUserNameLength($value)) {
@@ -18,6 +18,14 @@ class UserName
         }
 
         $this->value = $value;        
+    }
+
+    /**
+     * ユーザー名の初期値はメールアドレスのローカル部
+     */
+    public static function initialization(UserEmail $userEmail): self
+    {
+        return new self($userEmail->localPart());
     }
 
     private function invalidUserNameLength(string $name): bool

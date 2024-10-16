@@ -6,7 +6,7 @@ use InvalidArgumentException;
 
 class UserId
 {
-    private readonly string $value;
+    readonly string $value;
 
     public function __construct(string $value)
     {
