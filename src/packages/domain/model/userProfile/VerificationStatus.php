@@ -20,6 +20,6 @@ enum VerificationStatus: string
      */
     public function isVerified(): bool
     {
-        return $this->value === self::Verified;
+        return $this->value === self::Verified->value;
     }
 }
