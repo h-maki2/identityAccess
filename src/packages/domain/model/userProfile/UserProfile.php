@@ -56,4 +56,29 @@ class userProfile
             $verificationStatus
         );
     }
+
+    public function Id(): UserId
+    {
+        return $this->userId;
+    }
+
+    public function email(): UserEmail
+    {
+        return $this->userEmail;
+    }
+
+    public function name(): UserName
+    {
+        return $this->userName;
+    }
+
+    public function password(): UserPassword
+    {
+        return $this->userPassword;
+    }
+
+    public function verificationStatus(): VerificationStatus
+    {
+        return $this->verificationStatus;
+    }
 }
