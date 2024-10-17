@@ -40,7 +40,7 @@ package "ユーザープロフィール集約(UserProfileAggregation)" {
     end note
 
     note bottom of UserName
-        ・ユーザー名は変更可能
+        ・ステータスが「認証済み」の場合のみユーザー名が変更可能
         ・空白だけの文字列は受け付けない
         ・1文字以上20文字以下の文字列
         ・ユーザー名の初期値はメールアドレスのローカル部
@@ -53,7 +53,8 @@ package "ユーザープロフィール集約(UserProfileAggregation)" {
     end note
 
     note bottom of Password
-        パスワードはArgon2アルゴリズムを用いてハッシュ化する
+        ・パスワードはArgon2アルゴリズムを用いてハッシュ化する
+        ・ステータスが「認証済み」の場合のみパスワードの変更が行える
     end note
 
     UserProfile *-down- UserId
