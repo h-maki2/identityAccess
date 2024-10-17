@@ -32,8 +32,8 @@ class UserPassword
         return new self($hashedValue);
     }
 
-    public function equals(UserPassword $inputedPassword): bool
+    public function equals(string $inputedPassword): bool
     {
-        return $this->hashedValue === $inputedPassword->hashedValue;
+        return password_verify($inputedPassword, $this->hashedValue);
     }
 }
