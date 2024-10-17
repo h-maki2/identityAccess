@@ -44,7 +44,7 @@ package "ユーザープロフィール集約(UserProfileAggregation)" {
         ・空白だけの文字列は受け付けない
         ・1文字以上20文字以下の文字列
         ・ユーザー名の初期値はメールアドレスのローカル部
-        ・もしローカル部が20文字以上だった場合、20文字に切り取られる
+        ・もしローカル部が20文字以上だった場合、20文字以内に切り取られる
     end note
 
     note bottom of VerificationStatus
@@ -74,8 +74,8 @@ package "認証確認(AuthenticationConfirmation)" {
     }
 
     note bottom of Temporarytoken
-        ・ULIDをJWT(JSON Web Token)を使ってエンコードしたもの
         ・認証確認URLのクエリパラメータに追加される
+        ・ULIDをJWT(JSON Web Token)を使ってエンコードしたものがクエリパラメータに渡される
         ・認証確認が済んだら削除する
         ・有効期限は24時間
     end note

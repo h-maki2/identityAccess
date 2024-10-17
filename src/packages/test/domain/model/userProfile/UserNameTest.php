@@ -48,7 +48,19 @@ class UserNameTest extends TestCase
         $userName = UserName::initialization($userEmail);
 
         // then
-        $this->assertEquals($userEmail->localPart(), $userName->value);
+        $this->assertEquals('test', $userName->value);
+    }
+
+    public function test_メールアドレスのローカル部が21文字以上の場合、20文字以内になるように切り取られたローカル部がユーザー名に設定される()
+    {
+        // given 21文字以上のローカル部を持つメールアドレス
+        $userEmail = new UserEmail('12345678901234567890123456@example.com');
+
+        // when
+        $userName = UserName::initialization($userEmail);
+
+        // then
+        $this->assertEquals('12345678901234567890', $userName->value);
     }
 
     public static function invalidUserNameProvider(): array
