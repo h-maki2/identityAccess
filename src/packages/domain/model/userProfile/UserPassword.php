@@ -22,9 +22,13 @@ class UserPassword
     public static function create(string $value): self
     {
         $validtion = new UserPasswordValidation();
-        if (!$validtion->handle($value)) {
+        if ($validtion->invalidPasswordLength($value)) {
             throw new InvalidArgumentException('適切なパスワードではありません。');
         }
+        if ($validtion->invalidPasswordStrength($value)) {
+            throw new InvalidArgumentException('適切なパスワードではありません。');
+        }
+
         return new self(Argon2Hash::hashValue($value));
     }
 
