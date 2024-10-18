@@ -3,6 +3,7 @@
 namespace packages\domain\model\userProfile;
 
 use InvalidArgumentException;
+use packages\domain\model\userProfile\validation\UserPasswordValidation;
 use packages\domain\service\common\Argon2Hash;
 
 class UserPassword
@@ -11,10 +12,6 @@ class UserPassword
 
     private function __construct(string $hashedValue)
     {
-        if (empty($hashedValue)) {
-            throw new InvalidArgumentException('パスワードが空です。');
-        }
-
         if (!str_starts_with($hashedValue, '$argon2')) {
             throw new InvalidArgumentException('パスワードがハッシュ化されてません。');
         }
@@ -24,6 +21,10 @@ class UserPassword
 
     public static function create(string $value): self
     {
+        $validtion = new UserPasswordValidation();
+        if (!$validtion->handle($value)) {
+            throw new InvalidArgumentException('不正なパスワードです。');
+        }
         return new self(Argon2Hash::hashValue($value));
     }
 
