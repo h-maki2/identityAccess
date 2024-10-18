@@ -23,7 +23,7 @@ class UserPassword
     {
         $validtion = new UserPasswordValidation();
         if (!$validtion->handle($value)) {
-            throw new InvalidArgumentException('不正なパスワードです。');
+            throw new InvalidArgumentException('適切なパスワードではありません。');
         }
         return new self(Argon2Hash::hashValue($value));
     }
