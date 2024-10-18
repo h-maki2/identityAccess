@@ -2,7 +2,9 @@
 
 namespace packages\domain\model\userProfile;
 
-class userProfile
+use DomainException;
+
+class UserProfile
 {
     private UserId $userId;
     private UserEmail $userEmail;
@@ -57,7 +59,7 @@ class userProfile
         );
     }
 
-    public function Id(): UserId
+    public function id(): UserId
     {
         return $this->userId;
     }
@@ -80,5 +82,28 @@ class userProfile
     public function verificationStatus(): VerificationStatus
     {
         return $this->verificationStatus;
+    }
+
+    public function updateVerified(): void
+    {
+        $this->verificationStatus = VerificationStatus::Verified;
+    }
+
+    public function changeName(UserName $name): void
+    {
+        if (!$this->verificationStatus->isVerified()) {
+            throw new DomainException('認証済みのユーザーではありません。');
+        }
+
+        $this->userName = $name;
+    }
+
+    public function changePassword(UserPassword $password): void
+    {
+        if (!$this->verificationStatus->isVerified()) {
+            throw new DomainException('認証済みのユーザーではありません。');
+        }
+
+        $this->userPassword = $password;
     }
 }

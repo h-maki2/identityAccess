@@ -55,6 +55,7 @@ package "ユーザープロフィール集約(UserProfileAggregation)" {
     note bottom of Password
         ・パスワードはArgon2アルゴリズムを用いてハッシュ化する
         ・ステータスが「認証済み」の場合のみパスワードの変更が行える
+        ・nextTask: パスワードを変更したときにメールを送信する
     end note
 
     UserProfile *-down- UserId

@@ -11,7 +11,7 @@ class UserName
 
     private const MAX_USERNAME_LENGTH = 20;
 
-    public function __construct(string $value) {
+    private function __construct(string $value) {
         $validation = new UserNameValidation();
 
         if ($validation->invalidUserNameLength($value)) {
@@ -31,5 +31,10 @@ class UserName
     public static function initialization(UserEmail $userEmail): self
     {
         return new self(substr($userEmail->localPart(), 0, self::MAX_USERNAME_LENGTH));
+    }
+
+    public static function reconstruct(string $value): self
+    {
+        return new self($value);
     }
 }
