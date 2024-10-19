@@ -19,11 +19,11 @@ package "ユーザープロフィール集約(UserProfileAggregation)" {
         - value: string
     }
 
-    class Email {
+    class UserEmail {
         - value: string
     }
 
-    class Password {
+    class UserPassword {
         - value: string
     }
 
@@ -58,10 +58,14 @@ package "ユーザープロフィール集約(UserProfileAggregation)" {
         ・nextTask: パスワードを変更したときにメールを送信する
     end note
 
+    note bottom of Email
+        重複したメールアドレスは存在しない
+    end note
+
     UserProfile *-down- UserId
     UserProfile *-down- UserName
-    UserProfile *-down- Email
-    UserProfile *-down- Password
+    UserProfile *-down- UserEmail
+    UserProfile *-down- UserPassword
     UserProfile *-down- VerificationStatus
 }
 

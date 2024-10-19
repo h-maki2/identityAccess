@@ -5,7 +5,6 @@ title グループ関連
 package "グループ集約(GroupAggregation)" {
     class Group << (R,red) RootEntity >> {
         groupId: GroupId
-        groupHostUser: UserId
         groupName: GroupName
         groupMemberList : GroupMemberList
     }
@@ -20,12 +19,12 @@ package "グループ集約(GroupAggregation)" {
 
     class GroupMemberList << (E,green) Entity >> {
         - groupId: GroupId
-        - groupHostUser: UserId
         - groupMeberList: GroupMember[]
     }
 
     class GroupMember {
         userId: UserId
+        role: GroupRole
         inviteStatus 招待ステータス: InviteStatus
     }
 
@@ -33,17 +32,21 @@ package "グループ集約(GroupAggregation)" {
         - value: Enum { invited(招待済み), uninvited(未招待)}
     }
 
+    class GroupRole {
+        - value: Enum { admin(管理者), member(一般ユーザー)}
+    }
+
     note bottom of Group
-        ・ホストのみグループ名の変更とグループの削除が行える
+        ・管理者のみグループ名の変更とグループの削除が行える
         ・グループメンバーが1人以上いる場合は、グループの削除は行えない
     end note
 
     note bottom of GroupMemberList
-        ・ホストのみがユーザーをグループに招待できる
+        ・管理者のみがユーザーをグループに招待できる
         ・グループメンバーのステータスが「未招待」のメンバーは、まだグループへの参加が済んでいない
-        ・ホストがグループメンバーのステータスを「未招待」から「招待済み」に変更したときに
+        ・管理者がグループメンバーのステータスを「未招待」から「招待済み」に変更したときに
         　グループメンバーは正式にグループに参加済みになる
-        ・ホストは特定の参加者の強制退出が行える
+        ・管理者は特定の参加者の強制退出が行える
         ・参加者は自由にグループから退出できる
     end note
 
@@ -58,9 +61,10 @@ package "グループ集約(GroupAggregation)" {
     end note
 
     note bottom of InviteStatus
-    　　・初期値は「未招待」
-    　　・グループメンバーがグループへの参加を了承した段階では「未招待」
-    　　・グループのホストのみが「未招待」から「招待済み」に変更できる
+        ・一般メンバーのステータス初期値は「未招待」
+        ・管理者のステータス初期値は「招待済み」
+        ・グループメンバーがグループへの参加を了承した段階では「未招待」
+        ・グループの管理者のみが「未招待」から「招待済み」に変更できる
     end note
 
     Group *-down- GroupId

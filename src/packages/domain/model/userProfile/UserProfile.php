@@ -3,6 +3,7 @@
 namespace packages\domain\model\userProfile;
 
 use DomainException;
+use packages\domain\service\userProfile\UserProfileService;
 
 class UserProfile
 {
@@ -30,9 +31,15 @@ class UserProfile
     public static function create(
         UserId $userId,
         UserEmail $userEmail,
-        UserPassword $userPassword
+        UserPassword $userPassword,
+        UserProfileService $userProfileService
     ): self
     {
+        $alreadyExistsEmail = $userProfileService->alreadyExistsEmail($userEmail);
+        if ($alreadyExistsEmail) {
+            throw new DomainException('すでに存在するメールアドレスです。');
+        }
+        
         return new self(
             $userId,
             $userEmail,

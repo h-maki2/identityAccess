@@ -18,7 +18,6 @@ entity "認証情報\nauth_confirmations" as auth_confirmations {
 entity "グループ\ngroup" as group {
     group_id: CHAR(26)
     --
-    host_user_id(FK): CHAR(26)
     gourp_name: VARCHAR(30)
 }
 
@@ -27,6 +26,7 @@ entity "グループメンバー\ngroup_member" as group_member {
     user_id(FK): CHAR(26)
     --
     invite_status: bool
+    role: bool
 }
 
 user_profiles ||--o| auth_confirmations
