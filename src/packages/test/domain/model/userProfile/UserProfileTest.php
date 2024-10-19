@@ -142,4 +142,64 @@ class UserProfileTest extends TestCase
         // then
         $this->assertEquals($userNameAfterChange, $userProfile->name());
     }
+
+    public function test_認証ステータスが未認証の場合、ユーザー名の変更が行えない()
+    {
+        // given
+        // 認証済みステータスが未認証のユーザープロフィールを作成
+        $verificationStatus = VerificationStatus::Unverified;
+        $userName = UserName::create('test user');
+        $userProfile = TestUserProfileFactory::create(
+            null,
+            $userName,
+            null,
+            $verificationStatus
+        );
+
+        // when・then
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('認証済みのユーザーではありません。');
+        $userNameAfterChange = UserName::create('test user after change');
+        $userProfile->changeName($userNameAfterChange);
+    }
+
+    public function test_認証ステータスが認証済みの場合、パスワードの変更が行える()
+    {
+        // given
+        // 認証済みステータスが認証済みのユーザープロフィールを作成
+        $verificationStatus = VerificationStatus::Verified;
+        $password = UserPassword::create('124abcABC!');
+        $userProfile = TestUserProfileFactory::create(
+            null,
+            null,
+            $password,
+            $verificationStatus
+        );
+
+        // when
+        $passwordAfterChange = UserPassword::create('124abcABC!_afterChange');
+        $userProfile->changePassword($passwordAfterChange);
+
+        // then
+        $this->assertEquals($passwordAfterChange, $userProfile->password());
+    }
+
+    public function test_認証ステータスが未認証の場合、パスワードの変更が行えない()
+    {
+        // given
+        $verificationStatus = VerificationStatus::Unverified;
+        $password = UserPassword::create('124abcABC!');
+        $userProfile = TestUserProfileFactory::create(
+            null,
+            null,
+            $password,
+            $verificationStatus
+        );
+
+        // when・then
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('認証済みのユーザーではありません。');
+        $passwordAfterChange = UserPassword::create('124abcABC!_afterChange');
+        $userProfile->changePassword($passwordAfterChange);
+    }
 }
