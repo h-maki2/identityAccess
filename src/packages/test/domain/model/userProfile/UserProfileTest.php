@@ -84,7 +84,62 @@ class UserProfileTest extends TestCase
         $userId = $this->userProfileRepository->nextUserId();
         $password = UserPassword::create('1234abcABC!');
         $verificationStatus = VerificationStatus::Verified;
-        $userName = new UserName('test user');
+        $userName = UserName::create('test user');
 
+        // when
+        $userProfile = UserProfile::reconstruct(
+            $userId,
+            $email,
+            $userName,
+            $password,
+            $verificationStatus
+        );
+
+        // then
+        $this->assertEquals($email, $userProfile->email());
+        $this->assertEquals($userId, $userProfile->id());
+        $this->assertEquals($password, $userProfile->password());
+        $this->assertEquals($userName, $userProfile->name());
+        $this->assertEquals($verificationStatus, $userProfile->verificationStatus());
+    }
+
+    public function 認証ステータスを認証済みに更新できる()
+    {
+        // given
+        // 認証済みステータスが未認証のユーザープロフィールを作成
+        $verificationStatus = VerificationStatus::Unverified;
+        $userProfile = TestUserProfileFactory::create(
+            null,
+            null,
+            null,
+            $verificationStatus
+        );
+
+        // when
+        $userProfile->updateVerified();
+
+        // then
+        $this->assertEquals(VerificationStatus::Verified, $userProfile->verificationStatus());
+    }
+
+    public function test_認証ステータスが認証済みの場合、ユーザー名の変更が行える()
+    {
+        // given
+        // 認証済みステータスが認証済みのユーザープロフィールを作成
+        $verificationStatus = VerificationStatus::Verified;
+        $userName = UserName::create('test user');
+        $userProfile = TestUserProfileFactory::create(
+            null,
+            $userName,
+            null,
+            $verificationStatus
+        );
+
+        // when
+        $userNameAfterChange = UserName::create('test user after change');
+        $userProfile->changeName($userNameAfterChange);
+
+        // then
+        $this->assertEquals($userNameAfterChange, $userProfile->name());
     }
 }

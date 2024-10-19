@@ -31,7 +31,7 @@ class UserName
         return new self(substr($userEmail->localPart(), 0, UserNameValidation::maxUserNameLength()));
     }
 
-    public static function reconstruct(string $value): self
+    public static function create(string $value): self
     {
         return new self($value);
     }

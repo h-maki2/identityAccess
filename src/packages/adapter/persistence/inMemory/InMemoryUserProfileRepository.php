@@ -60,7 +60,7 @@ class InMemoryUserProfileRepository implements IUserProfileRepository
         return UserProfile::reconstruct(
             new UserId($userProfileModel->user_id),
             new UserEmail($userProfileModel->email),
-            UserName::reconstruct($userProfileModel->username),
+            UserName::create($userProfileModel->username),
             UserPassword::reconstruct($userProfileModel->password),
             VerificationStatus::from($userProfileModel->verification_status)
         );

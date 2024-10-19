@@ -22,7 +22,7 @@ class TestUserProfileFactory
         return UserProfile::reconstruct(
             $id ?? new UserId('0188b2a6-bd94-7ccf-9666-1df7e26ac6b8'),
             $email ?? new UserEmail('test@example.com'),
-            $name ?? UserName::reconstruct('testUser'),
+            $name ?? UserName::create('testUser'),
             $password ?? UserPassword::create('ABCabc123_'),
             $verificationStatus ?? VerificationStatus::Verified
         );

@@ -16,7 +16,7 @@ class UserNameTest extends TestCase
         // when・then
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('ユーザー名が無効です。');
-        UserName::reconstruct($userNameString);
+        UserName::create($userNameString);
     }
 
     public function test_ユーザー名が21文字以上の場合に例外が発生する()
@@ -27,7 +27,7 @@ class UserNameTest extends TestCase
         // when・then
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('ユーザー名が無効です。');
-        UserName::reconstruct($userNameString);
+        UserName::create($userNameString);
     }
 
     #[DataProvider('invalidUserNameProvider')]
@@ -36,7 +36,7 @@ class UserNameTest extends TestCase
         // when・then
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('ユーザー名が空です。');
-        UserName::reconstruct($invalidUserName);
+        UserName::create($invalidUserName);
     }
 
     public function test_ユーザー名の初期値にはメールアドレスのローカル部が設定される()
