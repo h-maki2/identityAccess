@@ -34,7 +34,7 @@ class FetchElapsedTimeFromUUIDver7 implements FetchElapsedTimeFromToken
     /**
      * 16進数のタイムスタンプを秒単位に変換
      */
-    private function conversionfromHexToSeconds(string $timestampHex): int
+    private function conversionfromHexToSeconds(string $timestampHex): float
     {
         // 10進数に変換する
         $timestampMs = hexdec($timestampHex);
@@ -44,7 +44,7 @@ class FetchElapsedTimeFromUUIDver7 implements FetchElapsedTimeFromToken
     /**
      * UUIDver7が生成されてからの経過時間を取得
      */
-    private function elapsedSecondsFrom(int $timestampSecond, DateTime $today): int
+    private function elapsedSecondsFrom(float $timestampSecond, DateTime $today): float
     {
         $currentTimestamp = $today->getTimestamp();
         return $currentTimestamp - $timestampSecond;
@@ -53,7 +53,7 @@ class FetchElapsedTimeFromUUIDver7 implements FetchElapsedTimeFromToken
     /**
      * 秒から時間に変換
      */
-    private function conversionFromSecondsToHours(int $elapsedSeconds): int
+    private function conversionFromSecondsToHours(float $elapsedSeconds): int
     {
         return ceil($elapsedSeconds / 3600);
     }

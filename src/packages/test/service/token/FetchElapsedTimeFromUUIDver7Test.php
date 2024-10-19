@@ -25,14 +25,14 @@ class FetchElapsedTimeFromUUIDver7Test extends TestCase
         $this->assertEquals(14, $elapsedTime);
     }
 
-    public function test_UUIDver7が生成されてからの経過時間を正しく取得できる_UUIDver7が生成されてから23時間59分が経過している場合()
+    public function test_UUIDver7が生成されてからの経過時間を正しく取得できる_UUIDver7が生成されてから23時間59分59秒が経過している場合()
     {
         // given
         $uuidVer7 = Uuid::uuid7();
         
         // 現在から25時間後を取得
         $dateTime = new DateTime();
-        $interval = new DateInterval('PT23H59M');
+        $interval = new DateInterval('PT23H59M59S');
         $dateTime->add($interval);
 
         $fetchElapsedTime = new FetchElapsedTimeFromUUIDver7();
@@ -44,14 +44,14 @@ class FetchElapsedTimeFromUUIDver7Test extends TestCase
         $this->assertEquals(24, $elapsedTime);
     }
 
-    public function test_UUIDver7が生成されてからの経過時間を正しく取得できる_UUIDver7が生成されてから24時間01分が経過している場合()
+    public function test_UUIDver7が生成されてからの経過時間を正しく取得できる_UUIDver7が生成されてから24時間00分01秒が経過している場合()
     {
         // given
         $uuidVer7 = Uuid::uuid7();
         
         // 現在から25時間後を取得
         $dateTime = new DateTime();
-        $interval = new DateInterval('PT24H01M');
+        $interval = new DateInterval('PT24H00M01S');
         $dateTime->add($interval);
 
         $fetchElapsedTime = new FetchElapsedTimeFromUUIDver7();
