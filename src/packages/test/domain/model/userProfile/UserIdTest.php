@@ -12,7 +12,7 @@ class UserIdTest extends TestCase
 
         // when・thenn
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('ユーザーIDは36文字です。');
+        $this->expectExceptionMessage('適切な文字列の長さではありません。');
         new UserId($userIdString);
     }
 
@@ -35,7 +35,7 @@ class UserIdTest extends TestCase
 
         // when・then
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('ユーザーIDは36文字です。');
+        $this->expectExceptionMessage('適切な文字列の長さではありません。');
         new UserId($userIdString);
     }
 
@@ -46,7 +46,7 @@ class UserIdTest extends TestCase
 
         // when・then
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('ユーザーIDは36文字です。');
+        $this->expectExceptionMessage('適切な文字列の長さではありません。');
         new UserId($userIdString);
     }
 
@@ -57,7 +57,7 @@ class UserIdTest extends TestCase
 
         // when・then
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('UUID ver7の形式になっていません。');
+        $this->expectExceptionMessage('適切な形式になっていません。');
         new UserId($userIdString);
     }
 }

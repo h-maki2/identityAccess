@@ -12,11 +12,11 @@ class UserId extends TokenFromUUIDver7
     public function __construct(string $value)
     {
         if ($this->isValidLength($value)) {
-            throw new InvalidArgumentException('ユーザーIDは36文字です。');
+            throw new InvalidArgumentException('適切な文字列の長さではありません。');
         }
 
         if (!$this->isValidFormat($value)) {
-            throw new InvalidArgumentException('UUID ver7の形式になっていません。');
+            throw new InvalidArgumentException('適切な形式になっていません。');
         }
 
         $this->value = $value;

@@ -14,7 +14,7 @@ class TemporaryTokenTest extends TestCase
 
         // when・then
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('UUID ver7の形式になっていません。');
+        $this->expectExceptionMessage('適切な形式になっていません。');
         new TemporaryToken($invalidTokenString);
     }
 
@@ -25,7 +25,7 @@ class TemporaryTokenTest extends TestCase
 
         // when・then
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('TemporaryTokenは36文字です。');
+        $this->expectExceptionMessage('適切な文字列の長さではありません。');
         new TemporaryToken($invalidTokenString);
     }
 
@@ -36,7 +36,7 @@ class TemporaryTokenTest extends TestCase
 
         // when・then
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('TemporaryTokenは36文字です。');
+        $this->expectExceptionMessage('適切な文字列の長さではありません。');
         new TemporaryToken($invalidTokenString);
     }
 
