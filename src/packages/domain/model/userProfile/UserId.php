@@ -14,7 +14,7 @@ class UserId
             throw new InvalidArgumentException('ユーザーIDが空です。');
         }
 
-        if (strlen($value) !== 26) {
+        if (strlen($value) !== 36) {
             throw new InvalidArgumentException('ユーザーIDは26文字です。');
         }
 

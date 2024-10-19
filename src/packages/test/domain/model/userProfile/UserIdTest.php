@@ -19,7 +19,7 @@ class UserIdTest extends TestCase
     public function test_適切なULIDを入力した場合にUserIdが正しく生成される()
     {
         // given
-        $userIdString = '01FVSHW3S7HW03J702MAE82MQS';
+        $userIdString = '0188b2a6-bd94-7ccf-9666-1df7e26ac6b8';
 
         // when
         $userId = new UserId($userIdString);
@@ -30,8 +30,8 @@ class UserIdTest extends TestCase
 
     public function test_不適切なULIDを入力した場合に例外が発生する_27文字のULIDの場合()
     {
-        // given 27文字のULID
-        $userIdString = '01FVSHW3S7HW03J702MAE82MQSO';
+        // given 37文字のULID
+        $userIdString = '0188b2a6-bd94-7ccf-9666-1df7e26ac6b89';
 
         // when・then
         $this->expectException(InvalidArgumentException::class);
@@ -41,8 +41,8 @@ class UserIdTest extends TestCase
 
     public function test_不適切なULIDを入力した場合に例外が発生する_25文字のULIDの場合()
     {
-        // given 25文字のULID
-        $userIdString = '01FVSHW3S7HW03J702MAE82MQ';
+        // given 35文字のULID
+        $userIdString = '0188b2a6-bd94-7ccf-9666-1df7e26ac6b';
 
         // when・then
         $this->expectException(InvalidArgumentException::class);

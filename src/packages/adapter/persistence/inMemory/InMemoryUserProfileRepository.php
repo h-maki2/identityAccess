@@ -9,6 +9,7 @@ use packages\domain\model\userProfile\UserName;
 use packages\domain\model\userProfile\UserPassword;
 use packages\domain\model\userProfile\UserProfile;
 use packages\domain\model\userProfile\VerificationStatus;
+use Ramsey\Uuid\Uuid;
 
 class InMemoryUserProfileRepository implements IUserProfileRepository
 {
@@ -37,7 +38,21 @@ class InMemoryUserProfileRepository implements IUserProfileRepository
 
     public function save(UserProfile $userProfile): void
     {
-        $userProfileList[$userProfile->id()->value] = $this->toUserProfileModel($userProfile);
+        $this->userProfileList[$userProfile->id()->value] = $this->toUserProfileModel($userProfile);
+    }
+
+    public function delete(UserId $id): void
+    {
+        if (!isset($this->userProfileList[$id()->value])) {
+            return;
+        }
+
+        unset($this->userProfileList[$id()->value]);
+    }
+
+    public function nextUserId(): UserId
+    {
+        return new UserId(Uuid::uuid7());
     }
 
     private function toUserProfile(object $userProfileModel): UserProfile
