@@ -4,22 +4,22 @@ namespace packages\domain\model\authConfirmation;
 
 use DateTime;
 use InvalidArgumentException;
+use packages\domain\model\common\token\TokenFromUUIDver7;
 use packages\domain\service\common\token\FetchElapsedTimeFromToken;
 
-class TemporaryToken
+class TemporaryToken extends TokenFromUUIDver7
 {
     readonly string $value;
 
-    private const TOKEN_LENGTH = 36;
     private const EFFECTIVE_TIME = 24;
 
     public function __construct(string $value)
     {
-        if (strlen($value) !== self::TOKEN_LENGTH) {
+        if ($this->isValidLength($value)) {
             throw new InvalidArgumentException('TemporaryTokenは36文字です。');
         }
 
-        if (!$this->isUuidV7($value)) {
+        if (!$this->isValidFormat($value)) {
             throw new InvalidArgumentException('UUID ver7の形式になっていません。');
         }
 
@@ -40,10 +40,5 @@ class TemporaryToken
     private function elapsedTime(FetchElapsedTimeFromToken $fetchElapsedTimeFromToken, DateTime $today): int
     {
         return $fetchElapsedTimeFromToken->handle($this->value, $today);
-    }
-
-    private function isUuidV7(string $value): bool
-    {
-        return preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i', $value);
     }
 }
