@@ -55,6 +55,6 @@ class FetchElapsedTimeFromUUIDver7 implements FetchElapsedTimeFromToken
      */
     private function conversionFromSecondsToHours(int $elapsedSeconds): int
     {
-        return floor($elapsedSeconds / 3600);
+        return ceil($elapsedSeconds / 3600);
     }
 }

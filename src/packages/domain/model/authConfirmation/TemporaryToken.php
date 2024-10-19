@@ -15,7 +15,7 @@ class TemporaryToken
 
     public function __construct(string $value)
     {
-        if ($value !== self::TOKEN_LENGTH) {
+        if (strlen($value) !== self::TOKEN_LENGTH) {
             throw new InvalidArgumentException('TemporaryTokenは36文字です。');
         }
 
