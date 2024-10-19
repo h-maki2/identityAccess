@@ -4,9 +4,9 @@ namespace packages\domain\model\userProfile;
 
 interface IUserProfileRepository
 {
-    public function findByEmail(UserEmail $email): UserProfile;
+    public function findByEmail(UserEmail $email): ?UserProfile;
 
-    public function findById(UserId $id): UserProfile;
+    public function findById(UserId $id): ?UserProfile;
 
     public function save(UserProfile $userProfile): void;
 
