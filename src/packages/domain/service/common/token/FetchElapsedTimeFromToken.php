@@ -1,8 +1,13 @@
 <?php
 
-namespace packages\domain\service\common\hash;
+namespace packages\domain\service\common\token;
+
+use DateTime;
 
 interface FetchElapsedTimeFromToken
 {
-    public function handle(string $token): int;
+    /**
+     * トークンが生成されてからの経過時間を取得する
+     */
+    public function handle(string $token, DateTime $today): int;
 }
