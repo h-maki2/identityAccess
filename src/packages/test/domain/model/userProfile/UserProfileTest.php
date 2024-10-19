@@ -3,6 +3,7 @@
 use packages\adapter\persistence\inMemory\InMemoryUserProfileRepository;
 use packages\domain\model\userProfile\IUserProfileRepository;
 use packages\domain\model\userProfile\UserEmail;
+use packages\domain\model\userProfile\UserName;
 use packages\domain\model\userProfile\UserPassword;
 use packages\domain\model\userProfile\UserProfile;
 use packages\domain\model\userProfile\VerificationStatus;
@@ -74,5 +75,16 @@ class UserProfileTest extends TestCase
             $password,
             $userProfileService
         );
+    }
+
+    public function test_ユーザープロフィールを再構築できる()
+    {
+        // given
+        $email = new UserEmail('otheruser@example.com');
+        $userId = $this->userProfileRepository->nextUserId();
+        $password = UserPassword::create('1234abcABC!');
+        $verificationStatus = VerificationStatus::Verified;
+        $userName = new UserName('test user');
+
     }
 }

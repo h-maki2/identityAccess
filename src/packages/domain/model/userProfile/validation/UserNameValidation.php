@@ -4,7 +4,12 @@ namespace packages\domain\model\userProfile\validation;
 
 class UserNameValidation
 {
-    private const MAX_USERNAME_LENGTH = 20;
+    private const MAX_USERNAME_LENGTH = 50;
+
+    public static function maxUserNameLength(): int
+    {
+        return self::MAX_USERNAME_LENGTH;
+    }
     
     public function invalidUserNameLength(string $userName): bool
     {

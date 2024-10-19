@@ -9,8 +9,6 @@ class UserName
 {
     readonly string $value;
 
-    private const MAX_USERNAME_LENGTH = 20;
-
     private function __construct(string $value) {
         $validation = new UserNameValidation();
 
@@ -30,7 +28,7 @@ class UserName
      */
     public static function initialization(UserEmail $userEmail): self
     {
-        return new self(substr($userEmail->localPart(), 0, self::MAX_USERNAME_LENGTH));
+        return new self(substr($userEmail->localPart(), 0, UserNameValidation::maxUserNameLength()));
     }
 
     public static function reconstruct(string $value): self

@@ -22,7 +22,7 @@ class UserNameTest extends TestCase
     public function test_ユーザー名が21文字以上の場合に例外が発生する()
     {
         // given
-        $userNameString = str_repeat('a', 21);
+        $userNameString = str_repeat('a', 51);
 
         // when・then
         $this->expectException(InvalidArgumentException::class);
@@ -53,14 +53,16 @@ class UserNameTest extends TestCase
 
     public function test_メールアドレスのローカル部が21文字以上の場合、20文字以内になるように切り取られたローカル部がユーザー名に設定される()
     {
-        // given 21文字以上のローカル部を持つメールアドレス
-        $userEmail = new UserEmail('12345678901234567890123456@example.com');
+        // given 51文字以上のローカル部を持つメールアドレス
+        $emailLocalPart = str_repeat('a', 51);
+        $userEmail = new UserEmail($emailLocalPart . '@example.com');
 
         // when
         $userName = UserName::initialization($userEmail);
 
         // then
-        $this->assertEquals('12345678901234567890', $userName->value);
+        $expectedUserName = str_repeat('a', 50);
+        $this->assertEquals($expectedUserName, $userName->value);
     }
 
     public static function invalidUserNameProvider(): array
