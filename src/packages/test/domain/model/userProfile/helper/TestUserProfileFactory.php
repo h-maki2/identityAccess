@@ -14,8 +14,8 @@ class TestUserProfileFactory
     public static function create(
         ?UserName $name = null,
         ?UserPassword $password = null,
-        ?VerificationStatus $verificationStatus = null,
-        ?UserEmail $email = null,
+        VerificationStatus $verificationStatus = VerificationStatus::Verified,
+        UserEmail $email = new UserEmail('test@example.com'),
         ?UserId $id = null
     ): UserProfile
     {
@@ -24,7 +24,7 @@ class TestUserProfileFactory
             $email ?? new UserEmail('test@example.com'),
             $name ?? UserName::reconstruct('testUser'),
             $password ?? UserPassword::reconstruct('ABCabc123_'),
-            $verificationStatus ?? VerificationStatus::Verified
+            $verificationStatus
         );
     }
 }
