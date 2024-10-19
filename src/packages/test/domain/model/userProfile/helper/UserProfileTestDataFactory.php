@@ -20,18 +20,18 @@ class UserProfileTestDataFactory
     }
 
     public function create(
+        ?UserEmail $email = null,
         ?UserName $name = null,
         ?UserPassword $password = null,
-        VerificationStatus $verificationStatus = VerificationStatus::Verified,
-        UserEmail $email = new UserEmail('test@example.com'),
-        UserId $id = new UserId('0188b2a6-bd94-7ccf-9666-1df7e26ac6b8')
+        ?VerificationStatus $verificationStatus = null,
+        ?UserId $id = null
     ): UserProfile
     {
         $userProfile = TestUserProfileFactory::create(
+            $email,
             $name,
             $password,
             $verificationStatus,
-            $email,
             $id
         );
 

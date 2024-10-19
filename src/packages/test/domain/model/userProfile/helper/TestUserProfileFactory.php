@@ -12,19 +12,19 @@ use packages\domain\model\userProfile\VerificationStatus;
 class TestUserProfileFactory
 {
     public static function create(
+        ?UserEmail $email = null,
         ?UserName $name = null,
         ?UserPassword $password = null,
-        VerificationStatus $verificationStatus = VerificationStatus::Verified,
-        UserEmail $email = new UserEmail('test@example.com'),
-        UserId $id = new UserId('0188b2a6-bd94-7ccf-9666-1df7e26ac6b8')
+        ?VerificationStatus $verificationStatus = null,
+        ?UserId $id = null
     ): UserProfile
     {
         return UserProfile::reconstruct(
-            $id,
-            $email,
+            $id ?? new UserId('0188b2a6-bd94-7ccf-9666-1df7e26ac6b8'),
+            $email ?? new UserEmail('test@example.com'),
             $name ?? UserName::reconstruct('testUser'),
-            $password ?? UserPassword::reconstruct('ABCabc123_'),
-            $verificationStatus
+            $password ?? UserPassword::create('ABCabc123_'),
+            $verificationStatus ?? VerificationStatus::Verified
         );
     }
 }
