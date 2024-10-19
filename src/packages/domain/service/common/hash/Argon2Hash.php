@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\domain\service\common;
+namespace packages\domain\service\common\hash;
 
 class Argon2Hash
 {

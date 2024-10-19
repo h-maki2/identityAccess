@@ -75,13 +75,12 @@ package "認証確認(AuthenticationConfirmation)" {
         userId: UserId
     }
 
-    class "Temporarytoken\n一時的なトークン" as Temporarytoken {
+    class "TemporaryToken\n一時的なトークン" as Temporarytoken {
         - value: string
     }
 
     note bottom of Temporarytoken
         ・認証確認URLのクエリパラメータに追加される
-        ・ULIDをJWT(JSON Web Token)を使ってエンコードしたものがクエリパラメータに渡される
         ・認証確認が済んだら削除する
         ・有効期限は24時間
     end note

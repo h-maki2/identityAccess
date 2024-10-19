@@ -4,7 +4,7 @@ namespace packages\domain\model\userProfile;
 
 use InvalidArgumentException;
 use packages\domain\model\userProfile\validation\UserPasswordValidation;
-use packages\domain\service\common\Argon2Hash;
+use packages\domain\service\common\hash\Argon2Hash;
 
 class UserPassword
 {
