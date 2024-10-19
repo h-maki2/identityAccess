@@ -50,4 +50,29 @@ class UserProfileTest extends TestCase
         $this->assertEquals($userId, $userProfile->id());
         $this->assertEquals($password, $userProfile->password());
     }
+
+    public function test_重複したメールアドレスを持つユーザーが既に存在する場合、ユーザープロフィールを初期化できない()
+    {
+        // given
+        // user@example.comのアドレスを持つユーザーをあらかじめ作成しておく
+        $alreadyExistsUserEmail = new UserEmail('user@example.com');
+        $userProfileTestDataFactory = new UserProfileTestDataFactory($this->userProfileRepository);
+        $userProfileTestDataFactory->create($alreadyExistsUserEmail);
+
+        // メールアドレスが重複している
+        $email = new UserEmail('user@example.com');
+        $userId = $this->userProfileRepository->nextUserId();
+        $password = UserPassword::create('1234abcABC!');
+        $userProfileService = new UserProfileService($this->userProfileRepository);
+
+        // when・then
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('すでに存在するメールアドレスです。');
+        UserProfile::create(
+            $userId,
+            $email,
+            $password,
+            $userProfileService
+        );
+    }
 }
