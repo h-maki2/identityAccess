@@ -11,10 +11,16 @@ class FetchElapsedTimeFromUUIDver7 implements FetchElapsedTimeFromToken
      */
     public function handle(string $uuidVer7, DateTime $today): int
     {
-        $timestampHex = $this->timestampHexFromUUIDver7($uuidVer7);
+        $uuidVer7WithoutHyphens = $this->removeHyphens($uuidVer7);
+        $timestampHex = $this->timestampHexFromUUIDver7($uuidVer7WithoutHyphens);
         $timestampSecond = $this->conversionfromHexToSeconds($timestampHex);
         $elapsedSeconds = $this->elapsedSecondsFrom($timestampSecond, $today);
-        return $this->conversionfromSecondsToHours($elapsedSeconds);
+        return $this->conversionFromSecondsToHours($elapsedSeconds);
+    }
+
+    private function removeHyphens(string $uuidVer7): string
+    {
+        return str_replace('-', '', $uuidVer7);
     }
 
     /**
@@ -47,7 +53,7 @@ class FetchElapsedTimeFromUUIDver7 implements FetchElapsedTimeFromToken
     /**
      * 秒から時間に変換
      */
-    private function conversionfromSecondsToHours(int $elapsedSeconds): int
+    private function conversionFromSecondsToHours(int $elapsedSeconds): int
     {
         return floor($elapsedSeconds / 3600);
     }
