@@ -8,14 +8,12 @@ class UserId
 {
     readonly string $value;
 
+    private const USERID_LENGTH = 36;
+
     public function __construct(string $value)
     {
-        if (empty($value)) {
-            throw new InvalidArgumentException('ユーザーIDが空です。');
-        }
-
-        if (strlen($value) !== 36) {
-            throw new InvalidArgumentException('ユーザーIDは26文字です。');
+        if (strlen($value) !== self::USERID_LENGTH) {
+            throw new InvalidArgumentException('ユーザーIDは36文字です。');
         }
 
         $this->value = $value;
