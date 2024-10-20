@@ -1,6 +1,6 @@
 <?php
 
-use packages\domain\service\common\token\FetchElapsedTimeFromUUIDver7;
+use packages\domain\service\common\identifier\FetchElapsedTimeFromUUIDver7;
 use Tests\TestCase;
 use Ramsey\Uuid\Uuid;
 

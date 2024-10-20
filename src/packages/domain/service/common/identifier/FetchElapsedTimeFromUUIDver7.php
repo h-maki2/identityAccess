@@ -1,10 +1,10 @@
 <?php
 
-namespace packages\domain\service\common\token;
+namespace packages\domain\service\common\identifier;
 
 use DateTime;
 
-class FetchElapsedTimeFromUUIDver7 implements FetchElapsedTimeFromToken
+class FetchElapsedTimeFromUUIDver7 implements FetchElapsedTimeFromIdentifier
 {
     /**
      * UUIDver7が生成されてからの経過時間を取得

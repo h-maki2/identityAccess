@@ -5,7 +5,7 @@ namespace packages\domain\model\authConfirmation;
 use DateTime;
 use InvalidArgumentException;
 use packages\domain\model\common\token\TokenFromUUIDver7;
-use packages\domain\service\common\token\FetchElapsedTimeFromToken;
+use packages\domain\service\common\identifier\FetchElapsedTimeFromIdentifier;
 
 class TemporaryToken extends TokenFromUUIDver7
 {
@@ -29,16 +29,16 @@ class TemporaryToken extends TokenFromUUIDver7
     /**
      * 有効なトークンかどうかを判定する
      */
-    public function isValid(FetchElapsedTimeFromToken $fetchElapsedTimeFromToken, DateTime $today): bool
+    public function isValid(FetchElapsedTimeFromIdentifier $fetchElapsedTimeFromIdentifier, DateTime $today): bool
     {
-        return $this->elapsedTime($fetchElapsedTimeFromToken, $today) <= self::EFFECTIVE_TIME;
+        return $this->elapsedTime($fetchElapsedTimeFromIdentifier, $today) <= self::EFFECTIVE_TIME;
     }
 
     /**
      * tokenが生成されてからの経過時間を取得する
      */
-    private function elapsedTime(FetchElapsedTimeFromToken $fetchElapsedTimeFromToken, DateTime $today): int
+    private function elapsedTime(FetchElapsedTimeFromIdentifier $fetchElapsedTimeFromIdentifier, DateTime $today): int
     {
-        return $fetchElapsedTimeFromToken->handle($this->value, $today);
+        return $fetchElapsedTimeFromIdentifier->handle($this->value, $today);
     }
 }

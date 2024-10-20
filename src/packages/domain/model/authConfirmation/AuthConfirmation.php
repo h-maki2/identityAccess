@@ -4,7 +4,7 @@ namespace packages\domain\model\authConfirmation;
 
 use DateTime;
 use packages\domain\model\userProfile\UserId;
-use packages\domain\service\common\token\FetchElapsedTimeFromToken;
+use packages\domain\service\common\identifier\FetchElapsedTimeFromIdentifier;
 
 class AuthConfirmation
 {
@@ -20,8 +20,8 @@ class AuthConfirmation
     /**
      * 有効な認証確認情報かどうかを判定する
      */
-    public function isValid(FetchElapsedTimeFromToken $fetchElapsedTimeFromToken, DateTime $today): bool
+    public function isValid(FetchElapsedTimeFromIdentifier $fetchElapsedTimeFromIdentifier, DateTime $today): bool
     {
-        return $this->token->isValid($fetchElapsedTimeFromToken, $today);
+        return $this->token->isValid($fetchElapsedTimeFromIdentifier, $today);
     }
 }

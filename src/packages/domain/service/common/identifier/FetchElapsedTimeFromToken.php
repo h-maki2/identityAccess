@@ -1,10 +1,10 @@
 <?php
 
-namespace packages\domain\service\common\token;
+namespace packages\domain\service\common\identifier;
 
 use DateTime;
 
-interface FetchElapsedTimeFromToken
+interface FetchElapsedTimeFromIdentifier
 {
     /**
      * トークンが生成されてからの経過時間を取得する

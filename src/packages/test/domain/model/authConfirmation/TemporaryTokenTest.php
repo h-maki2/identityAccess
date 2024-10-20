@@ -1,7 +1,7 @@
 <?php
 
 use packages\domain\model\authConfirmation\TemporaryToken;
-use packages\domain\service\common\token\FetchElapsedTimeFromUUIDver7;
+use packages\domain\service\common\identifier\FetchElapsedTimeFromUUIDver7;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 
