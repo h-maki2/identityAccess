@@ -4,10 +4,10 @@ namespace packages\domain\model\authConfirmation;
 
 use DateTime;
 use InvalidArgumentException;
-use packages\domain\model\common\token\TokenFromUUIDver7;
+use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
 use packages\domain\service\common\identifier\FetchElapsedTimeFromIdentifier;
 
-class TemporaryToken extends TokenFromUUIDver7
+class TemporaryToken extends IdentifierFromUUIDver7
 {
     readonly string $value;
 

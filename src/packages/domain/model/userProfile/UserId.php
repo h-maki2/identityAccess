@@ -3,9 +3,9 @@
 namespace packages\domain\model\userProfile;
 
 use InvalidArgumentException;
-use packages\domain\model\common\token\TokenFromUUIDver7;
+use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
 
-class UserId extends TokenFromUUIDver7
+class UserId extends IdentifierFromUUIDver7
 {
     readonly string $value;
 

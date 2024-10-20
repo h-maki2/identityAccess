@@ -1,8 +1,8 @@
 <?php
 
-namespace packages\domain\model\common\token;
+namespace packages\domain\model\common\identifier;
 
-abstract class TokenFromUUIDver7
+abstract class IdentifierFromUUIDver7
 {
     private const TOKEN_LENGTH = 36;
 
