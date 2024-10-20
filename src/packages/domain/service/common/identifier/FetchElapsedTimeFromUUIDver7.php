@@ -13,9 +13,9 @@ class FetchElapsedTimeFromUUIDver7 implements FetchElapsedTimeFromIdentifier
     {
         $uuidVer7WithoutHyphens = $this->removeHyphens($uuidVer7);
         $timestampHex = $this->timestampHexFromUUIDver7($uuidVer7WithoutHyphens);
-        $timestampSecond = $this->conversionfromHexToSeconds($timestampHex);
+        $timestampSecond = $this->conversionTimestampFromHexToSeconds($timestampHex);
         $elapsedSeconds = $this->elapsedSecondsFrom($timestampSecond, $today);
-        return $this->conversionFromSecondsToHours($elapsedSeconds);
+        return $this->conversionElapsedSecondToHours($elapsedSeconds);
     }
 
     private function removeHyphens(string $uuidVer7): string
@@ -34,7 +34,7 @@ class FetchElapsedTimeFromUUIDver7 implements FetchElapsedTimeFromIdentifier
     /**
      * 16進数のタイムスタンプを秒単位に変換
      */
-    private function conversionfromHexToSeconds(string $timestampHex): float
+    private function conversionTimestampFromHexToSeconds(string $timestampHex): float
     {
         // 10進数に変換する
         $timestampMs = hexdec($timestampHex);
@@ -53,7 +53,7 @@ class FetchElapsedTimeFromUUIDver7 implements FetchElapsedTimeFromIdentifier
     /**
      * 秒から時間に変換
      */
-    private function conversionFromSecondsToHours(float $elapsedSeconds): int
+    private function conversionElapsedSecondToHours(float $elapsedSeconds): int
     {
         return ceil($elapsedSeconds / 3600);
     }
