@@ -1,12 +1,12 @@
 <?php
 
-namespace packages\adapter\token\FirebaseJwtCreator;
+namespace packages\adapter\token;
 
-use packages\domain\service\common\tokne\JwtCreator;
+use packages\domain\service\common\tokne\JwtTokenHandler;
 use Firebase\JWT\Key;
 use Firebase\JWT\JWT;
 
-class FirebaseJwtCreator extends JwtCreator
+class FirebaseJwtTokenHandler extends JwtTokenHandler
 {
 
     private const ENCRYPTION_ALGORITHM = 'HS256';

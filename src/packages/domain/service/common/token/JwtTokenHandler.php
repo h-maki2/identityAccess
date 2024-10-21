@@ -4,7 +4,7 @@ namespace packages\domain\service\common\tokne;
 
 use RuntimeException;
 
-abstract class JwtCreator
+abstract class JwtTokenHandler
 {
     /**
      * JWTトークンを生成する
