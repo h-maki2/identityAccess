@@ -9,14 +9,14 @@ abstract class JwtCreator
     /**
      * JWTトークンを生成する
      */
-    abstract public function encode(string $id): string;
+    abstract public function encode(string $id, int $expirationTime): string;
 
     /**
      * JWTトークンをデコードする
      */
-    abstract public function decode(string $token): string;
+    abstract public function decode(string $jwtToken): string;
 
-    abstract protected function payload(string $id): array;
+    abstract protected function payload(string $id, int $expirationTime): array;
 
     protected function secretKey(): string
     {
