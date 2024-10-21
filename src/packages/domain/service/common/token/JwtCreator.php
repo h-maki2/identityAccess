@@ -4,12 +4,17 @@ namespace packages\domain\service\common\tokne;
 
 use RuntimeException;
 
-abstract class AJwtCreator
+abstract class JwtCreator
 {
     /**
      * JWTトークンを生成する
      */
-    abstract public function create(string $id): string;
+    abstract public function encode(string $id): string;
+
+    /**
+     * JWTトークンをデコードする
+     */
+    abstract public function decode(string $token): string;
 
     abstract protected function payload(string $id): array;
 

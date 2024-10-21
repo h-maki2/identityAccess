@@ -2,8 +2,13 @@
 
 title 認証関連
 
-package "認証(authentication)" {
-    class Refreshtoken {
+package "認証トークン管理(authTokenManage)" {
+    class authTokenManage {
+        refreshToken: RefreshToken
+        userId: UserId
+    }
+
+    class RefreshToken {
         - value: string
     }
 
@@ -11,12 +16,23 @@ package "認証(authentication)" {
         - value: string
     }
 
+    class AccessTokenExpirationDate {
+        - value: string
+    }
+
     note bottom of AccessToken
-        UserIDをJWT(JSON Web Token)を使ってエンコードしたもの
+        ・UserIDをJWT(JSON Web Token)を使ってエンコードしたもの
+        ・クッキーに保存
+    end note
+
+    note bottom of AccessTokenExpirationDate
+        有効期限は1時間
     end note
 
     note bottom of Refreshtoken
-        ・ULIDをJWT(JSON Web Token)を使ってエンコードしたもの
-        ・UserIDと一緒に永続化層に保存する
+        ・UUIDver7をJWT(JSON Web Token)を使ってエンコードしたもの
+        ・クッキーに保存
+        ・UserIDと一緒に永続化層に保存して、userIdと紐づけておく
+        ・有効期限は3か月
     end note
 }
