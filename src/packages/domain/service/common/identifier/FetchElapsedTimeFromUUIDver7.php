@@ -7,7 +7,7 @@ use DateTime;
 class FetchElapsedTimeFromUUIDver7 implements FetchElapsedTimeFromIdentifier
 {
     /**
-     * UUIDver7が生成されてからの経過時間を取得
+     * UUIDver7が生成されてからの経過時間（h）を取得
      */
     public function handle(string $uuidVer7, DateTime $today): int
     {
