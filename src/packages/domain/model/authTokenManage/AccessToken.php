@@ -29,6 +29,11 @@ class AccessToken
         );
     }
 
+    public static function reconstruct(string $jwtToken): self
+    {
+        return new self($jwtToken);
+    }
+
     public function toUserId(JwtTokenHandler $jwtTokenHandler): UserId
     {
         $userIdString = $jwtTokenHandler->decode($this->value);
