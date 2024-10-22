@@ -14,18 +14,9 @@ class FirebaseJwtTokenHandler extends JwtTokenHandler
     /**
      * JWTトークンを生成する
      */
-    public function encode(string $id, int $expirationTime): string
+    public function encode(string $id, int $expirationTime, string $secretKeyPath): string
     {
-        return JWT::encode($this->payload($id, $expirationTime), $this->secretKey(), self::ENCRYPTION_ALGORITHM);
-    }
-
-    /**
-     * JWTトークンをデコードする
-     */
-    public function decode(string $jwtToken): string
-    {
-        $decodedToken = JWT::decode($jwtToken, new Key($this->secretKey(), self::ENCRYPTION_ALGORITHM));
-        return $decodedToken->sub;
+        return JWT::encode($this->payload($id, $expirationTime), $secretKeyPath, self::ENCRYPTION_ALGORITHM);
     }
 
     protected function payload(string $id, int $expirationTime): array
@@ -34,7 +25,8 @@ class FirebaseJwtTokenHandler extends JwtTokenHandler
             'iss' => config('app.app_domain'),
             'aud' => config('app.app_domain'),
             'exp' => $expirationTime,
-            'iat' => time(),
+            'iat' => time(), // 発行時間
+            'nbf' => time(), // 有効開始時間
             'sub' => $id
         ];
     }
