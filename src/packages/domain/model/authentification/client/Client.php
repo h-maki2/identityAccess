@@ -1,24 +1,23 @@
 <?php
 
-
 namespace packages\domain\model\authentification\client;
 
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 
 class Client implements ClientEntityInterface
 {
-    private string $identifier;
+    private ClientId $id;
     private string $name;
     private array|string $redirectUri;
     private bool $isConfidential;
 
     public function __construct(
-        string $identifier,
+        ClientId $id,
         string $name,
         array|string $redirectUri,
-        bool $isConfidential = true
+        bool $isConfidential
     ) {
-        $this->identifier = $identifier;
+        $this->id = $id;
         $this->name = $name;
         $this->redirectUri = $redirectUri;
         $this->isConfidential = $isConfidential;
@@ -29,7 +28,7 @@ class Client implements ClientEntityInterface
      */
     public function getIdentifier(): string
     {
-        return $this->identifier;
+        return $this->id->value;
     }
 
     /**

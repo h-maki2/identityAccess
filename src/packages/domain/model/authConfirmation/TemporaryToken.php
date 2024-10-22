@@ -4,22 +4,22 @@ namespace packages\domain\model\authConfirmation;
 
 use DateTime;
 use InvalidArgumentException;
-use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
+use packages\domain\model\common\identifier\Identifier;
 use packages\domain\service\common\identifier\FetchElapsedTimeFromIdentifier;
 
-class TemporaryToken extends IdentifierFromUUIDver7
+class TemporaryToken
 {
     readonly string $value;
 
     private const EFFECTIVE_TIME = 24;
 
-    public function __construct(string $value)
+    public function __construct(Identifier $identifier, string $value)
     {
-        if ($this->isValidLength($value)) {
+        if ($identifier->isValidLength($value)) {
             throw new InvalidArgumentException('適切な文字列の長さではありません。');
         }
 
-        if (!$this->isValidFormat($value)) {
+        if (!$identifier->isValidFormat($value)) {
             throw new InvalidArgumentException('適切な形式になっていません。');
         }
 
