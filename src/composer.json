@@ -9,6 +9,7 @@
         "firebase/php-jwt": "^6.10",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
+        "league/oauth2-server": "^9.0",
         "ramsey/uuid": "^4.7"
     },
     "require-dev": {
