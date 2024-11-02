@@ -38,4 +38,12 @@ class FailedLoginAttempts
         }
         return new self($addedValue);
     }
+
+    /**
+     * ログイン失敗回数がアカウントロックのしきい値に達したかどうかを判定
+     */
+    public function hasReachedLockoutThreshold(): bool
+    {
+        return $this->value === self::MAX_VALUE;
+    }
 }

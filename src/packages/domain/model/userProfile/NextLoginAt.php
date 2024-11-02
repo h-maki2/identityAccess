@@ -5,7 +5,10 @@ namespace packages\domain\model\userProfile;
 use DateInterval;
 use DateTimeImmutable;
 
-class LastLoginAt
+/**
+ * 再ログイン可能な日時
+ */
+class NextLoginAt
 {
     readonly DateTimeImmutable $value;
 
@@ -14,7 +17,7 @@ class LastLoginAt
         $this->value = $value;
     }
 
-    public static function initialization(): self
+    public static function create(): self
     {
         $now = new DateTimeImmutable();
         return new self($now->add(new DateInterval('PT10M')));
@@ -23,5 +26,13 @@ class LastLoginAt
     public static function reconstruct(DateTimeImmutable $value): self
     {
         return new self($value);
+    }
+
+    /**
+     * 再ログインが可能かどうかを判定
+     */
+    public function isAvailable(DateTimeImmutable $currentDateTime): bool
+    {
+        return $currentDateTime <= $this->value;
     }
 }
