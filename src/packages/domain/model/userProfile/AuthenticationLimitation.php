@@ -42,7 +42,7 @@ class AuthenticationLimitation
         return $this->failedLoginAttempts->value;
     }
 
-    public function nextLoginAt(): string
+    public function nextLoginAt(): ?string
     {
         return $this->nextLoginAt->formattedValue();
     }

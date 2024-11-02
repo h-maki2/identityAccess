@@ -28,8 +28,12 @@ class NextLoginAt
         return new self($value);
     }
 
-    public function formattedValue(): string
+    public function formattedValue(): ?string
     {
+        if ($this->value === null) {
+            return null;
+        }
+        
         return $this->value->format('Y-m-d');
     }
 
