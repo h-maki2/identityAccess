@@ -37,6 +37,19 @@ class AuthenticationLimitation
         );
     }
 
+    public function failedLoginAttempts(): int
+    {
+        return $this->failedLoginAttempts->value;
+    }
+
+    public function nextLoginAt(): string
+    {
+        return $this->nextLoginAt->formattedValue();
+    }
+
+    /**
+     * ログイン失敗回数を更新する
+     */
     public function updateFailedLoginAttempts(): self
     {
         return new self(

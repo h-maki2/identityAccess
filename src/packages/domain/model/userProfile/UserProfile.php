@@ -12,13 +12,15 @@ class UserProfile
     private UserName $userName;
     private UserPassword $userPassword;
     private VerificationStatus $verificationStatus;
+    private AuthenticationLimitation $authenticationLimitation;
 
     private function __construct(
         UserId $userId,
         UserEmail $userEmail,
         UserName $userName,
         UserPassword $userPassword,
-        VerificationStatus $verificationStatus
+        VerificationStatus $verificationStatus,
+        AuthenticationLimitation $authenticationLimitation
     )
     {
         $this->userId = $userId;
@@ -26,6 +28,7 @@ class UserProfile
         $this->userName = $userName;
         $this->userPassword = $userPassword;
         $this->verificationStatus = $verificationStatus;
+        $this->authenticationLimitation = $authenticationLimitation;
     }
 
     public static function create(
@@ -45,7 +48,8 @@ class UserProfile
             $userEmail,
             UserName::initialization($userEmail),
             $userPassword,
-            VerificationStatus::Unverified
+            VerificationStatus::Unverified,
+            AuthenticationLimitation::initialization()
         );
     }
 
@@ -54,7 +58,8 @@ class UserProfile
         UserEmail $userEmail,
         UserName $userName,
         UserPassword $userPassword,
-        VerificationStatus $verificationStatus
+        VerificationStatus $verificationStatus,
+        AuthenticationLimitation $authenticationLimitation
     ): self
     {
         return new self(
@@ -62,7 +67,8 @@ class UserProfile
             $userEmail,
             $userName,
             $userPassword,
-            $verificationStatus
+            $verificationStatus,
+            $authenticationLimitation
         );
     }
 
@@ -91,6 +97,11 @@ class UserProfile
         return $this->verificationStatus;
     }
 
+    public function authenticationLimitation(): AuthenticationLimitation
+    {
+        return $this->authenticationLimitation;
+    }
+
     public function updateVerified(): void
     {
         $this->verificationStatus = VerificationStatus::Verified;
@@ -112,5 +123,29 @@ class UserProfile
         }
 
         $this->userPassword = $password;
+    }
+
+    /**
+     * ログイン失敗回数を更新する
+     */
+    public function updateFailedLoginAttempts(): void
+    {
+        $this->authenticationLimitation = $this->authenticationLimitation->updateFailedLoginAttempts();
+    }
+
+    /**
+     * 再ログイン可能な日時を更新する
+     */
+    public function updateNextLoginAt(): void
+    {
+        $this->authenticationLimitation = $this->authenticationLimitation->updateNextLoginAt();
+    }
+
+    /**
+     * ログイン失敗回数がアカウントロックのしきい値に達したかどうかを判定
+     */
+    public function hasReachedAccountLockoutThreshold(): bool
+    {
+        return $this->authenticationLimitation->hasReachedAccountLockoutThreshold();
     }
 }

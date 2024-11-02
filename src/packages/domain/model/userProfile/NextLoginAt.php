@@ -10,7 +10,7 @@ use DateTimeImmutable;
  */
 class NextLoginAt
 {
-    readonly DateTimeImmutable $value;
+    private DateTimeImmutable $value;
 
     private function __construct(DateTimeImmutable $value)
     {
@@ -26,6 +26,11 @@ class NextLoginAt
     public static function reconstruct(DateTimeImmutable $value): self
     {
         return new self($value);
+    }
+
+    public function formattedValue(): string
+    {
+        return $this->value->format('Y-m-d');
     }
 
     /**
