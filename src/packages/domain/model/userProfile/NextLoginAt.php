@@ -28,14 +28,9 @@ class NextLoginAt
         return new self($value);
     }
 
-    public function value(): DateTimeImmutable
-    {
-        return $this->value;
-    }
-
     public function formattedValue(): string
     {   
-        return $this->value->format('Y-m-d HH:MM:SS');
+        return $this->value->format('Y-m-d HH:MM');
     }
 
     /**
@@ -43,6 +38,6 @@ class NextLoginAt
      */
     public function isAvailable(DateTimeImmutable $currentDateTime): bool
     {
-        return $currentDateTime > $this->value;
+        return $currentDateTime >= $this->value;
     }
 }
