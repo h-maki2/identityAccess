@@ -1,7 +1,10 @@
 <?php
 
 use packages\adapter\persistence\inMemory\InMemoryUserProfileRepository;
+use packages\domain\model\userProfile\AuthenticationLimitation;
+use packages\domain\model\userProfile\FailedLoginCount;
 use packages\domain\model\userProfile\IUserProfileRepository;
+use packages\domain\model\userProfile\NextLoginAt;
 use packages\domain\model\userProfile\UserEmail;
 use packages\domain\model\userProfile\UserName;
 use packages\domain\model\userProfile\UserPassword;
@@ -85,6 +88,7 @@ class UserProfileTest extends TestCase
         $password = UserPassword::create('1234abcABC!');
         $verificationStatus = VerificationStatus::Verified;
         $userName = UserName::create('test user');
+        $authenticationLimitation = AuthenticationLimitation::initialization();
 
         // when
         $userProfile = UserProfile::reconstruct(
@@ -92,7 +96,8 @@ class UserProfileTest extends TestCase
             $email,
             $userName,
             $password,
-            $verificationStatus
+            $verificationStatus,
+            $authenticationLimitation
         );
 
         // then
@@ -101,6 +106,7 @@ class UserProfileTest extends TestCase
         $this->assertEquals($password, $userProfile->password());
         $this->assertEquals($userName, $userProfile->name());
         $this->assertEquals($verificationStatus, $userProfile->verificationStatus());
+        $this->assertEquals($authenticationLimitation, $userProfile->authenticationLimitation());
     }
 
     public function 認証ステータスを認証済みに更新できる()
@@ -201,5 +207,105 @@ class UserProfileTest extends TestCase
         $this->expectExceptionMessage('認証済みのユーザーではありません。');
         $passwordAfterChange = UserPassword::create('124abcABC!_afterChange');
         $userProfile->changePassword($passwordAfterChange);
+    }
+
+    public function test_ログイン失敗回数を更新する()
+    {
+        // given
+        $verificationStatus = VerificationStatus::Verified;
+        // ログイン失敗回数は0回
+        $authenticationLimitation = AuthenticationLimitation::reconstruct(
+            FailedLoginCount::reconstruct(0),
+            null
+        );
+        $userProfile = TestUserProfileFactory::create(
+            null,
+            null,
+            null,
+            $verificationStatus,
+            null,
+            $authenticationLimitation
+        );
+
+        // when
+        $userProfile->updateFailedLoginCount();
+
+        // then
+        $this->assertEquals(1, $userProfile->authenticationLimitation()->failedLoginCount());
+    }
+
+    public function test_再ログイン可能な日時を更新する()
+    {
+        // given
+        $verificationStatus = VerificationStatus::Verified;
+        // ログイン失敗回数は10回
+        $authenticationLimitation = AuthenticationLimitation::reconstruct(
+            FailedLoginCount::reconstruct(10),
+            null
+        );
+        $userProfile = TestUserProfileFactory::create(
+            null,
+            null,
+            null,
+            $verificationStatus,
+            null,
+            $authenticationLimitation
+        );
+        $expectedNextLoginAt = NextLoginAt::create();
+
+        // when
+        $userProfile->updateNextLoginAt();
+
+        // then
+        $this->assertEquals(10, $userProfile->authenticationLimitation()->failedLoginCount());
+        $this->assertEquals($expectedNextLoginAt->formattedValue(), $userProfile->authenticationLimitation()->nextLoginAt());
+    }
+
+    public function test_ログイン失敗回数がアカウントロックのしきい値に達している場合を判定できる()
+    {
+        // given
+        // ログイン失敗回数は10回
+        $authenticationLimitation = AuthenticationLimitation::reconstruct(
+            FailedLoginCount::reconstruct(10),
+            null
+        );
+        $userProfile = TestUserProfileFactory::create(
+            null,
+            null,
+            null,
+            null,
+            null,
+            $authenticationLimitation
+        );
+
+        // when
+        $result = $userProfile->hasReachedAccountLockoutThreshold();
+
+        // then
+        $this->assertTrue($result);
+    }
+
+    public function test_ログイン失敗回数がアカウントロックのしきい値に達していない場合を判定できる()
+    {
+         // given
+        // ログイン失敗回数は9回
+        $authenticationLimitation = AuthenticationLimitation::reconstruct(
+            FailedLoginCount::reconstruct(9),
+            null
+        );
+        $userProfile = TestUserProfileFactory::create(
+            null,
+            null,
+            null,
+            null,
+            null,
+            $authenticationLimitation
+        );
+
+        // when
+        $result = $userProfile->hasReachedAccountLockoutThreshold();
+
+        // then
+        $this->assertFalse($result);
     }
 }
