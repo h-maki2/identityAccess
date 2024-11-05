@@ -30,7 +30,6 @@ class FetchElapsedTimeFromUUIDver7Test extends TestCase
         // given
         $uuidVer7 = Uuid::uuid7();
         
-        // 現在から25時間後を取得
         $dateTime = new DateTime();
         $interval = new DateInterval('PT23H59M59S');
         $dateTime->add($interval);
@@ -49,7 +48,6 @@ class FetchElapsedTimeFromUUIDver7Test extends TestCase
         // given
         $uuidVer7 = Uuid::uuid7();
         
-        // 現在から25時間後を取得
         $dateTime = new DateTime();
         $interval = new DateInterval('PT24H00M01S');
         $dateTime->add($interval);
