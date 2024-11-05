@@ -87,8 +87,26 @@ class AuthenticationLimitationTest extends TestCase
         $authenticationLimitationAfterChange = $authenticationLimitation->updateNextLoginAt();
 
         // then
-        $this->assertEquals(10, $authenticationLimitation->failedLoginCount());
+        $this->assertEquals(10, $authenticationLimitationAfterChange->failedLoginCount());
         // 再ログイン可能な日時が設定されている
-        $this->assertEquals($expectedNextLoginAt->formattedValue(), $authenticationLimitationAfterChange);
+        $this->assertEquals($expectedNextLoginAt->formattedValue(), $authenticationLimitationAfterChange->nextLoginAt());
+
+        // 元の値は変更されていないことを確認
+        $this->assertEquals(10, $authenticationLimitation->failedLoginCount());
+        $this->assertEquals(null, $authenticationLimitation->nextLoginAt());
+    }
+
+    public function test_ログイン失敗回数がアカウントロックのしきい値に達していない場合、再ログイン可能な日時を設定すると例外が発生する()
+    {
+        // given
+        $authenticationLimitation = AuthenticationLimitation::reconstruct(
+            FailedLoginCount::reconstruct(9),
+            null
+        );
+
+        // when・then
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('ログイン失敗回数がアカウントロックの回数に達していません。');
+        $authenticationLimitation->updateNextLoginAt();
     }
 }
