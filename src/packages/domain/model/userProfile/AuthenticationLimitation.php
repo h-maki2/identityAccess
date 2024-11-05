@@ -37,13 +37,17 @@ class AuthenticationLimitation
         );
     }
 
-    public function FailedLoginCount(): int
+    public function failedLoginCount(): int
     {
         return $this->FailedLoginCount->value;
     }
 
     public function nextLoginAt(): ?string
     {
+        if ($this->nextLoginAt === null) {
+            return null;
+        }
+        
         return $this->nextLoginAt->formattedValue();
     }
 
