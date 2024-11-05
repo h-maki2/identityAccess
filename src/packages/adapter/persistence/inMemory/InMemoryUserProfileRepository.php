@@ -2,7 +2,12 @@
 
 namespace packages\adapter\persistence\inMemory;
 
+use DateTimeImmutable;
+use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
+use packages\domain\model\userProfile\AuthenticationLimitation;
+use packages\domain\model\userProfile\FailedLoginCount;
 use packages\domain\model\userProfile\IUserProfileRepository;
+use packages\domain\model\userProfile\NextLoginAt;
 use packages\domain\model\userProfile\UserEmail;
 use packages\domain\model\userProfile\UserId;
 use packages\domain\model\userProfile\UserName;
@@ -52,17 +57,21 @@ class InMemoryUserProfileRepository implements IUserProfileRepository
 
     public function nextUserId(): UserId
     {
-        return new UserId(Uuid::uuid7());
+        return new UserId(new IdentifierFromUUIDver7(), Uuid::uuid7());
     }
 
     private function toUserProfile(object $userProfileModel): UserProfile
     {
         return UserProfile::reconstruct(
-            new UserId($userProfileModel->user_id),
+            new UserId(new IdentifierFromUUIDver7(), $userProfileModel->user_id),
             new UserEmail($userProfileModel->email),
             UserName::create($userProfileModel->username),
             UserPassword::reconstruct($userProfileModel->password),
-            VerificationStatus::from($userProfileModel->verification_status)
+            VerificationStatus::from($userProfileModel->verification_status),
+            AuthenticationLimitation::reconstruct(
+                FailedLoginCount::reconstruct($userProfileModel->failed_login_count),
+                $userProfileModel->next_login_at !== null ? NextLoginAt::reconstruct(new DateTimeImmutable($userProfileModel->next_login_at)) : null
+            )
         );
     }
 
@@ -73,7 +82,9 @@ class InMemoryUserProfileRepository implements IUserProfileRepository
             'username' => $userProfile->name()->value,
             'email' => $userProfile->email()->value,
             'password' => $userProfile->password()->hashedValue,
-            'verification_status' => $userProfile->verificationStatus()->value
+            'verification_status' => $userProfile->verificationStatus()->value,
+            'failed_login_count' => $userProfile->authenticationLimitation()->failedLoginCount(),
+            'next_login_at' => $userProfile->authenticationLimitation()->nextLoginAt()
         ];
     }
 }
