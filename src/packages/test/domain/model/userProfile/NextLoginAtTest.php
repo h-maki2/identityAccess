@@ -20,4 +20,34 @@ class NextLoginAtTest extends TestCase
         // then
         $this->assertEquals($expectedDateTimeString, $nextLoginAt->value()->format('Y-m-d HH:MM'));
     }
+
+    public function test_再ログインが可能である場合を判定できる()
+    {
+        // given
+        $currentDateTime = new DateTimeImmutable();
+        // 現在の日時から10分01秒後は再ログインが可能
+        $再ログイン可能な日時 = $currentDateTime->add(new DateInterval('PT10M01S'));
+        $nextLoginAt = NextLoginAt::create();
+
+        // when
+        $result = $nextLoginAt->isAvailable($再ログイン可能な日時);
+
+        // then
+        $this->assertTrue($result);
+    }
+
+    public function test_再ログインが可能ではない場合を判定できる()
+    {
+        // given
+        $currentDateTime = new DateTimeImmutable();
+        // 現在の日時から9分59秒後は再ログインが可能
+        $再ログインが可能ではない日時 = $currentDateTime->add(new DateInterval('PT09M59S'));
+        $nextLoginAt = NextLoginAt::create();
+
+        // when
+        $result = $nextLoginAt->isAvailable($再ログインが可能ではない日時);
+
+        // then
+        $this->assertFalse($result);
+    }
 }
