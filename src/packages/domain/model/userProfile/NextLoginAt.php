@@ -28,13 +28,18 @@ class NextLoginAt
         return new self($value);
     }
 
+    public function value(): DateTimeImmutable
+    {
+        return $this->value;
+    }
+
     public function formattedValue(): ?string
     {
         if ($this->value === null) {
             return null;
         }
         
-        return $this->value->format('Y-m-d');
+        return $this->value->format('Y-m-d HH:MM:SS');
     }
 
     /**
