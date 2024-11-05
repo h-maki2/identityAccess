@@ -1,6 +1,7 @@
 <?php
 
 use packages\domain\model\authConfirmation\TemporaryToken;
+use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
 use packages\domain\service\common\identifier\FetchElapsedTimeFromUUIDver7;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
@@ -15,7 +16,7 @@ class TemporaryTokenTest extends TestCase
         // when・then
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('適切な形式になっていません。');
-        new TemporaryToken($invalidTokenString);
+        new TemporaryToken(new IdentifierFromUUIDver7(), $invalidTokenString);
     }
 
     public function test_トークンの文字数が36文字ではない場合、インスタンスを生成できない_37文字の場合()
@@ -26,7 +27,7 @@ class TemporaryTokenTest extends TestCase
         // when・then
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('適切な文字列の長さではありません。');
-        new TemporaryToken($invalidTokenString);
+        new TemporaryToken(new IdentifierFromUUIDver7(), $invalidTokenString);
     }
 
     public function test_トークンの文字数が36文字ではない場合、インスタンスを生成できない_35文字の場合()
@@ -37,13 +38,13 @@ class TemporaryTokenTest extends TestCase
         // when・then
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('適切な文字列の長さではありません。');
-        new TemporaryToken($invalidTokenString);
+        new TemporaryToken(new IdentifierFromUUIDver7(), $invalidTokenString);
     }
 
     public function test_有効なトークンかどうかを判定できる()
     {
         // given
-        $token = new TemporaryToken(Uuid::uuid7());
+        $token = new TemporaryToken(new IdentifierFromUUIDver7(), Uuid::uuid7());
 
         // 現在の時刻から23時間59分59秒後のDateTimeを取得
         $dateTime = new DateTime();
@@ -60,7 +61,7 @@ class TemporaryTokenTest extends TestCase
     public function test_無効なトークンかどうかを判定できる()
     {
         // given
-        $token = new TemporaryToken(Uuid::uuid7());
+        $token = new TemporaryToken(new IdentifierFromUUIDver7(), Uuid::uuid7());
 
         // 現在の時刻から24時間00分01秒後のDateTimeを取得
         $dateTime = new DateTime();
