@@ -47,7 +47,7 @@ class AuthenticationLimitation
         if ($this->nextLoginAt === null) {
             return null;
         }
-        
+
         return $this->nextLoginAt->formattedValue();
     }
 
@@ -63,7 +63,7 @@ class AuthenticationLimitation
     }
 
     /**
-     * 再ログイン可能な日時を更新する
+     * 再ログイン可能な日時を設定する
      */
     public function updateNextLoginAt(): self
     {
