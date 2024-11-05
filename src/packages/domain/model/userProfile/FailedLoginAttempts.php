@@ -32,9 +32,9 @@ class FailedLoginAttempts
 
     public function add(): self
     {
-        $addedValue = $this->value++;
+        $addedValue = $this->value + 1;
         if ($addedValue > self::MAX_VALUE) {
-            throw new DomainException('ログイン試行回数が最大値を超えました。');
+            throw new DomainException('ログイン失敗回数が最大値を超えました。');
         }
         return new self($addedValue);
     }
