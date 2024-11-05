@@ -5,6 +5,17 @@ use PHPUnit\Framework\TestCase;
 
 class FailedLoginAttemptsTest extends TestCase
 {
+    public function test_ログイン失敗回数を初期化する()
+    {
+        // given
+
+        // when
+        $failedLoginAttempts = FailedLoginAttempts::initialization();
+
+        // then
+        $this->assertEquals(0, $failedLoginAttempts->value);
+    }
+
     public function test_0未満の値が入力された場合に例外が発生する()
     {
         // given
@@ -53,5 +64,31 @@ class FailedLoginAttemptsTest extends TestCase
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('ログイン失敗回数が最大値を超えました。');
         $failedLoginAttempts->add();
+    }
+
+    public function test_ログイン失敗回数が、アカウントロックのしきい値に達した場合を判定できる()
+    {
+        // given
+        $maxFailedLoginAttemptsValue = 10;
+        $failedLoginAttempts = FailedLoginAttempts::reconstruct($maxFailedLoginAttemptsValue);
+
+        // when
+        $result = $failedLoginAttempts->hasReachedLockoutThreshold();
+
+        // then
+        $this->assertTrue($result);
+    }
+
+    public function test_ログイン失敗回数が、アカウントロックのしきい値に達していない場合を判定できる()
+    {
+        // given
+        $maxFailedLoginAttemptsValue = 9;
+        $failedLoginAttempts = FailedLoginAttempts::reconstruct($maxFailedLoginAttemptsValue);
+
+        // when
+        $result = $failedLoginAttempts->hasReachedLockoutThreshold();
+
+        // then
+        $this->assertFalse($result);
     }
 }
