@@ -130,6 +130,9 @@ class UserProfile
      */
     public function updateFailedLoginCount(): void
     {
+        if (!$this->verificationStatus->isVerified()) {
+            throw new DomainException('認証済みのユーザーではありません。');
+        }
         $this->authenticationLimitation = $this->authenticationLimitation->updateFailedLoginCount();
     }
 
@@ -138,6 +141,9 @@ class UserProfile
      */
     public function updateNextLoginAt(): void
     {
+        if (!$this->verificationStatus->isVerified()) {
+            throw new DomainException('認証済みのユーザーではありません。');
+        }
         $this->authenticationLimitation = $this->authenticationLimitation->updateNextLoginAt();
     }
 
