@@ -47,6 +47,6 @@ class NextLoginAt
      */
     public function isAvailable(DateTimeImmutable $currentDateTime): bool
     {
-        return $currentDateTime <= $this->value;
+        return $currentDateTime > $this->value;
     }
 }
