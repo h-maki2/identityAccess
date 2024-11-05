@@ -1,79 +1,79 @@
 <?php
 
-use packages\domain\model\userProfile\FailedLoginAttempts;
+use packages\domain\model\userProfile\FailedLoginCount;
 use PHPUnit\Framework\TestCase;
 
-class FailedLoginAttemptsTest extends TestCase
+class FailedLoginCountTest extends TestCase
 {
     public function test_ログイン失敗回数を初期化する()
     {
         // given
 
         // when
-        $failedLoginAttempts = FailedLoginAttempts::initialization();
+        $FailedLoginCount = FailedLoginCount::initialization();
 
         // then
-        $this->assertEquals(0, $failedLoginAttempts->value);
+        $this->assertEquals(0, $FailedLoginCount->value);
     }
 
     public function test_0未満の値が入力された場合に例外が発生する()
     {
         // given
-        $failedLoginAttemptsValue = -1;
+        $FailedLoginCountValue = -1;
 
         // when・then
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('無効な値です。');
-        FailedLoginAttempts::reconstruct($failedLoginAttemptsValue);
+        FailedLoginCount::reconstruct($FailedLoginCountValue);
     }
 
     public function test_10より大きい値が入力された場合に例外が発生する()
     {
         // given
-        $failedLoginAttemptsValue = 11;
+        $FailedLoginCountValue = 11;
 
         // when・then
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('無効な値です。');
-        FailedLoginAttempts::reconstruct($failedLoginAttemptsValue);
+        FailedLoginCount::reconstruct($FailedLoginCountValue);
     }
 
     public function test_ログインに失敗した回数をカウントアップする()
     {
         // given
-        $failedLoginAttemptsBeforeChange = FailedLoginAttempts::reconstruct(1);
+        $FailedLoginCountBeforeChange = FailedLoginCount::reconstruct(1);
 
         // when
-        $failedLoginAttemptsAfterChange = $failedLoginAttemptsBeforeChange->add();
+        $FailedLoginCountAfterChange = $FailedLoginCountBeforeChange->add();
 
         // then
         // ログインに失敗した回数がカウントアップされていることを確認
-        $this->assertEquals(2, $failedLoginAttemptsAfterChange->value);
+        $this->assertEquals(2, $FailedLoginCountAfterChange->value);
 
         // 元のログインに失敗した回数は変更されていないことを確認
-        $this->assertEquals(1, $failedLoginAttemptsBeforeChange->value);
+        $this->assertEquals(1, $FailedLoginCountBeforeChange->value);
     }
 
     public function test_ログイン失敗回数のカウントアップ時に、失敗回数の最大値を超えると例外が発生する()
     {
         // given
-        $maxFailedLoginAttemptsValue = 10;
-        $failedLoginAttempts = FailedLoginAttempts::reconstruct($maxFailedLoginAttemptsValue);
+        $maxFailedLoginCountValue = 10;
+        $FailedLoginCount = FailedLoginCount::reconstruct($maxFailedLoginCountValue);
 
         // when・then
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('ログイン失敗回数が最大値を超えました。');
-        $failedLoginAttempts->add();
+        $FailedLoginCount->add();
     }
 
     public function test_ログイン失敗回数が、アカウントロックのしきい値に達した場合を判定できる()
     {
         // given
-        $maxFailedLoginAttemptsValue = 10;
-        $failedLoginAttempts = FailedLoginAttempts::reconstruct($maxFailedLoginAttemptsValue);
+        $maxFailedLoginCountValue = 10;
+        $FailedLoginCount = FailedLoginCount::reconstruct($maxFailedLoginCountValue);
 
         // when
-        $result = $failedLoginAttempts->hasReachedLockoutThreshold();
+        $result = $FailedLoginCount->hasReachedLockoutThreshold();
 
         // then
         $this->assertTrue($result);
@@ -82,11 +82,11 @@ class FailedLoginAttemptsTest extends TestCase
     public function test_ログイン失敗回数が、アカウントロックのしきい値に達していない場合を判定できる()
     {
         // given
-        $maxFailedLoginAttemptsValue = 9;
-        $failedLoginAttempts = FailedLoginAttempts::reconstruct($maxFailedLoginAttemptsValue);
+        $maxFailedLoginCountValue = 9;
+        $FailedLoginCount = FailedLoginCount::reconstruct($maxFailedLoginCountValue);
 
         // when
-        $result = $failedLoginAttempts->hasReachedLockoutThreshold();
+        $result = $FailedLoginCount->hasReachedLockoutThreshold();
 
         // then
         $this->assertFalse($result);

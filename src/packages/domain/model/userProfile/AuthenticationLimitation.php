@@ -6,40 +6,40 @@ use DomainException;
 
 class AuthenticationLimitation
 {
-    private FailedLoginAttempts $failedLoginAttempts;
+    private FailedLoginCount $FailedLoginCount;
     private ?NextLoginAt $nextLoginAt;
 
     private function __construct(
-        FailedLoginAttempts $failedLoginAttempts,
+        FailedLoginCount $FailedLoginCount,
         ?NextLoginAt $nextLoginAt
     )
     {
-        $this->failedLoginAttempts = $failedLoginAttempts;
+        $this->FailedLoginCount = $FailedLoginCount;
         $this->nextLoginAt = $nextLoginAt;
     }
 
     public static function initialization(): self
     {
         return new self(
-            FailedLoginAttempts::initialization(),
+            FailedLoginCount::initialization(),
             null
         );
     }
 
     public static function reconstruct(
-        FailedLoginAttempts $failedLoginAttempts,
+        FailedLoginCount $FailedLoginCount,
         ?NextLoginAt $nextLoginAt
     ): self
     {
         return new self(
-            $failedLoginAttempts,
+            $FailedLoginCount,
             $nextLoginAt
         );
     }
 
-    public function failedLoginAttempts(): int
+    public function FailedLoginCount(): int
     {
-        return $this->failedLoginAttempts->value;
+        return $this->FailedLoginCount->value;
     }
 
     public function nextLoginAt(): ?string
@@ -50,10 +50,10 @@ class AuthenticationLimitation
     /**
      * ログイン失敗回数を更新する
      */
-    public function updateFailedLoginAttempts(): self
+    public function updateFailedLoginCount(): self
     {
         return new self(
-            $this->failedLoginAttempts->add(),
+            $this->FailedLoginCount->add(),
             $this->nextLoginAt
         );
     }
@@ -68,7 +68,7 @@ class AuthenticationLimitation
         }
 
         return new self(
-            $this->failedLoginAttempts,
+            $this->FailedLoginCount,
             NextLoginAt::create()
         );
     }
@@ -78,6 +78,6 @@ class AuthenticationLimitation
      */
     public function hasReachedAccountLockoutThreshold(): bool
     {
-        return $this->failedLoginAttempts->hasReachedLockoutThreshold();
+        return $this->FailedLoginCount->hasReachedLockoutThreshold();
     }
 }

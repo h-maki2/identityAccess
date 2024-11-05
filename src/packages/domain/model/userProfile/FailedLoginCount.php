@@ -5,7 +5,7 @@ namespace packages\domain\model\userProfile;
 use DomainException;
 use InvalidArgumentException;
 
-class FailedLoginAttempts
+class FailedLoginCount
 {
     readonly int $value;
 

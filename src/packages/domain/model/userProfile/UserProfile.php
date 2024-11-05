@@ -128,9 +128,9 @@ class UserProfile
     /**
      * ログイン失敗回数を更新する
      */
-    public function updateFailedLoginAttempts(): void
+    public function updateFailedLoginCount(): void
     {
-        $this->authenticationLimitation = $this->authenticationLimitation->updateFailedLoginAttempts();
+        $this->authenticationLimitation = $this->authenticationLimitation->updateFailedLoginCount();
     }
 
     /**
