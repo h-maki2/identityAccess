@@ -11,8 +11,8 @@ use packages\domain\model\userProfile\UserPassword;
 use packages\domain\model\userProfile\UserProfile;
 use packages\domain\model\userProfile\VerificationStatus;
 use packages\domain\service\userProfile\UserProfileService;
-use packages\test\domain\model\userProfile\helper\TestUserProfileFactory;
-use packages\test\domain\model\userProfile\helper\UserProfileTestDataFactory;
+use packages\test\helpers\userProfile\TestUserProfileFactory;
+use packages\test\helpers\userProfile\UserProfileTestDataFactory;
 use PHPUnit\Framework\TestCase;
 
 class UserProfileTest extends TestCase

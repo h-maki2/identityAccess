@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\test\domain\model\userProfile\helper;
+namespace packages\test\helpers\userProfile;
 
 use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
 use packages\domain\model\userProfile\AuthenticationLimitation;
