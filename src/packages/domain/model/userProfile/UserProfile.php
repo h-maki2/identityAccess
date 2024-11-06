@@ -109,7 +109,7 @@ class UserProfile
 
     public function changeName(UserName $name): void
     {
-        if (!$this->verificationStatus->isVerified()) {
+        if (!$this->isVerified()) {
             throw new DomainException('認証済みのユーザーではありません。');
         }
 
@@ -118,7 +118,7 @@ class UserProfile
 
     public function changePassword(UserPassword $password): void
     {
-        if (!$this->verificationStatus->isVerified()) {
+        if (!$this->isVerified()) {
             throw new DomainException('認証済みのユーザーではありません。');
         }
 
@@ -130,7 +130,7 @@ class UserProfile
      */
     public function updateFailedLoginCount(): void
     {
-        if (!$this->verificationStatus->isVerified()) {
+        if (!$this->isVerified()) {
             throw new DomainException('認証済みのユーザーではありません。');
         }
         $this->authenticationLimitation = $this->authenticationLimitation->updateFailedLoginCount();
@@ -141,7 +141,7 @@ class UserProfile
      */
     public function updateNextLoginAt(): void
     {
-        if (!$this->verificationStatus->isVerified()) {
+        if (!$this->isVerified()) {
             throw new DomainException('認証済みのユーザーではありません。');
         }
         $this->authenticationLimitation = $this->authenticationLimitation->updateNextLoginAt();
@@ -153,5 +153,13 @@ class UserProfile
     public function hasReachedAccountLockoutThreshold(): bool
     {
         return $this->authenticationLimitation->hasReachedAccountLockoutThreshold();
+    }
+
+    /**
+     * 認証済みかどうかを判定
+     */
+    public function isVerified(): bool
+    {
+        return $this->verificationStatus->isVerified();
     }
 }
