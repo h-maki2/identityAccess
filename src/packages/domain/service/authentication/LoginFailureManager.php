@@ -24,11 +24,7 @@ class LoginFailureManager
             return;
         }
 
-        if (!$userProfile->isVerified()) {
-            return;
-        }
-
-        if ($userProfile->isLocked($currentDateTime)) {
+        if (!$userProfile->isValid($currentDateTime)) {
             return;
         }
 

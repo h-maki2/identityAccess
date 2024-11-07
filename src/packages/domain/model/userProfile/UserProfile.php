@@ -108,19 +108,19 @@ class UserProfile
         $this->verificationStatus = VerificationStatus::Verified;
     }
 
-    public function changeName(UserName $name): void
+    public function changeName(UserName $name, DateTimeImmutable $currentDateTime): void
     {
-        if (!$this->isVerified()) {
-            throw new DomainException('認証済みのユーザーではありません。');
+        if (!$this->isValid($currentDateTime)) {
+            throw new DomainException('アカウントが有効ではありません。');
         }
 
         $this->userName = $name;
     }
 
-    public function changePassword(UserPassword $password): void
+    public function changePassword(UserPassword $password, DateTimeImmutable $currentDateTime): void
     {
-        if (!$this->isVerified()) {
-            throw new DomainException('認証済みのユーザーではありません。');
+        if (!$this->isValid($currentDateTime)) {
+            throw new DomainException('アカウントが有効ではありません。');
         }
 
         $this->userPassword = $password;
@@ -156,19 +156,24 @@ class UserProfile
         return $this->LoginRestriction->hasReachedAccountLockoutThreshold();
     }
 
-    /**
-     * 認証済みかどうかを判定
-     */
-    public function isVerified(): bool
+    public function isValid(DateTimeImmutable $currentDateTime): bool
     {
-        return $this->verificationStatus->isVerified();
+        return $this->isVerified() && !$this->isLocked(new DateTimeImmutable());
     }
 
     /**
-     * ログイン可能かどうかを判定
+     * アカウントがロックされているかどうかを判定
      */
     public function isLocked(DateTimeImmutable $currentDateTime): bool
     {
         return $this->LoginRestriction->isLoginAllowed($currentDateTime);
+    }
+
+    /**
+     * 認証済みかどうかを判定
+     */
+    private function isVerified(): bool
+    {
+        return $this->verificationStatus->isVerified();
     }
 }
