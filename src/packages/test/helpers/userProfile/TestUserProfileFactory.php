@@ -3,7 +3,7 @@
 namespace packages\test\helpers\userProfile;
 
 use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
-use packages\domain\model\userProfile\AuthenticationLimitation;
+use packages\domain\model\userProfile\LoginRestriction;
 use packages\domain\model\userProfile\UserEmail;
 use packages\domain\model\userProfile\UserId;
 use packages\domain\model\userProfile\UserName;
@@ -19,7 +19,7 @@ class TestUserProfileFactory
         ?UserPassword $password = null,
         ?VerificationStatus $verificationStatus = null,
         ?UserId $id = null,
-        ?AuthenticationLimitation $authenticationLimitation = null
+        ?LoginRestriction $LoginRestriction = null
     ): UserProfile
     {
         return UserProfile::reconstruct(
@@ -28,7 +28,7 @@ class TestUserProfileFactory
             $name ?? UserName::create('testUser'),
             $password ?? UserPassword::create('ABCabc123_'),
             $verificationStatus ?? VerificationStatus::Verified,
-            $authenticationLimitation ?? AuthenticationLimitation::initialization()
+            $LoginRestriction ?? LoginRestriction::initialization()
         );
     }
 }

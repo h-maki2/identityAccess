@@ -2,9 +2,10 @@
 
 namespace packages\domain\model\userProfile;
 
+use DateTimeImmutable;
 use DomainException;
 
-class AuthenticationLimitation
+class LoginRestriction
 {
     private FailedLoginCount $FailedLoginCount;
     private ?NextLoginAt $nextLoginAt;
@@ -83,5 +84,17 @@ class AuthenticationLimitation
     public function hasReachedAccountLockoutThreshold(): bool
     {
         return $this->FailedLoginCount->hasReachedLockoutThreshold();
+    }
+
+    /**
+     * ログインが許可されているかどうかを判定
+     */
+    public function isLoginAllowed(DateTimeImmutable $currentDateTime): bool
+    {
+        if ($this->nextLoginAt === null) {
+            return true;
+        }
+
+        return $this->nextLoginAt->isAvailable($currentDateTime);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace packages\domain\model\userProfile;
 
+use DateTimeImmutable;
 use DomainException;
 use packages\domain\service\userProfile\UserProfileService;
 
@@ -12,7 +13,7 @@ class UserProfile
     private UserName $userName;
     private UserPassword $userPassword;
     private VerificationStatus $verificationStatus;
-    private AuthenticationLimitation $authenticationLimitation;
+    private LoginRestriction $LoginRestriction;
 
     private function __construct(
         UserId $userId,
@@ -20,7 +21,7 @@ class UserProfile
         UserName $userName,
         UserPassword $userPassword,
         VerificationStatus $verificationStatus,
-        AuthenticationLimitation $authenticationLimitation
+        LoginRestriction $LoginRestriction
     )
     {
         $this->userId = $userId;
@@ -28,7 +29,7 @@ class UserProfile
         $this->userName = $userName;
         $this->userPassword = $userPassword;
         $this->verificationStatus = $verificationStatus;
-        $this->authenticationLimitation = $authenticationLimitation;
+        $this->LoginRestriction = $LoginRestriction;
     }
 
     public static function create(
@@ -49,7 +50,7 @@ class UserProfile
             UserName::initialization($userEmail),
             $userPassword,
             VerificationStatus::Unverified,
-            AuthenticationLimitation::initialization()
+            LoginRestriction::initialization()
         );
     }
 
@@ -59,7 +60,7 @@ class UserProfile
         UserName $userName,
         UserPassword $userPassword,
         VerificationStatus $verificationStatus,
-        AuthenticationLimitation $authenticationLimitation
+        LoginRestriction $LoginRestriction
     ): self
     {
         return new self(
@@ -68,7 +69,7 @@ class UserProfile
             $userName,
             $userPassword,
             $verificationStatus,
-            $authenticationLimitation
+            $LoginRestriction
         );
     }
 
@@ -97,9 +98,9 @@ class UserProfile
         return $this->verificationStatus;
     }
 
-    public function authenticationLimitation(): AuthenticationLimitation
+    public function LoginRestriction(): LoginRestriction
     {
-        return $this->authenticationLimitation;
+        return $this->LoginRestriction;
     }
 
     public function updateVerified(): void
@@ -133,7 +134,7 @@ class UserProfile
         if (!$this->isVerified()) {
             throw new DomainException('認証済みのユーザーではありません。');
         }
-        $this->authenticationLimitation = $this->authenticationLimitation->updateFailedLoginCount();
+        $this->LoginRestriction = $this->LoginRestriction->updateFailedLoginCount();
     }
 
     /**
@@ -144,7 +145,7 @@ class UserProfile
         if (!$this->isVerified()) {
             throw new DomainException('認証済みのユーザーではありません。');
         }
-        $this->authenticationLimitation = $this->authenticationLimitation->updateNextLoginAt();
+        $this->LoginRestriction = $this->LoginRestriction->updateNextLoginAt();
     }
 
     /**
@@ -152,7 +153,7 @@ class UserProfile
      */
     public function hasReachedAccountLockoutThreshold(): bool
     {
-        return $this->authenticationLimitation->hasReachedAccountLockoutThreshold();
+        return $this->LoginRestriction->hasReachedAccountLockoutThreshold();
     }
 
     /**
@@ -161,5 +162,10 @@ class UserProfile
     public function isVerified(): bool
     {
         return $this->verificationStatus->isVerified();
+    }
+
+    public function canLogin(DateTimeImmutable $currentDateTime): bool
+    {
+        return $this->LoginRestriction->isLoginAllowed($currentDateTime);
     }
 }

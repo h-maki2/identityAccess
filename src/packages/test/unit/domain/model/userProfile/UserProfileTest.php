@@ -1,7 +1,7 @@
 <?php
 
 use packages\adapter\persistence\inMemory\InMemoryUserProfileRepository;
-use packages\domain\model\userProfile\AuthenticationLimitation;
+use packages\domain\model\userProfile\LoginRestriction;
 use packages\domain\model\userProfile\FailedLoginCount;
 use packages\domain\model\userProfile\IUserProfileRepository;
 use packages\domain\model\userProfile\NextLoginAt;
@@ -88,7 +88,7 @@ class UserProfileTest extends TestCase
         $password = UserPassword::create('1234abcABC!');
         $verificationStatus = VerificationStatus::Verified;
         $userName = UserName::create('test user');
-        $authenticationLimitation = AuthenticationLimitation::initialization();
+        $LoginRestriction = LoginRestriction::initialization();
 
         // when
         $userProfile = UserProfile::reconstruct(
@@ -97,7 +97,7 @@ class UserProfileTest extends TestCase
             $userName,
             $password,
             $verificationStatus,
-            $authenticationLimitation
+            $LoginRestriction
         );
 
         // then
@@ -106,7 +106,7 @@ class UserProfileTest extends TestCase
         $this->assertEquals($password, $userProfile->password());
         $this->assertEquals($userName, $userProfile->name());
         $this->assertEquals($verificationStatus, $userProfile->verificationStatus());
-        $this->assertEquals($authenticationLimitation, $userProfile->authenticationLimitation());
+        $this->assertEquals($LoginRestriction, $userProfile->LoginRestriction());
     }
 
     public function 認証ステータスを認証済みに更新できる()
@@ -214,7 +214,7 @@ class UserProfileTest extends TestCase
         // given
         $verificationStatus = VerificationStatus::Verified;
         // ログイン失敗回数は0回
-        $authenticationLimitation = AuthenticationLimitation::reconstruct(
+        $LoginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(0),
             null
         );
@@ -224,14 +224,14 @@ class UserProfileTest extends TestCase
             null,
             $verificationStatus,
             null,
-            $authenticationLimitation
+            $LoginRestriction
         );
 
         // when
         $userProfile->updateFailedLoginCount();
 
         // then
-        $this->assertEquals(1, $userProfile->authenticationLimitation()->failedLoginCount());
+        $this->assertEquals(1, $userProfile->LoginRestriction()->failedLoginCount());
     }
 
     public function test_再ログイン可能な日時を更新する()
@@ -239,7 +239,7 @@ class UserProfileTest extends TestCase
         // given
         $verificationStatus = VerificationStatus::Verified;
         // ログイン失敗回数は10回
-        $authenticationLimitation = AuthenticationLimitation::reconstruct(
+        $LoginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
             null
         );
@@ -249,7 +249,7 @@ class UserProfileTest extends TestCase
             null,
             $verificationStatus,
             null,
-            $authenticationLimitation
+            $LoginRestriction
         );
         $expectedNextLoginAt = NextLoginAt::create();
 
@@ -257,15 +257,15 @@ class UserProfileTest extends TestCase
         $userProfile->updateNextLoginAt();
 
         // then
-        $this->assertEquals(10, $userProfile->authenticationLimitation()->failedLoginCount());
-        $this->assertEquals($expectedNextLoginAt->formattedValue(), $userProfile->authenticationLimitation()->nextLoginAt());
+        $this->assertEquals(10, $userProfile->LoginRestriction()->failedLoginCount());
+        $this->assertEquals($expectedNextLoginAt->formattedValue(), $userProfile->LoginRestriction()->nextLoginAt());
     }
 
     public function test_ログイン失敗回数がアカウントロックのしきい値に達している場合を判定できる()
     {
         // given
         // ログイン失敗回数は10回
-        $authenticationLimitation = AuthenticationLimitation::reconstruct(
+        $LoginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
             null
         );
@@ -275,7 +275,7 @@ class UserProfileTest extends TestCase
             null,
             null,
             null,
-            $authenticationLimitation
+            $LoginRestriction
         );
 
         // when
@@ -289,7 +289,7 @@ class UserProfileTest extends TestCase
     {
          // given
         // ログイン失敗回数は9回
-        $authenticationLimitation = AuthenticationLimitation::reconstruct(
+        $LoginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(9),
             null
         );
@@ -299,7 +299,7 @@ class UserProfileTest extends TestCase
             null,
             null,
             null,
-            $authenticationLimitation
+            $LoginRestriction
         );
 
         // when

@@ -4,7 +4,7 @@ namespace packages\adapter\persistence\inMemory;
 
 use DateTimeImmutable;
 use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
-use packages\domain\model\userProfile\AuthenticationLimitation;
+use packages\domain\model\userProfile\LoginRestriction;
 use packages\domain\model\userProfile\FailedLoginCount;
 use packages\domain\model\userProfile\IUserProfileRepository;
 use packages\domain\model\userProfile\NextLoginAt;
@@ -68,7 +68,7 @@ class InMemoryUserProfileRepository implements IUserProfileRepository
             UserName::create($userProfileModel->username),
             UserPassword::reconstruct($userProfileModel->password),
             VerificationStatus::from($userProfileModel->verification_status),
-            AuthenticationLimitation::reconstruct(
+            LoginRestriction::reconstruct(
                 FailedLoginCount::reconstruct($userProfileModel->failed_login_count),
                 $userProfileModel->next_login_at !== null ? NextLoginAt::reconstruct(new DateTimeImmutable($userProfileModel->next_login_at)) : null
             )
@@ -83,8 +83,8 @@ class InMemoryUserProfileRepository implements IUserProfileRepository
             'email' => $userProfile->email()->value,
             'password' => $userProfile->password()->hashedValue,
             'verification_status' => $userProfile->verificationStatus()->value,
-            'failed_login_count' => $userProfile->authenticationLimitation()->failedLoginCount(),
-            'next_login_at' => $userProfile->authenticationLimitation()->nextLoginAt()
+            'failed_login_count' => $userProfile->LoginRestriction()->failedLoginCount(),
+            'next_login_at' => $userProfile->LoginRestriction()->nextLoginAt()
         ];
     }
 }

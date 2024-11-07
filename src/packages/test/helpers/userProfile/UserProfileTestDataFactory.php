@@ -2,7 +2,7 @@
 
 namespace packages\test\helpers\userProfile;
 
-use packages\domain\model\userProfile\AuthenticationLimitation;
+use packages\domain\model\userProfile\LoginRestriction;
 use packages\domain\model\userProfile\IUserProfileRepository;
 use packages\domain\model\userProfile\UserEmail;
 use packages\domain\model\userProfile\UserId;
@@ -26,7 +26,7 @@ class UserProfileTestDataFactory
         ?UserPassword $password = null,
         ?VerificationStatus $verificationStatus = null,
         ?UserId $id = null,
-        ?AuthenticationLimitation $authenticationLimitation = null
+        ?LoginRestriction $LoginRestriction = null
     ): UserProfile
     {
         $userProfile = TestUserProfileFactory::create(
@@ -35,7 +35,7 @@ class UserProfileTestDataFactory
             $password,
             $verificationStatus,
             $id,
-            $authenticationLimitation
+            $LoginRestriction
         );
 
         $this->userProfileRepository->save($userProfile);

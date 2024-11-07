@@ -35,10 +35,6 @@ class UserAuthenticator
             return false;
         }
 
-        if ($userProfile->hasReachedAccountLockoutThreshold()) {
-            return false;
-        }
-
         if (!$userProfile->password()->equals($password)) {
             return false;
         }
