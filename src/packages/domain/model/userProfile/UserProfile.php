@@ -167,7 +167,7 @@ class UserProfile
     /**
      * ログイン可能かどうかを判定
      */
-    public function canLogin(DateTimeImmutable $currentDateTime): bool
+    public function isLocked(DateTimeImmutable $currentDateTime): bool
     {
         return $this->LoginRestriction->isLoginAllowed($currentDateTime);
     }

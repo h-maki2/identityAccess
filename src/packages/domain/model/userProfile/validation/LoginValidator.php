@@ -20,7 +20,7 @@ class LoginValidator
             return false;
         }
 
-        if (!$userProfile->canLogin($currentDateTime)) {
+        if (!$userProfile->isLocked($currentDateTime)) {
             return false;
         }
 

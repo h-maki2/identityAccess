@@ -34,4 +34,18 @@ class ClientData
     {
         return $this->redirectUri;
     }
+
+    public function authorizationUrl(): string
+    {
+        return url('/oauth/authorize') . '?' . $this->authorizationUrlQueryParam();
+    }
+
+    private function authorizationUrlQueryParam(): string
+    {
+        return http_build_query([
+            'response_type' => 'code',
+            'client_id' => $this->clientId,
+            'redirect_uri' => $this->redirectUri
+        ]);
+    }
 }
