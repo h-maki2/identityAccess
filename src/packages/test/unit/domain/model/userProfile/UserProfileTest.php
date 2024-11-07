@@ -143,7 +143,7 @@ class UserProfileTest extends TestCase
 
         // when
         $userNameAfterChange = UserName::create('test user after change');
-        $userProfile->changeName($userNameAfterChange);
+        $userProfile->changeName($userNameAfterChange, new DateTimeImmutable());
 
         // then
         $this->assertEquals($userNameAfterChange, $userProfile->name());
@@ -166,7 +166,7 @@ class UserProfileTest extends TestCase
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('認証済みのユーザーではありません。');
         $userNameAfterChange = UserName::create('test user after change');
-        $userProfile->changeName($userNameAfterChange);
+        $userProfile->changeName($userNameAfterChange, new DateTimeImmutable());
     }
 
     public function test_認証ステータスが認証済みの場合、パスワードの変更が行える()
@@ -184,7 +184,7 @@ class UserProfileTest extends TestCase
 
         // when
         $passwordAfterChange = UserPassword::create('124abcABC!_afterChange');
-        $userProfile->changePassword($passwordAfterChange);
+        $userProfile->changePassword($passwordAfterChange, new DateTimeImmutable());
 
         // then
         $this->assertEquals($passwordAfterChange, $userProfile->password());
@@ -206,7 +206,7 @@ class UserProfileTest extends TestCase
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('認証済みのユーザーではありません。');
         $passwordAfterChange = UserPassword::create('124abcABC!_afterChange');
-        $userProfile->changePassword($passwordAfterChange);
+        $userProfile->changePassword($passwordAfterChange, new DateTimeImmutable());
     }
 
     public function test_ログイン失敗回数を更新する()
