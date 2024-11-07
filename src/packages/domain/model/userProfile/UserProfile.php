@@ -164,6 +164,9 @@ class UserProfile
         return $this->verificationStatus->isVerified();
     }
 
+    /**
+     * ログイン可能かどうかを判定
+     */
     public function canLogin(DateTimeImmutable $currentDateTime): bool
     {
         return $this->LoginRestriction->isLoginAllowed($currentDateTime);
