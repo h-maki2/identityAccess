@@ -7,13 +7,17 @@ use packages\domain\model\client\IClientFetcher;
 use packages\domain\model\userProfile\IUserProfileRepository;
 use packages\domain\model\userProfile\SessionAuthentication;
 use packages\domain\model\userProfile\UserEmail;
+use packages\domain\model\userProfile\UserProfile;
 use packages\domain\model\userProfile\validation\LoginValidator;
+use packages\domain\service\authentication\LoginFailureManager;
+use UnexpectedValueException;
 
 class LoginApplicationService
 {
     private IUserProfileRepository $userProfileRepository;
     private SessionAuthentication $sessionAuthentication;
     private IClientFetcher $clientFetcher;
+    private LoginFailureManager $loginFailureManager;
 
     public function __construct(
         IUserProfileRepository $userProfileRepository,
@@ -24,46 +28,48 @@ class LoginApplicationService
         $this->userProfileRepository = $userProfileRepository;
         $this->sessionAuthentication = $sessionAuthentication;
         $this->clientFetcher = $clientFetcher;
+        $this->loginFailureManager = new LoginFailureManager($userProfileRepository);
     }
 
     public function login(
         string $email,
-        string $password,
+        string $inputedPassword,
         string $clientId
     ): LoginResult
     {
         $email = new UserEmail($email);
         $userProfile = $this->userProfileRepository->findByEmail($email);
 
-        if ($userProfile === null) {
-            return LoginResult::createWhenLoginFailed('ログインに失敗しました。');
+        $currentDateTime = new DateTimeImmutable();
+        if (!LoginValidator::validate($userProfile, $inputedPassword, $currentDateTime)) {
+            // ログインに失敗した場合
+            $this->loginFailureManager->handleFailedLoginAttempt($userProfile, $currentDateTime);
+            return LoginResult::createWhenLoginFailed($this->isAccountLocked($userProfile, $currentDateTime));
         }
 
-        $loginValidator = new LoginValidator();
-        if (!$loginValidator->validate($userProfile, $password, new DateTimeImmutable())) {
-            if (!$userProfile->isVerified()) {
-                return LoginResult::createWhenLoginFailed('ログインに失敗しました。');
-            }
-
-            if ($userProfile->isLocked(new DateTimeImmutable())) {
-                return LoginResult::createWhenLoginFailed('アカウントがロックされています。');
-            }
-
-            $userProfile->updateFailedLoginCount();
-            if ($userProfile->hasReachedAccountLockoutThreshold()) {
-                $userProfile->updateNextLoginAt();
-            }
-            $this->userProfileRepository->save($userProfile);
-            return LoginResult::createWhenLoginFailed('ログインに失敗しました。');
-        }
-
-        $this->sessionAuthentication->markAsLoggedIn($userProfile->Id());
+        $this->sessionAuthentication->markAsLoggedIn($userProfile->id());
 
         $client = $this->clientFetcher->fetchById($clientId);
         if ($client === null) {
-            // 例外を発生させる
+            throw new UnexpectedValueException("{$clientId}のクライアントが見つかりませんでした。");
         }
 
         return LoginResult::createWhenLoginSucceeded($client->authorizationUrl());
+    }
+
+    /**
+     * アカウントがロックされているかどうかを判定する
+     */
+    private function isAccountLocked(?UserProfile $userProfile, DateTimeImmutable $currentDateTime): bool
+    {
+        if ($userProfile === null) {
+            return false;
+        }
+
+        if ($userProfile->isLocked($currentDateTime)) {
+            return true;
+        }
+
+        return false;
     }
 }

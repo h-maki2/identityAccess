@@ -4,44 +4,39 @@ namespace packages\application\authentication;
 
 class LoginResult
 {
-    private string $errorMessage;
     private string $authorizationUrl;
     private bool $loginSucceeded;
+    private bool $accountLocked;
 
     private function __construct(
-        string $errorMessage,
         string $authorizationUrl,
-        bool $loginSucceeded
+        bool $loginSucceeded,
+        bool $accountLocked
     )
     {
-        $this->errorMessage = $errorMessage;
         $this->authorizationUrl = $authorizationUrl;
         $this->loginSucceeded = $loginSucceeded;
+        $this->accountLocked = $accountLocked;
     }
 
-    public static function createWhenLoginFailed(string $errorMessage): self
+    public static function createWhenLoginFailed(bool $accountLocked): self
     {
         return new self(
-            $errorMessage,
             '',
-            false
+            false,
+            $accountLocked
         );
     }
 
     public static function createWhenLoginSucceeded(string $authorizationUrl): self
     {
         return new self(
-            '',
             $authorizationUrl,
-            true
+            true,
+            false
         );
     }
-
-    public function errorMessage(): string
-    {
-        return $this->errorMessage;
-    }
-
+    
     public function authorizationUrl(): string
     {
         return $this->authorizationUrl;
@@ -50,5 +45,10 @@ class LoginResult
     public function loginSucceeded(): bool
     {
         return $this->loginSucceeded;
+    }
+
+    public function accountLocked(): bool
+    {
+        return $this->accountLocked;
     }
 }
