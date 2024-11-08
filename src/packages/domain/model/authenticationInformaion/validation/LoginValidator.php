@@ -8,19 +8,19 @@ use packages\domain\model\authenticationInformaion\AuthenticationInformaion;
 class LoginValidator
 {
     public static function validate(
-        ?AuthenticationInformaion $authenticationInformaion,
+        AuthenticationInformaion $authenticationInformaion,
         string $inputedPassword,
         DateTimeImmutable $currentDateTime
     ): bool
     {
-        if ($authenticationInformaion === null) {
+        if (!$authenticationInformaion->isVerified()) {
             return false;
         }
-
-        if (!$authenticationInformaion->isValid($currentDateTime)) {
+        
+        if ($authenticationInformaion->isLocked($currentDateTime)) {
             return false;
         }
-
+ 
         if (!$authenticationInformaion->password()->equals($inputedPassword)) {
             return false;
         }

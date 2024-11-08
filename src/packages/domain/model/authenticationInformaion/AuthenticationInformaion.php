@@ -113,10 +113,14 @@ class AuthenticationInformaion
     /**
      * ログイン失敗回数を更新する
      */
-    public function updateFailedLoginCount(): void
+    public function updateFailedLoginCount(DateTimeImmutable $currentDateTime): void
     {
         if (!$this->isVerified()) {
-            throw new DomainException('認証済みのユーザーではありません。');
+            return;
+        }
+
+        if ($this->isLocked($currentDateTime)) {
+            return;
         }
         $this->LoginRestriction = $this->LoginRestriction->updateFailedLoginCount();
     }
@@ -124,11 +128,20 @@ class AuthenticationInformaion
     /**
      * ログイン制限を有効にする
      */
-    public function enableLoginRestriction(): void
+    public function enableLoginRestriction(DateTimeImmutable $currentDateTime): void
     {
-        if (!$this->isVerified()) {
-            throw new DomainException('認証済みのユーザーではありません。');
+        if ($this->isVerified()) {
+            return;
         }
+
+        if ($this->isLocked($currentDateTime)) {
+            return;
+        }
+
+        if (!$this->canApplyLoginRestriction()) {
+            return;
+        }
+
         $this->LoginRestriction = $this->LoginRestriction->enable();
     }
 
@@ -138,7 +151,7 @@ class AuthenticationInformaion
     public function disableLoginRestriction(DateTimeImmutable $currentDateTime): void
     {
         if (!$this->isVerified()) {
-            throw new DomainException('認証済みのユーザーではありません。');
+            return;
         }
 
         if ($this->isLocked($currentDateTime)) {
@@ -146,14 +159,6 @@ class AuthenticationInformaion
         }
 
         $this->LoginRestriction = $this->LoginRestriction->disable($currentDateTime);
-    }
-
-    /**
-     * ログイン制限を有効可能かどうかを判定
-     */
-    public function canApplyLoginRestriction(): bool
-    {
-        return $this->LoginRestriction->canApply();
     }
 
     /**
@@ -167,8 +172,16 @@ class AuthenticationInformaion
     /**
      * 認証済みかどうかを判定
      */
-    private function isVerified(): bool
+    public function isVerified(): bool
     {
         return $this->verificationStatus->isVerified();
+    }
+
+    /**
+     * ログイン制限が有効可能かどうかを判定
+     */
+    private function canApplyLoginRestriction(): bool
+    {
+        return $this->LoginRestriction->canApply();
     }
 }

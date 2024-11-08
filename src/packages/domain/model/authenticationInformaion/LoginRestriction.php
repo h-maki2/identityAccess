@@ -104,6 +104,7 @@ class LoginRestriction
 
     /**
      * ログイン制限が適用可能かどうかを判定
+     * 既にログイン制限が有効状態の場合はfalse
      */
     public function canApply(): bool
     {
