@@ -1,6 +1,6 @@
 <?php
 
-use packages\domain\model\userProfile\FailedLoginCount;
+use packages\domain\model\authenticationInformaion\FailedLoginCount;
 use PHPUnit\Framework\TestCase;
 
 class FailedLoginCountTest extends TestCase

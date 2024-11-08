@@ -1,23 +1,23 @@
 <?php
 
-namespace packages\test\helpers\userProfile;
+namespace packages\test\helpers\AuthenticationInformaion;
 
-use packages\domain\model\userProfile\LoginRestriction;
-use packages\domain\model\userProfile\IUserProfileRepository;
-use packages\domain\model\userProfile\UserEmail;
-use packages\domain\model\userProfile\UserId;
-use packages\domain\model\userProfile\UserName;
-use packages\domain\model\userProfile\UserPassword;
-use packages\domain\model\userProfile\UserProfile;
-use packages\domain\model\userProfile\VerificationStatus;
+use packages\domain\model\authenticationInformaion\LoginRestriction;
+use packages\domain\model\authenticationInformaion\IAuthenticationInformaionRepository;
+use packages\domain\model\authenticationInformaion\UserEmail;
+use packages\domain\model\authenticationInformaion\UserId;
+use packages\domain\model\authenticationInformaion\UserName;
+use packages\domain\model\authenticationInformaion\UserPassword;
+use packages\domain\model\authenticationInformaion\AuthenticationInformaion;
+use packages\domain\model\authenticationInformaion\VerificationStatus;
 
-class UserProfileTestDataFactory
+class AuthenticationInformaionTestDataFactory
 {
-    private IUserProfileRepository $userProfileRepository;
+    private IAuthenticationInformaionRepository $authenticationInformaionRepository;
 
-    public function __construct(IUserProfileRepository $userProfileRepository)
+    public function __construct(IAuthenticationInformaionRepository $authenticationInformaionRepository)
     {
-        $this->userProfileRepository = $userProfileRepository;
+        $this->AuthenticationInformaionRepository = $authenticationInformaionRepository;
     }
 
     public function create(
@@ -27,9 +27,9 @@ class UserProfileTestDataFactory
         ?VerificationStatus $verificationStatus = null,
         ?UserId $id = null,
         ?LoginRestriction $LoginRestriction = null
-    ): UserProfile
+    ): AuthenticationInformaion
     {
-        $userProfile = TestUserProfileFactory::create(
+        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
             $email,
             $name,
             $password,
@@ -38,8 +38,8 @@ class UserProfileTestDataFactory
             $LoginRestriction
         );
 
-        $this->userProfileRepository->save($userProfile);
+        $this->AuthenticationInformaionRepository->save($authenticationInformaion);
 
-        return $userProfile;
+        return $authenticationInformaion;
     }
 }

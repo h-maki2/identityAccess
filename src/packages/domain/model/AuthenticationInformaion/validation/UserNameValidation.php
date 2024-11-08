@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\domain\model\userProfile\validation;
+namespace packages\domain\model\authenticationInformaion\validation;
 
 class UserNameValidation
 {

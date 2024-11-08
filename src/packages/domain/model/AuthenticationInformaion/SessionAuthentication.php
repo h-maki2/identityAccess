@@ -1,8 +1,8 @@
 <?php
 
-namespace packages\domain\model\userProfile;
+namespace packages\domain\model\authenticationInformaion;
 
-use packages\domain\model\userProfile\UserId;
+use packages\domain\model\authenticationInformaion\UserId;
 
 abstract class SessionAuthentication
 {

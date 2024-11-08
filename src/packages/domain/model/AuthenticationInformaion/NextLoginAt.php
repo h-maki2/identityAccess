@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\domain\model\userProfile;
+namespace packages\domain\model\authenticationInformaion;
 
 use DateInterval;
 use DateTimeImmutable;

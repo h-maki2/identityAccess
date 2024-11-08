@@ -1,27 +1,27 @@
 <?php
 
-use packages\adapter\persistence\inMemory\InMemoryUserProfileRepository;
-use packages\domain\model\userProfile\LoginRestriction;
-use packages\domain\model\userProfile\FailedLoginCount;
-use packages\domain\model\userProfile\IUserProfileRepository;
-use packages\domain\model\userProfile\NextLoginAt;
-use packages\domain\model\userProfile\UserEmail;
-use packages\domain\model\userProfile\UserName;
-use packages\domain\model\userProfile\UserPassword;
-use packages\domain\model\userProfile\UserProfile;
-use packages\domain\model\userProfile\VerificationStatus;
-use packages\domain\service\userProfile\UserProfileService;
-use packages\test\helpers\userProfile\TestUserProfileFactory;
-use packages\test\helpers\userProfile\UserProfileTestDataFactory;
+use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformaionRepository;
+use packages\domain\model\authenticationInformaion\LoginRestriction;
+use packages\domain\model\authenticationInformaion\FailedLoginCount;
+use packages\domain\model\authenticationInformaion\IAuthenticationInformaionRepository;
+use packages\domain\model\authenticationInformaion\NextLoginAt;
+use packages\domain\model\authenticationInformaion\UserEmail;
+use packages\domain\model\authenticationInformaion\UserName;
+use packages\domain\model\authenticationInformaion\UserPassword;
+use packages\domain\model\authenticationInformaion\AuthenticationInformaion;
+use packages\domain\model\authenticationInformaion\VerificationStatus;
+use packages\domain\service\AuthenticationInformaion\AuthenticationInformaionService;
+use packages\test\helpers\AuthenticationInformaion\TestAuthenticationInformaionFactory;
+use packages\test\helpers\AuthenticationInformaion\AuthenticationInformaionTestDataFactory;
 use PHPUnit\Framework\TestCase;
 
-class UserProfileTest extends TestCase
+class AuthenticationInformaionTest extends TestCase
 {
-    private IUserProfileRepository $userProfileRepository;
+    private IAuthenticationInformaionRepository $authenticationInformaionRepository;
 
     public function setUp(): void
     {
-        $this->userProfileRepository = new InMemoryUserProfileRepository();
+        $this->AuthenticationInformaionRepository = new InMemoryAuthenticationInformaionRepository();
     }
 
     public function test_重複したメールアドレスを持つユーザーが存在しない場合、ユーザープロフィールを初期化できる()
@@ -29,30 +29,30 @@ class UserProfileTest extends TestCase
         // given
         // user@example.comのアドレスを持つユーザーをあらかじめ作成しておく
         $alreadyExistsUserEmail = new UserEmail('user@example.com');
-        $userProfileTestDataFactory = new UserProfileTestDataFactory($this->userProfileRepository);
-        $userProfileTestDataFactory->create($alreadyExistsUserEmail);
+        $authenticationInformaionTestDataFactory = new AuthenticationInformaionTestDataFactory($this->AuthenticationInformaionRepository);
+        $authenticationInformaionTestDataFactory->create($alreadyExistsUserEmail);
 
         $email = new UserEmail('otheruser@example.com');
-        $userId = $this->userProfileRepository->nextUserId();
+        $userId = $this->AuthenticationInformaionRepository->nextUserId();
         $password = UserPassword::create('1234abcABC!');
-        $userProfileService = new UserProfileService($this->userProfileRepository);
+        $authenticationInformaionService = new AuthenticationInformaionService($this->AuthenticationInformaionRepository);
 
         // when
-        $userProfile = UserProfile::create(
+        $authenticationInformaion = AuthenticationInformaion::create(
             $userId,
             $email,
             $password,
-            $userProfileService
+            $authenticationInformaionService
         );
 
         // then
-        $this->assertEquals('otheruser', $userProfile->name()->value);
-        $this->assertEquals(VerificationStatus::Unverified, $userProfile->verificationStatus());
+        $this->assertEquals('otheruser', $authenticationInformaion->name()->value);
+        $this->assertEquals(VerificationStatus::Unverified, $authenticationInformaion->verificationStatus());
 
         // 以下の属性はそのまま設定される
-        $this->assertEquals($email, $userProfile->email());
-        $this->assertEquals($userId, $userProfile->id());
-        $this->assertEquals($password, $userProfile->password());
+        $this->assertEquals($email, $authenticationInformaion->email());
+        $this->assertEquals($userId, $authenticationInformaion->id());
+        $this->assertEquals($password, $authenticationInformaion->password());
     }
 
     public function test_重複したメールアドレスを持つユーザーが既に存在する場合、ユーザープロフィールを初期化できない()
@@ -60,23 +60,23 @@ class UserProfileTest extends TestCase
         // given
         // user@example.comのアドレスを持つユーザーをあらかじめ作成しておく
         $alreadyExistsUserEmail = new UserEmail('user@example.com');
-        $userProfileTestDataFactory = new UserProfileTestDataFactory($this->userProfileRepository);
-        $userProfileTestDataFactory->create($alreadyExistsUserEmail);
+        $authenticationInformaionTestDataFactory = new AuthenticationInformaionTestDataFactory($this->AuthenticationInformaionRepository);
+        $authenticationInformaionTestDataFactory->create($alreadyExistsUserEmail);
 
         // メールアドレスが重複している
         $email = new UserEmail('user@example.com');
-        $userId = $this->userProfileRepository->nextUserId();
+        $userId = $this->AuthenticationInformaionRepository->nextUserId();
         $password = UserPassword::create('1234abcABC!');
-        $userProfileService = new UserProfileService($this->userProfileRepository);
+        $authenticationInformaionService = new AuthenticationInformaionService($this->AuthenticationInformaionRepository);
 
         // when・then
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('すでに存在するメールアドレスです。');
-        UserProfile::create(
+        AuthenticationInformaion::create(
             $userId,
             $email,
             $password,
-            $userProfileService
+            $authenticationInformaionService
         );
     }
 
@@ -84,14 +84,14 @@ class UserProfileTest extends TestCase
     {
         // given
         $email = new UserEmail('otheruser@example.com');
-        $userId = $this->userProfileRepository->nextUserId();
+        $userId = $this->AuthenticationInformaionRepository->nextUserId();
         $password = UserPassword::create('1234abcABC!');
         $verificationStatus = VerificationStatus::Verified;
         $userName = UserName::create('test user');
         $LoginRestriction = LoginRestriction::initialization();
 
         // when
-        $userProfile = UserProfile::reconstruct(
+        $authenticationInformaion = AuthenticationInformaion::reconstruct(
             $userId,
             $email,
             $userName,
@@ -101,12 +101,12 @@ class UserProfileTest extends TestCase
         );
 
         // then
-        $this->assertEquals($email, $userProfile->email());
-        $this->assertEquals($userId, $userProfile->id());
-        $this->assertEquals($password, $userProfile->password());
-        $this->assertEquals($userName, $userProfile->name());
-        $this->assertEquals($verificationStatus, $userProfile->verificationStatus());
-        $this->assertEquals($LoginRestriction, $userProfile->LoginRestriction());
+        $this->assertEquals($email, $authenticationInformaion->email());
+        $this->assertEquals($userId, $authenticationInformaion->id());
+        $this->assertEquals($password, $authenticationInformaion->password());
+        $this->assertEquals($userName, $authenticationInformaion->name());
+        $this->assertEquals($verificationStatus, $authenticationInformaion->verificationStatus());
+        $this->assertEquals($LoginRestriction, $authenticationInformaion->LoginRestriction());
     }
 
     public function 認証ステータスを認証済みに更新できる()
@@ -114,7 +114,7 @@ class UserProfileTest extends TestCase
         // given
         // 認証済みステータスが未認証のユーザープロフィールを作成
         $verificationStatus = VerificationStatus::Unverified;
-        $userProfile = TestUserProfileFactory::create(
+        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
             null,
             null,
             null,
@@ -122,10 +122,10 @@ class UserProfileTest extends TestCase
         );
 
         // when
-        $userProfile->updateVerified();
+        $authenticationInformaion->updateVerified();
 
         // then
-        $this->assertEquals(VerificationStatus::Verified, $userProfile->verificationStatus());
+        $this->assertEquals(VerificationStatus::Verified, $authenticationInformaion->verificationStatus());
     }
 
     public function test_認証ステータスが認証済みの場合、ユーザー名の変更が行える()
@@ -134,7 +134,7 @@ class UserProfileTest extends TestCase
         // 認証済みステータスが認証済みのユーザープロフィールを作成
         $verificationStatus = VerificationStatus::Verified;
         $userName = UserName::create('test user');
-        $userProfile = TestUserProfileFactory::create(
+        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
             null,
             $userName,
             null,
@@ -143,10 +143,10 @@ class UserProfileTest extends TestCase
 
         // when
         $userNameAfterChange = UserName::create('test user after change');
-        $userProfile->changeName($userNameAfterChange, new DateTimeImmutable());
+        $authenticationInformaion->changeName($userNameAfterChange, new DateTimeImmutable());
 
         // then
-        $this->assertEquals($userNameAfterChange, $userProfile->name());
+        $this->assertEquals($userNameAfterChange, $authenticationInformaion->name());
     }
 
     public function test_認証ステータスが未認証の場合、ユーザー名の変更が行えない()
@@ -155,7 +155,7 @@ class UserProfileTest extends TestCase
         // 認証済みステータスが未認証のユーザープロフィールを作成
         $verificationStatus = VerificationStatus::Unverified;
         $userName = UserName::create('test user');
-        $userProfile = TestUserProfileFactory::create(
+        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
             null,
             $userName,
             null,
@@ -166,7 +166,7 @@ class UserProfileTest extends TestCase
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('認証済みのユーザーではありません。');
         $userNameAfterChange = UserName::create('test user after change');
-        $userProfile->changeName($userNameAfterChange, new DateTimeImmutable());
+        $authenticationInformaion->changeName($userNameAfterChange, new DateTimeImmutable());
     }
 
     public function test_認証ステータスが認証済みの場合、パスワードの変更が行える()
@@ -175,7 +175,7 @@ class UserProfileTest extends TestCase
         // 認証済みステータスが認証済みのユーザープロフィールを作成
         $verificationStatus = VerificationStatus::Verified;
         $password = UserPassword::create('124abcABC!');
-        $userProfile = TestUserProfileFactory::create(
+        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
             null,
             null,
             $password,
@@ -184,10 +184,10 @@ class UserProfileTest extends TestCase
 
         // when
         $passwordAfterChange = UserPassword::create('124abcABC!_afterChange');
-        $userProfile->changePassword($passwordAfterChange, new DateTimeImmutable());
+        $authenticationInformaion->changePassword($passwordAfterChange, new DateTimeImmutable());
 
         // then
-        $this->assertEquals($passwordAfterChange, $userProfile->password());
+        $this->assertEquals($passwordAfterChange, $authenticationInformaion->password());
     }
 
     public function test_認証ステータスが未認証の場合、パスワードの変更が行えない()
@@ -195,7 +195,7 @@ class UserProfileTest extends TestCase
         // given
         $verificationStatus = VerificationStatus::Unverified;
         $password = UserPassword::create('124abcABC!');
-        $userProfile = TestUserProfileFactory::create(
+        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
             null,
             null,
             $password,
@@ -206,7 +206,7 @@ class UserProfileTest extends TestCase
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('認証済みのユーザーではありません。');
         $passwordAfterChange = UserPassword::create('124abcABC!_afterChange');
-        $userProfile->changePassword($passwordAfterChange, new DateTimeImmutable());
+        $authenticationInformaion->changePassword($passwordAfterChange, new DateTimeImmutable());
     }
 
     public function test_ログイン失敗回数を更新する()
@@ -218,7 +218,7 @@ class UserProfileTest extends TestCase
             FailedLoginCount::reconstruct(0),
             null
         );
-        $userProfile = TestUserProfileFactory::create(
+        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
             null,
             null,
             null,
@@ -228,10 +228,10 @@ class UserProfileTest extends TestCase
         );
 
         // when
-        $userProfile->updateFailedLoginCount();
+        $authenticationInformaion->updateFailedLoginCount();
 
         // then
-        $this->assertEquals(1, $userProfile->LoginRestriction()->failedLoginCount());
+        $this->assertEquals(1, $authenticationInformaion->LoginRestriction()->failedLoginCount());
     }
 
     public function test_再ログイン可能な日時を更新する()
@@ -243,7 +243,7 @@ class UserProfileTest extends TestCase
             FailedLoginCount::reconstruct(10),
             null
         );
-        $userProfile = TestUserProfileFactory::create(
+        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
             null,
             null,
             null,
@@ -254,11 +254,11 @@ class UserProfileTest extends TestCase
         $expectedNextLoginAt = NextLoginAt::create();
 
         // when
-        $userProfile->updateNextLoginAt();
+        $authenticationInformaion->updateNextLoginAt();
 
         // then
-        $this->assertEquals(10, $userProfile->LoginRestriction()->failedLoginCount());
-        $this->assertEquals($expectedNextLoginAt->formattedValue(), $userProfile->LoginRestriction()->nextLoginAt());
+        $this->assertEquals(10, $authenticationInformaion->LoginRestriction()->failedLoginCount());
+        $this->assertEquals($expectedNextLoginAt->formattedValue(), $authenticationInformaion->LoginRestriction()->nextLoginAt());
     }
 
     public function test_ログイン失敗回数がアカウントロックのしきい値に達している場合を判定できる()
@@ -269,7 +269,7 @@ class UserProfileTest extends TestCase
             FailedLoginCount::reconstruct(10),
             null
         );
-        $userProfile = TestUserProfileFactory::create(
+        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
             null,
             null,
             null,
@@ -279,7 +279,7 @@ class UserProfileTest extends TestCase
         );
 
         // when
-        $result = $userProfile->hasReachedAccountLockoutThreshold();
+        $result = $authenticationInformaion->hasReachedAccountLockoutThreshold();
 
         // then
         $this->assertTrue($result);
@@ -293,7 +293,7 @@ class UserProfileTest extends TestCase
             FailedLoginCount::reconstruct(9),
             null
         );
-        $userProfile = TestUserProfileFactory::create(
+        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
             null,
             null,
             null,
@@ -303,7 +303,7 @@ class UserProfileTest extends TestCase
         );
 
         // when
-        $result = $userProfile->hasReachedAccountLockoutThreshold();
+        $result = $authenticationInformaion->hasReachedAccountLockoutThreshold();
 
         // then
         $this->assertFalse($result);

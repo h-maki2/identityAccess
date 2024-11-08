@@ -70,7 +70,7 @@ return [
         // ],
         'user_profiles' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\UserProfile::class),
+            'model' => env('AUTH_MODEL', App\Models\AuthenticationInformaion::class),
         ],
 
         // 'users' => [

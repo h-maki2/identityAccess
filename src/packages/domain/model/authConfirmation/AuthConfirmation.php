@@ -3,7 +3,7 @@
 namespace packages\domain\model\authConfirmation;
 
 use DateTime;
-use packages\domain\model\userProfile\UserId;
+use packages\domain\model\authenticationInformaion\UserId;
 use packages\domain\service\common\identifier\FetchElapsedTimeFromIdentifier;
 
 class AuthConfirmation

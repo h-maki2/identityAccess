@@ -10,7 +10,7 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 
-class UserProfile extends Authenticatable
+class AuthenticationInformaion extends Authenticatable
 {
     use HasFactory, HasApiTokens, Notifiable;
 

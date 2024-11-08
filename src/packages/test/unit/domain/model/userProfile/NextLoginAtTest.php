@@ -3,7 +3,7 @@
 use PHPUnit\Framework\TestCase;
 
 use DateTimeImmutable;
-use packages\domain\model\userProfile\NextLoginAt;
+use packages\domain\model\authenticationInformaion\NextLoginAt;
 
 class NextLoginAtTest extends TestCase
 {

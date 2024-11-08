@@ -1,9 +1,9 @@
 <?php
 
-namespace packages\domain\model\userProfile;
+namespace packages\domain\model\authenticationInformaion;
 
 use InvalidArgumentException;
-use packages\domain\model\userProfile\validation\UserNameValidation;
+use packages\domain\model\authenticationInformaion\validation\UserNameValidation;
 
 class UserName
 {

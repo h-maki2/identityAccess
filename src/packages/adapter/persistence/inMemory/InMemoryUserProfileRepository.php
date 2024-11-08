@@ -4,55 +4,55 @@ namespace packages\adapter\persistence\inMemory;
 
 use DateTimeImmutable;
 use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
-use packages\domain\model\userProfile\LoginRestriction;
-use packages\domain\model\userProfile\FailedLoginCount;
-use packages\domain\model\userProfile\IUserProfileRepository;
-use packages\domain\model\userProfile\NextLoginAt;
-use packages\domain\model\userProfile\UserEmail;
-use packages\domain\model\userProfile\UserId;
-use packages\domain\model\userProfile\UserName;
-use packages\domain\model\userProfile\UserPassword;
-use packages\domain\model\userProfile\UserProfile;
-use packages\domain\model\userProfile\VerificationStatus;
+use packages\domain\model\authenticationInformaion\LoginRestriction;
+use packages\domain\model\authenticationInformaion\FailedLoginCount;
+use packages\domain\model\authenticationInformaion\IAuthenticationInformaionRepository;
+use packages\domain\model\authenticationInformaion\NextLoginAt;
+use packages\domain\model\authenticationInformaion\UserEmail;
+use packages\domain\model\authenticationInformaion\UserId;
+use packages\domain\model\authenticationInformaion\UserName;
+use packages\domain\model\authenticationInformaion\UserPassword;
+use packages\domain\model\authenticationInformaion\AuthenticationInformaion;
+use packages\domain\model\authenticationInformaion\VerificationStatus;
 use Ramsey\Uuid\Uuid;
 
-class InMemoryUserProfileRepository implements IUserProfileRepository
+class InMemoryAuthenticationInformaionRepository implements IAuthenticationInformaionRepository
 {
-    private array $userProfileList;
+    private array $authenticationInformaionList;
 
-    public function findByEmail(UserEmail $email): ?UserProfile
+    public function findByEmail(UserEmail $email): ?AuthenticationInformaion
     {
-        foreach ($this->userProfileList as $userProfileModel) {
-            if ($userProfileModel->email === $email->value) {
-                return $this->toUserProfile($userProfileModel);
+        foreach ($this->AuthenticationInformaionList as $authenticationInformaionModel) {
+            if ($authenticationInformaionModel->email === $email->value) {
+                return $this->toAuthenticationInformaion($authenticationInformaionModel);
             }
         }
 
         return null;
     }
 
-    public function findById(UserId $id): ?UserProfile
+    public function findById(UserId $id): ?AuthenticationInformaion
     {
-        $userProfileModel = $this->userProfileList[$id->value] ?? null;
-        if ($userProfileModel === null) {
+        $authenticationInformaionModel = $this->AuthenticationInformaionList[$id->value] ?? null;
+        if ($authenticationInformaionModel === null) {
             return null;
         }
 
-        return $this->toUserProfile($userProfileModel);
+        return $this->toAuthenticationInformaion($authenticationInformaionModel);
     }
 
-    public function save(UserProfile $userProfile): void
+    public function save(AuthenticationInformaion $authenticationInformaion): void
     {
-        $this->userProfileList[$userProfile->id()->value] = $this->toUserProfileModel($userProfile);
+        $this->AuthenticationInformaionList[$authenticationInformaion->id()->value] = $this->toAuthenticationInformaionModel($authenticationInformaion);
     }
 
     public function delete(UserId $id): void
     {
-        if (!isset($this->userProfileList[$id()->value])) {
+        if (!isset($this->AuthenticationInformaionList[$id()->value])) {
             return;
         }
 
-        unset($this->userProfileList[$id()->value]);
+        unset($this->AuthenticationInformaionList[$id()->value]);
     }
 
     public function nextUserId(): UserId
@@ -60,31 +60,31 @@ class InMemoryUserProfileRepository implements IUserProfileRepository
         return new UserId(new IdentifierFromUUIDver7(), Uuid::uuid7());
     }
 
-    private function toUserProfile(object $userProfileModel): UserProfile
+    private function toAuthenticationInformaion(object $authenticationInformaionModel): AuthenticationInformaion
     {
-        return UserProfile::reconstruct(
-            new UserId(new IdentifierFromUUIDver7(), $userProfileModel->user_id),
-            new UserEmail($userProfileModel->email),
-            UserName::create($userProfileModel->username),
-            UserPassword::reconstruct($userProfileModel->password),
-            VerificationStatus::from($userProfileModel->verification_status),
+        return AuthenticationInformaion::reconstruct(
+            new UserId(new IdentifierFromUUIDver7(), $authenticationInformaionModel->user_id),
+            new UserEmail($authenticationInformaionModel->email),
+            UserName::create($authenticationInformaionModel->username),
+            UserPassword::reconstruct($authenticationInformaionModel->password),
+            VerificationStatus::from($authenticationInformaionModel->verification_status),
             LoginRestriction::reconstruct(
-                FailedLoginCount::reconstruct($userProfileModel->failed_login_count),
-                $userProfileModel->next_login_at !== null ? NextLoginAt::reconstruct(new DateTimeImmutable($userProfileModel->next_login_at)) : null
+                FailedLoginCount::reconstruct($authenticationInformaionModel->failed_login_count),
+                $authenticationInformaionModel->next_login_at !== null ? NextLoginAt::reconstruct(new DateTimeImmutable($authenticationInformaionModel->next_login_at)) : null
             )
         );
     }
 
-    private function toUserProfileModel(UserProfile $userProfile): object
+    private function toAuthenticationInformaionModel(AuthenticationInformaion $authenticationInformaion): object
     {
         return (object) [
-            'user_id' => $userProfile->id()->value,
-            'username' => $userProfile->name()->value,
-            'email' => $userProfile->email()->value,
-            'password' => $userProfile->password()->hashedValue,
-            'verification_status' => $userProfile->verificationStatus()->value,
-            'failed_login_count' => $userProfile->LoginRestriction()->failedLoginCount(),
-            'next_login_at' => $userProfile->LoginRestriction()->nextLoginAt()
+            'user_id' => $authenticationInformaion->id()->value,
+            'username' => $authenticationInformaion->name()->value,
+            'email' => $authenticationInformaion->email()->value,
+            'password' => $authenticationInformaion->password()->hashedValue,
+            'verification_status' => $authenticationInformaion->verificationStatus()->value,
+            'failed_login_count' => $authenticationInformaion->LoginRestriction()->failedLoginCount(),
+            'next_login_at' => $authenticationInformaion->LoginRestriction()->nextLoginAt()
         ];
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
-use packages\domain\model\userProfile\LoginRestriction;
-use packages\domain\model\userProfile\FailedLoginCount;
-use packages\domain\model\userProfile\NextLoginAt;
+use packages\domain\model\authenticationInformaion\LoginRestriction;
+use packages\domain\model\authenticationInformaion\FailedLoginCount;
+use packages\domain\model\authenticationInformaion\NextLoginAt;
 use PHPUnit\Framework\TestCase;
 
 class LoginRestrictionTest extends TestCase

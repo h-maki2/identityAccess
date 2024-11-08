@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Models\UserProfile;
+use App\Models\AuthenticationInformaion;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         // ->update(['redirect' => 'http://identity.todoapp.local/test/token']);
 
         // サンプルデータの作成
-        UserProfile::create([
+        AuthenticationInformaion::create([
             'user_id' => (string) '11112',
             'username' => 'example_user',
             'password' => bcrypt('password123'), // パスワードをハッシュ化

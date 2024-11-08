@@ -1,17 +1,17 @@
 <?php
 
-namespace packages\domain\service\userProfile;
+namespace packages\domain\service\AuthenticationInformaion;
 
-use packages\domain\model\userProfile\IUserProfileRepository;
-use packages\domain\model\userProfile\UserEmail;
+use packages\domain\model\authenticationInformaion\IAuthenticationInformaionRepository;
+use packages\domain\model\authenticationInformaion\UserEmail;
 
-class UserProfileService
+class AuthenticationInformaionService
 {
-    private IUserProfileRepository $userProfileRepository;
+    private IAuthenticationInformaionRepository $authenticationInformaionRepository;
 
-    public function __construct(IUserProfileRepository $userProfileRepository)
+    public function __construct(IAuthenticationInformaionRepository $authenticationInformaionRepository)
     {
-        $this->userProfileRepository = $userProfileRepository;
+        $this->AuthenticationInformaionRepository = $authenticationInformaionRepository;
     }
 
     /**
@@ -19,8 +19,8 @@ class UserProfileService
      */
     public function alreadyExistsEmail(UserEmail $email): bool
     {
-        $userProfile = $this->userProfileRepository->findByEmail($email);
+        $authenticationInformaion = $this->AuthenticationInformaionRepository->findByEmail($email);
 
-        return $userProfile !== null;
+        return $authenticationInformaion !== null;
     }
 }

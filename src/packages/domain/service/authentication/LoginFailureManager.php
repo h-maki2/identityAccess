@@ -3,35 +3,35 @@
 namespace packages\domain\service\authentication;
 
 use DateTimeImmutable;
-use packages\domain\model\userProfile\IUserProfileRepository;
-use packages\domain\model\userProfile\UserProfile;
+use packages\domain\model\authenticationInformaion\IAuthenticationInformaionRepository;
+use packages\domain\model\authenticationInformaion\AuthenticationInformaion;
 
 class LoginFailureManager
 {
-    private IUserProfileRepository $userProfileRepository;
+    private IAuthenticationInformaionRepository $authenticationInformaionRepository;
 
-    public function __construct(IUserProfileRepository $userProfileRepository)
+    public function __construct(IAuthenticationInformaionRepository $authenticationInformaionRepository)
     {
-        $this->userProfileRepository = $userProfileRepository;
+        $this->AuthenticationInformaionRepository = $authenticationInformaionRepository;
     }
 
     /**
      * ログイン失敗時の処理
      */
-    public function handleFailedLoginAttempt(?UserProfile $userProfile, DateTimeImmutable $currentDateTime): void
+    public function handleFailedLoginAttempt(?AuthenticationInformaion $authenticationInformaion, DateTimeImmutable $currentDateTime): void
     {
-        if ($userProfile === null) {
+        if ($authenticationInformaion === null) {
             return;
         }
 
-        if (!$userProfile->isValid($currentDateTime)) {
+        if (!$authenticationInformaion->isValid($currentDateTime)) {
             return;
         }
 
-        $userProfile->updateFailedLoginCount();
-        if ($userProfile->hasReachedAccountLockoutThreshold()) {
-            $userProfile->updateNextLoginAt();
+        $authenticationInformaion->updateFailedLoginCount();
+        if ($authenticationInformaion->hasReachedAccountLockoutThreshold()) {
+            $authenticationInformaion->updateNextLoginAt();
         }
-        $this->userProfileRepository->save($userProfile);
+        $this->AuthenticationInformaionRepository->save($authenticationInformaion);
     }
 }

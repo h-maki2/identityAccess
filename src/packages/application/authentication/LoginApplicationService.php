@@ -4,31 +4,31 @@ namespace packages\application\authentication;
 
 use DateTimeImmutable;
 use packages\domain\model\client\IClientFetcher;
-use packages\domain\model\userProfile\IUserProfileRepository;
-use packages\domain\model\userProfile\SessionAuthentication;
-use packages\domain\model\userProfile\UserEmail;
-use packages\domain\model\userProfile\UserProfile;
-use packages\domain\model\userProfile\validation\LoginValidator;
+use packages\domain\model\authenticationInformaion\IAuthenticationInformaionRepository;
+use packages\domain\model\authenticationInformaion\SessionAuthentication;
+use packages\domain\model\authenticationInformaion\UserEmail;
+use packages\domain\model\authenticationInformaion\AuthenticationInformaion;
+use packages\domain\model\authenticationInformaion\validation\LoginValidator;
 use packages\domain\service\authentication\LoginFailureManager;
 use UnexpectedValueException;
 
 class LoginApplicationService
 {
-    private IUserProfileRepository $userProfileRepository;
+    private IAuthenticationInformaionRepository $authenticationInformaionRepository;
     private SessionAuthentication $sessionAuthentication;
     private IClientFetcher $clientFetcher;
     private LoginFailureManager $loginFailureManager;
 
     public function __construct(
-        IUserProfileRepository $userProfileRepository,
+        IAuthenticationInformaionRepository $authenticationInformaionRepository,
         SessionAuthentication $sessionAuthentication,
         IClientFetcher $clientFetcher
     )
     {
-        $this->userProfileRepository = $userProfileRepository;
+        $this->AuthenticationInformaionRepository = $authenticationInformaionRepository;
         $this->sessionAuthentication = $sessionAuthentication;
         $this->clientFetcher = $clientFetcher;
-        $this->loginFailureManager = new LoginFailureManager($userProfileRepository);
+        $this->loginFailureManager = new LoginFailureManager($authenticationInformaionRepository);
     }
 
     public function login(
@@ -38,16 +38,16 @@ class LoginApplicationService
     ): LoginResult
     {
         $email = new UserEmail($email);
-        $userProfile = $this->userProfileRepository->findByEmail($email);
+        $authenticationInformaion = $this->AuthenticationInformaionRepository->findByEmail($email);
 
         $currentDateTime = new DateTimeImmutable();
-        if (!LoginValidator::validate($userProfile, $inputedPassword, $currentDateTime)) {
+        if (!LoginValidator::validate($authenticationInformaion, $inputedPassword, $currentDateTime)) {
             // ログインに失敗した場合
-            $this->loginFailureManager->handleFailedLoginAttempt($userProfile, $currentDateTime);
-            return LoginResult::createWhenLoginFailed($this->isAccountLocked($userProfile, $currentDateTime));
+            $this->loginFailureManager->handleFailedLoginAttempt($authenticationInformaion, $currentDateTime);
+            return LoginResult::createWhenLoginFailed($this->isAccountLocked($authenticationInformaion, $currentDateTime));
         }
 
-        $this->sessionAuthentication->markAsLoggedIn($userProfile->id());
+        $this->sessionAuthentication->markAsLoggedIn($authenticationInformaion->id());
 
         $client = $this->clientFetcher->fetchById($clientId);
         if ($client === null) {
@@ -60,13 +60,13 @@ class LoginApplicationService
     /**
      * アカウントがロックされているかどうかを判定する
      */
-    private function isAccountLocked(?UserProfile $userProfile, DateTimeImmutable $currentDateTime): bool
+    private function isAccountLocked(?AuthenticationInformaion $authenticationInformaion, DateTimeImmutable $currentDateTime): bool
     {
-        if ($userProfile === null) {
+        if ($authenticationInformaion === null) {
             return false;
         }
 
-        if ($userProfile->isLocked($currentDateTime)) {
+        if ($authenticationInformaion->isLocked($currentDateTime)) {
             return true;
         }
 
