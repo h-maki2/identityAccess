@@ -5,12 +5,11 @@ namespace packages\domain\model\authenticationInformaion;
 use DateTimeImmutable;
 use DomainException;
 use packages\domain\service\AuthenticationInformaion\AuthenticationInformaionService;
-// AuthenticationInformaion
+
 class AuthenticationInformaion
 {
     private UserId $userId;
     private UserEmail $userEmail;
-    private UserName $userName;
     private UserPassword $userPassword;
     private VerificationStatus $verificationStatus;
     private LoginRestriction $LoginRestriction;
@@ -18,7 +17,6 @@ class AuthenticationInformaion
     private function __construct(
         UserId $userId,
         UserEmail $userEmail,
-        UserName $userName,
         UserPassword $userPassword,
         VerificationStatus $verificationStatus,
         LoginRestriction $LoginRestriction
@@ -26,7 +24,6 @@ class AuthenticationInformaion
     {
         $this->userId = $userId;
         $this->userEmail = $userEmail;
-        $this->userName = $userName;
         $this->userPassword = $userPassword;
         $this->verificationStatus = $verificationStatus;
         $this->LoginRestriction = $LoginRestriction;
@@ -47,7 +44,6 @@ class AuthenticationInformaion
         return new self(
             $userId,
             $userEmail,
-            UserName::initialization($userEmail),
             $userPassword,
             VerificationStatus::Unverified,
             LoginRestriction::initialization()
@@ -66,7 +62,6 @@ class AuthenticationInformaion
         return new self(
             $userId,
             $userEmail,
-            $userName,
             $userPassword,
             $verificationStatus,
             $LoginRestriction
@@ -81,11 +76,6 @@ class AuthenticationInformaion
     public function email(): UserEmail
     {
         return $this->userEmail;
-    }
-
-    public function name(): UserName
-    {
-        return $this->userName;
     }
 
     public function password(): UserPassword
@@ -108,19 +98,14 @@ class AuthenticationInformaion
         $this->verificationStatus = VerificationStatus::Verified;
     }
 
-    public function changeName(UserName $name, DateTimeImmutable $currentDateTime): void
-    {
-        if (!$this->isValid($currentDateTime)) {
-            throw new DomainException('アカウントが有効ではありません。');
-        }
-
-        $this->userName = $name;
-    }
-
     public function changePassword(UserPassword $password, DateTimeImmutable $currentDateTime): void
     {
-        if (!$this->isValid($currentDateTime)) {
-            throw new DomainException('アカウントが有効ではありません。');
+        if ($this->isLocked($currentDateTime)) {
+            throw new DomainException('アカウントがロックされています。');
+        }
+
+        if (!$this->isVerified()) {
+            throw new DomainException('認証済みのユーザーではありません。');
         }
 
         $this->userPassword = $password;
@@ -138,35 +123,30 @@ class AuthenticationInformaion
     }
 
     /**
-     * 再ログイン可能な日時を更新する
+     * ログイン制限を有効にする
      */
-    public function updateNextLoginAt(): void
+    public function enableLoginRestriction(): void
     {
         if (!$this->isVerified()) {
             throw new DomainException('認証済みのユーザーではありません。');
         }
-        $this->LoginRestriction = $this->LoginRestriction->updateNextLoginAt();
+        $this->LoginRestriction = $this->LoginRestriction->enable();
     }
 
     /**
-     * ログイン失敗回数がアカウントロックのしきい値に達したかどうかを判定
+     * ログイン制限を有効可能かどうかを判定
      */
-    public function hasReachedAccountLockoutThreshold(): bool
+    public function canApplyLoginRestriction(): bool
     {
-        return $this->LoginRestriction->hasReachedAccountLockoutThreshold();
-    }
-
-    public function isValid(DateTimeImmutable $currentDateTime): bool
-    {
-        return $this->isVerified() && !$this->isLocked($currentDateTime);
+        return $this->LoginRestriction->canApply();
     }
 
     /**
-     * アカウントがロックされているかどうかを判定
+     * 認証情報がロックされているかどうかを判定
      */
     public function isLocked(DateTimeImmutable $currentDateTime): bool
     {
-        return $this->LoginRestriction->isLoginAllowed($currentDateTime);
+        return $this->LoginRestriction->isEnable($currentDateTime);
     }
 
     /**

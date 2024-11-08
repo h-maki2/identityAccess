@@ -3,9 +3,9 @@
 use PHPUnit\Framework\TestCase;
 
 use DateTimeImmutable;
-use packages\domain\model\authenticationInformaion\NextLoginAt;
+use packages\domain\model\authenticationInformaion\NextLoginAllowedAt;
 
-class NextLoginAtTest extends TestCase
+class NextLoginAllowedAtTest extends TestCase
 {
     public function test_再ログイン可能な日時は現在の時刻から10分後()
     {
@@ -15,10 +15,10 @@ class NextLoginAtTest extends TestCase
         $expectedDateTimeString = $expectedDateTime->format('Y-m-d HH:MM');
 
         // when
-        $nextLoginAt = NextLoginAt::create();
+        $nextLoginAllowedAt = NextLoginAllowedAt::create();
 
         // then
-        $this->assertEquals($expectedDateTimeString, $nextLoginAt->formattedValue());
+        $this->assertEquals($expectedDateTimeString, $nextLoginAllowedAt->formattedValue());
     }
 
     public function test_再ログインが可能である場合を判定できる()
@@ -27,10 +27,10 @@ class NextLoginAtTest extends TestCase
         $currentDateTime = new DateTimeImmutable();
         // 現在の日時から10分後は再ログインが可能
         $再ログイン可能な日時 = $currentDateTime->add(new DateInterval('PT10M01S'));
-        $nextLoginAt = NextLoginAt::create();
+        $nextLoginAllowedAt = NextLoginAllowedAt::create();
 
         // when
-        $result = $nextLoginAt->isAvailable($再ログイン可能な日時);
+        $result = $nextLoginAllowedAt->isAvailable($再ログイン可能な日時);
 
         // then
         $this->assertTrue($result);
@@ -42,10 +42,10 @@ class NextLoginAtTest extends TestCase
         $currentDateTime = new DateTimeImmutable();
         // 現在の日時から9分は再ログインが可能ではない
         $再ログインが可能ではない日時 = $currentDateTime->add(new DateInterval('PT09M'));
-        $nextLoginAt = NextLoginAt::create();
+        $nextLoginAllowedAt = NextLoginAllowedAt::create();
 
         // when
-        $result = $nextLoginAt->isAvailable($再ログインが可能ではない日時);
+        $result = $nextLoginAllowedAt->isAvailable($再ログインが可能ではない日時);
 
         // then
         $this->assertFalse($result);

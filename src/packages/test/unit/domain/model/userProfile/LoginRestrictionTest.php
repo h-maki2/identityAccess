@@ -2,7 +2,7 @@
 
 use packages\domain\model\authenticationInformaion\LoginRestriction;
 use packages\domain\model\authenticationInformaion\FailedLoginCount;
-use packages\domain\model\authenticationInformaion\NextLoginAt;
+use packages\domain\model\authenticationInformaion\NextLoginAllowedAt;
 use PHPUnit\Framework\TestCase;
 
 class LoginRestrictionTest extends TestCase
@@ -18,7 +18,7 @@ class LoginRestrictionTest extends TestCase
         // ログイン失敗回数は0回である
         $this->assertEquals(0, $LoginRestriction->failedLoginCount());
         // 再ログイン可能な日時はnull
-        $this->assertEquals(null, $LoginRestriction->nextLoginAt());
+        $this->assertEquals(null, $LoginRestriction->NextLoginAllowedAt());
     }
 
     public function test_ログイン失敗回数を更新する()
@@ -34,11 +34,11 @@ class LoginRestrictionTest extends TestCase
 
         // then
         $this->assertEquals(1, $LoginRestrictionAfterChange->failedLoginCount());
-        $this->assertEquals(null, $LoginRestrictionAfterChange->nextLoginAt());
+        $this->assertEquals(null, $LoginRestrictionAfterChange->NextLoginAllowedAt());
 
         // 元の値は更新されていないことを確認する
         $this->assertEquals(0, $LoginRestriction->failedLoginCount());
-        $this->assertEquals(null, $LoginRestriction->nextLoginAt());
+        $this->assertEquals(null, $LoginRestriction->NextLoginAllowedAt());
     }
 
     public function test_ログイン失敗回数がアカウントロックのしきい値に達した場合を判定できる()
@@ -81,19 +81,19 @@ class LoginRestrictionTest extends TestCase
             FailedLoginCount::reconstruct(10),
             null
         );
-        $expectedNextLoginAt = NextLoginAt::create();
+        $expectedNextLoginAllowedAt = NextLoginAllowedAt::create();
 
         // when
-        $LoginRestrictionAfterChange = $LoginRestriction->updateNextLoginAt();
+        $LoginRestrictionAfterChange = $LoginRestriction->updateNextLoginAllowedAt();
 
         // then
         $this->assertEquals(10, $LoginRestrictionAfterChange->failedLoginCount());
         // 再ログイン可能な日時が設定されている
-        $this->assertEquals($expectedNextLoginAt->formattedValue(), $LoginRestrictionAfterChange->nextLoginAt());
+        $this->assertEquals($expectedNextLoginAllowedAt->formattedValue(), $LoginRestrictionAfterChange->NextLoginAllowedAt());
 
         // 元の値は変更されていないことを確認
         $this->assertEquals(10, $LoginRestriction->failedLoginCount());
-        $this->assertEquals(null, $LoginRestriction->nextLoginAt());
+        $this->assertEquals(null, $LoginRestriction->NextLoginAllowedAt());
     }
 
     public function test_ログイン失敗回数がアカウントロックのしきい値に達していない場合、再ログイン可能な日時を設定すると例外が発生する()
@@ -107,6 +107,6 @@ class LoginRestrictionTest extends TestCase
         // when・then
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('ログイン失敗回数がアカウントロックの回数に達していません。');
-        $LoginRestriction->updateNextLoginAt();
+        $LoginRestriction->updateNextLoginAllowedAt();
     }
 }

@@ -29,11 +29,11 @@ package "認証情報集約(Aggregation)" {
 
     class "LoginRestriction\nログイン制限" as LoginRestriction {
         - failedLoginCount ログイン失敗回数: FailedLoginCount
-        - loginRestriction: LoginRestriction
+        - loginRestrictionStatus: LoginRestrictionStatus
         - nextLoginAllowedAt 次回ログイン可能日時: NextLoginAllowedAt
     }
 
-    class "LoginRestriction\nログイン制限ステータス" as LoginRestrictionStatus {
+    class "LoginRestrictionStatus\nログイン制限ステータス" as LoginRestrictionStatus {
         + value: Enum { restricted(制限中), unrestricted(制限なし)}
     }
 

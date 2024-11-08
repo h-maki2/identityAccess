@@ -7,7 +7,7 @@ use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
 use packages\domain\model\authenticationInformaion\LoginRestriction;
 use packages\domain\model\authenticationInformaion\FailedLoginCount;
 use packages\domain\model\authenticationInformaion\IAuthenticationInformaionRepository;
-use packages\domain\model\authenticationInformaion\NextLoginAt;
+use packages\domain\model\authenticationInformaion\NextLoginAllowedAt;
 use packages\domain\model\authenticationInformaion\UserEmail;
 use packages\domain\model\authenticationInformaion\UserId;
 use packages\domain\model\authenticationInformaion\UserName;
@@ -70,7 +70,7 @@ class InMemoryAuthenticationInformaionRepository implements IAuthenticationInfor
             VerificationStatus::from($authenticationInformaionModel->verification_status),
             LoginRestriction::reconstruct(
                 FailedLoginCount::reconstruct($authenticationInformaionModel->failed_login_count),
-                $authenticationInformaionModel->next_login_at !== null ? NextLoginAt::reconstruct(new DateTimeImmutable($authenticationInformaionModel->next_login_at)) : null
+                $authenticationInformaionModel->next_login_at !== null ? NextLoginAllowedAt::reconstruct(new DateTimeImmutable($authenticationInformaionModel->next_login_at)) : null
             )
         );
     }
@@ -84,7 +84,7 @@ class InMemoryAuthenticationInformaionRepository implements IAuthenticationInfor
             'password' => $authenticationInformaion->password()->hashedValue,
             'verification_status' => $authenticationInformaion->verificationStatus()->value,
             'failed_login_count' => $authenticationInformaion->LoginRestriction()->failedLoginCount(),
-            'next_login_at' => $authenticationInformaion->LoginRestriction()->nextLoginAt()
+            'next_login_at' => $authenticationInformaion->LoginRestriction()->NextLoginAllowedAt()
         ];
     }
 }

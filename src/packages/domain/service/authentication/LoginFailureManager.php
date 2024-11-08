@@ -30,7 +30,7 @@ class LoginFailureManager
 
         $authenticationInformaion->updateFailedLoginCount();
         if ($authenticationInformaion->hasReachedAccountLockoutThreshold()) {
-            $authenticationInformaion->updateNextLoginAt();
+            $authenticationInformaion->updateNextLoginAllowedAt();
         }
         $this->AuthenticationInformaionRepository->save($authenticationInformaion);
     }

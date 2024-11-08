@@ -8,7 +8,7 @@ use DateTimeImmutable;
 /**
  * 再ログイン可能な日時
  */
-class NextLoginAt
+class NextLoginAllowedAt
 {
     private DateTimeImmutable $value;
 

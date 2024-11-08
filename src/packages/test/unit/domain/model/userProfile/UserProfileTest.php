@@ -4,7 +4,7 @@ use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformaionReposi
 use packages\domain\model\authenticationInformaion\LoginRestriction;
 use packages\domain\model\authenticationInformaion\FailedLoginCount;
 use packages\domain\model\authenticationInformaion\IAuthenticationInformaionRepository;
-use packages\domain\model\authenticationInformaion\NextLoginAt;
+use packages\domain\model\authenticationInformaion\NextLoginAllowedAt;
 use packages\domain\model\authenticationInformaion\UserEmail;
 use packages\domain\model\authenticationInformaion\UserName;
 use packages\domain\model\authenticationInformaion\UserPassword;
@@ -251,14 +251,14 @@ class AuthenticationInformaionTest extends TestCase
             null,
             $LoginRestriction
         );
-        $expectedNextLoginAt = NextLoginAt::create();
+        $expectedNextLoginAllowedAt = NextLoginAllowedAt::create();
 
         // when
-        $authenticationInformaion->updateNextLoginAt();
+        $authenticationInformaion->updateNextLoginAllowedAt();
 
         // then
         $this->assertEquals(10, $authenticationInformaion->LoginRestriction()->failedLoginCount());
-        $this->assertEquals($expectedNextLoginAt->formattedValue(), $authenticationInformaion->LoginRestriction()->nextLoginAt());
+        $this->assertEquals($expectedNextLoginAllowedAt->formattedValue(), $authenticationInformaion->LoginRestriction()->NextLoginAllowedAt());
     }
 
     public function test_ログイン失敗回数がアカウントロックのしきい値に達している場合を判定できる()
