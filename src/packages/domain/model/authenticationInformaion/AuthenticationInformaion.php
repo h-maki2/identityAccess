@@ -53,7 +53,6 @@ class AuthenticationInformaion
     public static function reconstruct(
         UserId $userId,
         UserEmail $userEmail,
-        UserName $userName,
         UserPassword $userPassword,
         VerificationStatus $verificationStatus,
         LoginRestriction $LoginRestriction
@@ -131,6 +130,22 @@ class AuthenticationInformaion
             throw new DomainException('認証済みのユーザーではありません。');
         }
         $this->LoginRestriction = $this->LoginRestriction->enable();
+    }
+
+    /**
+     * ログイン制限を無効にする
+     */
+    public function disableLoginRestriction(DateTimeImmutable $currentDateTime): void
+    {
+        if (!$this->isVerified()) {
+            throw new DomainException('認証済みのユーザーではありません。');
+        }
+
+        if ($this->isLocked($currentDateTime)) {
+            return;
+        }
+
+        $this->LoginRestriction = $this->LoginRestriction->disable($currentDateTime);
     }
 
     /**
