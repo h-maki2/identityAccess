@@ -130,4 +130,12 @@ class LoginRestriction
     {
         return $this->loginRestrictionStatus->isRestricted() && !$this->nextLoginAllowedAt->isAvailable($currentDateTime);
     }
+
+    /**
+     * ログイン制限が無効かどうかを判定
+     */
+    public function isUnrestricted(): bool
+    {
+        return !$this->loginRestrictionStatus->isRestricted();
+    }
 }

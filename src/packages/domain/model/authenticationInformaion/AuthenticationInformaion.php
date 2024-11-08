@@ -12,21 +12,21 @@ class AuthenticationInformaion
     private UserEmail $userEmail;
     private UserPassword $userPassword;
     private VerificationStatus $verificationStatus;
-    private LoginRestriction $LoginRestriction;
+    private LoginRestriction $loginRestriction;
 
     private function __construct(
         UserId $userId,
         UserEmail $userEmail,
         UserPassword $userPassword,
         VerificationStatus $verificationStatus,
-        LoginRestriction $LoginRestriction
+        LoginRestriction $loginRestriction
     )
     {
         $this->userId = $userId;
         $this->userEmail = $userEmail;
         $this->userPassword = $userPassword;
         $this->verificationStatus = $verificationStatus;
-        $this->LoginRestriction = $LoginRestriction;
+        $this->loginRestriction = $loginRestriction;
     }
 
     public static function create(
@@ -89,7 +89,7 @@ class AuthenticationInformaion
 
     public function LoginRestriction(): LoginRestriction
     {
-        return $this->LoginRestriction;
+        return $this->loginRestriction;
     }
 
     public function updateVerified(): void
@@ -122,7 +122,7 @@ class AuthenticationInformaion
         if ($this->isLocked($currentDateTime)) {
             return;
         }
-        $this->LoginRestriction = $this->LoginRestriction->updateFailedLoginCount();
+        $this->loginRestriction = $this->loginRestriction->updateFailedLoginCount();
     }
 
     /**
@@ -142,7 +142,7 @@ class AuthenticationInformaion
             return;
         }
 
-        $this->LoginRestriction = $this->LoginRestriction->enable();
+        $this->loginRestriction = $this->loginRestriction->enable($currentDateTime);
     }
 
     /**
@@ -154,11 +154,15 @@ class AuthenticationInformaion
             return;
         }
 
+        if ($this->loginRestriction->isUnrestricted()) {
+            return;
+        }
+
         if ($this->isLocked($currentDateTime)) {
             return;
         }
 
-        $this->LoginRestriction = $this->LoginRestriction->disable($currentDateTime);
+        $this->loginRestriction = $this->loginRestriction->disable($currentDateTime);
     }
 
     /**
@@ -166,7 +170,7 @@ class AuthenticationInformaion
      */
     public function isLocked(DateTimeImmutable $currentDateTime): bool
     {
-        return $this->LoginRestriction->isEnable($currentDateTime);
+        return $this->loginRestriction->isEnable($currentDateTime);
     }
 
     /**
@@ -182,6 +186,6 @@ class AuthenticationInformaion
      */
     private function canApplyLoginRestriction(): bool
     {
-        return $this->LoginRestriction->canApply();
+        return $this->loginRestriction->canApply();
     }
 }

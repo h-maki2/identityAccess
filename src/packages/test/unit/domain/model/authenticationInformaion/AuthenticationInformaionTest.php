@@ -10,6 +10,7 @@ use packages\domain\model\authenticationInformaion\UserEmail;
 use packages\domain\model\authenticationInformaion\UserName;
 use packages\domain\model\authenticationInformaion\UserPassword;
 use packages\domain\model\authenticationInformaion\AuthenticationInformaion;
+use packages\domain\model\authenticationInformaion\LoginRestrictionStatus;
 use packages\domain\model\authenticationInformaion\VerificationStatus;
 use packages\domain\service\AuthenticationInformaion\AuthenticationInformaionService;
 use packages\test\helpers\AuthenticationInformaion\TestAuthenticationInformaionFactory;
@@ -48,6 +49,9 @@ class AuthenticationInformaionTest extends TestCase
 
         // then
         $this->assertEquals(VerificationStatus::Unverified, $authenticationInformaion->verificationStatus());
+        $this->assertEquals(LoginRestrictionStatus::Unrestricted, $authenticationInformaion->LoginRestriction()->loginRestrictionStatus());
+        $this->assertEquals(0, $authenticationInformaion->LoginRestriction()->failedLoginCount());
+        $this->assertEquals(null, $authenticationInformaion->LoginRestriction()->nextLoginAllowedAt());
 
         // 以下の属性はそのまま設定される
         $this->assertEquals($email, $authenticationInformaion->email());
@@ -87,14 +91,12 @@ class AuthenticationInformaionTest extends TestCase
         $userId = $this->authenticationInformaionRepository->nextUserId();
         $password = UserPassword::create('1234abcABC!');
         $verificationStatus = VerificationStatus::Verified;
-        $userName = UserName::create('test user');
         $LoginRestriction = LoginRestriction::initialization();
 
         // when
         $authenticationInformaion = AuthenticationInformaion::reconstruct(
             $userId,
             $email,
-            $userName,
             $password,
             $verificationStatus,
             $LoginRestriction
@@ -104,7 +106,6 @@ class AuthenticationInformaionTest extends TestCase
         $this->assertEquals($email, $authenticationInformaion->email());
         $this->assertEquals($userId, $authenticationInformaion->id());
         $this->assertEquals($password, $authenticationInformaion->password());
-        $this->assertEquals($userName, $authenticationInformaion->name());
         $this->assertEquals($verificationStatus, $authenticationInformaion->verificationStatus());
         $this->assertEquals($LoginRestriction, $authenticationInformaion->LoginRestriction());
     }
@@ -115,7 +116,6 @@ class AuthenticationInformaionTest extends TestCase
         // 認証済みステータスが未認証のユーザープロフィールを作成
         $verificationStatus = VerificationStatus::Unverified;
         $authenticationInformaion = TestAuthenticationInformaionFactory::create(
-            null,
             null,
             null,
             $verificationStatus
@@ -136,7 +136,6 @@ class AuthenticationInformaionTest extends TestCase
         $password = UserPassword::create('124abcABC!');
         $authenticationInformaion = TestAuthenticationInformaionFactory::create(
             null,
-            null,
             $password,
             $verificationStatus
         );
@@ -156,7 +155,6 @@ class AuthenticationInformaionTest extends TestCase
         $password = UserPassword::create('124abcABC!');
         $authenticationInformaion = TestAuthenticationInformaionFactory::create(
             null,
-            null,
             $password,
             $verificationStatus
         );
@@ -168,6 +166,32 @@ class AuthenticationInformaionTest extends TestCase
         $authenticationInformaion->changePassword($passwordAfterChange, new DateTimeImmutable());
     }
 
+    public function test_アカウントがロックされている場合、パスワードの変更が行えない()
+    {
+        // given
+        // ログイン制限が有効なユーザープロフィールを作成
+        $verificationStatus = VerificationStatus::Verified;
+        $password = UserPassword::create('124abcABC!');
+        $loginRestriction = LoginRestriction::reconstruct(
+            FailedLoginCount::reconstruct(10),
+            LoginRestrictionStatus::Restricted,
+            NextLoginAllowedAt::reconstruct(new DateTimeImmutable('+10 minutes'))
+        );
+        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
+            null,
+            $password,
+            $verificationStatus,
+            null,
+            $loginRestriction
+        );
+
+        // when・then
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('アカウントがロックされています。');
+        $passwordAfterChange = UserPassword::create('124abcABC!_afterChange');
+        $authenticationInformaion->changePassword($passwordAfterChange, new DateTimeImmutable());
+    }
+
     public function test_ログイン失敗回数を更新する()
     {
         // given
@@ -175,10 +199,10 @@ class AuthenticationInformaionTest extends TestCase
         // ログイン失敗回数は0回
         $LoginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(0),
+            LoginRestrictionStatus::Unrestricted,
             null
         );
         $authenticationInformaion = TestAuthenticationInformaionFactory::create(
-            null,
             null,
             null,
             $verificationStatus,
@@ -187,10 +211,36 @@ class AuthenticationInformaionTest extends TestCase
         );
 
         // when
-        $authenticationInformaion->updateFailedLoginCount();
+        $authenticationInformaion->updateFailedLoginCount(new DateTimeImmutable());
 
         // then
         $this->assertEquals(1, $authenticationInformaion->LoginRestriction()->failedLoginCount());
+    }
+
+    public function test_認証ステータスが未認証の場合、ログイン失敗回数を更新しない()
+    {
+        // given
+        $verificationStatus = VerificationStatus::Unverified;
+        // ログイン失敗回数は0回
+        $LoginRestriction = LoginRestriction::reconstruct(
+            FailedLoginCount::reconstruct(0),
+            LoginRestrictionStatus::Unrestricted,
+            null
+        );
+        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
+            null,
+            null,
+            $verificationStatus,
+            null,
+            $LoginRestriction
+        );
+
+        // when
+        $authenticationInformaion->updateFailedLoginCount(new DateTimeImmutable());
+
+        // the
+        // ログイン失敗回数は更新されていないことを確認する
+        $this->assertEquals(0, $authenticationInformaion->LoginRestriction()->failedLoginCount());
     }
 
     public function test_再ログイン可能な日時を更新する()
