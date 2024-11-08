@@ -158,7 +158,7 @@ class UserProfile
 
     public function isValid(DateTimeImmutable $currentDateTime): bool
     {
-        return $this->isVerified() && !$this->isLocked(new DateTimeImmutable());
+        return $this->isVerified() && !$this->isLocked($currentDateTime);
     }
 
     /**
