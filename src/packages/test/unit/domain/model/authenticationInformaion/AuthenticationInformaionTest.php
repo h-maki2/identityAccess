@@ -1,5 +1,6 @@
 <?php
 
+use Lcobucci\JWT\Signer\Key\InMemory;
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformaionRepository;
 use packages\domain\model\authenticationInformaion\LoginRestriction;
 use packages\domain\model\authenticationInformaion\FailedLoginCount;
@@ -17,11 +18,11 @@ use PHPUnit\Framework\TestCase;
 
 class AuthenticationInformaionTest extends TestCase
 {
-    private IAuthenticationInformaionRepository $authenticationInformaionRepository;
+    private InMemoryAuthenticationInformaionRepository $authenticationInformaionRepository;
 
     public function setUp(): void
     {
-        $this->AuthenticationInformaionRepository = new InMemoryAuthenticationInformaionRepository();
+        $this->authenticationInformaionRepository = new InMemoryAuthenticationInformaionRepository();
     }
 
     public function test_重複したメールアドレスを持つユーザーが存在しない場合、ユーザープロフィールを初期化できる()
@@ -29,13 +30,13 @@ class AuthenticationInformaionTest extends TestCase
         // given
         // user@example.comのアドレスを持つユーザーをあらかじめ作成しておく
         $alreadyExistsUserEmail = new UserEmail('user@example.com');
-        $authenticationInformaionTestDataFactory = new AuthenticationInformaionTestDataFactory($this->AuthenticationInformaionRepository);
+        $authenticationInformaionTestDataFactory = new AuthenticationInformaionTestDataFactory($this->authenticationInformaionRepository);
         $authenticationInformaionTestDataFactory->create($alreadyExistsUserEmail);
 
         $email = new UserEmail('otheruser@example.com');
-        $userId = $this->AuthenticationInformaionRepository->nextUserId();
+        $userId = $this->authenticationInformaionRepository->nextUserId();
         $password = UserPassword::create('1234abcABC!');
-        $authenticationInformaionService = new AuthenticationInformaionService($this->AuthenticationInformaionRepository);
+        $authenticationInformaionService = new AuthenticationInformaionService($this->authenticationInformaionRepository);
 
         // when
         $authenticationInformaion = AuthenticationInformaion::create(
@@ -46,7 +47,6 @@ class AuthenticationInformaionTest extends TestCase
         );
 
         // then
-        $this->assertEquals('otheruser', $authenticationInformaion->name()->value);
         $this->assertEquals(VerificationStatus::Unverified, $authenticationInformaion->verificationStatus());
 
         // 以下の属性はそのまま設定される
@@ -60,14 +60,14 @@ class AuthenticationInformaionTest extends TestCase
         // given
         // user@example.comのアドレスを持つユーザーをあらかじめ作成しておく
         $alreadyExistsUserEmail = new UserEmail('user@example.com');
-        $authenticationInformaionTestDataFactory = new AuthenticationInformaionTestDataFactory($this->AuthenticationInformaionRepository);
+        $authenticationInformaionTestDataFactory = new AuthenticationInformaionTestDataFactory($this->authenticationInformaionRepository);
         $authenticationInformaionTestDataFactory->create($alreadyExistsUserEmail);
 
         // メールアドレスが重複している
         $email = new UserEmail('user@example.com');
-        $userId = $this->AuthenticationInformaionRepository->nextUserId();
+        $userId = $this->authenticationInformaionRepository->nextUserId();
         $password = UserPassword::create('1234abcABC!');
-        $authenticationInformaionService = new AuthenticationInformaionService($this->AuthenticationInformaionRepository);
+        $authenticationInformaionService = new AuthenticationInformaionService($this->authenticationInformaionRepository);
 
         // when・then
         $this->expectException(DomainException::class);
@@ -84,7 +84,7 @@ class AuthenticationInformaionTest extends TestCase
     {
         // given
         $email = new UserEmail('otheruser@example.com');
-        $userId = $this->AuthenticationInformaionRepository->nextUserId();
+        $userId = $this->authenticationInformaionRepository->nextUserId();
         $password = UserPassword::create('1234abcABC!');
         $verificationStatus = VerificationStatus::Verified;
         $userName = UserName::create('test user');
@@ -126,47 +126,6 @@ class AuthenticationInformaionTest extends TestCase
 
         // then
         $this->assertEquals(VerificationStatus::Verified, $authenticationInformaion->verificationStatus());
-    }
-
-    public function test_認証ステータスが認証済みの場合、ユーザー名の変更が行える()
-    {
-        // given
-        // 認証済みステータスが認証済みのユーザープロフィールを作成
-        $verificationStatus = VerificationStatus::Verified;
-        $userName = UserName::create('test user');
-        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
-            null,
-            $userName,
-            null,
-            $verificationStatus
-        );
-
-        // when
-        $userNameAfterChange = UserName::create('test user after change');
-        $authenticationInformaion->changeName($userNameAfterChange, new DateTimeImmutable());
-
-        // then
-        $this->assertEquals($userNameAfterChange, $authenticationInformaion->name());
-    }
-
-    public function test_認証ステータスが未認証の場合、ユーザー名の変更が行えない()
-    {
-        // given
-        // 認証済みステータスが未認証のユーザープロフィールを作成
-        $verificationStatus = VerificationStatus::Unverified;
-        $userName = UserName::create('test user');
-        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
-            null,
-            $userName,
-            null,
-            $verificationStatus
-        );
-
-        // when・then
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('認証済みのユーザーではありません。');
-        $userNameAfterChange = UserName::create('test user after change');
-        $authenticationInformaion->changeName($userNameAfterChange, new DateTimeImmutable());
     }
 
     public function test_認証ステータスが認証済みの場合、パスワードの変更が行える()

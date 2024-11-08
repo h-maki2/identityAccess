@@ -17,7 +17,7 @@ class AuthenticationInformaionTestDataFactory
 
     public function __construct(IAuthenticationInformaionRepository $authenticationInformaionRepository)
     {
-        $this->AuthenticationInformaionRepository = $authenticationInformaionRepository;
+        $this->authenticationInformaionRepository = $authenticationInformaionRepository;
     }
 
     public function create(
@@ -38,7 +38,7 @@ class AuthenticationInformaionTestDataFactory
             $LoginRestriction
         );
 
-        $this->AuthenticationInformaionRepository->save($authenticationInformaion);
+        $this->authenticationInformaionRepository->save($authenticationInformaion);
 
         return $authenticationInformaion;
     }
