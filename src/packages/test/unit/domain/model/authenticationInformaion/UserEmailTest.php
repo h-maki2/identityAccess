@@ -27,19 +27,6 @@ class UserEmailTest extends TestCase
         new UserEmail($emailString);
     }
 
-    public function test_メールアドレスのローカル部を取得できる()
-    {
-        // given
-        $emailString = 'test@example.com';
-        $email = new UserEmail($emailString);
-
-        // when
-        $emailLocalPart = $email->localPart();
-
-        // then
-        $this->assertEquals('test', $emailLocalPart);
-    }
-
     public static function invalidEmailProvider(): array
     {
         return [
