@@ -49,7 +49,7 @@ class AuthenticationInformaionTest extends TestCase
 
         // then
         $this->assertEquals(VerificationStatus::Unverified, $authenticationInformaion->verificationStatus());
-        $this->assertEquals(LoginRestrictionStatus::Unrestricted, $authenticationInformaion->LoginRestriction()->loginRestrictionStatus());
+        $this->assertEquals(LoginRestrictionStatus::Unrestricted->value, $authenticationInformaion->LoginRestriction()->loginRestrictionStatus());
         $this->assertEquals(0, $authenticationInformaion->LoginRestriction()->failedLoginCount());
         $this->assertEquals(null, $authenticationInformaion->LoginRestriction()->nextLoginAllowedAt());
 
@@ -263,7 +263,7 @@ class AuthenticationInformaionTest extends TestCase
         $authenticationInformaion->enableLoginRestriction(new DateTimeImmutable());
 
         // then
-        $this->assertEquals(LoginRestrictionStatus::Restricted, $authenticationInformaion->LoginRestriction()->loginRestrictionStatus());
+        $this->assertEquals(LoginRestrictionStatus::Restricted->value, $authenticationInformaion->LoginRestriction()->loginRestrictionStatus());
         $this->assertNotNull($authenticationInformaion->LoginRestriction()->nextLoginAllowedAt());
     }
 }
