@@ -34,7 +34,7 @@ class LoginRestrictionTest extends TestCase
         );
 
         // when
-        $loginRestrictionAfterChange = $loginRestriction->updateFailedLoginCount();
+        $loginRestrictionAfterChange = $loginRestriction->addFailedLoginCount();
 
         // then
         $this->assertEquals(1, $loginRestrictionAfterChange->failedLoginCount());
@@ -45,7 +45,7 @@ class LoginRestrictionTest extends TestCase
         $this->assertEquals(LoginRestrictionStatus::Unrestricted->value, $loginRestriction->loginRestrictionStatus());
     }
 
-    public function test_ログイン失敗回数がログイン制限回数に達した場合、ログイン制限が適用可能かどうかを判定できる()
+    public function test_ログイン制限が有効可能であることを判定できる()
     {
         // given
         // ログイン失敗回数が10回に達した場合
@@ -62,7 +62,7 @@ class LoginRestrictionTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function test_ログイン失敗回数がログイン制限回数に達していない場合、ログイン制限が適用可能ではないことを判定できる()
+    public function test_ログイン制限を有効にできないことを判定できる()
     {
         // given
         // ログイン失敗回数が10回未満の場合
@@ -79,14 +79,14 @@ class LoginRestrictionTest extends TestCase
         $this->assertFalse($result);
     }
 
-    public function test_ログイン制限が有効であることを判定できる_再ログイン可能ではない場合()
+    public function test_ログイン制限を無効にできることを判定できる()
     {
         // given
-        // 再ログイン可能な日時が10分後の場合
+        // 再ログイン可能である場合
         $loginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
             LoginRestrictionStatus::Restricted,
-            NextLoginAllowedAt::reconstruct(new DateTimeImmutable('+10 minutes'))
+            NextLoginAllowedAt::reconstruct(new DateTimeImmutable('-1 minutes'))
         );
 
         // when
@@ -96,14 +96,14 @@ class LoginRestrictionTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function test_ログイン制限が有効ではないことを判定できる_再ログインが可能である場合()
+    public function test_ログイン制限がまだ無効にできないことを判定できる()
     {
         // given
-        // 再ログイン可能な日時が10分前の場合
+        // 再ログイン不可である場合
         $loginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
             LoginRestrictionStatus::Unrestricted,
-            NextLoginAllowedAt::reconstruct(new DateTimeImmutable('-10 minutes'))
+            NextLoginAllowedAt::reconstruct(new DateTimeImmutable('+1 minutes'))
         );
 
         // when
@@ -113,27 +113,10 @@ class LoginRestrictionTest extends TestCase
         $this->assertFalse($result);
     }
 
-    public function test_ログイン制限が有効ではないことを判定できる_ログイン制限されていない場合()
+    public function test_ログイン制限が有効可能である場合、ログイン制限を有効にできる()
     {
         // given
-        // ログイン制限されていない場合
-        $loginRestriction = LoginRestriction::reconstruct(
-            FailedLoginCount::reconstruct(9),
-            LoginRestrictionStatus::Unrestricted,
-            null
-        );
-
-        // when
-        $result = $loginRestriction->canDisable(new DateTimeImmutable());
-
-        // then
-        $this->assertFalse($result);
-    }
-
-    public function test_ログイン制限が適用可能である場合、ログイン制限を有効にできる()
-    {
-        // given
-        // ログイン失敗回数が10回に達した場合で、すでにログイン制限が適用されていない場合
+        // ログイン失敗回数が10回に達した場合
         $loginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
             LoginRestrictionStatus::Unrestricted,
@@ -154,7 +137,7 @@ class LoginRestrictionTest extends TestCase
         $this->assertEquals(LoginRestrictionStatus::Unrestricted->value, $loginRestriction->loginRestrictionStatus());
     }
 
-    public function test_ログイン制限が適用可能ではない場合、ログイン制限を有効にできない()
+    public function test_ログイン制限が有効可能ではない場合、ログイン制限を有効にできない()
     {
         // given
         $loginRestriction = LoginRestriction::reconstruct(
@@ -169,29 +152,14 @@ class LoginRestrictionTest extends TestCase
         $loginRestriction->enable(new DateTimeImmutable());
     }
 
-    public function test_すでにログイン制限が有効である場合、ログイン制限を有効にできない()
+    public function test_ログイン制限が現在有効状態で尚且つ再ログインが可能である場合、ログイン制限を無効にできる()
     {
         // given
+        // ログイン制限が有効で再ログインが可能である場合
         $loginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
             LoginRestrictionStatus::Restricted,
-            NextLoginAllowedAt::reconstruct(new DateTimeImmutable('+10 minutes'))
-        );
-
-        // when・then
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage("すでにログイン制限が有効です。");
-        $loginRestriction->enable(new DateTimeImmutable());
-    }
-
-    public function test_再ログイン可能である場合に、ログイン制限を無効にできる()
-    {
-        // given
-        // 再ログイン可能である場合
-        $loginRestriction = LoginRestriction::reconstruct(
-            FailedLoginCount::reconstruct(10),
-            LoginRestrictionStatus::Restricted,
-            NextLoginAllowedAt::reconstruct(new DateTimeImmutable('-10 minutes'))
+            NextLoginAllowedAt::reconstruct(new DateTimeImmutable('-1 minutes'))
         );
 
         // when
@@ -209,14 +177,14 @@ class LoginRestrictionTest extends TestCase
         $this->assertNotNull($loginRestriction->nextLoginAllowedAt());
     }
 
-    public function test_再ログイン可能ではない場合に、ログイン制限を無効にできない()
+    public function test_ログイン制限が現在有効状態で尚且つ再ログインが不可である場合、ログイン制限を無効にできない()
     {
         // given
-        // 再ログイン可能でない場合
+        // ログイン制限が現在有効状態で尚且つ再ログインが不可である場合
         $loginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
             LoginRestrictionStatus::Restricted,
-            NextLoginAllowedAt::reconstruct(new DateTimeImmutable('+10 minutes'))
+            NextLoginAllowedAt::reconstruct(new DateTimeImmutable('+1 minutes'))
         );
 
         // when・then
@@ -225,7 +193,7 @@ class LoginRestrictionTest extends TestCase
         $loginRestriction->disable(new DateTimeImmutable());
     }
 
-    public function test_ログイン制限が有効ではない場合に、ログイン制限を無効化できない()
+    public function test_ログイン制限が現在有効状態ではない場合に、ログイン制限を無効化できない()
     {
         // given
         // ログイン制限が有効ではない場合
