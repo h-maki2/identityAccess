@@ -244,7 +244,7 @@ class AuthenticationInformaionTest extends TestCase
     public function test_ログイン制限が有効可能の場合、ログイン制限を有効にする()
     {
         // given
-        // ログイン失敗回数が10回で、ログイン制限が有効な認証情報を生成
+        // ログイン失敗回数が10回に達している認証情報を生成する
         $verificationStatus = VerificationStatus::Verified;
         $LoginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
@@ -364,5 +364,105 @@ class AuthenticationInformaionTest extends TestCase
 
         // then
         $this->assertTrue($result);
+    }
+
+    public function test_ログイン制限中であることを判定できる()
+    {
+        // given
+        // ログイン制限が有効である認証情報を生成する
+        $verificationStatus = VerificationStatus::Verified;
+        $loginRestriction = LoginRestriction::reconstruct(
+            FailedLoginCount::reconstruct(10),
+            LoginRestrictionStatus::Restricted,
+            NextLoginAllowedAt::reconstruct(new DateTimeImmutable('+10 minutes'))
+        );
+        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
+            null,
+            null,
+            $verificationStatus,
+            null,
+            $loginRestriction
+        );
+
+        // when
+        $result = $authenticationInformaion->isUnderLoginRestriction();
+
+        // then
+        $this->assertTrue($result);
+    }
+
+    public function test_ログイン制限中でないことを判定できる()
+    {
+        // given
+        // ログイン制限が有効である認証情報を生成する
+        $verificationStatus = VerificationStatus::Verified;
+        $loginRestriction = LoginRestriction::reconstruct(
+            FailedLoginCount::reconstruct(10),
+            LoginRestrictionStatus::Unrestricted,
+            null
+        );
+        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
+            null,
+            null,
+            $verificationStatus,
+            null,
+            $loginRestriction
+        );
+
+        // when
+        $result = $authenticationInformaion->isUnderLoginRestriction();
+
+        // then
+        $this->assertFalse($result);
+    }
+
+    public function test_ログイン制限を有効にできるかどうかを判定できる()
+    {
+        // given
+        // ログイン失敗回数が10回に達していている認証情報を生成する
+        $verificationStatus = VerificationStatus::Verified;
+        $loginRestriction = LoginRestriction::reconstruct(
+            FailedLoginCount::reconstruct(10),
+            LoginRestrictionStatus::Unrestricted,
+            null
+        );
+        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
+            null,
+            null,
+            $verificationStatus,
+            null,
+            $loginRestriction
+        );
+
+        // when
+        $result = $authenticationInformaion->canEnableLoginRestriction(new DateTimeImmutable());
+
+        // then
+        $this->assertTrue($result);
+    }
+
+    public function test_ログイン制限を有効にできないことを判定できる()
+    {
+        // given
+        // ログイン失敗回数が10回に達していない認証情報を生成する
+        $verificationStatus = VerificationStatus::Verified;
+        $loginRestriction = LoginRestriction::reconstruct(
+            FailedLoginCount::reconstruct(9),
+            LoginRestrictionStatus::Unrestricted,
+            null
+        );
+        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
+            null,
+            null,
+            $verificationStatus,
+            null,
+            $loginRestriction
+        );
+
+        // when
+        $result = $authenticationInformaion->canEnableLoginRestriction(new DateTimeImmutable());
+
+        // then
+        $this->assertFalse($result);
     }
 }
