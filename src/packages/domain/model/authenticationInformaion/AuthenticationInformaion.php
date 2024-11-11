@@ -4,7 +4,7 @@ namespace packages\domain\model\authenticationInformaion;
 
 use DateTimeImmutable;
 use DomainException;
-use packages\domain\service\AuthenticationInformaion\AuthenticationInformaionService;
+use packages\domain\service\authenticationInformaion\AuthenticationInformaionService;
 
 class AuthenticationInformaion
 {

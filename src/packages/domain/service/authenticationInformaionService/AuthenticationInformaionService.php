@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\domain\service\AuthenticationInformaion;
+namespace packages\domain\service\authenticationInformaion;
 
 use packages\domain\model\authenticationInformaion\IAuthenticationInformaionRepository;
 use packages\domain\model\authenticationInformaion\UserEmail;
@@ -11,7 +11,7 @@ class AuthenticationInformaionService
 
     public function __construct(IAuthenticationInformaionRepository $authenticationInformaionRepository)
     {
-        $this->AuthenticationInformaionRepository = $authenticationInformaionRepository;
+        $this->authenticationInformaionRepository = $authenticationInformaionRepository;
     }
 
     /**
@@ -19,7 +19,7 @@ class AuthenticationInformaionService
      */
     public function alreadyExistsEmail(UserEmail $email): bool
     {
-        $authenticationInformaion = $this->AuthenticationInformaionRepository->findByEmail($email);
+        $authenticationInformaion = $this->authenticationInformaionRepository->findByEmail($email);
 
         return $authenticationInformaion !== null;
     }

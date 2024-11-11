@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\test\helpers\AuthenticationInformaion;
+namespace packages\test\helpers\authenticationInformaion;
 
 use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
 use packages\domain\model\authenticationInformaion\LoginRestriction;

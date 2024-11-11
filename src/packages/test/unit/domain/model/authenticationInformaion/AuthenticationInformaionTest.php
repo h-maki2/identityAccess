@@ -12,9 +12,9 @@ use packages\domain\model\authenticationInformaion\UserPassword;
 use packages\domain\model\authenticationInformaion\AuthenticationInformaion;
 use packages\domain\model\authenticationInformaion\LoginRestrictionStatus;
 use packages\domain\model\authenticationInformaion\VerificationStatus;
-use packages\domain\service\AuthenticationInformaion\AuthenticationInformaionService;
-use packages\test\helpers\AuthenticationInformaion\TestAuthenticationInformaionFactory;
-use packages\test\helpers\AuthenticationInformaion\AuthenticationInformaionTestDataFactory;
+use packages\domain\service\authenticationInformaion\AuthenticationInformaionService;
+use packages\test\helpers\authenticationInformaion\TestAuthenticationInformaionFactory;
+use packages\test\helpers\authenticationInformaion\AuthenticationInformaionTestDataFactory;
 use PHPUnit\Framework\TestCase;
 
 class AuthenticationInformaionTest extends TestCase
@@ -239,84 +239,31 @@ class AuthenticationInformaionTest extends TestCase
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('認証済みのユーザーではありません。');
         $authenticationInformaion->addFailedLoginCount();
-
-        // the
-        // ログイン失敗回数は更新されていないことを確認する
-        $this->assertEquals(0, $authenticationInformaion->LoginRestriction()->failedLoginCount());
     }
 
-    public function test_再ログイン可能な日時を更新する()
+    public function test_ログイン制限が有効可能の場合、ログイン制限を有効にする()
     {
         // given
+        // ログイン失敗回数が10回で、ログイン制限が有効な認証情報を生成
         $verificationStatus = VerificationStatus::Verified;
-        // ログイン失敗回数は10回
         $LoginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
+            LoginRestrictionStatus::Unrestricted,
             null
         );
         $authenticationInformaion = TestAuthenticationInformaionFactory::create(
-            null,
             null,
             null,
             $verificationStatus,
             null,
             $LoginRestriction
         );
-        $expectedNextLoginAllowedAt = NextLoginAllowedAt::create();
 
         // when
-        $authenticationInformaion->updateNextLoginAllowedAt();
+        $authenticationInformaion->enableLoginRestriction(new DateTimeImmutable());
 
         // then
-        $this->assertEquals(10, $authenticationInformaion->LoginRestriction()->failedLoginCount());
-        $this->assertEquals($expectedNextLoginAllowedAt->formattedValue(), $authenticationInformaion->LoginRestriction()->NextLoginAllowedAt());
-    }
-
-    public function test_ログイン失敗回数がアカウントロックのしきい値に達している場合を判定できる()
-    {
-        // given
-        // ログイン失敗回数は10回
-        $LoginRestriction = LoginRestriction::reconstruct(
-            FailedLoginCount::reconstruct(10),
-            null
-        );
-        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
-            null,
-            null,
-            null,
-            null,
-            null,
-            $LoginRestriction
-        );
-
-        // when
-        $result = $authenticationInformaion->hasReachedAccountLockoutThreshold();
-
-        // then
-        $this->assertTrue($result);
-    }
-
-    public function test_ログイン失敗回数がアカウントロックのしきい値に達していない場合を判定できる()
-    {
-         // given
-        // ログイン失敗回数は9回
-        $LoginRestriction = LoginRestriction::reconstruct(
-            FailedLoginCount::reconstruct(9),
-            null
-        );
-        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
-            null,
-            null,
-            null,
-            null,
-            null,
-            $LoginRestriction
-        );
-
-        // when
-        $result = $authenticationInformaion->hasReachedAccountLockoutThreshold();
-
-        // then
-        $this->assertFalse($result);
+        $this->assertEquals(LoginRestrictionStatus::Restricted, $authenticationInformaion->LoginRestriction()->loginRestrictionStatus());
+        $this->assertNotNull($authenticationInformaion->LoginRestriction()->nextLoginAllowedAt());
     }
 }
