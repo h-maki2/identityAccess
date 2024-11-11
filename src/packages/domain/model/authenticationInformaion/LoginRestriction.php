@@ -66,7 +66,7 @@ class LoginRestriction
     /**
      * ログイン失敗回数を更新する
      */
-    public function updateFailedLoginCount(): self
+    public function addFailedLoginCount(): self
     {
         return new self(
             $this->failedLoginCount->add(),
@@ -78,14 +78,10 @@ class LoginRestriction
     /**
      * ログイン制限を有効にする
      */
-    public function enable(DateTimeImmutable $currentDateTime): self
+    public function enable(): self
     {
         if (!$this->canApply()) {
             throw new DomainException("ログイン失敗回数がログイン制限の回数に達していません。");
-        }
-
-        if ($this->isEnable($currentDateTime)) {
-            throw new DomainException("すでにログイン制限が有効です。");
         }
 
         return new self(
@@ -131,11 +127,8 @@ class LoginRestriction
         return $this->loginRestrictionStatus->isRestricted() && !$this->nextLoginAllowedAt->isAvailable($currentDateTime);
     }
 
-    /**
-     * ログイン制限が無効かどうかを判定
-     */
-    public function isUnrestricted(): bool
+    public function isRestricted(): bool
     {
-        return !$this->loginRestrictionStatus->isRestricted();
+        return $this->loginRestrictionStatus->isRestricted();
     }
 }

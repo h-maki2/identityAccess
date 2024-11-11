@@ -99,12 +99,12 @@ class AuthenticationInformaion
 
     public function changePassword(UserPassword $password, DateTimeImmutable $currentDateTime): void
     {
-        if ($this->isLocked($currentDateTime)) {
-            throw new DomainException('アカウントがロックされています。');
-        }
-
         if (!$this->isVerified()) {
             throw new DomainException('認証済みのユーザーではありません。');
+        }
+
+        if ($this->isLocked($currentDateTime)) {
+            throw new DomainException('アカウントがロックされています。');
         }
 
         $this->userPassword = $password;
@@ -113,16 +113,13 @@ class AuthenticationInformaion
     /**
      * ログイン失敗回数を更新する
      */
-    public function updateFailedLoginCount(DateTimeImmutable $currentDateTime): void
+    public function addFailedLoginCount(): void
     {
         if (!$this->isVerified()) {
-            return;
+            throw new DomainException('認証済みのユーザーではありません。');
         }
 
-        if ($this->isLocked($currentDateTime)) {
-            return;
-        }
-        $this->loginRestriction = $this->loginRestriction->updateFailedLoginCount();
+        $this->loginRestriction = $this->loginRestriction->addFailedLoginCount();
     }
 
     /**
@@ -130,16 +127,8 @@ class AuthenticationInformaion
      */
     public function enableLoginRestriction(DateTimeImmutable $currentDateTime): void
     {
-        if ($this->isVerified()) {
-            return;
-        }
-
-        if ($this->isLocked($currentDateTime)) {
-            return;
-        }
-
-        if (!$this->canApplyLoginRestriction()) {
-            return;
+        if (!$this->isVerified()) {
+            throw new DomainException('認証済みのユーザーではありません。');
         }
 
         $this->loginRestriction = $this->loginRestriction->enable($currentDateTime);
@@ -151,15 +140,7 @@ class AuthenticationInformaion
     public function disableLoginRestriction(DateTimeImmutable $currentDateTime): void
     {
         if (!$this->isVerified()) {
-            return;
-        }
-
-        if ($this->loginRestriction->isUnrestricted()) {
-            return;
-        }
-
-        if ($this->isLocked($currentDateTime)) {
-            return;
+            throw new DomainException('認証済みのユーザーではありません。');
         }
 
         $this->loginRestriction = $this->loginRestriction->disable($currentDateTime);
@@ -182,9 +163,17 @@ class AuthenticationInformaion
     }
 
     /**
-     * ログイン制限が有効可能かどうかを判定
+     * ログイン制限中かどうかを判定
      */
-    private function canApplyLoginRestriction(): bool
+    public function isUnderLoginRestriction(): bool
+    {
+        return $this->loginRestriction->isRestricted();
+    }
+
+    /**
+     * ログイン制限を有効にできるかどうかを判定する
+     */
+    public function canEnableLoginRestriction(): bool
     {
         return $this->loginRestriction->canApply();
     }

@@ -7,10 +7,6 @@ use packages\domain\model\client\IClientFetcher;
 use packages\domain\model\authenticationInformaion\IAuthenticationInformaionRepository;
 use packages\domain\model\authenticationInformaion\SessionAuthentication;
 use packages\domain\model\authenticationInformaion\UserEmail;
-use packages\domain\model\authenticationInformaion\AuthenticationInformaion;
-use packages\domain\model\authenticationInformaion\validation\LoginValidator;
-use packages\domain\service\authentication\AuthenticationService;
-use packages\domain\service\authentication\LoginFailureManager;
 use UnexpectedValueException;
 
 class LoginApplicationService
@@ -44,13 +40,15 @@ class LoginApplicationService
         }
 
         $currentDateTime = new DateTimeImmutable();
-        $authenticationInformaion->disableLoginRestriction($currentDateTime);
-
         if ($authenticationInformaion->isLocked($currentDateTime)) {
             return LoginResult::createWhenLoginFailed(true);
         }
 
-        if (LoginValidator::validate($authenticationInformaion, $inputedPassword, $currentDateTime)) {
+        if ($authenticationInformaion->isUnderLoginRestriction()) {
+            $authenticationInformaion->disableLoginRestriction($currentDateTime);
+        }
+
+        if ($authenticationInformaion->password()->equals($inputedPassword)) {
             $this->sessionAuthentication->markAsLoggedIn($authenticationInformaion->id());
 
             $client = $this->clientFetcher->fetchById($clientId);
@@ -62,8 +60,10 @@ class LoginApplicationService
             return LoginResult::createWhenLoginSucceeded($client->authorizationUrl());
         }
 
-        $authenticationInformaion->updateFailedLoginCount($currentDateTime);
-        $authenticationInformaion->enableLoginRestriction($currentDateTime);
+        $authenticationInformaion->addFailedLoginCount($currentDateTime);
+        if ($authenticationInformaion->canEnableLoginRestriction()) {
+            $authenticationInformaion->enableLoginRestriction($currentDateTime);
+        }
         $this->authenticationInformaionRepository->save($authenticationInformaion);
 
         if ($authenticationInformaion->isLocked($currentDateTime)) {
