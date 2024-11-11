@@ -169,7 +169,7 @@ class AuthenticationInformaionTest extends TestCase
     public function test_アカウントがロックされている場合、パスワードの変更が行えない()
     {
         // given
-        // ログイン制限が有効なユーザープロフィールを作成
+        // アカウントがロックされているユーザープロフィールを作成
         $verificationStatus = VerificationStatus::Verified;
         $password = UserPassword::create('124abcABC!');
         $loginRestriction = LoginRestriction::reconstruct(
@@ -211,7 +211,7 @@ class AuthenticationInformaionTest extends TestCase
         );
 
         // when
-        $authenticationInformaion->updateFailedLoginCount(new DateTimeImmutable());
+        $authenticationInformaion->addFailedLoginCount();
 
         // then
         $this->assertEquals(1, $authenticationInformaion->LoginRestriction()->failedLoginCount());
@@ -235,8 +235,10 @@ class AuthenticationInformaionTest extends TestCase
             $LoginRestriction
         );
 
-        // when
-        $authenticationInformaion->updateFailedLoginCount(new DateTimeImmutable());
+        // when・then
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('認証済みのユーザーではありません。');
+        $authenticationInformaion->addFailedLoginCount();
 
         // the
         // ログイン失敗回数は更新されていないことを確認する

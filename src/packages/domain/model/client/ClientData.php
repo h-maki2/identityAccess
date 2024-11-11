@@ -35,12 +35,15 @@ class ClientData
         return $this->redirectUri;
     }
 
-    public function authorizationUrl(): string
+    /**
+     * 認可コード取得URLを作成する
+     */
+    public function urlForObtainingAuthorizationCode(): string
     {
-        return url('/oauth/authorize') . '?' . $this->authorizationUrlQueryParam();
+        return url('/oauth/authorize') . '?' . $this->queryParam();
     }
 
-    private function authorizationUrlQueryParam(): string
+    private function queryParam(): string
     {
         return http_build_query([
             'response_type' => 'code',

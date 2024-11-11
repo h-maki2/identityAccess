@@ -57,7 +57,7 @@ class LoginApplicationService
             }
 
             $this->authenticationInformaionRepository->save($authenticationInformaion);
-            return LoginResult::createWhenLoginSucceeded($client->authorizationUrl());
+            return LoginResult::createWhenLoginSucceeded($client->urlForObtainingAuthorizationCode());
         }
 
         $authenticationInformaion->addFailedLoginCount($currentDateTime);
