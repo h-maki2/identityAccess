@@ -266,4 +266,103 @@ class AuthenticationInformaionTest extends TestCase
         $this->assertEquals(LoginRestrictionStatus::Restricted->value, $authenticationInformaion->LoginRestriction()->loginRestrictionStatus());
         $this->assertNotNull($authenticationInformaion->LoginRestriction()->nextLoginAllowedAt());
     }
+
+    public function test_認証ステータスが未認証の場合、ログイン制限を有効にできない()
+    {
+        // given
+        $verificationStatus = VerificationStatus::Unverified;
+        $LoginRestriction = LoginRestriction::reconstruct(
+            FailedLoginCount::reconstruct(10),
+            LoginRestrictionStatus::Unrestricted,
+            null
+        );
+        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
+            null,
+            null,
+            $verificationStatus,
+            null,
+            $LoginRestriction
+        );
+
+        // when・then
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('認証済みのユーザーではありません。');
+        $authenticationInformaion->enableLoginRestriction(new DateTimeImmutable());
+    }
+
+    public function test_ログイン制限が現在有効で、ログイン制限が解除可能の場合はログイン制限を解除できる()
+    {
+        // given
+        // ログイン制限は有効だが再ログイン可能な認証情報を生成する
+        $verificationStatus = VerificationStatus::Verified;
+        $LoginRestriction = LoginRestriction::reconstruct(
+            FailedLoginCount::reconstruct(10),
+            LoginRestrictionStatus::Restricted,
+            NextLoginAllowedAt::reconstruct(new DateTimeImmutable('-1 minutes'))
+        );
+        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
+            null,
+            null,
+            $verificationStatus,
+            null,
+            $LoginRestriction
+        );
+
+        // when
+        $authenticationInformaion->disableLoginRestriction(new DateTimeImmutable());
+
+        // then
+        $this->assertEquals(LoginRestrictionStatus::Unrestricted->value, $authenticationInformaion->LoginRestriction()->loginRestrictionStatus());
+        $this->assertNull($authenticationInformaion->LoginRestriction()->nextLoginAllowedAt());
+    }
+
+    public function test_認証情報がロックされているかどうかを判定できる()
+    {
+        // given
+        // ログイン制限が有効である認証情報を生成する
+        $verificationStatus = VerificationStatus::Verified;
+        $loginRestriction = LoginRestriction::reconstruct(
+            FailedLoginCount::reconstruct(10),
+            LoginRestrictionStatus::Restricted,
+            NextLoginAllowedAt::reconstruct(new DateTimeImmutable('+10 minutes'))
+        );
+        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
+            null,
+            null,
+            $verificationStatus,
+            null,
+            $loginRestriction
+        );
+
+        // when
+        $result = $authenticationInformaion->isLocked(new DateTimeImmutable());
+
+        // then
+        $this->assertTrue($result);
+    }
+
+    public function test_認証情報がロックされていないかどうかを判定できる()
+    {
+        // given
+        // ログイン制限は有効だが再ログイン可能な認証情報を生成する
+        $verificationStatus = VerificationStatus::Verified;
+        $loginRestriction = LoginRestriction::reconstruct(
+            FailedLoginCount::reconstruct(10),
+            LoginRestrictionStatus::Restricted,
+            NextLoginAllowedAt::reconstruct(new DateTimeImmutable('-1 minutes'))
+        );
+        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
+            null,
+            null,
+            $verificationStatus,
+            null,
+            $loginRestriction
+        );
+
+        // when
+        $result = $authenticationInformaion->isLocked(new DateTimeImmutable());
+
+        // then
+        $this->assertFalse($result);
+    }
 }
