@@ -316,7 +316,7 @@ class AuthenticationInformaionTest extends TestCase
         $this->assertNull($authenticationInformaion->LoginRestriction()->nextLoginAllowedAt());
     }
 
-    public function test_認証情報がロックされているかどうかを判定できる()
+    public function test_ログインができないことを判定できる()
     {
         // given
         // ログイン制限が有効である認証情報を生成する
@@ -335,13 +335,13 @@ class AuthenticationInformaionTest extends TestCase
         );
 
         // when
-        $result = $authenticationInformaion->canReloggedIn(new DateTimeImmutable());
+        $result = $authenticationInformaion->canLoggedIn(new DateTimeImmutable());
 
         // then
-        $this->assertTrue($result);
+        $this->assertFalse($result);
     }
 
-    public function test_認証情報がロックされていないかどうかを判定できる()
+    public function test_ログインが可能であることを判定できる()
     {
         // given
         // ログイン制限は有効だが再ログイン可能な認証情報を生成する
@@ -360,9 +360,9 @@ class AuthenticationInformaionTest extends TestCase
         );
 
         // when
-        $result = $authenticationInformaion->canReloggedIn(new DateTimeImmutable());
+        $result = $authenticationInformaion->canLoggedIn(new DateTimeImmutable());
 
         // then
-        $this->assertFalse($result);
+        $this->assertTrue($result);
     }
 }

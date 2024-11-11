@@ -40,7 +40,7 @@ class LoginApplicationService
         }
 
         $currentDateTime = new DateTimeImmutable();
-        if ($authenticationInformaion->canReloggedIn($currentDateTime)) {
+        if (!$authenticationInformaion->canLoggedIn($currentDateTime)) {
             return LoginResult::createWhenLoginFailed(true);
         }
 
@@ -66,7 +66,7 @@ class LoginApplicationService
         }
         $this->authenticationInformaionRepository->save($authenticationInformaion);
 
-        if ($authenticationInformaion->canReloggedIn($currentDateTime)) {
+        if (!$authenticationInformaion->canLoggedIn($currentDateTime)) {
             return LoginResult::createWhenLoginFailed(true);
         }
 

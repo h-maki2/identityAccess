@@ -103,7 +103,7 @@ class AuthenticationInformaion
             throw new DomainException('認証済みのユーザーではありません。');
         }
 
-        if ($this->canReloggedIn($currentDateTime)) {
+        if (!$this->canLoggedIn($currentDateTime)) {
             throw new DomainException('アカウントがロックされています。');
         }
 
@@ -147,11 +147,19 @@ class AuthenticationInformaion
     }
 
     /**
-     * 再ログインが可能かどうかを判定
+     * ログイン可能かどうかを判定
      */
-    public function canReloggedIn(DateTimeImmutable $currentDateTime): bool
+    public function canLoggedIn(DateTimeImmutable $currentDateTime): bool
     {
-        return $this->loginRestriction->canDisable($currentDateTime);
+        if ($this->loginRestriction->canDisable($currentDateTime)) {
+            return true;
+        }
+
+        if ($this->isUnderLoginRestriction()) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
