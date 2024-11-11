@@ -100,7 +100,7 @@ class LoginRestriction
             throw new DomainException("ログイン制限が有効ではありません。");
         }
 
-        if ($this->isEnable($currentDateTime)) {
+        if ($this->canDisable($currentDateTime)) {
             throw new DomainException("ログイン制限の期間内です。");
         }
 
@@ -120,13 +120,16 @@ class LoginRestriction
     }
 
     /**
-     * ログイン制限が有効かどうかを判定
+     * ログイン制限を無効にできるかどうかを判定
      */
-    public function isEnable(DateTimeImmutable $currentDateTime): bool
+    public function canDisable(DateTimeImmutable $currentDateTime): bool
     {
         return $this->loginRestrictionStatus->isRestricted() && !$this->nextLoginAllowedAt->isAvailable($currentDateTime);
     }
 
+    /**
+     * ログイン制限中かどうかを判定
+     */
     public function isRestricted(): bool
     {
         return $this->loginRestrictionStatus->isRestricted();

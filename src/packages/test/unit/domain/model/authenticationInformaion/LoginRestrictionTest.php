@@ -90,7 +90,7 @@ class LoginRestrictionTest extends TestCase
         );
 
         // when
-        $result = $loginRestriction->isEnable(new DateTimeImmutable());
+        $result = $loginRestriction->canDisable(new DateTimeImmutable());
 
         // then
         $this->assertTrue($result);
@@ -107,7 +107,7 @@ class LoginRestrictionTest extends TestCase
         );
 
         // when
-        $result = $loginRestriction->isEnable(new DateTimeImmutable());
+        $result = $loginRestriction->canDisable(new DateTimeImmutable());
 
         // then
         $this->assertFalse($result);
@@ -124,7 +124,7 @@ class LoginRestrictionTest extends TestCase
         );
 
         // when
-        $result = $loginRestriction->isEnable(new DateTimeImmutable());
+        $result = $loginRestriction->canDisable(new DateTimeImmutable());
 
         // then
         $this->assertFalse($result);

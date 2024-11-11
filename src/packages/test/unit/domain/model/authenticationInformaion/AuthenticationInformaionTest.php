@@ -335,7 +335,7 @@ class AuthenticationInformaionTest extends TestCase
         );
 
         // when
-        $result = $authenticationInformaion->isLocked(new DateTimeImmutable());
+        $result = $authenticationInformaion->canReloggedIn(new DateTimeImmutable());
 
         // then
         $this->assertTrue($result);
@@ -360,7 +360,7 @@ class AuthenticationInformaionTest extends TestCase
         );
 
         // when
-        $result = $authenticationInformaion->isLocked(new DateTimeImmutable());
+        $result = $authenticationInformaion->canReloggedIn(new DateTimeImmutable());
 
         // then
         $this->assertFalse($result);

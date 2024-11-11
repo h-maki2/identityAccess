@@ -17,7 +17,7 @@ class LoginValidator
             return false;
         }
         
-        if ($authenticationInformaion->isLocked($currentDateTime)) {
+        if ($authenticationInformaion->canReloggedIn($currentDateTime)) {
             return false;
         }
  
