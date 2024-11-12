@@ -2,7 +2,7 @@
 
 namespace packages\domain\model\client;
 
-class ClientData
+abstract class ClientData
 {
     private string $clientId;
     private string $clientSecret;
@@ -38,12 +38,14 @@ class ClientData
     /**
      * 認可コード取得URLを作成する
      */
-    public function urlForObtainingAuthorizationCode(): string
+    abstract public function urlForObtainingAuthorizationCode(): string;
+
+    protected function urlPathForObtainingAuthorizationCode(): string
     {
-        return url('/oauth/authorize') . '?' . $this->queryParam();
+        return '/oauth/authorize?' . $this->queryParam();
     }
 
-    private function queryParam(): string
+    protected function queryParam(): string
     {
         return http_build_query([
             'response_type' => 'code',

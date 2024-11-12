@@ -22,7 +22,6 @@ class AuthenticationInformaionTestDataFactory
 
     public function create(
         ?UserEmail $email = null,
-        ?UserName $name = null,
         ?UserPassword $password = null,
         ?VerificationStatus $verificationStatus = null,
         ?UserId $id = null,
@@ -31,7 +30,6 @@ class AuthenticationInformaionTestDataFactory
     {
         $authenticationInformaion = TestAuthenticationInformaionFactory::create(
             $email,
-            $name,
             $password,
             $verificationStatus,
             $id,

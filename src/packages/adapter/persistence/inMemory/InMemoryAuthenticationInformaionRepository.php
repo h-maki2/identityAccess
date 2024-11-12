@@ -18,7 +18,7 @@ use Ramsey\Uuid\Uuid;
 
 class InMemoryAuthenticationInformaionRepository implements IAuthenticationInformaionRepository
 {
-    private array $authenticationInformaionList;
+    private array $authenticationInformaionList = [];
 
     public function findByEmail(UserEmail $email): ?AuthenticationInformaion
     {
