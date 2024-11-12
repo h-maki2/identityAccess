@@ -82,7 +82,7 @@ class LoginRestrictionTest extends TestCase
     public function test_ログイン制限を無効にできることを判定できる()
     {
         // given
-        // 再ログイン可能である場合
+        // 現在ログイン制限が有効で再ログイン可能である場合
         $loginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
             LoginRestrictionStatus::Restricted,
@@ -99,7 +99,7 @@ class LoginRestrictionTest extends TestCase
     public function test_ログイン制限がまだ無効にできないことを判定できる()
     {
         // given
-        // 再ログイン不可である場合
+        // 現在ログイン制限が有効で再ログイン不可である場合
         $loginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
             LoginRestrictionStatus::Unrestricted,
@@ -207,5 +207,39 @@ class LoginRestrictionTest extends TestCase
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage("ログイン制限が有効ではありません。");
         $loginRestriction->disable(new DateTimeImmutable());
+    }
+
+    public function test_ログイン制限中かどうかを判定できる()
+    {
+        // given
+        // ログイン制限が有効である場合
+        $loginRestriction = LoginRestriction::reconstruct(
+            FailedLoginCount::reconstruct(10),
+            LoginRestrictionStatus::Restricted,
+            NextLoginAllowedAt::reconstruct(new DateTimeImmutable('+1 minutes'))
+        );
+
+        // when
+        $result = $loginRestriction->isRestricted();
+
+        // then
+        $this->assertTrue($result);
+    }
+
+    public function test_ログイン制限中ではないことを判定できる()
+    {
+        // given
+        // ログイン制限が有効でない場合
+        $loginRestriction = LoginRestriction::reconstruct(
+            FailedLoginCount::reconstruct(9),
+            LoginRestrictionStatus::Unrestricted,
+            null
+        );
+
+        // when
+        $result = $loginRestriction->isRestricted();
+
+        // then
+        $this->assertFalse($result);
     }
 }
