@@ -22,9 +22,9 @@ class InMemoryAuthenticationInformaionRepository implements IAuthenticationInfor
 
     public function findByEmail(UserEmail $email): ?AuthenticationInformaion
     {
-        foreach ($this->authenticationInformaionList as $authenticationInformaionModel) {
-            if ($authenticationInformaionModel->email === $email->value) {
-                return $this->toAuthenticationInformaion($authenticationInformaionModel);
+        foreach ($this->authenticationInformaionList as $authenticationInformaionObj) {
+            if ($authenticationInformaionObj->email === $email->value) {
+                return $this->toAuthenticationInformaion($authenticationInformaionObj);
             }
         }
 
@@ -33,12 +33,12 @@ class InMemoryAuthenticationInformaionRepository implements IAuthenticationInfor
 
     public function findById(UserId $id): ?AuthenticationInformaion
     {
-        $authenticationInformaionModel = $this->authenticationInformaionList[$id->value] ?? null;
-        if ($authenticationInformaionModel === null) {
+        $authenticationInformaionObj = $this->authenticationInformaionList[$id->value] ?? null;
+        if ($authenticationInformaionObj === null) {
             return null;
         }
 
-        return $this->toAuthenticationInformaion($authenticationInformaionModel);
+        return $this->toAuthenticationInformaion($authenticationInformaionObj);
     }
 
     public function save(AuthenticationInformaion $authenticationInformaion): void
@@ -60,17 +60,17 @@ class InMemoryAuthenticationInformaionRepository implements IAuthenticationInfor
         return new UserId(new IdentifierFromUUIDver7(), Uuid::uuid7());
     }
 
-    private function toAuthenticationInformaion(object $authenticationInformaionModel): AuthenticationInformaion
+    private function toAuthenticationInformaion(object $authenticationInformaionObj): AuthenticationInformaion
     {
         return AuthenticationInformaion::reconstruct(
-            new UserId(new IdentifierFromUUIDver7(), $authenticationInformaionModel->user_id),
-            new UserEmail($authenticationInformaionModel->email),
-            UserPassword::reconstruct($authenticationInformaionModel->password),
-            VerificationStatus::from($authenticationInformaionModel->verification_status),
+            new UserId(new IdentifierFromUUIDver7(), $authenticationInformaionObj->user_id),
+            new UserEmail($authenticationInformaionObj->email),
+            UserPassword::reconstruct($authenticationInformaionObj->password),
+            VerificationStatus::from($authenticationInformaionObj->verification_status),
             LoginRestriction::reconstruct(
-                FailedLoginCount::reconstruct($authenticationInformaionModel->failed_login_count),
-                LoginRestrictionStatus::from($authenticationInformaionModel->login_restriction_status),
-                $authenticationInformaionModel->next_login_allowed_at !== null ? NextLoginAllowedAt::reconstruct(new DateTimeImmutable($authenticationInformaionModel->next_login_allowed_at)) : null
+                FailedLoginCount::reconstruct($authenticationInformaionObj->failed_login_count),
+                LoginRestrictionStatus::from($authenticationInformaionObj->login_restriction_status),
+                $authenticationInformaionObj->next_login_allowed_at !== null ? NextLoginAllowedAt::reconstruct(new DateTimeImmutable($authenticationInformaionObj->next_login_allowed_at)) : null
             )
         );
     }
