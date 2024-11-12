@@ -51,13 +51,10 @@ class LoginApplicationService
         if ($authenticationInformaion->password()->equals($inputedPassword)) {
             $this->sessionAuthentication->markAsLoggedIn($authenticationInformaion->id());
 
-            $client = $this->clientFetcher->fetchById($clientId);
-            if ($client === null) {
-                throw new UnexpectedValueException("{$clientId}のクライアントが見つかりません。");
-            }
-
             $this->authenticationInformaionRepository->save($authenticationInformaion);
-            return LoginResult::createWhenLoginSucceeded($client->urlForObtainingAuthorizationCode());
+
+            $urlForObtainingAuthorizationCode = $this->urlForObtainingAuthorizationCode($clientId);
+            return LoginResult::createWhenLoginSucceeded($urlForObtainingAuthorizationCode);
         }
 
         $authenticationInformaion->addFailedLoginCount($currentDateTime);
@@ -71,5 +68,18 @@ class LoginApplicationService
         }
 
         return LoginResult::createWhenLoginFailed(false);
+    }
+
+    /**
+     * 認可コード取得用URLを取得する
+     */
+    private function urlForObtainingAuthorizationCode(string $clientId): string
+    {
+        $client = $this->clientFetcher->fetchById($clientId);
+        if ($client === null) {
+            throw new UnexpectedValueException("{$clientId}のクライアントが見つかりません。");
+        }
+            
+        return $client->urlForObtainingAuthorizationCode();
     }
 }
