@@ -8,7 +8,6 @@ use packages\domain\model\authenticationInformaion\UserPassword;
 use packages\domain\model\authenticationInformaion\VerificationStatus;
 use packages\domain\model\client\IClientFetcher;
 use packages\test\helpers\authenticationInformaion\AuthenticationInformaionTestDataFactory;
-use packages\test\helpers\authenticationInformaion\TestAuthenticationInformaionFactory;
 use packages\test\helpers\client\TestClientDataFactory;
 use PHPUnit\Framework\TestCase;
 
@@ -78,7 +77,9 @@ class LoginApplicationServiceTest extends TestCase
         // then
         // ログインが成功していることを確認する
         $this->assertTrue($loginResult->loginSucceeded());
+        // 認可コード取得用のURLが返されていることを確認する
         $this->assertEquals($clientData->urlForObtainingAuthorizationCode(), $loginResult->authorizationUrl());
+        // アカウントがロックされていないことを確認する
         $this->assertFalse($loginResult->accountLocked());
     }
 }
