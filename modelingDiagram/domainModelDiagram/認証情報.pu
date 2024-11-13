@@ -29,7 +29,7 @@ package "認証情報集約(Aggregation)" {
 
     class "LoginRestriction\nログイン制限" as LoginRestriction {
         - failedLoginCount ログイン失敗回数: FailedLoginCount
-        - loginRestrictionStatus: LoginRestrictionStatus
+        - loginRestrictionStatus ログイン制限ステータス: LoginRestrictionStatus
         - nextLoginAllowedAt 次回ログイン可能日時: NextLoginAllowedAt
     }
 
@@ -96,8 +96,13 @@ package "認証確認(AuthenticationConfirmation)" {
         userId: UserId
     }
 
-    class "TemporaryToken\n一時的なトークン" as Temporarytoken {
+    class "TemporaryToken\n一時トークン" as Temporarytoken {
         - value: string
+        - temporaryTokenEffectiveDate: TemporaryTokenEffectiveDate
+    }
+
+    class "TemporaryTokenEffectiveDate\n一時トークンの有効期限" as TemporaryTokenEffectiveDate {
+        - value: DatetimeImutable
     }
 
     note bottom of Temporarytoken

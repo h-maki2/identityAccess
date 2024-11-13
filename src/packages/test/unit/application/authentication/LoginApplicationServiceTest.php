@@ -82,4 +82,34 @@ class LoginApplicationServiceTest extends TestCase
         // アカウントがロックされていないことを確認する
         $this->assertFalse($loginResult->accountLocked());
     }
+
+    public function test_メールアドレスが正しくない場合にログインが失敗する()
+    {
+
+    }
+
+    public function test_パスワードが正しくない場合にログインが失敗する()
+    {
+
+    }
+
+    public function test_アカウントがロックされている場合はログインが失敗する()
+    {
+
+    }
+
+    public function test_アカウントロックの有効期限外の場合、正しいメールアドレスとパスワードでログインできる()
+    {
+
+    }
+
+    public function test_ログインに失敗した場合、ログイン失敗回数が更新される()
+    {
+
+    }
+
+    public function test_ログインに失敗した場合、失敗回数が一定回数を超えた場合アカウントがロックされる()
+    {
+
+    }
 }

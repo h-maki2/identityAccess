@@ -44,14 +44,14 @@ class LoginApplicationService
             return LoginResult::createWhenLoginFailed(true);
         }
 
-        if ($authenticationInformaion->isUnderLoginRestriction()) {
-            $authenticationInformaion->disableLoginRestriction($currentDateTime);
-        }
+        // if ($authenticationInformaion->isUnderLoginRestriction()) {
+        //     $authenticationInformaion->disableLoginRestriction($currentDateTime);
+        // }
 
         if ($authenticationInformaion->password()->equals($inputedPassword)) {
             $this->sessionAuthentication->markAsLoggedIn($authenticationInformaion->id());
 
-            $this->authenticationInformaionRepository->save($authenticationInformaion);
+            // $this->authenticationInformaionRepository->save($authenticationInformaion);
 
             $urlForObtainingAuthorizationCode = $this->urlForObtainingAuthorizationCode($clientId);
             return LoginResult::createWhenLoginSucceeded($urlForObtainingAuthorizationCode);
