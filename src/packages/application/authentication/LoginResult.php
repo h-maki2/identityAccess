@@ -6,25 +6,21 @@ class LoginResult
 {
     private string $authorizationUrl;
     private bool $loginSucceeded;
-    private bool $accountLocked;
 
     private function __construct(
         string $authorizationUrl,
-        bool $loginSucceeded,
-        bool $accountLocked
+        bool $loginSucceeded
     )
     {
         $this->authorizationUrl = $authorizationUrl;
         $this->loginSucceeded = $loginSucceeded;
-        $this->accountLocked = $accountLocked;
     }
 
-    public static function createWhenLoginFailed(bool $accountLocked): self
+    public static function createWhenLoginFailed(): self
     {
         return new self(
             '',
-            false,
-            $accountLocked
+            false
         );
     }
 
@@ -32,8 +28,7 @@ class LoginResult
     {
         return new self(
             $authorizationUrl,
-            true,
-            false
+            true
         );
     }
     
@@ -45,10 +40,5 @@ class LoginResult
     public function loginSucceeded(): bool
     {
         return $this->loginSucceeded;
-    }
-
-    public function accountLocked(): bool
-    {
-        return $this->accountLocked;
     }
 }

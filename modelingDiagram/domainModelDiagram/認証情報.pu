@@ -78,7 +78,7 @@ package "認証情報集約(Aggregation)" {
         ・ログイン制限は10分間
     end note
 
-    note bottom of LoginRestriction
+    note bottom of LoginRestrictionStatus
         ・ログイン制限がかかった場合、ログイン制限ステータスが「制限中」になる
         ・ログイン制限が解除された場合、ログイン制限ステータスが「制限なし」になる
     end note

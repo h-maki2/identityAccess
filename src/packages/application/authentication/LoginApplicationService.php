@@ -41,14 +41,11 @@ class LoginApplicationService
 
         $currentDateTime = new DateTimeImmutable();
         if (!$authenticationInformaion->canLoggedIn($currentDateTime)) {
-            return LoginResult::createWhenLoginFailed(true);
+            return LoginResult::createWhenLoginFailed();
         }
 
         if ($authenticationInformaion->password()->equals($inputedPassword)) {
             $this->sessionAuthentication->markAsLoggedIn($authenticationInformaion->id());
-
-            // $this->authenticationInformaionRepository->save($authenticationInformaion);
-
             $urlForObtainingAuthorizationCode = $this->urlForObtainingAuthorizationCode($clientId);
             return LoginResult::createWhenLoginSucceeded($urlForObtainingAuthorizationCode);
         }
@@ -59,11 +56,7 @@ class LoginApplicationService
         }
         $this->authenticationInformaionRepository->save($authenticationInformaion);
 
-        if (!$authenticationInformaion->canLoggedIn($currentDateTime)) {
-            return LoginResult::createWhenLoginFailed(true);
-        }
-
-        return LoginResult::createWhenLoginFailed(false);
+        return LoginResult::createWhenLoginFailed();
     }
 
     /**
