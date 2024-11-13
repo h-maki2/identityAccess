@@ -21,12 +21,9 @@ class UserPassword
 
     public static function create(string $value): self
     {
-        $validtion = new UserPasswordValidation();
-        if ($validtion->invalidPasswordLength($value)) {
-            throw new InvalidArgumentException('適切なパスワードではありません。');
-        }
-        if ($validtion->invalidPasswordStrength($value)) {
-            throw new InvalidArgumentException('適切なパスワードではありません。');
+        $userPasswordValidation = new UserPasswordValidation($value);
+        if (!$userPasswordValidation->validate()) {
+            throw new InvalidArgumentException('無効なパスワードです。');
         }
 
         return new self(Argon2Hash::hashValue($value));
