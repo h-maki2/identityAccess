@@ -78,6 +78,8 @@ class LoginApplicationServiceTest extends TestCase
         $this->assertEquals($clientData->urlForObtainingAuthorizationCode(), $loginResult->authorizationUrl());
         // 正しいuserIdでログインされていることを確認する
         $this->assertEquals($userId->value, $capturedUserId);
+        // アカウントがロックされていないことを確認する
+        $this->assertFalse($loginResult->accountLocked());
     }
 
     public function test_メールアドレスが正しくない場合にログインが失敗する()
@@ -174,6 +176,8 @@ class LoginApplicationServiceTest extends TestCase
         // ログインが失敗していることを確認する
         $this->assertFalse($loginResult->loginSucceeded());
         $this->assertEmpty($loginResult->authorizationUrl());
+        // アカウントがロックされていることを確認する
+        $this->assertTrue($loginResult->accountLocked());
     }
 
     public function test_アカウントロックの有効期限外の場合、正しいメールアドレスとパスワードでログインできる()
@@ -234,6 +238,8 @@ class LoginApplicationServiceTest extends TestCase
         $this->assertEquals($clientData->urlForObtainingAuthorizationCode(), $loginResult->authorizationUrl());
         // 正しいuserIdでログインされていることを確認する
         $this->assertEquals($userId->value, $capturedUserId);
+        // アカウントがロックされていないことを確認する
+        $this->assertFalse($loginResult->accountLocked());
     }
 
     public function test_ログインに失敗した場合、ログイン失敗回数が更新される()
@@ -308,7 +314,7 @@ class LoginApplicationServiceTest extends TestCase
 
         // when
         // 10回目のログインに失敗する
-        $loginApplicationService->login($inputedEmail, $inputedPassword, $clientId);
+        $loginResult = $loginApplicationService->login($inputedEmail, $inputedPassword, $clientId);
 
         // then
         // アカウントがロックされていることを確認する
@@ -316,5 +322,6 @@ class LoginApplicationServiceTest extends TestCase
         $this->assertEquals(LoginRestrictionStatus::Restricted->value, $authenticationInformaion->loginRestriction()->loginRestrictionStatus());
         $this->assertNotNull($authenticationInformaion->loginRestriction()->nextLoginAllowedAt());
         $this->assertEquals(10, $authenticationInformaion->loginRestriction()->failedLoginCount());
+        $this->assertTrue($loginResult->accountLocked());
     }
 }

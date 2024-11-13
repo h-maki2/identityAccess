@@ -36,17 +36,23 @@ class LoginApplicationService
         $authenticationInformaion = $this->authenticationInformaionRepository->findByEmail($email);
 
         if ($authenticationInformaion === null) {
-            return LoginResult::createWhenLoginFailed();
+            return LoginResult::createWhenLoginFailed(false);
         }
 
         $currentDateTime = new DateTimeImmutable();
-        if (!$authenticationInformaion->canLoggedIn(new DateTimeImmutable())) {
-            return LoginResult::createWhenLoginFailed();
+        if (!$authenticationInformaion->canLoggedIn($currentDateTime)) {
+            return LoginResult::createWhenLoginFailed(true);
+        }
+
+        if ($authenticationInformaion->canDisableLoginRestriction($currentDateTime)) {
+            $authenticationInformaion->disableLoginRestriction($currentDateTime);
         }
 
         if ($authenticationInformaion->password()->equals($inputedPassword)) {
             $this->sessionAuthentication->markAsLoggedIn($authenticationInformaion->id());
             $urlForObtainingAuthorizationCode = $this->urlForObtainingAuthorizationCode($clientId);
+
+            $this->authenticationInformaionRepository->save($authenticationInformaion);
             return LoginResult::createWhenLoginSucceeded($urlForObtainingAuthorizationCode);
         }
 
@@ -56,7 +62,11 @@ class LoginApplicationService
         }
         $this->authenticationInformaionRepository->save($authenticationInformaion);
 
-        return LoginResult::createWhenLoginFailed();
+        if (!$authenticationInformaion->canLoggedIn($currentDateTime)) {
+            return LoginResult::createWhenLoginFailed(true);
+        }
+
+        return LoginResult::createWhenLoginFailed(false);
     }
 
     /**

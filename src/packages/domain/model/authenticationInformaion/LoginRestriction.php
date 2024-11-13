@@ -124,7 +124,7 @@ class LoginRestriction
             return false;
         }
         
-        return $this->isRestricted() && $this->nextLoginAllowedAt->isAvailable($currentDateTime);
+        return $this->nextLoginAllowedAt->isAvailable($currentDateTime);
     }
 
     /**
