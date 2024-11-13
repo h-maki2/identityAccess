@@ -3,26 +3,18 @@
 namespace packages\domain\model\authenticationInformaion;
 
 use InvalidArgumentException;
+use packages\domain\model\authenticationInformaion\validation\UserEmailValidation;
 
 class UserEmail
 {
     readonly string $value;
 
-    public function __construct(string $value)
+    public function __construct(string $value, UserEmailValidation $userEmailValidation)
     {
-        if (empty($value)) {
-            throw new InvalidArgumentException('メールアドレスが空です。');
-        }
-
-        if ($this->invalidEmail($value)) {
+        if (!$userEmailValidation->validate()) {
             throw new InvalidArgumentException('無効なメールアドレスです。');
         }
 
         $this->value = $value;
-    }
-
-    private function invalidEmail(string $value): bool
-    {
-        return !preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $value);
     }
 }

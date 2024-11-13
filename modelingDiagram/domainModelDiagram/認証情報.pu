@@ -64,7 +64,8 @@ package "認証情報集約(Aggregation)" {
     end note
 
     note bottom of Email
-        重複したメールアドレスは存在しない
+        ・重複したメールアドレスは存在しない
+        ・255文字以内
     end note
 
     note bottom of FailedLoginCount
