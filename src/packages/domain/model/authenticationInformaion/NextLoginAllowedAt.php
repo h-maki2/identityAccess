@@ -30,7 +30,7 @@ class NextLoginAllowedAt
 
     public function formattedValue(): string
     {   
-        return $this->value->format('Y-m-d HH:MM');
+        return $this->value->format('Y-m-d H:i');
     }
 
     /**

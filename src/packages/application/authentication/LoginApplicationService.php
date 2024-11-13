@@ -41,7 +41,11 @@ class LoginApplicationService
         }
 
         $currentDateTime = new DateTimeImmutable();
-        if (LoginAvailabilityService::isLoginAvailable($authenticationInformaion, $inputedPassword, $currentDateTime)) {
+        if (!$authenticationInformaion->canLoggedIn(new DateTimeImmutable())) {
+            return LoginResult::createWhenLoginFailed();
+        }
+
+        if ($authenticationInformaion->password()->equals($inputedPassword)) {
             $this->sessionAuthentication->markAsLoggedIn($authenticationInformaion->id());
             $urlForObtainingAuthorizationCode = $this->urlForObtainingAuthorizationCode($clientId);
             return LoginResult::createWhenLoginSucceeded($urlForObtainingAuthorizationCode);
