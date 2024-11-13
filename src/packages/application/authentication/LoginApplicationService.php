@@ -7,6 +7,7 @@ use packages\domain\model\client\IClientFetcher;
 use packages\domain\model\authenticationInformaion\IAuthenticationInformaionRepository;
 use packages\domain\model\authenticationInformaion\SessionAuthentication;
 use packages\domain\model\authenticationInformaion\UserEmail;
+use packages\domain\model\authenticationInformaion\validation\LoginAvailabilityService;
 use UnexpectedValueException;
 
 class LoginApplicationService
@@ -36,15 +37,11 @@ class LoginApplicationService
         $authenticationInformaion = $this->authenticationInformaionRepository->findByEmail($email);
 
         if ($authenticationInformaion === null) {
-            return LoginResult::createWhenLoginFailed(false);
-        }
-
-        $currentDateTime = new DateTimeImmutable();
-        if (!$authenticationInformaion->canLoggedIn($currentDateTime)) {
             return LoginResult::createWhenLoginFailed();
         }
 
-        if ($authenticationInformaion->password()->equals($inputedPassword)) {
+        $currentDateTime = new DateTimeImmutable();
+        if (LoginAvailabilityService::isLoginAvailable($authenticationInformaion, $inputedPassword, $currentDateTime)) {
             $this->sessionAuthentication->markAsLoggedIn($authenticationInformaion->id());
             $urlForObtainingAuthorizationCode = $this->urlForObtainingAuthorizationCode($clientId);
             return LoginResult::createWhenLoginSucceeded($urlForObtainingAuthorizationCode);
