@@ -96,12 +96,8 @@ class LoginRestriction
      */
     public function disable(DateTimeImmutable $currentDateTime): self
     {
-        if (!$this->isRestricted()) {
-            throw new DomainException("ログイン制限が有効ではありません。");
-        }
-
         if (!$this->canDisable($currentDateTime)) {
-            throw new DomainException("ログイン制限の期間内です。");
+            throw new DomainException("ログイン制限が有効ではないか、もしくはログイン制限の期間内です。");
         }
 
         return new self(
