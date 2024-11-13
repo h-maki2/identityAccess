@@ -1,7 +1,7 @@
 <?php
 
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformaionRepository;
-use packages\application\authentication\LoginApplicationService;
+use packages\application\authentication\login\LoginApplicationService;
 use packages\domain\model\authenticationInformaion\FailedLoginCount;
 use packages\domain\model\authenticationInformaion\LoginRestriction;
 use packages\domain\model\authenticationInformaion\LoginRestrictionStatus;

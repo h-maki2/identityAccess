@@ -1,13 +1,12 @@
 <?php
 
-namespace packages\application\authentication;
+namespace packages\application\authentication\login;
 
 use DateTimeImmutable;
 use packages\domain\model\client\IClientFetcher;
 use packages\domain\model\authenticationInformaion\IAuthenticationInformaionRepository;
 use packages\domain\model\authenticationInformaion\SessionAuthentication;
 use packages\domain\model\authenticationInformaion\UserEmail;
-use packages\domain\model\authenticationInformaion\validation\LoginAvailabilityService;
 use UnexpectedValueException;
 
 class LoginApplicationService

@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\application\authentication;
+namespace packages\application\authentication\login;
 
 class LoginResult
 {
