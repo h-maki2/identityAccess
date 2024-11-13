@@ -290,10 +290,10 @@ class AuthenticationInformaionTest extends TestCase
         $authenticationInformaion->enableLoginRestriction(new DateTimeImmutable());
     }
 
-    public function test_ログイン制限が現在有効で、ログイン制限が解除可能の場合はログイン制限を解除できる()
+    public function test_ログイン制限が有効で再ログイン可能である場合はログイン制限を解除できる()
     {
         // given
-        // ログイン制限は有効だが再ログイン可能な認証情報を生成する
+        // ログイン制限は有効だが再ログインは可能である認証情報を生成する
         $verificationStatus = VerificationStatus::Verified;
         $LoginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
@@ -316,10 +316,10 @@ class AuthenticationInformaionTest extends TestCase
         $this->assertNull($authenticationInformaion->LoginRestriction()->nextLoginAllowedAt());
     }
 
-    public function test_ログインができないことを判定できる()
+    public function test_ログイン制限が有効状態で再ログインが不可である場合、ログインができないことを判定できる()
     {
         // given
-        // ログイン制限が有効である認証情報を生成する
+        // ログイン制限が有効状態で再ログインが不可である認証情報を生成する
         $verificationStatus = VerificationStatus::Verified;
         $loginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
@@ -341,7 +341,7 @@ class AuthenticationInformaionTest extends TestCase
         $this->assertFalse($result);
     }
 
-    public function test_ログインが可能であることを判定できる()
+    public function test_ログイン制限が有効状態で再ログインが可能である場合、ログインが可能であることを判定できる()
     {
         // given
         // ログイン制限は有効だが再ログイン可能な認証情報を生成する
@@ -364,6 +364,49 @@ class AuthenticationInformaionTest extends TestCase
 
         // then
         $this->assertTrue($result);
+    }
+
+    public function test_ログイン制限が有効状態ではない場合、ログインが可能であることを判定できる()
+    {
+        // given
+        // ログイン制限が有効状態ではない認証情報を生成する
+        $verificationStatus = VerificationStatus::Verified;
+        $loginRestriction = LoginRestriction::reconstruct(
+            FailedLoginCount::reconstruct(9),
+            LoginRestrictionStatus::Unrestricted,
+            null
+        );
+        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
+            null,
+            null,
+            $verificationStatus,
+            null,
+            $loginRestriction
+        );
+
+        // when
+        $result = $authenticationInformaion->canLoggedIn(new DateTimeImmutable());
+
+        // then
+        $this->assertTrue($result);
+    }
+
+    public function test_認証ステータスが未認証の場合、ログイン不可であることを判定できる()
+    {
+        // given
+        // 認証ステータスが未認証の認証情報を生成する
+        $verificationStatus = VerificationStatus::Unverified;
+        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
+            null,
+            null,
+            $verificationStatus
+        );
+
+        // when
+        $result = $authenticationInformaion->canLoggedIn(new DateTimeImmutable());
+
+        // then
+        $this->assertFalse($result);
     }
 
     public function test_ログイン制限を有効にできるかどうかを判定できる()
