@@ -275,6 +275,46 @@ class LoginApplicationServiceTest extends TestCase
 
     public function test_ログインに失敗した場合、失敗回数が一定回数を超えた場合アカウントがロックされる()
     {
+        // given
+        // 認証情報を作成する
+        $email = new UserEmail('test@example.com');
+        $password = UserPassword::create('ABCabc123_');
+        $loginRestriction = LoginRestriction::reconstruct(
+            FailedLoginCount::reconstruct(0),
+            LoginRestrictionStatus::Unrestricted,
+            null
+        );
+        $this->authenticationInformaionTestDataFactory->create(
+            $email,
+            $password,
+            VerificationStatus::Verified,
+            null,
+            $loginRestriction
+        );
 
+        $inputedEmail = 'test@example.com';
+        // パスワードが間違っている
+        $inputedPassword = 'ABCabc123_!';
+        $clientId = '1';
+        $loginApplicationService = new LoginApplicationService(
+            $this->authenticationInformaionRepository,
+            $this->createMock(SessionAuthentication::class),
+            $this->createMock(IClientFetcher::class)
+        );
+        // 9回ログインに失敗する
+        for ($i = 0; $i < 9; $i++) {
+            $loginApplicationService->login($inputedEmail, $inputedPassword, $clientId);
+        }
+
+        // when
+        // 10回目のログインに失敗する
+        $loginApplicationService->login($inputedEmail, $inputedPassword, $clientId);
+
+        // then
+        // アカウントがロックされていることを確認する
+        $authenticationInformaion = $this->authenticationInformaionRepository->findByEmail($email);
+        $this->assertEquals(LoginRestrictionStatus::Restricted->value, $authenticationInformaion->loginRestriction()->loginRestrictionStatus());
+        $this->assertNotNull($authenticationInformaion->loginRestriction()->nextLoginAllowedAt());
+        $this->assertEquals(10, $authenticationInformaion->loginRestriction()->failedLoginCount());
     }
 }
