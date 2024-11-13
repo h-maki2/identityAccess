@@ -151,15 +151,27 @@ class AuthenticationInformaion
      */
     public function canLoggedIn(DateTimeImmutable $currentDateTime): bool
     {
-        if ($this->loginRestriction->canDisable($currentDateTime)) {
-            return true;
-        }
-
-        if ($this->isUnderLoginRestriction()) {
+        if (!$this->isVerified()) {
             return false;
         }
 
-        return true;
+        if (!$this->loginRestriction->isRestricted()) {
+            return true;
+        }
+
+        if ($this->canDisableLoginRestriction($currentDateTime)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * ログイン制限を無効にできるかどうかを判定
+     */
+    public function canDisableLoginRestriction(DateTimeImmutable $currentDateTime): bool
+    {
+        return $this->loginRestriction->canDisable($currentDateTime);
     }
 
     /**
@@ -168,14 +180,6 @@ class AuthenticationInformaion
     public function isVerified(): bool
     {
         return $this->verificationStatus->isVerified();
-    }
-
-    /**
-     * ログイン制限中かどうかを判定
-     */
-    public function isUnderLoginRestriction(): bool
-    {
-        return $this->loginRestriction->isRestricted();
     }
 
     /**

@@ -44,10 +44,6 @@ class LoginApplicationService
             return LoginResult::createWhenLoginFailed(true);
         }
 
-        // if ($authenticationInformaion->isUnderLoginRestriction()) {
-        //     $authenticationInformaion->disableLoginRestriction($currentDateTime);
-        // }
-
         if ($authenticationInformaion->password()->equals($inputedPassword)) {
             $this->sessionAuthentication->markAsLoggedIn($authenticationInformaion->id());
 

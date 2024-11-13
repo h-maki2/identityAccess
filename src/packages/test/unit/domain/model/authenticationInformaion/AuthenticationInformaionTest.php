@@ -366,56 +366,6 @@ class AuthenticationInformaionTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function test_ログイン制限中であることを判定できる()
-    {
-        // given
-        // ログイン制限が有効である認証情報を生成する
-        $verificationStatus = VerificationStatus::Verified;
-        $loginRestriction = LoginRestriction::reconstruct(
-            FailedLoginCount::reconstruct(10),
-            LoginRestrictionStatus::Restricted,
-            NextLoginAllowedAt::reconstruct(new DateTimeImmutable('+10 minutes'))
-        );
-        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
-            null,
-            null,
-            $verificationStatus,
-            null,
-            $loginRestriction
-        );
-
-        // when
-        $result = $authenticationInformaion->isUnderLoginRestriction();
-
-        // then
-        $this->assertTrue($result);
-    }
-
-    public function test_ログイン制限中でないことを判定できる()
-    {
-        // given
-        // ログイン制限が有効である認証情報を生成する
-        $verificationStatus = VerificationStatus::Verified;
-        $loginRestriction = LoginRestriction::reconstruct(
-            FailedLoginCount::reconstruct(10),
-            LoginRestrictionStatus::Unrestricted,
-            null
-        );
-        $authenticationInformaion = TestAuthenticationInformaionFactory::create(
-            null,
-            null,
-            $verificationStatus,
-            null,
-            $loginRestriction
-        );
-
-        // when
-        $result = $authenticationInformaion->isUnderLoginRestriction();
-
-        // then
-        $this->assertFalse($result);
-    }
-
     public function test_ログイン制限を有効にできるかどうかを判定できる()
     {
         // given

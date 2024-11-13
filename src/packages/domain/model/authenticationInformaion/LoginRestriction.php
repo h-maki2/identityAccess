@@ -124,6 +124,10 @@ class LoginRestriction
      */
     public function canDisable(DateTimeImmutable $currentDateTime): bool
     {
+        if (!$this->isRestricted()) {
+            return false;
+        }
+        
         return $this->isRestricted() && $this->nextLoginAllowedAt->isAvailable($currentDateTime);
     }
 
