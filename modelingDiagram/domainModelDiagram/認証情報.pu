@@ -93,23 +93,34 @@ package "認証情報集約(Aggregation)" {
 
 package "認証確認(AuthenticationConfirmation)" {
     class "AuthenticationConfirmation\n認証確認" as AuthenticationConfirmation {
-        temporarytoken: Temporarytoken
         userId: UserId
+        temporarytoken: Temporarytoken
+        authenticationCode: AuthenticationCode
+    }
+
+    class "AuthenticationCode\n認証コード" as AuthenticationCode {
+        - value: string
     }
 
     class "TemporaryToken\n一時トークン" as Temporarytoken {
         - value: string
-        - temporaryTokenEffectiveDate: TemporaryTokenEffectiveDate
+        - temporaryTokenExpiration: TemporaryTokenExpiration
     }
 
-    class "TemporaryTokenEffectiveDate\n一時トークンの有効期限" as TemporaryTokenEffectiveDate {
+    class "TemporaryTokenExpiration\n一時トークンの有効期限" as TemporaryTokenExpiration {
         - value: DatetimeImutable
     }
+
+    note bottom of AuthenticationCode
+        ・ランダムな6文字の数字
+    end note
 
     note bottom of Temporarytoken
         ・認証確認URLのクエリパラメータに追加される
         ・認証確認が済んだら削除する
         ・有効期限は24時間
+        ・有効期限が切れた場合は、再度新しい一時トークンを発行する
+        ・ランダムな24文字の文字列
     end note
 
     AuthenticationConfirmation *-down- Temporarytoken
