@@ -12,17 +12,17 @@ abstract class Validator
     abstract public function validate(): bool;
 
     /**
-     * バリデーション対象のフィールド名を取得
-     */
-    abstract protected function fieldName(): string;
-
-    /**
      * エラーメッセージを取得
      */
-    protected function errorMessageList(): array
+    public function errorMessageList(): array
     {
         return $this->errorMessageList;
     }
+
+    /**
+     * バリデーション対象のフィールド名を取得
+     */
+    abstract protected function fieldName(): string;
 
     /**
      * エラーメッセージをセット

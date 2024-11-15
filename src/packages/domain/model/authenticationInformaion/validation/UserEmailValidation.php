@@ -2,41 +2,43 @@
 
 namespace packages\domain\model\authenticationInformaion\validation;
 
+use packages\domain\model\authenticationInformaion\IAuthenticationInformaionRepository;
+use packages\domain\model\authenticationInformaion\UserEmail;
 use packages\domain\model\common\validator\Validator;
+use packages\domain\service\authenticationInformaion\AuthenticationInformaionService;
+use PharIo\Manifest\Email;
 
 class UserEmailValidation extends Validator
 {
     private const MIN_LENGTH = 255;
 
     private string $email;
+    private IAuthenticationInformaionRepository $authenticationInformaionRepository;
 
-    public function __construct(string $email)
+    public function __construct(
+        string $email, 
+        IAuthenticationInformaionRepository $authenticationInformaionRepository
+    )
     {
         $this->email = $email;
+        $this->authenticationInformaionRepository = $authenticationInformaionRepository;
     }
 
     public function validate(): bool
     {
-        if ($this->invalidLength() || $this->invalidEmail()) {
+        if (UserEmailFormatChecker::invalidEmailLength($this->email) || UserEmailFormatChecker::invalidEmail($this->email)) {
             $this->setErrorMessage('不正なメールアドレスです。');
             return false;
         }
 
-        return true;
-    }
-
-    protected function invalidLength(): bool
-    {
-        if (empty($this->email)) {
-            return true;
+        $userEmail = new UserEmail($this->email);
+        $authenticationInformaionService = new AuthenticationInformaionService($this->authenticationInformaionRepository);
+        if ($authenticationInformaionService->alreadyExistsEmail($userEmail)) {
+            $this->setErrorMessage('既に登録されているメールアドレスです。');
+            return false;
         }
 
-        return mb_strlen($this->email, 'UTF-8') > self::MIN_LENGTH;
-    }
-
-    protected function invalidEmail(): bool
-    {
-        return !preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $this->email);
+        return true;
     }
 
     protected function fieldName(): string
