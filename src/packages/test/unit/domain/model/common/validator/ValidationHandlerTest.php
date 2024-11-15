@@ -45,4 +45,23 @@ class ValidationHandlerTest extends TestCase
         ];
         $this->assertEquals($expectedErrorMessageList, $validationHandler->errorMessages());
     }
+
+    public function test_バリデーションエラーが発生しない場合、エラーメッセージは空である()
+    {
+        // given
+        // メールアドレスとパスワードのバリデーションを行う
+        $userEmailValidation = new UserEmailValidation('test@example.com', $this->authenticationInformaionRepository);
+        $userPasswordValidation = new UserPasswordValidation('passWord1!');
+
+        $validationHandler = new ValidationHandler();
+        $validationHandler->addValidator($userEmailValidation);
+        $validationHandler->addValidator($userPasswordValidation);
+
+        // when
+        $result = $validationHandler->validate();
+
+        // then
+        $this->assertTrue($result);
+        $this->assertEmpty($validationHandler->errorMessages());
+    }
 }
