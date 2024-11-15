@@ -10,8 +10,6 @@ use PharIo\Manifest\Email;
 
 class UserEmailValidation extends Validator
 {
-    private const MIN_LENGTH = 255;
-
     private string $email;
     private IAuthenticationInformaionRepository $authenticationInformaionRepository;
 
