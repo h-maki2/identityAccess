@@ -17,9 +17,7 @@ class UserPasswordValidationTest extends TestCase
         // then
         $this->assertFalse($result);
 
-        $expectedErrorMessageList = [
-            'password' => ['パスワードは8文字以上で入力してください']
-        ];
+        $expectedErrorMessageList = ['パスワードは8文字以上で入力してください'];
         $this->assertEquals($expectedErrorMessageList, $validation->errorMessageList());
     }
 
@@ -35,9 +33,7 @@ class UserPasswordValidationTest extends TestCase
         // then
         $this->assertFalse($result);
 
-        $expectedErrorMessageList = [
-            'password' => ['パスワードは大文字、小文字、数字、記号をそれぞれ1文字以上含めてください']
-        ];
+        $expectedErrorMessageList = ['パスワードは大文字、小文字、数字、記号をそれぞれ1文字以上含めてください'];
         $this->assertEquals($expectedErrorMessageList, $validation->errorMessageList());
     }
 
@@ -53,10 +49,8 @@ class UserPasswordValidationTest extends TestCase
         // then
         $this->assertFalse($result);
         $expectedErrorMessageList = [
-            'password' => [
-                'パスワードは8文字以上で入力してください',
-                'パスワードは大文字、小文字、数字、記号をそれぞれ1文字以上含めてください'
-            ]
+            'パスワードは8文字以上で入力してください',
+            'パスワードは大文字、小文字、数字、記号をそれぞれ1文字以上含めてください'
         ];
         $this->assertEquals($expectedErrorMessageList, $validation->errorMessageList());
     }

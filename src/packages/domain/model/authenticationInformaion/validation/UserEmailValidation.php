@@ -39,7 +39,7 @@ class UserEmailValidation extends Validator
         return true;
     }
 
-    protected function fieldName(): string
+    public function fieldName(): string
     {
         return 'email';
     }

@@ -29,9 +29,7 @@ class UserEmailValidationTest extends TestCase
         // then
         $this->assertFalse($result);
 
-        $expectedErrorMessage = [
-            'email' => ['不正なメールアドレスです。']
-        ];
+        $expectedErrorMessage = ['不正なメールアドレスです。'];
         $this->assertEquals($expectedErrorMessage, $userEmailValidation->errorMessageList());
     }
 
@@ -47,9 +45,7 @@ class UserEmailValidationTest extends TestCase
         // then
         $this->assertFalse($result);
 
-        $expectedErrorMessage = [
-            'email' => ['不正なメールアドレスです。']
-        ];
+        $expectedErrorMessage = ['不正なメールアドレスです。'];
         $this->assertEquals($expectedErrorMessage, $userEmailValidation->errorMessageList());
     }
 
@@ -69,9 +65,7 @@ class UserEmailValidationTest extends TestCase
         // then
         $this->assertFalse($result);
 
-        $expectedErrorMessage = [
-            'email' => ['既に登録されているメールアドレスです。']
-        ];
+        $expectedErrorMessage = ['既に登録されているメールアドレスです。'];
         $this->assertEquals($expectedErrorMessage, $userEmailValidation->errorMessageList());
     }
 

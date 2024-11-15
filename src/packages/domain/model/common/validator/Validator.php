@@ -22,13 +22,13 @@ abstract class Validator
     /**
      * バリデーション対象のフィールド名を取得
      */
-    abstract protected function fieldName(): string;
+    abstract public function fieldName(): string;
 
     /**
      * エラーメッセージをセット
      */
     protected function setErrorMessage(string $message): void
     {
-        $this->errorMessageList[$this->fieldName()][] = $message;
+        $this->errorMessageList[] = $message;
     }
 }

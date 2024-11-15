@@ -31,6 +31,11 @@ class UserPasswordValidation extends Validator
 
         return $valid;
     }
+    
+    public function fieldName(): string
+    {
+        return 'password';
+    }
 
     /**
      * 不適切なパスワードの長さかどうかを判定
@@ -46,10 +51,5 @@ class UserPasswordValidation extends Validator
     protected function invalidPasswordStrength(): bool
     {
         return !preg_match('/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\W_]).+$/', $this->password);
-    }
-
-    protected function fieldName(): string
-    {
-        return 'password';
     }
 }

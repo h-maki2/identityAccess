@@ -20,11 +20,6 @@ class ValidationHandler
         return $valid;
     }
 
-    public function setErrorMessage(Validator $validator): void
-    {
-        $this->errorMessages[] = $validator->errorMessageList();
-    }
-
     public function errorMessages(): array
     {
         return $this->errorMessages;
@@ -41,5 +36,10 @@ class ValidationHandler
     private function validatorList(): array
     {
         return $this->validatorList;
+    }
+
+    private function setErrorMessage(Validator $validator): void
+    {
+        $this->errorMessages[$validator->fieldName()] = $validator->errorMessageList();
     }
 }
