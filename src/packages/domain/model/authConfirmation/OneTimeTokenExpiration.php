@@ -4,7 +4,7 @@ namespace packages\domain\model\authConfirmation;
 
 use DateTimeImmutable;
 
-class TemporaryTokenExpiration
+class OneTimeTokenExpiration
 {
     private DateTimeImmutable $value;
 

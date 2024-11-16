@@ -1,16 +1,16 @@
 <?php
 
-use packages\domain\model\authConfirmation\TemporaryTokenExpiration;
+use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
 use PHPUnit\Framework\TestCase;
 
-class TemporaryTokenExpirationTest extends TestCase
+class OneTimeTokenExpirationTest extends TestCase
 {
     public function test_一時トークンの有効期限は24時間後()
     {
         // given
 
         // when
-        $actual = TemporaryTokenExpiration::create();
+        $actual = OneTimeTokenExpiration::create();
 
         // then
         $expectedDateTime = new DateTimeImmutable('+24 hours');
@@ -21,10 +21,10 @@ class TemporaryTokenExpirationTest extends TestCase
     {
         // given
         // １分後が有効期限
-        $temporaryTokenExpiration = TemporaryTokenExpiration::reconstruct(new DateTimeImmutable('+1 minutes'));
+        $OneTimeTokenExpiration = OneTimeTokenExpiration::reconstruct(new DateTimeImmutable('+1 minutes'));
 
         // when
-        $result = $temporaryTokenExpiration->isExpired(new DateTimeImmutable());
+        $result = $OneTimeTokenExpiration->isExpired(new DateTimeImmutable());
 
         // then
         $this->assertFalse($result);
@@ -34,10 +34,10 @@ class TemporaryTokenExpirationTest extends TestCase
     {
         // given
         // １分前が有効期限
-        $temporaryTokenExpiration = TemporaryTokenExpiration::reconstruct(new DateTimeImmutable('-1 minutes'));
+        $OneTimeTokenExpiration = OneTimeTokenExpiration::reconstruct(new DateTimeImmutable('-1 minutes'));
 
         // when
-        $result = $temporaryTokenExpiration->isExpired(new DateTimeImmutable());
+        $result = $OneTimeTokenExpiration->isExpired(new DateTimeImmutable());
 
         // then
         $this->assertTrue($result);

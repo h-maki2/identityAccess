@@ -94,7 +94,7 @@ package "認証情報集約(Aggregation)" {
 package "認証確認(AuthenticationConfirmation)" {
     class "AuthenticationConfirmation\n認証確認" as AuthenticationConfirmation {
         userId: UserId
-        temporarytoken: Temporarytoken
+        OneTimeToken: OneTimeToken
         authenticationCode: AuthenticationCode
     }
 
@@ -102,12 +102,12 @@ package "認証確認(AuthenticationConfirmation)" {
         - value: string
     }
 
-    class "TemporaryToken\n一時トークン" as Temporarytoken {
+    class "OneTimeToken\n一時トークン" as OneTimeToken {
         - value: string
-        - temporaryTokenExpiration: TemporaryTokenExpiration
+        - OneTimeTokenExpiration: OneTimeTokenExpiration
     }
 
-    class "TemporaryTokenExpiration\n一時トークンの有効期限" as TemporaryTokenExpiration {
+    class "OneTimeTokenExpiration\n一時トークンの有効期限" as OneTimeTokenExpiration {
         - value: DatetimeImutable
     }
 
@@ -115,7 +115,7 @@ package "認証確認(AuthenticationConfirmation)" {
         ・ランダムな6文字の数字
     end note
 
-    note bottom of Temporarytoken
+    note bottom of OneTimeToken
         ・認証確認URLのクエリパラメータに追加される
         ・認証確認が済んだら削除する
         ・有効期限は24時間
@@ -123,7 +123,7 @@ package "認証確認(AuthenticationConfirmation)" {
         ・ランダムな24文字の文字列
     end note
 
-    AuthenticationConfirmation *-down- Temporarytoken
+    AuthenticationConfirmation *-down- OneTimeToken
     AuthenticationConfirmation -down-> AuthenticationInformaion.UserId
 }
 
