@@ -40,12 +40,12 @@ class AuthConfirmation
         return new self($userId, $oneTimeToken, $oneTimePassword);
     }
 
-    public function OneTimeToken(): OneTimeToken
+    public function oneTimeToken(): OneTimeToken
     {
         return $this->oneTimeToken;
     }
 
-    public function OneTimePassword(): OneTimePassword
+    public function oneTimePassword(): OneTimePassword
     {
         return $this->oneTimePassword;
     }
