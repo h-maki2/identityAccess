@@ -15,7 +15,7 @@ class TemporaryTokenTest extends TestCase
         $temporaryToken = TemporaryToken::create();
 
         // then
-        $this->assertSame(26, strlen($temporaryToken->value));
+        $this->assertEquals(26, strlen($temporaryToken->value));
     }
 
     #[DataProvider('invalidTokenProvider')]
