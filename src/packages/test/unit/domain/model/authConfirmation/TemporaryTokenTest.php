@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use packages\domain\model\authConfirmation\TemporaryToken;
+use packages\domain\model\authConfirmation\TemporaryTokenExpiration;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -25,7 +26,8 @@ class TemporaryTokenTest extends TestCase
 
         // when・then
         $this->expectException(InvalidArgumentException::class);
-        TemporaryToken::reconstruct($invalidToken);
+        $temporaryTokenExpiration = TemporaryTokenExpiration::reconstruct(new DateTimeImmutable('+1 minutes'));
+        TemporaryToken::reconstruct($invalidToken, $temporaryTokenExpiration);
     }
 
     public static function invalidTokenProvider(): array
