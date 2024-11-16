@@ -9,6 +9,4 @@ interface IAuthConfirmationRepository
     public function save(AuthConfirmation $authInformation): void;
 
     public function delete(OneTimeToken $token): void;
-
-    public function nextOneTimeToken(): OneTimeToken;
 }
