@@ -1,0 +1,43 @@
+@startuml userRegister
+title ユーザー登録
+hide footbox
+
+Actor User
+participant "認証システム" as authSystem
+participant DB 
+
+== ユーザー登録 ==
+User -> authSystem : メールアドレスとパスワードを入力
+activate authSystem
+authSystem -> authSystem : バリデーション
+authSystem -> DB : メールアドレスとパスワードを保存
+authSystem <- DB
+authSystem -> DB : 一時トークンとトークンの有効期限、ワンタイムパスワードを保存
+authSystem <- DB
+User <- authSystem : 認証済み更新URLとワンタイムパスワードをメール送信する\n（認証済み更新URLのクエリパラメータには一時トークンが設定されている）
+deactivate authSystem
+
+== 認証済み更新処理 ==
+User -> authSystem : 認証済み更新URLにアクセス
+activate authSystem
+authSystem -> authSystem : 一時トークンが存在するかどうか・トークンの有効期限をバリデーション
+User <- authSystem : ワンタイムトークン入力画面
+User -> authSystem : ワンタイムトークンを入力
+authSystem -> authSystem : 正しいワンタイムトークンかどうか・トークンの有効期限を判定
+authSystem -> DB : ユーザーの認証情報を「認証済み」に更新
+authSystem <- DB
+authSystem -> DB : 一時トークン情報を削除
+deactivate authSystem
+
+== 一時トークンの期限が切れている場合 ==
+User -> authSystem : 認証済み更新URLにアクセス
+activate authSystem
+authSystem -> authSystem : 一時トークンが存在するかどうか・トークンの有効期限をバリデーション
+User <- authSystem : 一時トークン再発行画面をレスポンス
+User -> authSystem : 一時トークン再発行
+authSystem -> DB : 新しい一時トークン情報を更新する
+authSystem <- DB
+User <- authSystem : 新たな認証済み更新URLとワンタイムパスワードをメール送信する\n（認証済み更新URLのクエリパラメータには一時トークンが設定されている）
+deactivate authSystem
+
+@enduml
