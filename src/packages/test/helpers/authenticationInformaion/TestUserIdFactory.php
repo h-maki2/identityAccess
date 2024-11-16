@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\test\helpers\authConfirmation;
+namespace packages\test\helpers\authenticationInformaion;
 
 use packages\domain\model\authenticationInformaion\UserId;
 use packages\domain\model\common\identifier\IdentifierFromUUIDver7;

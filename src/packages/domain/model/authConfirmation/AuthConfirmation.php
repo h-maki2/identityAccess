@@ -54,7 +54,7 @@ class AuthConfirmation
      * 認証確認の再取得を行う
      * ワンタイムトークンとワンタイムパスワードを再生成する
      */
-    public function ReObtain(): void
+    public function reObtain(): void
     {
         $this->oneTimeToken = OneTimeToken::create();
         $this->oneTimePassword = OneTimePassword::create();

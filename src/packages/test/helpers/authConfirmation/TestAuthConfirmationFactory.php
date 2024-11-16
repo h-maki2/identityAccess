@@ -6,6 +6,7 @@ use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeToken;
 use packages\domain\model\authenticationInformaion\UserId;
+use packages\test\helpers\authenticationInformaion\TestUserIdFactory;
 
 class TestAuthConfirmationFactory
 {
