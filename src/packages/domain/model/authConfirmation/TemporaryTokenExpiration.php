@@ -25,7 +25,7 @@ class TemporaryTokenExpiration
 
     public function formattedValue(): string
     {
-        return $this->value->format('Y-m-d H:i:s');
+        return $this->value->format('Y-m-d H:i');
     }
 
     /**
