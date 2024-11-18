@@ -58,7 +58,7 @@ class UserRegistrationApplicationService
         }
 
         $userEmail = new UserEmail($inputedEmail);
-        $userPassword = new UserPassword($inputedPassword);
+        $userPassword = UserPassword::create($inputedPassword);
         $authInformation = AuthenticationInformaion::create(
             $this->authenticationInformaionRepository->nextUserId(),
             $userEmail,
