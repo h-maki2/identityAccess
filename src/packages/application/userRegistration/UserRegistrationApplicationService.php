@@ -3,6 +3,7 @@
 namespace packages\application\userRegistration;
 
 use Exception;
+use packages\application\common\email\SendEmailDto;
 use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authenticationInformaion\AuthenticationInformaion;
@@ -69,8 +70,34 @@ class UserRegistrationApplicationService
             return UserRegistrationResult::createWhenTransactionError();
         }
 
-        
+        $this->userRegistrationCompletionEmail->send(
+            $this->sendEmailDto(
+                $authInformation->email()->value,
+                $authConfirmation->oneTimeToken()->value,
+                $authConfirmation->oneTimePassword()->value
+            )
+        );
 
         return UserRegistrationResult::createWhenSuccess($authConfirmation->oneTimeToken()->value);
+    }
+
+    private function sendEmailDto(
+        string $toAddress,
+        string $oneTimeToken,
+        string $oneTimePassword
+    ): SendEmailDto
+    {
+        $templateValiables = [
+            'oneTimeToken' => $oneTimeToken,
+            'oneTimePassword' => $oneTimePassword
+        ];
+        return new SendEmailDto(
+            'test@example.com',
+            $toAddress,
+            'システムテスト',
+            '会員登録完了のお知らせ',
+            'email.test',
+            $templateValiables
+        );
     }
 }
