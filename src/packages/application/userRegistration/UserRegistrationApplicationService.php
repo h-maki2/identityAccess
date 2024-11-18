@@ -4,6 +4,9 @@ namespace packages\application\userRegistration;
 
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authenticationInformaion\IAuthenticationInformaionRepository;
+use packages\domain\model\authenticationInformaion\validation\UserEmailValidation;
+use packages\domain\model\authenticationInformaion\validation\UserPasswordValidation;
+use packages\domain\model\common\validator\ValidationHandler;
 use packages\domain\service\authenticationInformaion\AuthenticationInformaionService;
 
 class UserRegistrationApplicationService
@@ -22,8 +25,17 @@ class UserRegistrationApplicationService
         $this->authenticationInformaionService = new AuthenticationInformaionService($authenticationInformaionRepository);
     }
 
-    public function userRegister(string $email, string $password)
+    public function userRegister(
+        string $inputedEmail, 
+        string $inputedPassword
+    )
     {
-        
+        $validationHandler = new ValidationHandler();
+        $validationHandler->addValidator(new UserEmailValidation($inputedEmail, $this->authenticationInformaionRepository));
+        $validationHandler->addValidator(new UserPasswordValidation($inputedPassword));
+        if (!$validationHandler->validate()) {
+            
+        }
+
     }
 }

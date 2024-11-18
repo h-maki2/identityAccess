@@ -2,10 +2,12 @@
 
 namespace packages\domain\model\common\validator;
 
+use packages\application\common\validation\ValidationErrorMessageData;
+
 class ValidationHandler
 {
     private array $validatorList = [];
-    private array $errorMessages = [];
+    private array $errorMessages = []; // ValidationErrorMessageData[]
 
     public function validate(): bool
     {
@@ -20,6 +22,9 @@ class ValidationHandler
         return $valid;
     }
 
+    /**
+     * @return ValidationErrorMessageData[]
+     */
     public function errorMessages(): array
     {
         return $this->errorMessages;
@@ -40,6 +45,9 @@ class ValidationHandler
 
     private function setErrorMessage(Validator $validator): void
     {
-        $this->errorMessages[$validator->fieldName()] = $validator->errorMessageList();
+        $this->errorMessages[] = new ValidationErrorMessageData(
+            $validator->fieldName(),
+            $validator->errorMessageList()
+        );
     }
 }

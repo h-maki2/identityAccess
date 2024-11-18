@@ -12,32 +12,32 @@ activate authSystem
 authSystem -> authSystem : バリデーション
 authSystem -> DB : メールアドレスとパスワードを保存
 authSystem <- DB
-authSystem -> DB : 一時トークンとトークンの有効期限、ワンタイムパスワードを保存
+authSystem -> DB : ワンタイムトークンとトークンの有効期限、ワンタイムパスワードを保存
 authSystem <- DB
-User <- authSystem : 認証済み更新URLとワンタイムパスワードをメール送信する\n（認証済み更新URLのクエリパラメータには一時トークンが設定されている）
+User <- authSystem : 認証済み更新URLとワンタイムパスワードをメール送信する\n（認証済み更新URLのクエリパラメータにはワンタイムトークンが設定されている）
 deactivate authSystem
 
 == 認証済み更新処理 ==
 User -> authSystem : 認証済み更新URLにアクセス
 activate authSystem
-authSystem -> authSystem : 一時トークンが存在するかどうか・トークンの有効期限をバリデーション
+authSystem -> authSystem : ワンタイムトークンが存在するかどうか・トークンの有効期限をバリデーション
 User <- authSystem : ワンタイムトークン入力画面
 User -> authSystem : ワンタイムトークンを入力
 authSystem -> authSystem : 正しいワンタイムトークンかどうか・トークンの有効期限を判定
 authSystem -> DB : ユーザーの認証情報を「認証済み」に更新
 authSystem <- DB
-authSystem -> DB : 一時トークン情報を削除
+authSystem -> DB : ワンタイムトークン情報を削除
 deactivate authSystem
 
-== 一時トークンの期限が切れている場合 ==
+== ワンタイムトークンの期限が切れている場合 ==
 User -> authSystem : 認証済み更新URLにアクセス
 activate authSystem
-authSystem -> authSystem : 一時トークンが存在するかどうか・トークンの有効期限をバリデーション
-User <- authSystem : 一時トークン再発行画面をレスポンス
-User -> authSystem : 一時トークン再発行
-authSystem -> DB : 新しい一時トークン情報を更新する
+authSystem -> authSystem : ワンタイムトークンが存在するかどうか・トークンの有効期限をバリデーション
+User <- authSystem : ワンタイムトークン再発行画面をレスポンス
+User -> authSystem : ワンタイムトークン再発行
+authSystem -> DB : 新しいワンタイムトークン情報を更新する
 authSystem <- DB
-User <- authSystem : 新たな認証済み更新URLとワンタイムパスワードをメール送信する\n（認証済み更新URLのクエリパラメータには一時トークンが設定されている）
+User <- authSystem : 新たな認証済み更新URLとワンタイムパスワードをメール送信する\n（認証済み更新URLのクエリパラメータにはワンタイムトークンが設定されている）
 deactivate authSystem
 
 @enduml
