@@ -27,12 +27,12 @@ class LoginApplicationService
     }
 
     public function login(
-        string $email,
+        string $inputedEmail,
         string $inputedPassword,
         string $clientId
     ): LoginResult
     {
-        $email = new UserEmail($email);
+        $email = new UserEmail($inputedEmail);
         $authenticationInformaion = $this->authenticationInformaionRepository->findByEmail($email);
 
         if ($authenticationInformaion === null) {
