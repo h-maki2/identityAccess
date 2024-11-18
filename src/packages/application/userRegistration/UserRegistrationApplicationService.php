@@ -4,6 +4,7 @@ namespace packages\application\userRegistration;
 
 use Exception;
 use packages\application\common\email\SendEmailDto;
+use packages\application\common\exception\TransactionException;
 use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authenticationInformaion\AuthenticationInformaion;
@@ -73,7 +74,7 @@ class UserRegistrationApplicationService
                 $this->authConfirmationRepository->save($authConfirmation);
             });
         } catch (Exception $e) {
-            return UserRegistrationResult::createWhenTransactionError();
+            throw new TransactionException($e->getMessage());
         }
 
         $this->userRegistrationCompletionEmail->send(

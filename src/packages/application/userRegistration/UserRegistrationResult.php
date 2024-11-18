@@ -5,7 +5,6 @@ namespace packages\application\userRegistration;
 class UserRegistrationResult
 {
     readonly bool $validationError;
-    readonly bool $transactionError;
     readonly array $validationErrorMessageList; // ValidationErrorMessageData[]
     readonly bool $isSuccess;
     readonly string $oneTimeToken;
@@ -15,14 +14,12 @@ class UserRegistrationResult
      */
     private function __construct(
         bool $validationError,
-        bool $transactionError,
         array $validationErrorMessageList,
         bool $isSuccess,
         string $oneTimeToken
     )
     {
         $this->validationError = $validationError;
-        $this->transactionError = $transactionError;
         $this->validationErrorMessageList = $validationErrorMessageList;
         $this->isSuccess = $isSuccess;
         $this->oneTimeToken = $oneTimeToken;
@@ -36,20 +33,8 @@ class UserRegistrationResult
     ): self
     {
         return new self(
-            true, 
-            false, 
+            true,
             $validationErrorMessageList, 
-            false,
-            ''
-        );
-    }
-
-    public static function createWhenTransactionError(): self
-    {
-        return new self(
-            false, 
-            true, 
-            [], 
             false,
             ''
         );
@@ -58,8 +43,7 @@ class UserRegistrationResult
     public static function createWhenSuccess(string $oneTimeToken): self
     {
         return new self(
-            false, 
-            false, 
+            false,
             [], 
             true,
             $oneTimeToken
