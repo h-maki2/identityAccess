@@ -16,6 +16,9 @@ use packages\domain\model\common\unitOfWork\UnitOfWork;
 use packages\domain\model\common\validator\ValidationHandler;
 use packages\domain\service\authenticationInformaion\AuthenticationInformaionService;
 
+/**
+ * ユーザー登録のアプリケーションサービス
+ */
 class UserRegistrationApplicationService
 {
     private IAuthConfirmationRepository $authConfirmationRepository;
@@ -38,6 +41,9 @@ class UserRegistrationApplicationService
         $this->userRegistrationCompletionEmail = $userRegistrationCompletionEmail;
     }
 
+    /**
+     * ユーザー登録を行う
+     */
     public function userRegister(
         string $inputedEmail, 
         string $inputedPassword
