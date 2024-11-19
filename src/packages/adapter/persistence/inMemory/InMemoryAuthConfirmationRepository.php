@@ -8,6 +8,7 @@ use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeToken;
 use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
+use packages\domain\model\authConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationInformaion\UserId;
 use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
 
@@ -15,10 +16,10 @@ class InMemoryAuthConfirmationRepository implements IAuthConfirmationRepository
 {
     private array $authConfirmationsObjList = [];
 
-    public function findByToken(OneTimeToken $token): ?AuthConfirmation
+    public function findByToken(OneTimeTokenValue $tokenValue): ?AuthConfirmation
     {
         foreach ($this->authConfirmationsObjList as $authConfirmationsObj) {
-            if ($authConfirmationsObj->one_time_token === $token->value) {
+            if ($authConfirmationsObj->one_time_token === $tokenValue->value) {
                 return $this->toAuthConfirmation($authConfirmationsObj);
             }
         }
@@ -36,10 +37,10 @@ class InMemoryAuthConfirmationRepository implements IAuthConfirmationRepository
         ];
     }
 
-    public function delete(OneTimeToken $token): void
+    public function delete(OneTimeTokenValue $tokenValue): void
     {
         foreach ($this->authConfirmationsObjList as $key => $authConfirmationsObj) {
-            if ($authConfirmationsObj->one_time_token === $token->value) {
+            if ($authConfirmationsObj->one_time_token === $tokenValue->value) {
                 unset($this->authConfirmationsObjList[$key]);
             }
         }
@@ -50,7 +51,7 @@ class InMemoryAuthConfirmationRepository implements IAuthConfirmationRepository
         return AuthConfirmation::reconstruct(
             new UserId(new IdentifierFromUUIDver7(), $authConfirmationsObj->user_id),
             new OneTimeToken(
-                $authConfirmationsObj->one_time_token,
+                OneTimeTokenValue::reconstruct($authConfirmationsObj->one_time_token),
                 OneTimeTokenExpiration::reconstruct(new DateTimeImmutable($authConfirmationsObj->one_time_token_expiration))
             ),
             new OneTimePassword($authConfirmationsObj->one_time_password)

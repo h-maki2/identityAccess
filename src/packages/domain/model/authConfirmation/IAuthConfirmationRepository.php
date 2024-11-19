@@ -4,9 +4,9 @@ namespace packages\domain\model\authConfirmation;
 
 interface IAuthConfirmationRepository
 {
-    public function findByToken(OneTimeToken $token): ?AuthConfirmation;
+    public function findByToken(OneTimeTokenValue $tokenValue): ?AuthConfirmation;
 
     public function save(AuthConfirmation $authInformation): void;
 
-    public function delete(OneTimeToken $token): void;
+    public function delete(OneTimeTokenValue $tokenValue): void;
 }
