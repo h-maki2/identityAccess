@@ -1,19 +1,18 @@
 <?php
 declare(strict_types=1);
 
-use packages\domain\model\authConfirmation\OneTimeToken;
-use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
+use packages\domain\model\authConfirmation\OneTimeTokenValue;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-class OneTimeTokenTest extends TestCase
+class OneTimeTokenValueTest extends TestCase
 {
     public function test_26文字の一時トークンを生成できる()
     {
         // given
 
         // when
-        $OneTimeToken = OneTimeToken::create();
+        $OneTimeToken = OneTimeTokenValue::create();
 
         // then
         $this->assertEquals(26, strlen($OneTimeToken->value));
@@ -26,8 +25,7 @@ class OneTimeTokenTest extends TestCase
 
         // when・then
         $this->expectException(InvalidArgumentException::class);
-        $OneTimeTokenExpiration = OneTimeTokenExpiration::reconstruct(new DateTimeImmutable('+1 minutes'));
-        OneTimeToken::reconstruct($invalidToken, $OneTimeTokenExpiration);
+        OneTimeTokenValue::reconstruct($invalidToken);
     }
 
     public static function invalidTokenProvider(): array
