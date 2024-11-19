@@ -16,17 +16,17 @@ use packages\domain\model\authenticationInformaion\validation\UserPasswordValida
 use packages\domain\model\common\unitOfWork\UnitOfWork;
 use packages\domain\model\common\validator\ValidationHandler;
 use packages\domain\service\authenticationInformaion\AuthenticationInformaionService;
+use packages\domain\service\userRegistration\UserRegistration;
 
 /**
  * ユーザー登録のアプリケーションサービス
  */
 class UserRegistrationApplicationService
 {
-    private IAuthConfirmationRepository $authConfirmationRepository;
     private IAuthenticationInformaionRepository $authenticationInformaionRepository;
     private AuthenticationInformaionService $authenticationInformaionService;
-    private UnitOfWork $unitOfWork;
     private IUserRegistrationCompletionEmail $userRegistrationCompletionEmail;
+    private UserRegistration $userRegistration;
 
     public function __construct(
         IAuthConfirmationRepository $authConfirmationRepository,
@@ -35,11 +35,14 @@ class UserRegistrationApplicationService
         IUserRegistrationCompletionEmail $userRegistrationCompletionEmail
     )
     {
-        $this->authConfirmationRepository = $authConfirmationRepository;
         $this->authenticationInformaionRepository = $authenticationInformaionRepository;
-        $this->unitOfWork = $unitOfWork;
         $this->authenticationInformaionService = new AuthenticationInformaionService($authenticationInformaionRepository);
         $this->userRegistrationCompletionEmail = $userRegistrationCompletionEmail;
+        $this->userRegistration = new UserRegistration(
+            $authenticationInformaionRepository,
+            $authConfirmationRepository,
+            $unitOfWork
+        );
     }
 
     /**
@@ -59,27 +62,15 @@ class UserRegistrationApplicationService
 
         $userEmail = new UserEmail($inputedEmail);
         $userPassword = UserPassword::create($inputedPassword);
-        $authInformation = AuthenticationInformaion::create(
-            $this->authenticationInformaionRepository->nextUserId(),
-            $userEmail,
-            $userPassword,
-            $this->authenticationInformaionService
-        );
-
-        $authConfirmation = AuthConfirmation::create($authInformation->id());
-
         try {
-            $this->unitOfWork->performTransaction(function () use ($authInformation, $authConfirmation) {
-                $this->authenticationInformaionRepository->save($authInformation);
-                $this->authConfirmationRepository->save($authConfirmation);
-            });
+            $authConfirmation = $this->userRegistration->handle($userEmail, $userPassword);
         } catch (Exception $e) {
             throw new TransactionException($e->getMessage());
         }
 
         $this->userRegistrationCompletionEmail->send(
             $this->sendEmailDto(
-                $authInformation->email()->value,
+                $userEmail->value,
                 $authConfirmation->oneTimeToken()->value,
                 $authConfirmation->oneTimePassword()->value
             )
