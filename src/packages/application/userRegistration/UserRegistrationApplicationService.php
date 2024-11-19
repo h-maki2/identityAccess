@@ -24,7 +24,6 @@ use packages\domain\service\userRegistration\UserRegistration;
 class UserRegistrationApplicationService
 {
     private IAuthenticationInformaionRepository $authenticationInformaionRepository;
-    private AuthenticationInformaionService $authenticationInformaionService;
     private IUserRegistrationCompletionEmail $userRegistrationCompletionEmail;
     private UserRegistration $userRegistration;
 
@@ -36,7 +35,6 @@ class UserRegistrationApplicationService
     )
     {
         $this->authenticationInformaionRepository = $authenticationInformaionRepository;
-        $this->authenticationInformaionService = new AuthenticationInformaionService($authenticationInformaionRepository);
         $this->userRegistrationCompletionEmail = $userRegistrationCompletionEmail;
         $this->userRegistration = new UserRegistration(
             $authenticationInformaionRepository,
