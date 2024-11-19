@@ -32,6 +32,6 @@ class DisplayVerifiedUpdatePageApplicationService
             return DisplayVerifiedUpdatePageResult::createWhenValidationError('無効なワンタイムトークンです。');
         }
 
-        return DisplayVerifiedUpdatePageResult::createWhenSuccess($oneTimeTokenValue);
+        return DisplayVerifiedUpdatePageResult::createWhenSuccess($oneTimeTokenValue, $authConfirmation->oneTimePassword());
     }
 }
