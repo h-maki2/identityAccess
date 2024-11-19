@@ -1,6 +1,7 @@
 <?php
 
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformaionRepository;
+use packages\application\common\validation\ValidationErrorMessageData;
 use packages\domain\model\authenticationInformaion\validation\UserEmailValidation;
 use packages\domain\model\authenticationInformaion\validation\UserPasswordValidation;
 use packages\domain\model\common\validator\ValidationHandler;
@@ -43,7 +44,15 @@ class ValidationHandlerTest extends TestCase
                 'パスワードは大文字、小文字、数字、記号をそれぞれ1文字以上含めてください'
             ]
         ];
-        $this->assertEquals($expectedErrorMessageList, $validationHandler->errorMessages());
+
+        $expectedErrorMessageDataList = [
+            new ValidationErrorMessageData('email', ['不正なメールアドレスです。']),
+            new ValidationErrorMessageData('password', [
+                'パスワードは8文字以上で入力してください',
+                'パスワードは大文字、小文字、数字、記号をそれぞれ1文字以上含めてください'
+            ])
+        ];
+        $this->assertEquals($expectedErrorMessageDataList, $validationHandler->errorMessages());
     }
 
     public function test_バリデーションエラーが発生しない場合、エラーメッセージは空である()
