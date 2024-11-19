@@ -2,6 +2,7 @@
 
 use packages\adapter\persistence\inMemory\InMemoryAuthConfirmationRepository;
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformaionRepository;
+use packages\application\common\validation\ValidationErrorMessageData;
 use packages\application\userRegistration\IUserRegistrationCompletionEmail;
 use packages\application\userRegistration\UserRegistrationApplicationService;
 use packages\test\helpers\unitOfWork\TestUnitOfWork;
@@ -58,9 +59,45 @@ class UserRegistrationApplicationServiceTest extends TestCase
         // ワンタイムトークンが生成されていることを確認
         $this->assertNotEmpty($result->oneTimeToken);
 
-        // メール送信の引数が正しいことを確認
+        // メール送信するデータ正しいことを確認
         $this->assertEquals($capturedOneTimeToken, $result->oneTimeToken);
         $this->assertEquals($userEmailString, $capturedToAddress);
         $this->assertNotEmpty($capturedOneTimePassword);
+    }
+
+    public function test_バリデーションエラーが発生した場合に、ユーザー登録が失敗する()
+    {
+        // given
+        // メールアドレスの形式が不正な場合
+        $userEmailString = 'test';
+        // パスワードの形式が不正な場合
+        $userPasswordString = 'password';
+
+        $userRegistrationApplicationService = new UserRegistrationApplicationService(
+            $this->authConfirmationRepository,
+            $this->authenticationInformaionRepository,
+            $this->unitOfWork,
+            $this->createMock(IUserRegistrationCompletionEmail::class)
+        );
+
+        // when
+        $result = $userRegistrationApplicationService->userRegister($userEmailString, $userPasswordString);
+
+        // then
+        // 登録が失敗していることを確認
+        $this->assertFalse($result->isSuccess);
+
+        // バリデーションエラーがあることを確認
+        $this->assertTrue($result->validationError);
+        // バリデーションエラーメッセージが正しいことを確認
+        $expectedErrorMessageDataList = [
+            new ValidationErrorMessageData('email', ['不正なメールアドレスです。']),
+            new ValidationErrorMessageData('password', [
+                'パスワードは大文字、小文字、数字、記号をそれぞれ1文字以上含めてください'
+            ])
+        ];
+        $this->assertEquals($expectedErrorMessageDataList, $result->validationErrorMessageList);
+
+        $this->assertEmpty($result->oneTimeToken);
     }
 }
