@@ -3,6 +3,7 @@
 namespace packages\application\authentication\verifiedUpdate\display;
 
 use DateTimeImmutable;
+use packages\domain\model\authConfirmation\DisplayVerifiedUpdatePageResult;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authConfirmation\OneTimeToken;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
@@ -23,12 +24,14 @@ class DisplayVerifiedUpdatePageApplicationService
     /**
      * 認証済み更新ページを表示する
      */
-    public function displayVerifiedUpdatePage(string $oneTimeToken)
+    public function displayVerifiedUpdatePage(string $oneTimeTokenValueString): DisplayVerifiedUpdatePageResult
     {
-        $oneTimeToken = OneTimeTokenValue::reconstruct($oneTimeToken);
-        $authConfirmation = $this->authConfirmationRepository->findByToken($oneTimeToken);
-        if (AuthConfirmationValidation::validate($authConfirmation, new DateTimeImmutable())) {
-            
+        $oneTimeTokenValue = OneTimeTokenValue::reconstruct($oneTimeTokenValueString);
+        $authConfirmation = $this->authConfirmationRepository->findByToken($oneTimeTokenValue);
+        if (!AuthConfirmationValidation::validate($authConfirmation, new DateTimeImmutable())) {
+            return DisplayVerifiedUpdatePageResult::createWhenValidationError('無効なワンタイムトークンです。');
         }
+
+        return DisplayVerifiedUpdatePageResult::createWhenSuccess($oneTimeTokenValue);
     }
 }
