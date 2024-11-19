@@ -23,7 +23,7 @@ activate authSystem
 authSystem -> authSystem : ワンタイムトークンが存在するかどうか・トークンの有効期限をバリデーション
 User <- authSystem : ワンタイムトークン入力画面
 User -> authSystem : ワンタイムトークンを入力
-authSystem -> authSystem : 正しいワンタイムトークンかどうか・トークンの有効期限を判定
+authSystem -> authSystem : 正しいワンタイムトークンかどうか・正しいワンタイムパスワードかどうか・トークンの有効期限を判定
 authSystem -> DB : ユーザーの認証情報を「認証済み」に更新
 authSystem <- DB
 authSystem -> DB : ワンタイムトークン情報を削除
