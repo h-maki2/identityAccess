@@ -69,12 +69,12 @@ class UserRegistrationApplicationService
         $this->userRegistrationCompletionEmail->send(
             $this->sendEmailDto(
                 $userEmail->value,
-                $authConfirmation->oneTimeToken()->value,
+                $authConfirmation->oneTimeToken()->value(),
                 $authConfirmation->oneTimePassword()->value
             )
         );
 
-        return UserRegistrationResult::createWhenSuccess($authConfirmation->oneTimeToken()->value);
+        return UserRegistrationResult::createWhenSuccess($authConfirmation->oneTimeToken()->value());
     }
 
     private function sendEmailDto(

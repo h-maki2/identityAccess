@@ -4,6 +4,7 @@ namespace packages\test\helpers\authConfirmation;
 
 use packages\domain\model\authConfirmation\OneTimeToken;
 use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
+use packages\domain\model\authConfirmation\OneTimeTokenValue;
 
 class TestOneTimeTokenFactory
 {
@@ -12,7 +13,7 @@ class TestOneTimeTokenFactory
         ?OneTimeTokenExpiration $expiration = null
     ): OneTimeToken
     {
-        $tokenValue = $tokenValue ?? OneTimeToken::create()->value;
+        $tokenValue = $tokenValue ?? OneTimeTokenValue::create();
         $expiration = $expiration ?? OneTimeTokenExpiration::create();
         return OneTimeToken::reconstruct($tokenValue, $expiration);
     }

@@ -51,8 +51,6 @@ class UserRegistrationApplicationServiceTest extends TestCase
         $result = $userRegistrationApplicationService->userRegister($userEmailString, $userPasswordString);
 
         // then
-        // 登録が成功していることを確認
-        $this->assertTrue($result->isSuccess);
         // バリデーションエラーがないことを確認
         $this->assertFalse($result->validationError);
         $this->assertEmpty($result->validationErrorMessageList);
@@ -84,9 +82,6 @@ class UserRegistrationApplicationServiceTest extends TestCase
         $result = $userRegistrationApplicationService->userRegister($userEmailString, $userPasswordString);
 
         // then
-        // 登録が失敗していることを確認
-        $this->assertFalse($result->isSuccess);
-
         // バリデーションエラーがあることを確認
         $this->assertTrue($result->validationError);
         // バリデーションエラーメッセージが正しいことを確認

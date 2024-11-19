@@ -6,7 +6,7 @@ use DateTimeImmutable;
 
 class OneTimeToken
 {
-    readonly OneTimeTokenValue $value;
+    private OneTimeTokenValue $tokenValue;
     private OneTimeTokenExpiration $tokenExpiration;
 
     private function __construct(
@@ -14,7 +14,7 @@ class OneTimeToken
         OneTimeTokenExpiration $tokenExpiration
     )
     {
-        $this->value = $value;
+        $this->tokenValue = $value;
         $this->tokenExpiration = $tokenExpiration;
     }
 
@@ -34,9 +34,14 @@ class OneTimeToken
         return new self($value, $tokenExpiration);
     }
 
-    public function expiration(): OneTimeTokenExpiration
+    public function value(): string
     {
-        return $this->tokenExpiration;
+        return $this->tokenValue->value;
+    }
+
+    public function expirationDate(): string
+    {
+        return $this->tokenExpiration->formattedValue();
     }
 
     public function isExpired(DateTimeImmutable $currentDateTime): bool

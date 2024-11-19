@@ -6,7 +6,6 @@ class UserRegistrationResult
 {
     readonly bool $validationError;
     readonly array $validationErrorMessageList; // ValidationErrorMessageData[]
-    readonly bool $isSuccess;
     readonly string $oneTimeToken;
 
     /**
@@ -15,13 +14,11 @@ class UserRegistrationResult
     private function __construct(
         bool $validationError,
         array $validationErrorMessageList,
-        bool $isSuccess,
         string $oneTimeToken
     )
     {
         $this->validationError = $validationError;
         $this->validationErrorMessageList = $validationErrorMessageList;
-        $this->isSuccess = $isSuccess;
         $this->oneTimeToken = $oneTimeToken;
     }
 
@@ -35,7 +32,6 @@ class UserRegistrationResult
         return new self(
             true,
             $validationErrorMessageList, 
-            false,
             ''
         );
     }
@@ -44,8 +40,7 @@ class UserRegistrationResult
     {
         return new self(
             false,
-            [], 
-            true,
+            [],
             $oneTimeToken
         );
     }
