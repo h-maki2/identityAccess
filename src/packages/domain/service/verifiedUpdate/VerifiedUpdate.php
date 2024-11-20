@@ -3,6 +3,7 @@
 namespace packages\domain\service\verifiedUpdate;
 
 use Carbon\Unit;
+use packages\application\common\exception\TransactionException;
 use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authConfirmation\OneTimePassword;
@@ -46,9 +47,15 @@ class VerifiedUpdate
 
         $authInformation->updateVerified();
 
-        $this->unitOfWork->performTransaction(function () use ($authInformation, $authConfirmation) {
-            $this->authenticationInformaionRepository->save($authInformation);
-            $this->authConfirmationRepository->delete($authConfirmation);
-        });
+        try {
+            $this->unitOfWork->performTransaction(function () use ($authInformation, $authConfirmation) {
+                $this->authenticationInformaionRepository->save($authInformation);
+                $this->authConfirmationRepository->delete($authConfirmation);
+            });
+        } catch (\Exception $e) {
+            throw new TransactionException($e->getMessage());
+        }
+
+        return true;
     }
 }
