@@ -1,6 +1,5 @@
 <?php
 
-use Lcobucci\JWT\Signer\Key\InMemory;
 use packages\adapter\persistence\inMemory\InMemoryAuthConfirmationRepository;
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformaionRepository;
 use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateApplicationService;
@@ -77,5 +76,63 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
         // 認証確認情報が削除されていることを確認
         $deletedAuthConfirmation = $this->authConfirmationRepository->findByToken($oneTimeTokenValue);
         $this->assertNull($deletedAuthConfirmation);
+    }
+
+    public function test_ワンタイムトークンが有効ではない場合、認証情報を認証済みに更新できない()
+    {
+        // given
+        // 認証済みではない認証情報を保存しておく
+        $userId = $this->authenticationInformaionRepository->nextUserId();
+        $this->authenticationInformaionTestDataCreator->create(
+            id: $userId,
+            verificationStatus: VerificationStatus::Unverified
+        );
+        // 認証確認情報を保存しておく
+        $oneTimePassword = OneTimePassword::reconstruct('123456');
+        $oneTimeTokenValue = OneTimeTokenValue::create();
+        $authConfirmation = $this->authConfirmationTestDataCreator->create(
+            userId: $userId,
+            oneTimePassword: $oneTimePassword,
+            oneTimeTokenValue: $oneTimeTokenValue
+        );
+
+        // when
+        // 存在しないワンタイムトークンを生成
+        $invalidOneTimeTokenValue = OneTimeTokenValue::create();
+        $result = $this->verifiedUpdateApplicationService->verifiedUpdate($invalidOneTimeTokenValue->value, $oneTimePassword->value);
+
+        // then
+        // バリデーションエラーが発生していることを確認
+        $this->assertTrue($result->validationError);
+        $this->assertEquals('ワンタイムトークンが無効です。', $result->validationErrorMessage);
+    }
+
+    public function test_ワンタイムパスワードが正しくない場合、認証情報を認証済みに更新できない()
+    {
+        // given
+        // 認証済みではない認証情報を保存しておく
+        $userId = $this->authenticationInformaionRepository->nextUserId();
+        $this->authenticationInformaionTestDataCreator->create(
+            id: $userId,
+            verificationStatus: VerificationStatus::Unverified
+        );
+        // 認証確認情報を保存しておく
+        $oneTimePassword = OneTimePassword::reconstruct('123456');
+        $oneTimeTokenValue = OneTimeTokenValue::create();
+        $authConfirmation = $this->authConfirmationTestDataCreator->create(
+            userId: $userId,
+            oneTimePassword: $oneTimePassword,
+            oneTimeTokenValue: $oneTimeTokenValue
+        );
+
+        // when
+        // 正しくないワンタイムパスワードを入力する
+        $invalidOneTimePassword = OneTimePassword::reconstruct('654321');
+        $result = $this->verifiedUpdateApplicationService->verifiedUpdate($oneTimeTokenValue->value, $invalidOneTimePassword->value);
+
+        // then
+        // バリデーションエラーが発生していることを確認
+        $this->assertTrue($result->validationError);
+        $this->assertEquals('ワンタイムトークンかワンタイムパスワードが無効です。', $result->validationErrorMessage);
     }
 }
