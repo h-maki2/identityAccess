@@ -11,7 +11,7 @@ use packages\domain\model\authenticationInformaion\UserPassword;
 use packages\domain\model\authenticationInformaion\AuthenticationInformaion;
 use packages\domain\model\authenticationInformaion\VerificationStatus;
 
-class AuthenticationInformaionTestDataFactory
+class AuthenticationInformaionTestDataCreator
 {
     private IAuthenticationInformaionRepository $authenticationInformaionRepository;
 
