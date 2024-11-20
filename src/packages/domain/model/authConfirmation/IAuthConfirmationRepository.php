@@ -8,5 +8,5 @@ interface IAuthConfirmationRepository
 
     public function save(AuthConfirmation $authInformation): void;
 
-    public function delete(OneTimeTokenValue $tokenValue): void;
+    public function delete(AuthConfirmation $authInformation): void;
 }

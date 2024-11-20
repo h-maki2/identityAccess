@@ -4,12 +4,11 @@ namespace packages\domain\model\authConfirmation\validation;
 
 use DateTimeImmutable;
 use packages\domain\model\authConfirmation\AuthConfirmation;
+use packages\domain\model\authConfirmation\OneTimePassword;
 
 class AuthConfirmationValidation
 {
-    /**
-     * 認証確認が有効かどうかを検証する
-     */
+    
     public static function validateExpirationDate(?AuthConfirmation $authConfirmation, DateTimeImmutable $currentDateTime): bool
     {
         if ($authConfirmation === null) {
