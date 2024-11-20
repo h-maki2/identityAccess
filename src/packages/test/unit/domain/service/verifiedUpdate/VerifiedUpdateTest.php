@@ -34,7 +34,7 @@ class VerifiedUpdateTest extends TestCase
         // given
         // 認証済みではない認証情報を保存しておく
         $userId = $this->authenticationInformaionRepository->nextUserId();
-        $authenticationInformaion = $this->authenticationInformaionTestDataCreator->create(
+        $this->authenticationInformaionTestDataCreator->create(
             id: $userId,
             verificationStatus: VerificationStatus::Unverified
         );

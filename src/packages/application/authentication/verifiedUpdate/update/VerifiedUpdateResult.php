@@ -4,8 +4,8 @@ namespace packages\application\authentication\verifiedUpdate\update;
 
 class VerifiedUpdateResult
 {
-    private bool $validationError;
-    private string $validationErrorMessage;
+    readonly bool $validationError;
+    readonly string $validationErrorMessage;
 
     private function __construct(bool $validationError, string $validationErrorMessage)
     {
