@@ -2,6 +2,8 @@
 
 namespace packages\domain\model\authConfirmation;
 
+use packages\domain\model\authenticationInformaion\UserId;
+
 interface IAuthConfirmationRepository
 {
     public function findByToken(OneTimeTokenValue $tokenValue): ?AuthConfirmation;
