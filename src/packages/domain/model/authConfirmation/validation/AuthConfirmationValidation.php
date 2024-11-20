@@ -10,7 +10,7 @@ class AuthConfirmationValidation
     /**
      * 認証確認が有効かどうかを検証する
      */
-    public static function validate(?AuthConfirmation $authConfirmation, DateTimeImmutable $currentDateTime): bool
+    public static function validateExpirationDate(?AuthConfirmation $authConfirmation, DateTimeImmutable $currentDateTime): bool
     {
         if ($authConfirmation === null) {
             return false;
