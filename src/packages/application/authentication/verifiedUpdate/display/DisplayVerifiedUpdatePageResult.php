@@ -1,6 +1,9 @@
 <?php
 
-namespace packages\domain\model\authConfirmation;
+namespace packages\application\authentication\verifiedUpdate\display;
+
+use packages\domain\model\authConfirmation\OneTimePassword;
+use packages\domain\model\authConfirmation\OneTimeTokenValue;
 
 class DisplayVerifiedUpdatePageResult
 {

@@ -50,11 +50,11 @@ class InMemoryAuthConfirmationRepository implements IAuthConfirmationRepository
     {
         return AuthConfirmation::reconstruct(
             new UserId(new IdentifierFromUUIDver7(), $authConfirmationsObj->user_id),
-            new OneTimeToken(
+            OneTimeToken::reconstruct(
                 OneTimeTokenValue::reconstruct($authConfirmationsObj->one_time_token),
                 OneTimeTokenExpiration::reconstruct(new DateTimeImmutable($authConfirmationsObj->one_time_token_expiration))
             ),
-            new OneTimePassword($authConfirmationsObj->one_time_password)
+            OneTimePassword::reconstruct($authConfirmationsObj->one_time_password)
         );
     }
 }

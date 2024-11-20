@@ -9,7 +9,7 @@ use packages\domain\model\authConfirmation\OneTimeTokenValue;
 class TestOneTimeTokenFactory
 {
     public static function createOneTimeToken(
-        ?string $tokenValue = null,
+        ?OneTimeTokenValue $tokenValue = null,
         ?OneTimeTokenExpiration $expiration = null
     ): OneTimeToken
     {

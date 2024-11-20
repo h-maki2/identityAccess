@@ -3,9 +3,7 @@
 namespace packages\application\authentication\verifiedUpdate\display;
 
 use DateTimeImmutable;
-use packages\domain\model\authConfirmation\DisplayVerifiedUpdatePageResult;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
-use packages\domain\model\authConfirmation\OneTimeToken;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
 use packages\domain\model\authConfirmation\validation\AuthConfirmationValidation;
 

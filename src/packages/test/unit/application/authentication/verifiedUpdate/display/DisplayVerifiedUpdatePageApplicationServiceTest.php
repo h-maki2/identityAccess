@@ -46,4 +46,31 @@ class DisplayVerifiedUpdatePageApplicationServiceTest extends TestCase
         $this->assertEquals($oneTimeTokenValue->value, $result->oneTimeTokenValue);
         $this->assertEquals($oneTimePassword->value, $result->oneTimePassword);
     }
+
+    public function test_有効期限が切れている無効なワンタイムトークンの場合、認証済み更新ページを表示しない()
+    {
+        // given
+        // 有効期限が切れた認証確認を作成して保存する
+        $oneTimeTokenValue = OneTimeTokenValue::create();
+        $oneTimeTokenExpiration = OneTimeTokenExpiration::reconstruct(new DateTimeImmutable('-1 day'));
+        $this->authConfirmationTestDataCreator->create(
+            oneTimeTokenValue: $oneTimeTokenValue,
+            oneTimeTokenExpiration: $oneTimeTokenExpiration
+        );
+
+        $displayVerifiedUpdatePageApplicationService = new DisplayVerifiedUpdatePageApplicationService($this->authConfirmationRepository);
+
+        // when
+        $result = $displayVerifiedUpdatePageApplicationService->displayVerifiedUpdatePage($oneTimeTokenValue->value);
+
+        // then
+        // バリデーションエラーが発生していることを確認
+        $this->assertTrue($result->validationError);
+        // バリデーションエラーメッセージが取得できることを確認
+        $this->assertEquals('無効なワンタイムトークンです。', $result->validationErrorMessage);
+
+        // ワンタイムトークンとワンタイムパスワードが取得できないことを確認
+        $this->assertEmpty($result->oneTimeTokenValue);
+        $this->assertEmpty($result->oneTimePassword);
+    }
 }
