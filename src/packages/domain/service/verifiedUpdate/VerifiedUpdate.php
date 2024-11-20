@@ -41,10 +41,7 @@ class VerifiedUpdate
         }
 
         $authInformation = $this->authenticationInformaionRepository->findById($authConfirmation->userId);
-        if ($authInformation === null) {
-            throw new RuntimeException('認証情報が見つかりませんでした。');
-        }
-
+        
         $authInformation->updateVerified();
 
         try {

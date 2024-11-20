@@ -66,4 +66,46 @@ class VerifiedUpdateTest extends TestCase
         $deletedAuthConfirmation = $this->authConfirmationRepository->findByToken(OneTimeTokenValue::reconstruct($authConfirmation->oneTimeToken()->value()));
         $this->assertNull($deletedAuthConfirmation);
     }
+
+    public function test_ワンタイムパスワードが正しくない場合、認証情報を認証済みに更新しない()
+    {
+        // given
+        // 認証済みではない認証情報を保存しておく
+        $userId = $this->authenticationInformaionRepository->nextUserId();
+        $authenticationInformaion = $this->authenticationInformaionTestDataCreator->create(
+            id: $userId,
+            verificationStatus: VerificationStatus::Unverified
+        );
+        // 認証確認情報を保存しておく
+        $oneTimePassword = OneTimePassword::reconstruct('123456');
+        $authConfirmation = $this->authConfirmationTestDataCreator->create(
+            userId: $userId,
+            oneTimePassword: $oneTimePassword
+        );
+
+        $verifiedUpdate = new VerifiedUpdate(
+            $this->authenticationInformaionRepository,
+            $this->authConfirmationRepository,
+            $this->unitOfWork
+        );
+
+        // when
+        $invalidOneTimePassword = OneTimePassword::reconstruct('654321');
+        $result = $verifiedUpdate->handle($authConfirmation, $invalidOneTimePassword);
+
+        // then
+        // 更新が失敗していることを確認
+        $this->assertFalse($result);
+
+        // 認証情報が認証済みになっていないことを確認
+        $updatedAuthenticationInformaion = $this->authenticationInformaionRepository->findById($userId);
+        $this->assertEquals(VerificationStatus::Unverified, $updatedAuthenticationInformaion->verificationStatus());
+
+        // 認証確認情報が削除されていないことを確認
+        $actualAuthConfirmation = $this->authConfirmationRepository->findByToken(OneTimeTokenValue::reconstruct($authConfirmation->oneTimeToken()->value()));
+        $this->assertEquals($authConfirmation->userId, $actualAuthConfirmation->userId);
+        $this->assertEquals($authConfirmation->oneTimeToken()->value(), $actualAuthConfirmation->oneTimeToken()->value());
+        $this->assertEquals($authConfirmation->oneTimeToken()->expirationDate(), $actualAuthConfirmation->oneTimeToken()->expirationDate());
+        $this->assertEquals($authConfirmation->oneTimePassword(), $actualAuthConfirmation->oneTimePassword());
+    }
 }
