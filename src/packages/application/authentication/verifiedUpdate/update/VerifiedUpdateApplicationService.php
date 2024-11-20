@@ -16,7 +16,6 @@ use packages\domain\service\verifiedUpdate\VerifiedUpdate;
  */
 class VerifiedUpdateApplicationService
 {
-    private IAuthenticationInformaionRepository $authenticationInformaionRepository;
     private IAuthConfirmationRepository $authConfirmationRepository;
     private VerifiedUpdate $verifiedUpdate;
 
