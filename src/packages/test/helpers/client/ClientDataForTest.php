@@ -2,7 +2,7 @@
 
 namespace packages\test\helpers\client;
 
-use packages\domain\model\client\ClientData;
+use packages\domain\model\oauth\client\ClientData;
 
 class ClientDataForTest extends ClientData
 {

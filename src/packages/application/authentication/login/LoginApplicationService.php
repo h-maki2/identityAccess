@@ -3,7 +3,7 @@
 namespace packages\application\authentication\login;
 
 use DateTimeImmutable;
-use packages\domain\model\client\IClientFetcher;
+use packages\domain\model\oauth\client\IClientFetcher;
 use packages\domain\model\authenticationInformaion\IAuthenticationInformaionRepository;
 use packages\domain\model\authenticationInformaion\SessionAuthentication;
 use packages\domain\model\authenticationInformaion\UserEmail;

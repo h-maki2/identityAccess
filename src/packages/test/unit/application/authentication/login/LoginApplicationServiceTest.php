@@ -10,7 +10,7 @@ use packages\domain\model\authenticationInformaion\SessionAuthentication;
 use packages\domain\model\authenticationInformaion\UserEmail;
 use packages\domain\model\authenticationInformaion\UserPassword;
 use packages\domain\model\authenticationInformaion\VerificationStatus;
-use packages\domain\model\client\IClientFetcher;
+use packages\domain\model\oauth\client\IClientFetcher;
 use packages\test\helpers\authenticationInformaion\AuthenticationInformaionTestDataFactory;
 use packages\test\helpers\client\TestClientDataFactory;
 use PHPUnit\Framework\TestCase;

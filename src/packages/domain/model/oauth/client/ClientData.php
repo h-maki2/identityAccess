@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\domain\model\client;
+namespace packages\domain\model\oauth\client;
 
 abstract class ClientData
 {
