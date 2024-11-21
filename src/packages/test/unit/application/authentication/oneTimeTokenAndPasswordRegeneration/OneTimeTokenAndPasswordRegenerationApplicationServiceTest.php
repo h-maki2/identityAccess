@@ -31,7 +31,7 @@ class OneTimeTokenAndPasswordRegenerationApplicationServiceTest extends TestCase
         $this->authenticationInformaionTestDataCreator = new AuthenticationInformaionTestDataCreator($this->authenticationInformaionRepository);
     }
 
-    public function test_認証情報は認証済みではない場合、ワンタイムトークンとワンタイムパスワードの再生成ができる()
+    public function test_認証情報が認証済みではない場合、ワンタイムトークンとワンタイムパスワードの再生成ができる()
     {
         // given
         // 認証情報を作成して保存する
@@ -66,4 +66,59 @@ class OneTimeTokenAndPasswordRegenerationApplicationServiceTest extends TestCase
         $this->assertNotEquals($oneTimePasword->value, $actualAuthConfirmation->oneTimePassword()->value);
     }
 
+    public function test_入力されたメールアドレスに紐づく認証情報が存在しない場合、バリデーションエラーが発生する()
+    {
+        // given
+        // 認証情報を作成して保存する
+        $userEmail = new UserEmail('test@example.com');
+        $this->authenticationInformaionTestDataCreator->create(
+            email: $userEmail
+        );
+
+        // when
+        $正しくないメールアドレス = 'other@example.com';
+        $result = $this->oneTimeTokenAndPasswordRegenerationApplicationService->regenerateOneTimeTokenAndPassword($正しくないメールアドレス);
+
+        // then
+        // バリデーションエラーが発生していることを確認
+        $this->assertTrue($result->validationError);
+        $this->assertEquals('メールアドレスが登録されていません。', $result->validationErrorMessage);
+        $this->assertEmpty($result->oneTimeTokenValue);
+    }
+
+    public function test_認証情報がすでに認証済みの場合、バリデーションエラーが発生する()
+    {
+        // given
+        // 認証情報を作成して保存する
+        $userEmail = new UserEmail('test@example.com');
+        $this->authenticationInformaionTestDataCreator->create(
+            email: $userEmail,
+            verificationStatus: VerificationStatus::Verified // 認証済み
+        );
+
+        // when
+        $result = $this->oneTimeTokenAndPasswordRegenerationApplicationService->regenerateOneTimeTokenAndPassword($userEmail->value);
+
+        // then
+        // バリデーションエラーが発生していることを確認
+        $this->assertTrue($result->validationError);
+        $this->assertEquals('既にアカウントが認証済みです。', $result->validationErrorMessage);
+        $this->assertEmpty($result->oneTimeTokenValue);
+    }
+
+    public function test_認証情報に紐づく認証確認情報が存在しない場合は例外が発生する()
+    {
+        // given
+        // 認証情報を作成して保存する
+        $userEmail = new UserEmail('test@example.com');
+        $authenticationInformaion = $this->authenticationInformaionTestDataCreator->create(
+            email: $userEmail,
+            verificationStatus: VerificationStatus::Unverified // 認証済みではない
+        );
+
+        // when・then
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('認証情報が存在しません。userId: ' . $authenticationInformaion->id()->value);
+        $this->oneTimeTokenAndPasswordRegenerationApplicationService->regenerateOneTimeTokenAndPassword($userEmail->value);
+    }
 }
