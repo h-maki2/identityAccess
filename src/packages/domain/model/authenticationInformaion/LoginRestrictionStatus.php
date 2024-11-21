@@ -12,6 +12,6 @@ enum LoginRestrictionStatus: int
      */
     public function isRestricted(): bool
     {
-        return $this->value === self::Restricted->value;
+        return $this === self::Restricted;
     }
 }
