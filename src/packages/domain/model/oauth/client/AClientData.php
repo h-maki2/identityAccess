@@ -11,10 +11,10 @@ abstract class AClientData
     private RedirectUrl $redirectUri;
     // private array $scope;
 
-    public function __construct(
-        string $clientId,
-        string $clientSecret,
-        string $redirectUri
+    protected function __construct(
+        ClientId $clientId,
+        ClientSecret $clientSecret,
+        RedirectUrl $redirectUri
     )
     {
         $this->clientId = $clientId;
