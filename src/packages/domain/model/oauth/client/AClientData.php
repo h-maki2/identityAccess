@@ -4,7 +4,7 @@ namespace packages\domain\model\oauth\client;
 
 use InvalidArgumentException;
 
-abstract class ClientData
+abstract class AClientData
 {
     private ClientId $clientId;
     private ClientSecret $clientSecret;
