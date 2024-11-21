@@ -20,6 +20,6 @@ class ClientData extends AClientData
 
     protected function baseUrl(): string
     {
-        return getenv('APP_URL');
+        return config('app.url');
     }
 }

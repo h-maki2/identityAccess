@@ -12,7 +12,7 @@ class ClientId
             throw new \InvalidArgumentException('Invalid client id');
         }
 
-        if (!ctype_digit($this->value)) {
+        if (!ctype_digit($value)) {
             throw new \InvalidArgumentException('Invalid client id');
         }
 
