@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\application\authentication\authConfirmationRegeneration;
+namespace packages\application\authentication\oneTimeTokenAndPasswordRegeneration;
 
 use packages\application\authentication\oneTimeTokenAndPasswordRegeneration\OneTimeTokenAndPasswordRegenerationResult;
 use packages\domain\model\authConfirmation\AuthConfirmation;

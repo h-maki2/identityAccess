@@ -27,6 +27,15 @@ class InMemoryAuthConfirmationRepository implements IAuthConfirmationRepository
         return null;
     }
 
+    public function findById(UserId $userId): ?AuthConfirmation
+    {
+        if (!isset($this->authConfirmationsObjList[$userId->value])) {
+            return null;
+        }
+
+        return $this->toAuthConfirmation($this->authConfirmationsObjList[$userId->value]);
+    }
+
     public function save(AuthConfirmation $authConfirmation): void
     {
         $this->authConfirmationsObjList[$authConfirmation->userId->value] = (object) [
