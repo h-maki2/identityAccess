@@ -58,17 +58,22 @@ class EloquentAuthenticationInformationRepository implements IAuthenticationInfo
         $eloquentAuthenticationInformation->delete();
     }
 
-    private function toAuthenticationInformation(EloquentAuthenticationInformation $authenticationInformationObj): AuthenticationInformation
+    public function nextUserId(): UserId
+    {
+        return new UserId(new IdentifierFromUUIDver7(), Uuid::uuid7());
+    }
+
+    private function toAuthenticationInformation(EloquentAuthenticationInformation $eloquentAuthenticationInformation): AuthenticationInformation
     {
         return AuthenticationInformation::reconstruct(
-            new UserId(new IdentifierFromUUIDver7(), $authenticationInformationObj->user_id),
-            new UserEmail($authenticationInformationObj->email),
-            UserPassword::reconstruct($authenticationInformationObj->password),
-            VerificationStatus::from($authenticationInformationObj->verification_status),
+            new UserId(new IdentifierFromUUIDver7(), $eloquentAuthenticationInformation->user_id),
+            new UserEmail($eloquentAuthenticationInformation->email),
+            UserPassword::reconstruct($eloquentAuthenticationInformation->password),
+            VerificationStatus::from($eloquentAuthenticationInformation->verification_status),
             LoginRestriction::reconstruct(
-                FailedLoginCount::reconstruct($authenticationInformationObj->failed_login_count),
-                LoginRestrictionStatus::from($authenticationInformationObj->login_restriction_status),
-                $authenticationInformationObj->next_login_allowed_at !== null ? NextLoginAllowedAt::reconstruct(new DateTimeImmutable($authenticationInformationObj->next_login_allowed_at)) : null
+                FailedLoginCount::reconstruct($eloquentAuthenticationInformation->failed_login_count),
+                LoginRestrictionStatus::from($eloquentAuthenticationInformation->login_restriction_status),
+                $eloquentAuthenticationInformation->next_login_allowed_at !== null ? NextLoginAllowedAt::reconstruct(new DateTimeImmutable($eloquentAuthenticationInformation->next_login_allowed_at)) : null
             )
         );
     }
