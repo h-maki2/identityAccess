@@ -48,7 +48,7 @@ class UserRegistrationTest extends TestCase
     {
         // given
         $userEmail = new UserEmail('test@example.com');
-        $userPassword = UserPassword::create('ABCabc123');
+        $userPassword = UserPassword::create('ABCabc123_');
 
         // when
         $this->userRegistration->handle($userEmail, $userPassword);
