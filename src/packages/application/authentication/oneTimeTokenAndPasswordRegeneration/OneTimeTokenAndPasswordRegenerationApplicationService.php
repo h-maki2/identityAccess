@@ -16,14 +16,17 @@ class OneTimeTokenAndPasswordRegenerationApplicationService
 {
     private IAuthConfirmationRepository $authConfirmationRepository;
     private IAuthenticationInformaionRepository $authenticationInformaionRepository;
+    private OneTimeTokenAndPasswordRegenerationOutputBoundary $outputBoundary;
 
     public function __construct(
         IAuthConfirmationRepository $authConfirmationRepository,
-        IAuthenticationInformaionRepository $authenticationInformaionRepository
+        IAuthenticationInformaionRepository $authenticationInformaionRepository,
+        OneTimeTokenAndPasswordRegenerationOutputBoundary $outputBoundary
     )
     {
         $this->authConfirmationRepository = $authConfirmationRepository;
         $this->authenticationInformaionRepository = $authenticationInformaionRepository;
+        $this->outputBoundary = $outputBoundary;
     }
 
     /**
@@ -31,16 +34,22 @@ class OneTimeTokenAndPasswordRegenerationApplicationService
      */
     public function regenerateOneTimeTokenAndPassword(
         string $userEmailString
-    ): OneTimeTokenAndPasswordRegenerationResult
+    ): void
     {
         $userEmail = new UserEmail($userEmailString);
         $authInfo = $this->authenticationInformaionRepository->findByEmail($userEmail);
         if ($authInfo === null) {
-            return OneTimeTokenAndPasswordRegenerationResult::createWhenValidationError('メールアドレスが登録されていません。');
+            $this->outputBoundary->present(
+                OneTimeTokenAndPasswordRegenerationResult::createWhenValidationError('メールアドレスが登録されていません。')
+            );
+            return;
         }
 
         if ($authInfo->isVerified()) {
-            return OneTimeTokenAndPasswordRegenerationResult::createWhenValidationError('既にアカウントが認証済みです。');
+            $this->outputBoundary->present(
+                OneTimeTokenAndPasswordRegenerationResult::createWhenValidationError('既にアカウントが認証済みです。')
+            );
+            return;
         }
 
         $userId = $authInfo->id();
@@ -52,6 +61,8 @@ class OneTimeTokenAndPasswordRegenerationApplicationService
         $authConfirmation->reObtain();
         $this->authConfirmationRepository->save($authConfirmation);
 
-        return OneTimeTokenAndPasswordRegenerationResult::createWhenSuccess($authConfirmation->oneTimeToken()->value());
+        $this->outputBoundary->present(
+            OneTimeTokenAndPasswordRegenerationResult::createWhenSuccess($authConfirmation->oneTimeToken()->value())
+        );
     }
 }
