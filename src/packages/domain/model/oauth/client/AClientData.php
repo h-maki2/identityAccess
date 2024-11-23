@@ -11,7 +11,7 @@ abstract class AClientData
     private RedirectUrl $redirectUrl;
     // private array $scope;
 
-    protected function __construct(
+    public function __construct(
         ClientId $clientId,
         ClientSecret $clientSecret,
         RedirectUrl $redirectUrl

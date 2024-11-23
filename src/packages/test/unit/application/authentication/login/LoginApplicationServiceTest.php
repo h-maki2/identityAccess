@@ -16,6 +16,7 @@ use packages\domain\model\authenticationInformaion\VerificationStatus;
 use packages\domain\model\oauth\client\IClientFetcher;
 use packages\domain\model\oauth\client\RedirectUrl;
 use packages\test\helpers\authenticationInformaion\AuthenticationInformaionTestDataCreator;
+use packages\test\helpers\client\ClientDataForTest;
 use packages\test\helpers\client\TestClientDataFactory;
 use PHPUnit\Framework\TestCase;
 
@@ -28,6 +29,7 @@ class LoginApplicationServiceTest extends TestCase
     private UserId $capturedUserId;
     private LoginOutputBoundary $outputBoundary;
     private LoginResult $capturedLoginResult;
+    private ClientDataForTest $expectedClientData;
 
     public function setUp(): void
     {
@@ -45,19 +47,19 @@ class LoginApplicationServiceTest extends TestCase
         $this->sessionAuthentication = $sessionAuthentication;
 
         // fetchByIdメソッドが呼ばれた際に返すデータを設定する
-        $clientData = TestClientDataFactory::create(
+        $this->expectedClientData = TestClientDataFactory::create(
             redirectUri: new RedirectUrl('http://localhost:8080/callback')
         );
         $clientFetcher = $this->createMock(IClientFetcher::class);
-        $clientFetcher->method('fetchById')->willReturn($clientData);
+        $clientFetcher->method('fetchById')->willReturn($this->expectedClientData);
         $this->clientFetcher = $clientFetcher;
 
         // presentメソッドが呼ばれた際に引数の値をキャプチャする
         $outputBoundary = $this->createMock(LoginOutputBoundary::class);
-        $outputBoundary->expects($this->once())
+        $outputBoundary
             ->method('present')
             ->with($this->callback(function (LoginResult $capturedLoginResult) {
-                $this->capturedLoginResult = $this->capturedLoginResult;
+                $this->capturedLoginResult = $capturedLoginResult;
                 return true;
             }));
         $this->outputBoundary = $outputBoundary;
@@ -82,7 +84,7 @@ class LoginApplicationServiceTest extends TestCase
         $inputedPassword = 'ABCabc123_';
         $clientId = '1';
         $redirectUrl = 'http://localhost:8080/callback';
-        $code = 'code';
+        $responseType = 'code';
 
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationInformaionRepository,
@@ -95,16 +97,20 @@ class LoginApplicationServiceTest extends TestCase
             $inputedPassword, 
             $clientId,
             $redirectUrl,
-            $code
+            $responseType
         );
 
         // then
         // ログインが成功していることを確認する
         $this->assertTrue($this->capturedLoginResult->loginSucceeded);
         // 認可コード取得用のURLが返されていることを確認する
-        $this->assertEquals($redirectUrl, $this->capturedLoginResult->authorizationUrl);
+        $expectedAuthorizationUrl = $this->expectedClientData->urlForObtainingAuthorizationCode(
+            new RedirectUrl($redirectUrl),
+            $responseType
+        );
+        $this->assertEquals($expectedAuthorizationUrl, $this->capturedLoginResult->authorizationUrl);
         // 正しいuserIdでログインされていることを確認する
-        $this->assertEquals($userId->value, $this->capturedUserId);
+        $this->assertEquals($userId, $this->capturedUserId);
         // アカウントがロックされていないことを確認する
         $this->assertFalse($this->capturedLoginResult->accountLocked);
     }
@@ -127,7 +133,7 @@ class LoginApplicationServiceTest extends TestCase
         $inputedPassword = 'ABCabc123_';
         $clientId = '1';
         $redirectUrl = 'http://localhost:8080/callback';
-        $code = 'code';
+        $responseType = 'code';
 
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationInformaionRepository,
@@ -140,7 +146,7 @@ class LoginApplicationServiceTest extends TestCase
             $inputedPassword, 
             $clientId,
             $redirectUrl,
-            $code
+            $responseType
         );
 
         // then
@@ -167,7 +173,7 @@ class LoginApplicationServiceTest extends TestCase
         $inputedPassword = 'ABCabc123_!!jdn';
         $clientId = '1';
         $redirectUrl = 'http://localhost:8080/callback';
-        $code = 'code';
+        $responseType = 'code';
 
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationInformaionRepository,
@@ -180,7 +186,7 @@ class LoginApplicationServiceTest extends TestCase
             $inputedPassword, 
             $clientId,
             $redirectUrl,
-            $code
+            $responseType
         );
 
         // then
@@ -214,7 +220,7 @@ class LoginApplicationServiceTest extends TestCase
         $inputedPassword = 'ABCabc123_';
         $clientId = '1';
         $redirectUrl = 'http://localhost:8080/callback';
-        $code = 'code';
+        $responseType = 'code';
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationInformaionRepository,
             $this->sessionAuthentication,
@@ -226,18 +232,15 @@ class LoginApplicationServiceTest extends TestCase
             $inputedPassword, 
             $clientId,
             $redirectUrl,
-            $code
+            $responseType
         );
 
         // then
-        // ログインが成功していることを確認する
-        $this->assertTrue($this->capturedLoginResult->loginSucceeded);
-        // 認可コード取得用のURLが返されていることを確認する
-        $this->assertEquals($redirectUrl, $this->capturedLoginResult->authorizationUrl);
-        // 正しいuserIdでログインされていることを確認する
-        $this->assertEquals($userId->value, $this->capturedUserId);
-        // アカウントがロックされていないことを確認する
-        $this->assertFalse($this->capturedLoginResult->accountLocked);
+        // ログインが失敗していることを確認する
+        $this->assertFalse($this->capturedLoginResult->loginSucceeded);
+        $this->assertEmpty($this->capturedLoginResult->authorizationUrl);
+        // アカウントがロックされていることを確認する
+        $this->assertTrue($this->capturedLoginResult->accountLocked);
     }
 
     public function test_アカウントロックの有効期限外の場合、正しいメールアドレスとパスワードでログインできる()
@@ -266,7 +269,7 @@ class LoginApplicationServiceTest extends TestCase
         $inputedPassword = 'ABCabc123_';
         $clientId = '1';
         $redirectUrl = 'http://localhost:8080/callback';
-        $code = 'code';
+        $responseType = 'code';
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationInformaionRepository,
             $this->sessionAuthentication,
@@ -278,16 +281,20 @@ class LoginApplicationServiceTest extends TestCase
             $inputedPassword, 
             $clientId,
             $redirectUrl,
-            $code
+            $responseType
         );
 
         // then
         // ログインが成功していることを確認する
         $this->assertTrue($this->capturedLoginResult->loginSucceeded);
         // 認可コード取得用のURLが返されていることを確認する
-        $this->assertEquals($redirectUrl, $this->capturedLoginResult->authorizationUrl);
+        $expectedAuthorizationUrl = $this->expectedClientData->urlForObtainingAuthorizationCode(
+            new RedirectUrl($redirectUrl),
+            $responseType
+        );
+        $this->assertEquals($expectedAuthorizationUrl, $this->capturedLoginResult->authorizationUrl);
         // 正しいuserIdでログインされていることを確認する
-        $this->assertEquals($userId->value, $this->capturedUserId);
+        $this->assertEquals($userId, $this->capturedUserId);
         // アカウントがロックされていないことを確認する
         $this->assertFalse($this->capturedLoginResult->accountLocked);
     }
@@ -313,10 +320,11 @@ class LoginApplicationServiceTest extends TestCase
 
         // when
         $inputedEmail = 'test@example.com';
-        $inputedPassword = 'ABCabc123_';
+        // 不正なパスワード
+        $inputedPassword = 'ABCabc123_!!!';
         $clientId = '1';
         $redirectUrl = 'http://localhost:8080/callback';
-        $code = 'code';
+        $responseType = 'code';
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationInformaionRepository,
             $this->sessionAuthentication,
@@ -328,7 +336,7 @@ class LoginApplicationServiceTest extends TestCase
             $inputedPassword, 
             $clientId,
             $redirectUrl,
-            $code
+            $responseType
         );
 
         // then
@@ -362,7 +370,7 @@ class LoginApplicationServiceTest extends TestCase
         $inputedPassword = 'ABCabc123_!!';
         $clientId = '1';
         $redirectUrl = 'http://localhost:8080/callback';
-        $code = 'code';
+        $responseType = 'code';
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationInformaionRepository,
             $this->sessionAuthentication,
@@ -376,7 +384,7 @@ class LoginApplicationServiceTest extends TestCase
                 $inputedPassword, 
                 $clientId,
                 $redirectUrl,
-                $code
+                $responseType
             );
         }
 
@@ -387,7 +395,7 @@ class LoginApplicationServiceTest extends TestCase
             $inputedPassword, 
             $clientId,
             $redirectUrl,
-            $code
+            $responseType
         );
 
         // then
