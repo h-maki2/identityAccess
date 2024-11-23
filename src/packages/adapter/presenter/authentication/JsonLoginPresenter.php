@@ -2,6 +2,7 @@
 
 namespace packages\adapter\presenter\authentication;
 
+use Illuminate\Http\JsonResponse;
 use packages\application\authentication\login\LoginOutputBoundary;
 use packages\application\authentication\login\LoginResult;
 
@@ -13,6 +14,12 @@ class JsonLoginPresenter implements LoginOutputBoundary
     public function present(LoginResult $loginResult): void
     {
         $this->setResponseData($loginResult);
+        $this->setStatusCode($loginResult);
+    }
+
+    public function response(): JsonResponse
+    {
+        return response()->json($this->responseData, $this->statusCode);
     }
 
     private function setResponseData(LoginResult $loginResult): void
