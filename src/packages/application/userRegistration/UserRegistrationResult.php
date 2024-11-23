@@ -6,20 +6,17 @@ class UserRegistrationResult
 {
     readonly bool $validationError;
     readonly array $validationErrorMessageList; // ValidationErrorMessageData[]
-    readonly string $oneTimeToken;
 
     /**
      * @param ValidationErrorMessageData[] $validationErrorMessageList
      */
     private function __construct(
         bool $validationError,
-        array $validationErrorMessageList,
-        string $oneTimeToken
+        array $validationErrorMessageList
     )
     {
         $this->validationError = $validationError;
         $this->validationErrorMessageList = $validationErrorMessageList;
-        $this->oneTimeToken = $oneTimeToken;
     }
 
     /**
@@ -31,17 +28,15 @@ class UserRegistrationResult
     {
         return new self(
             true,
-            $validationErrorMessageList, 
-            ''
+            $validationErrorMessageList
         );
     }
 
-    public static function createWhenSuccess(string $oneTimeToken): self
+    public static function createWhenSuccess(): self
     {
         return new self(
             false,
-            [],
-            $oneTimeToken
+            []
         );
     }
 }

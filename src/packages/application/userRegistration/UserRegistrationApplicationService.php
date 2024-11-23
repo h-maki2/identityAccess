@@ -24,23 +24,25 @@ use packages\domain\service\userRegistration\UserRegistration;
 class UserRegistrationApplicationService
 {
     private IAuthenticationInformaionRepository $authenticationInformaionRepository;
-    private IUserRegistrationCompletionEmail $userRegistrationCompletionEmail;
     private UserRegistration $userRegistration;
+    private UserRegistrationOutputBoundary $outputBoundary;
 
     public function __construct(
         IAuthConfirmationRepository $authConfirmationRepository,
         IAuthenticationInformaionRepository $authenticationInformaionRepository,
         UnitOfWork $unitOfWork,
-        IUserRegistrationCompletionEmail $userRegistrationCompletionEmail
+        IUserRegistrationCompletionEmail $userRegistrationCompletionEmail,
+        UserRegistrationOutputBoundary $outputBoundary
     )
     {
         $this->authenticationInformaionRepository = $authenticationInformaionRepository;
-        $this->userRegistrationCompletionEmail = $userRegistrationCompletionEmail;
         $this->userRegistration = new UserRegistration(
             $authenticationInformaionRepository,
             $authConfirmationRepository,
-            $unitOfWork
+            $unitOfWork,
+            $userRegistrationCompletionEmail
         );
+        $this->outputBoundary = $outputBoundary;
     }
 
     /**
@@ -49,51 +51,29 @@ class UserRegistrationApplicationService
     public function userRegister(
         string $inputedEmail, 
         string $inputedPassword
-    ): UserRegistrationResult
+    ): void
     {
         $validationHandler = new ValidationHandler();
         $validationHandler->addValidator(new UserEmailValidation($inputedEmail, $this->authenticationInformaionRepository));
         $validationHandler->addValidator(new UserPasswordValidation($inputedPassword));
         if (!$validationHandler->validate()) {
-            return UserRegistrationResult::createWhenValidationError($validationHandler->errorMessages());
+            $this->outputBoundary->present(
+                UserRegistrationResult::createWhenValidationError($validationHandler->errorMessages())
+            );
+            return;
         }
 
         $userEmail = new UserEmail($inputedEmail);
         $userPassword = UserPassword::create($inputedPassword);
         try {
-            $authConfirmation = $this->userRegistration->handle($userEmail, $userPassword);
+            $this->userRegistration->handle($userEmail, $userPassword);
         } catch (Exception $e) {
             throw new TransactionException($e->getMessage());
         }
 
-        $this->userRegistrationCompletionEmail->send(
-            $this->sendEmailDto(
-                $userEmail->value,
-                $authConfirmation->oneTimeToken()->value(),
-                $authConfirmation->oneTimePassword()->value
-            )
+        $this->outputBoundary->present(
+            UserRegistrationResult::createWhenSuccess()
         );
-
-        return UserRegistrationResult::createWhenSuccess($authConfirmation->oneTimeToken()->value());
-    }
-
-    private function sendEmailDto(
-        string $toAddress,
-        string $oneTimeToken,
-        string $oneTimePassword
-    ): SendEmailDto
-    {
-        $templateValiables = [
-            'oneTimeToken' => $oneTimeToken,
-            'oneTimePassword' => $oneTimePassword
-        ];
-        return new SendEmailDto(
-            'test@example.com',
-            $toAddress,
-            'システムテスト',
-            '会員登録完了のお知らせ',
-            'email.test',
-            $templateValiables
-        );
+        return;
     }
 }
