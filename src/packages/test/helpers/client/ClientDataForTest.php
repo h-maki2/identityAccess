@@ -2,12 +2,12 @@
 
 namespace packages\test\helpers\client;
 
-use packages\domain\model\oauth\client\ClientData;
+use packages\domain\model\oauth\client\AClientData;
 
-class ClientDataForTest extends ClientData
+class ClientDataForTest extends AClientData
 {
-    public function urlForObtainingAuthorizationCode(): string
+    protected function baseUrl(): string
     {
-        return 'http://localhost:8080' . $this->urlPathForObtainingAuthorizationCode();
+        return 'http://localhost:8080';
     }
 }
