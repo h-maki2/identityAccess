@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\domain\model\oauth\accessToken;
+namespace packages\domain\model\oauth\authToken;
 
 use InvalidArgumentException;
 

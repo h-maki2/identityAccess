@@ -1,10 +1,10 @@
 <?php
 
-namespace packages\adapter\oauth\accessToken;
+namespace packages\adapter\oauth\authToken;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use packages\domain\model\oauth\accessToken\AccessToken;
+use packages\domain\model\oauth\authToken\AccessToken;
 
 class LaravelPassportAccessToken extends AccessToken
 {
