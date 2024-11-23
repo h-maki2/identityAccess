@@ -2,7 +2,8 @@
 
 namespace packages\application\authentication\verifiedUpdate\display;
 
-interface DisplayVerifiedUpdatePageOutputBoundary
+abstract class DisplayVerifiedUpdatePageOutputBoundary
 {
-    public function present(DisplayVerifiedUpdatePageResult $result): void;
+    abstract public function present(DisplayVerifiedUpdatePageResult $result): void;
+    abstract public function response();
 }

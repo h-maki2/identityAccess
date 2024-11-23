@@ -2,7 +2,8 @@
 
 namespace packages\application\authentication\login;
 
-interface LoginOutputBoundary
+abstract class LoginOutputBoundary
 {
-    public function present(LoginResult $loginResult): void;
+    abstract public function present(LoginResult $loginResult): void;
+    abstract public function response();
 }
