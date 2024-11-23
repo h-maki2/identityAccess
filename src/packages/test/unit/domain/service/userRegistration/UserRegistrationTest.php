@@ -2,8 +2,8 @@
 
 use packages\adapter\persistence\inMemory\InMemoryAuthConfirmationRepository;
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformaionRepository;
-use packages\application\common\email\SendEmailDto;
-use packages\application\userRegistration\IUserRegistrationCompletionEmail;
+use packages\domain\model\common\email\SendEmailDto;
+use packages\domain\service\userRegistration\IUserRegistrationCompletionEmail;
 use packages\domain\model\authenticationInformaion\UserEmail;
 use packages\domain\model\authenticationInformaion\UserPassword;
 use packages\domain\model\authenticationInformaion\VerificationStatus;

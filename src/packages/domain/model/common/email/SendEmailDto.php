@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\application\common\email;
+namespace packages\domain\model\common\email;
 
 class SendEmailDto
 {

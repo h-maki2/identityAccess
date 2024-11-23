@@ -2,12 +2,12 @@
 
 use packages\adapter\persistence\inMemory\InMemoryAuthConfirmationRepository;
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformaionRepository;
-use packages\application\common\email\SendEmailDto;
+use packages\domain\model\common\email\SendEmailDto;
 use packages\application\common\validation\ValidationErrorMessageData;
-use packages\application\userRegistration\IUserRegistrationCompletionEmail;
-use packages\application\userRegistration\UserRegistrationApplicationService;
-use packages\application\userRegistration\UserRegistrationOutputBoundary;
-use packages\application\userRegistration\UserRegistrationResult;
+use packages\domain\service\userRegistration\IUserRegistrationCompletionEmail;
+use packages\domain\service\userRegistration\UserRegistrationApplicationService;
+use packages\domain\service\userRegistration\UserRegistrationOutputBoundary;
+use packages\domain\service\userRegistration\UserRegistrationResult;
 use packages\test\helpers\unitOfWork\TestUnitOfWork;
 use PHPUnit\Framework\TestCase;
 

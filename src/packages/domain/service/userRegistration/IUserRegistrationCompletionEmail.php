@@ -1,8 +1,8 @@
 <?php
 
-namespace packages\application\userRegistration;
+namespace packages\domain\service\userRegistration;
 
-use packages\application\common\email\SendEmailDto;
+use packages\domain\model\common\email\SendEmailDto;
 
 interface IUserRegistrationCompletionEmail
 {

@@ -2,10 +2,10 @@
 
 namespace packages\adapter\email;
 
-use packages\application\userRegistration\IUserRegistrationCompletionEmail;
+use packages\domain\service\userRegistration\IUserRegistrationCompletionEmail;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailHandler;
-use packages\application\common\email\SendEmailDto;
+use packages\domain\model\common\email\SendEmailDto;
 
 class UserRegistrationCompletionEmail implements IUserRegistrationCompletionEmail
 {

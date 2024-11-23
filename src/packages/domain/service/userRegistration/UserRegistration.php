@@ -2,8 +2,8 @@
 
 namespace packages\domain\service\userRegistration;
 
-use packages\application\common\email\SendEmailDto;
-use packages\application\userRegistration\IUserRegistrationCompletionEmail;
+use packages\domain\model\common\email\SendEmailDto;
+use packages\domain\service\userRegistration\IUserRegistrationCompletionEmail;
 use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authConfirmation\OneTimeToken;

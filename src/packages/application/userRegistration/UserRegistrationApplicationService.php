@@ -1,9 +1,9 @@
 <?php
 
-namespace packages\application\userRegistration;
+namespace packages\domain\service\userRegistration;
 
 use Exception;
-use packages\application\common\email\SendEmailDto;
+use packages\domain\model\common\email\SendEmailDto;
 use packages\application\common\exception\TransactionException;
 use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
