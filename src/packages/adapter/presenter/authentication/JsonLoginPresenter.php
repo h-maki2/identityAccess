@@ -8,8 +8,8 @@ use packages\application\authentication\login\LoginResult;
 
 class JsonLoginPresenter implements LoginOutputBoundary
 {
-    readonly array $responseData;
-    readonly int $statusCode;
+    private array $responseData;
+    private int $statusCode;
 
     public function present(LoginResult $loginResult): void
     {
