@@ -1,6 +1,6 @@
 <?php
 
-use packages\domain\model\authenticationInformaion\validation\UserPasswordValidation;
+use packages\domain\model\AuthenticationInformation\validation\UserPasswordValidation;
 use PHPUnit\Framework\TestCase;
 
 class UserPasswordValidationTest extends TestCase

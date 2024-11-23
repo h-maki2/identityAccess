@@ -71,9 +71,9 @@ package "グループ集約(GroupAggregation)" {
     Group *-down- GroupName
     Group *-down- PublicationId
     Group *-down- GroupMemberList
-    Group -down-> AuthenticationInformaion.UserId
+    Group -down-> AuthenticationInformation.UserId
     GroupMemberList "1" *-down- "0..n" GroupMember
-    GroupMember -down-> AuthenticationInformaion.UserId
+    GroupMember -down-> AuthenticationInformation.UserId
     GroupMember *-down- InviteStatus
 }
 

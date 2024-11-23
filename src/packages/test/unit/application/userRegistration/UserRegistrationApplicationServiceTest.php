@@ -1,7 +1,7 @@
 <?php
 
 use packages\adapter\persistence\inMemory\InMemoryAuthConfirmationRepository;
-use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformaionRepository;
+use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
 use packages\domain\model\common\email\SendEmailDto;
 use packages\application\common\validation\ValidationErrorMessageData;
 use packages\domain\service\userRegistration\IUserRegistrationCompletionEmail;
@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 class UserRegistrationApplicationServiceTest extends TestCase
 {
     private InMemoryAuthConfirmationRepository $authConfirmationRepository;
-    private InMemoryAuthenticationInformaionRepository $authenticationInformaionRepository;
+    private InMemoryAuthenticationInformationRepository $authenticationInformationRepository;
     private TestUnitOfWork $unitOfWork;
     private UserRegistrationOutputBoundary $outputBoundary;
     private UserRegistrationResult $capturedResult;
@@ -25,7 +25,7 @@ class UserRegistrationApplicationServiceTest extends TestCase
     public function setUp(): void
     {
         $this->authConfirmationRepository = new InMemoryAuthConfirmationRepository();
-        $this->authenticationInformaionRepository = new InMemoryAuthenticationInformaionRepository();
+        $this->authenticationInformationRepository = new InMemoryAuthenticationInformationRepository();
         $this->unitOfWork = new TestUnitOfWork();
 
         $outputBoundary = $this->createMock(UserRegistrationOutputBoundary::class);
@@ -47,7 +47,7 @@ class UserRegistrationApplicationServiceTest extends TestCase
 
         $this->userRegistrationApplicationService = new UserRegistrationApplicationService(
             $this->authConfirmationRepository,
-            $this->authenticationInformaionRepository,
+            $this->authenticationInformationRepository,
             $this->unitOfWork,
             $userRegistrationCompletionEmail,
             $this->outputBoundary

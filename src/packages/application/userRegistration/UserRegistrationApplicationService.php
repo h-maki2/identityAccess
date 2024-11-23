@@ -7,15 +7,15 @@ use packages\domain\model\common\email\SendEmailDto;
 use packages\application\common\exception\TransactionException;
 use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
-use packages\domain\model\authenticationInformaion\AuthenticationInformaion;
-use packages\domain\model\authenticationInformaion\IAuthenticationInformaionRepository;
-use packages\domain\model\authenticationInformaion\UserEmail;
-use packages\domain\model\authenticationInformaion\UserPassword;
-use packages\domain\model\authenticationInformaion\validation\UserEmailValidation;
-use packages\domain\model\authenticationInformaion\validation\UserPasswordValidation;
+use packages\domain\model\AuthenticationInformation\AuthenticationInformation;
+use packages\domain\model\AuthenticationInformation\IAuthenticationInformationRepository;
+use packages\domain\model\AuthenticationInformation\UserEmail;
+use packages\domain\model\AuthenticationInformation\UserPassword;
+use packages\domain\model\AuthenticationInformation\validation\UserEmailValidation;
+use packages\domain\model\AuthenticationInformation\validation\UserPasswordValidation;
 use packages\domain\model\common\unitOfWork\UnitOfWork;
 use packages\domain\model\common\validator\ValidationHandler;
-use packages\domain\service\authenticationInformaion\AuthenticationInformaionService;
+use packages\domain\service\AuthenticationInformation\AuthenticationInformationService;
 use packages\domain\service\userRegistration\UserRegistration;
 
 /**
@@ -23,21 +23,21 @@ use packages\domain\service\userRegistration\UserRegistration;
  */
 class UserRegistrationApplicationService
 {
-    private IAuthenticationInformaionRepository $authenticationInformaionRepository;
+    private IAuthenticationInformationRepository $authenticationInformationRepository;
     private UserRegistration $userRegistration;
     private UserRegistrationOutputBoundary $outputBoundary;
 
     public function __construct(
         IAuthConfirmationRepository $authConfirmationRepository,
-        IAuthenticationInformaionRepository $authenticationInformaionRepository,
+        IAuthenticationInformationRepository $authenticationInformationRepository,
         UnitOfWork $unitOfWork,
         IUserRegistrationCompletionEmail $userRegistrationCompletionEmail,
         UserRegistrationOutputBoundary $outputBoundary
     )
     {
-        $this->authenticationInformaionRepository = $authenticationInformaionRepository;
+        $this->authenticationInformationRepository = $authenticationInformationRepository;
         $this->userRegistration = new UserRegistration(
-            $authenticationInformaionRepository,
+            $authenticationInformationRepository,
             $authConfirmationRepository,
             $unitOfWork,
             $userRegistrationCompletionEmail
@@ -54,7 +54,7 @@ class UserRegistrationApplicationService
     ): void
     {
         $validationHandler = new ValidationHandler();
-        $validationHandler->addValidator(new UserEmailValidation($inputedEmail, $this->authenticationInformaionRepository));
+        $validationHandler->addValidator(new UserEmailValidation($inputedEmail, $this->authenticationInformationRepository));
         $validationHandler->addValidator(new UserPasswordValidation($inputedPassword));
         if (!$validationHandler->validate()) {
             $this->outputBoundary->present(

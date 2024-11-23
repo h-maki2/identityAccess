@@ -1,27 +1,27 @@
 <?php
 
 use packages\adapter\persistence\inMemory\InMemoryAuthConfirmationRepository;
-use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformaionRepository;
+use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
 use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateApplicationService;
 use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateOutputBoundary;
 use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateResult;
 use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
-use packages\domain\model\authenticationInformaion\VerificationStatus;
+use packages\domain\model\AuthenticationInformation\VerificationStatus;
 use packages\domain\service\verifiedUpdate\VerifiedUpdate;
 use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
-use packages\test\helpers\authenticationInformaion\AuthenticationInformaionTestDataCreator;
+use packages\test\helpers\AuthenticationInformation\AuthenticationInformationTestDataCreator;
 use packages\test\helpers\unitOfWork\TestUnitOfWork;
 use PHPUnit\Framework\TestCase;
 
 class VerifiedUpdateApplicationServiceTest extends TestCase
 {
     private InMemoryAuthConfirmationRepository $authConfirmationRepository;
-    private InMemoryAuthenticationInformaionRepository $authenticationInformaionRepository;
+    private InMemoryAuthenticationInformationRepository $authenticationInformationRepository;
     private VerifiedUpdate $verifiedUpdate;
     private TestUnitOfWork $unitOfWork;
     private AuthConfirmationTestDataCreator $authConfirmationTestDataCreator;
-    private AuthenticationInformaionTestDataCreator $authenticationInformaionTestDataCreator;
+    private AuthenticationInformationTestDataCreator $authenticationInformationTestDataCreator;
     private VerifiedUpdateApplicationService $verifiedUpdateApplicationService;
     private VerifiedUpdateOutputBoundary $outputBoundary;
     private VerifiedUpdateResult $capturedResult;
@@ -29,15 +29,15 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
     public function setUp(): void
     {
         $this->authConfirmationRepository = new InMemoryAuthConfirmationRepository();
-        $this->authenticationInformaionRepository = new InMemoryAuthenticationInformaionRepository();
+        $this->authenticationInformationRepository = new InMemoryAuthenticationInformationRepository();
         $this->unitOfWork = new TestUnitOfWork();
         $this->verifiedUpdate = new VerifiedUpdate(
-            $this->authenticationInformaionRepository,
+            $this->authenticationInformationRepository,
             $this->authConfirmationRepository,
             $this->unitOfWork
         );
-        $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator($this->authConfirmationRepository, $this->authenticationInformaionRepository);
-        $this->authenticationInformaionTestDataCreator = new AuthenticationInformaionTestDataCreator($this->authenticationInformaionRepository);
+        $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator($this->authConfirmationRepository, $this->authenticationInformationRepository);
+        $this->authenticationInformationTestDataCreator = new AuthenticationInformationTestDataCreator($this->authenticationInformationRepository);
 
         $outputBoundary = $this->createMock(VerifiedUpdateOutputBoundary::class);
         $outputBoundary
@@ -49,7 +49,7 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
         $this->outputBoundary = $outputBoundary;
 
         $this->verifiedUpdateApplicationService = new VerifiedUpdateApplicationService(
-            $this->authenticationInformaionRepository,
+            $this->authenticationInformationRepository,
             $this->authConfirmationRepository,
             $this->unitOfWork,
             $this->outputBoundary
@@ -60,8 +60,8 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
     {
         // given
         // 認証済みではない認証情報を保存しておく
-        $userId = $this->authenticationInformaionRepository->nextUserId();
-        $this->authenticationInformaionTestDataCreator->create(
+        $userId = $this->authenticationInformationRepository->nextUserId();
+        $this->authenticationInformationTestDataCreator->create(
             id: $userId,
             verificationStatus: VerificationStatus::Unverified
         );
@@ -84,8 +84,8 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
         $this->assertEmpty($this->capturedResult->validationErrorMessage);
 
         // 認証情報が認証済みになっていることを確認
-        $updatedAuthenticationInformaion = $this->authenticationInformaionRepository->findById($userId);
-        $this->assertEquals(VerificationStatus::Verified, $updatedAuthenticationInformaion->verificationStatus());
+        $updatedAuthenticationInformation = $this->authenticationInformationRepository->findById($userId);
+        $this->assertEquals(VerificationStatus::Verified, $updatedAuthenticationInformation->verificationStatus());
 
         // 認証確認情報が削除されていることを確認
         $deletedAuthConfirmation = $this->authConfirmationRepository->findByToken($oneTimeTokenValue);
@@ -96,8 +96,8 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
     {
         // given
         // 認証済みではない認証情報を保存しておく
-        $userId = $this->authenticationInformaionRepository->nextUserId();
-        $this->authenticationInformaionTestDataCreator->create(
+        $userId = $this->authenticationInformationRepository->nextUserId();
+        $this->authenticationInformationTestDataCreator->create(
             id: $userId,
             verificationStatus: VerificationStatus::Unverified
         );
@@ -125,8 +125,8 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
     {
         // given
         // 認証済みではない認証情報を保存しておく
-        $userId = $this->authenticationInformaionRepository->nextUserId();
-        $this->authenticationInformaionTestDataCreator->create(
+        $userId = $this->authenticationInformationRepository->nextUserId();
+        $this->authenticationInformationTestDataCreator->create(
             id: $userId,
             verificationStatus: VerificationStatus::Unverified
         );

@@ -1,30 +1,30 @@
 <?php
 
-use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformaionRepository;
+use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
 use packages\application\authentication\login\LoginApplicationService;
 use packages\application\authentication\login\LoginOutputBoundary;
 use packages\application\authentication\login\LoginResult;
-use packages\domain\model\authenticationInformaion\FailedLoginCount;
-use packages\domain\model\authenticationInformaion\LoginRestriction;
-use packages\domain\model\authenticationInformaion\LoginRestrictionStatus;
-use packages\domain\model\authenticationInformaion\NextLoginAllowedAt;
-use packages\domain\model\authenticationInformaion\SessionAuthentication;
-use packages\domain\model\authenticationInformaion\UserEmail;
-use packages\domain\model\authenticationInformaion\UserId;
-use packages\domain\model\authenticationInformaion\UserPassword;
-use packages\domain\model\authenticationInformaion\VerificationStatus;
+use packages\domain\model\AuthenticationInformation\FailedLoginCount;
+use packages\domain\model\AuthenticationInformation\LoginRestriction;
+use packages\domain\model\AuthenticationInformation\LoginRestrictionStatus;
+use packages\domain\model\AuthenticationInformation\NextLoginAllowedAt;
+use packages\domain\model\AuthenticationInformation\SessionAuthentication;
+use packages\domain\model\AuthenticationInformation\UserEmail;
+use packages\domain\model\AuthenticationInformation\UserId;
+use packages\domain\model\AuthenticationInformation\UserPassword;
+use packages\domain\model\AuthenticationInformation\VerificationStatus;
 use packages\domain\model\oauth\client\IClientFetcher;
 use packages\domain\model\oauth\client\RedirectUrl;
-use packages\test\helpers\authenticationInformaion\AuthenticationInformaionTestDataCreator;
+use packages\test\helpers\AuthenticationInformation\AuthenticationInformationTestDataCreator;
 use packages\test\helpers\client\ClientDataForTest;
 use packages\test\helpers\client\TestClientDataFactory;
 use PHPUnit\Framework\TestCase;
 
 class LoginApplicationServiceTest extends TestCase
 {
-    private InMemoryAuthenticationInformaionRepository $authenticationInformaionRepository;
+    private InMemoryAuthenticationInformationRepository $authenticationInformationRepository;
     private IClientFetcher $clientFetcher;
-    private AuthenticationInformaionTestDataCreator $authenticationInformaionTestDataCreator;
+    private AuthenticationInformationTestDataCreator $authenticationInformationTestDataCreator;
     private SessionAuthentication $sessionAuthentication;
     private UserId $capturedUserId;
     private LoginOutputBoundary $outputBoundary;
@@ -33,8 +33,8 @@ class LoginApplicationServiceTest extends TestCase
 
     public function setUp(): void
     {
-        $this->authenticationInformaionRepository = new InMemoryAuthenticationInformaionRepository();
-        $this->authenticationInformaionTestDataCreator = new AuthenticationInformaionTestDataCreator($this->authenticationInformaionRepository);
+        $this->authenticationInformationRepository = new InMemoryAuthenticationInformationRepository();
+        $this->authenticationInformationTestDataCreator = new AuthenticationInformationTestDataCreator($this->authenticationInformationRepository);
 
         // markAsLoggedInメソッドが呼ばれた際に引数の値をキャプチャする
         $sessionAuthentication = $this->createMock(SessionAuthentication::class);
@@ -71,8 +71,8 @@ class LoginApplicationServiceTest extends TestCase
         // 認証情報を作成する
         $email = new UserEmail('test@example.com');
         $password = UserPassword::create('ABCabc123_');
-        $userId = $this->authenticationInformaionRepository->nextUserId();
-        $this->authenticationInformaionTestDataCreator->create(
+        $userId = $this->authenticationInformationRepository->nextUserId();
+        $this->authenticationInformationTestDataCreator->create(
             $email,
             $password,
             VerificationStatus::Verified,
@@ -87,7 +87,7 @@ class LoginApplicationServiceTest extends TestCase
         $responseType = 'code';
 
         $loginApplicationService = new LoginApplicationService(
-            $this->authenticationInformaionRepository,
+            $this->authenticationInformationRepository,
             $this->sessionAuthentication,
             $this->clientFetcher,
             $this->outputBoundary
@@ -121,7 +121,7 @@ class LoginApplicationServiceTest extends TestCase
         // 認証情報を作成する
         $email = new UserEmail('test@example.com');
         $password = UserPassword::create('ABCabc123_');
-        $this->authenticationInformaionTestDataCreator->create(
+        $this->authenticationInformationTestDataCreator->create(
             $email,
             $password,
             VerificationStatus::Verified
@@ -136,7 +136,7 @@ class LoginApplicationServiceTest extends TestCase
         $responseType = 'code';
 
         $loginApplicationService = new LoginApplicationService(
-            $this->authenticationInformaionRepository,
+            $this->authenticationInformationRepository,
             $this->sessionAuthentication,
             $this->clientFetcher,
             $this->outputBoundary
@@ -161,7 +161,7 @@ class LoginApplicationServiceTest extends TestCase
         // 認証情報を作成する
         $email = new UserEmail('test@example.com');
         $password = UserPassword::create('ABCabc123_');
-        $this->authenticationInformaionTestDataCreator->create(
+        $this->authenticationInformationTestDataCreator->create(
             $email,
             $password,
             VerificationStatus::Verified
@@ -176,7 +176,7 @@ class LoginApplicationServiceTest extends TestCase
         $responseType = 'code';
 
         $loginApplicationService = new LoginApplicationService(
-            $this->authenticationInformaionRepository,
+            $this->authenticationInformationRepository,
             $this->sessionAuthentication,
             $this->clientFetcher,
             $this->outputBoundary
@@ -206,8 +206,8 @@ class LoginApplicationServiceTest extends TestCase
             LoginRestrictionStatus::Restricted,
             NextLoginAllowedAt::reconstruct(new DateTimeImmutable('+10 minutes'))
         );
-        $userId = $this->authenticationInformaionRepository->nextUserId();
-        $this->authenticationInformaionTestDataCreator->create(
+        $userId = $this->authenticationInformationRepository->nextUserId();
+        $this->authenticationInformationTestDataCreator->create(
             $email,
             $password,
             VerificationStatus::Verified,
@@ -222,7 +222,7 @@ class LoginApplicationServiceTest extends TestCase
         $redirectUrl = 'http://localhost:8080/callback';
         $responseType = 'code';
         $loginApplicationService = new LoginApplicationService(
-            $this->authenticationInformaionRepository,
+            $this->authenticationInformationRepository,
             $this->sessionAuthentication,
             $this->clientFetcher,
             $this->outputBoundary
@@ -249,14 +249,14 @@ class LoginApplicationServiceTest extends TestCase
         // 認証情報を作成する
         $email = new UserEmail('test@example.com');
         $password = UserPassword::create('ABCabc123_');
-        $userId = $this->authenticationInformaionRepository->nextUserId();
+        $userId = $this->authenticationInformationRepository->nextUserId();
         // アカウントがロックされているが再ログイン可能
         $loginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
             LoginRestrictionStatus::Restricted,
             NextLoginAllowedAt::reconstruct(new DateTimeImmutable('-1 minutes'))
         );
-        $this->authenticationInformaionTestDataCreator->create(
+        $this->authenticationInformationTestDataCreator->create(
             $email,
             $password,
             VerificationStatus::Verified,
@@ -271,7 +271,7 @@ class LoginApplicationServiceTest extends TestCase
         $redirectUrl = 'http://localhost:8080/callback';
         $responseType = 'code';
         $loginApplicationService = new LoginApplicationService(
-            $this->authenticationInformaionRepository,
+            $this->authenticationInformationRepository,
             $this->sessionAuthentication,
             $this->clientFetcher,
             $this->outputBoundary
@@ -310,7 +310,7 @@ class LoginApplicationServiceTest extends TestCase
             LoginRestrictionStatus::Unrestricted,
             null
         );
-        $this->authenticationInformaionTestDataCreator->create(
+        $this->authenticationInformationTestDataCreator->create(
             $email,
             $password,
             VerificationStatus::Verified,
@@ -326,7 +326,7 @@ class LoginApplicationServiceTest extends TestCase
         $redirectUrl = 'http://localhost:8080/callback';
         $responseType = 'code';
         $loginApplicationService = new LoginApplicationService(
-            $this->authenticationInformaionRepository,
+            $this->authenticationInformationRepository,
             $this->sessionAuthentication,
             $this->clientFetcher,
             $this->outputBoundary
@@ -341,8 +341,8 @@ class LoginApplicationServiceTest extends TestCase
 
         // then
         // ログイン失敗回数が更新されていることを確認する
-        $authenticationInformaion = $this->authenticationInformaionRepository->findByEmail($email);
-        $this->assertEquals(2, $authenticationInformaion->loginRestriction()->failedLoginCount());
+        $authenticationInformation = $this->authenticationInformationRepository->findByEmail($email);
+        $this->assertEquals(2, $authenticationInformation->loginRestriction()->failedLoginCount());
     }
 
     public function test_ログインに失敗した場合、失敗回数が一定回数を超えた場合アカウントがロックされる()
@@ -356,7 +356,7 @@ class LoginApplicationServiceTest extends TestCase
             LoginRestrictionStatus::Unrestricted,
             null
         );
-        $this->authenticationInformaionTestDataCreator->create(
+        $this->authenticationInformationTestDataCreator->create(
             $email,
             $password,
             VerificationStatus::Verified,
@@ -372,7 +372,7 @@ class LoginApplicationServiceTest extends TestCase
         $redirectUrl = 'http://localhost:8080/callback';
         $responseType = 'code';
         $loginApplicationService = new LoginApplicationService(
-            $this->authenticationInformaionRepository,
+            $this->authenticationInformationRepository,
             $this->sessionAuthentication,
             $this->clientFetcher,
             $this->outputBoundary
@@ -400,10 +400,10 @@ class LoginApplicationServiceTest extends TestCase
 
         // then
         // アカウントがロックされていることを確認する
-        $authenticationInformaion = $this->authenticationInformaionRepository->findByEmail($email);
-        $this->assertEquals(LoginRestrictionStatus::Restricted->value, $authenticationInformaion->loginRestriction()->loginRestrictionStatus());
-        $this->assertNotNull($authenticationInformaion->loginRestriction()->nextLoginAllowedAt());
-        $this->assertEquals(10, $authenticationInformaion->loginRestriction()->failedLoginCount());
+        $authenticationInformation = $this->authenticationInformationRepository->findByEmail($email);
+        $this->assertEquals(LoginRestrictionStatus::Restricted->value, $authenticationInformation->loginRestriction()->loginRestrictionStatus());
+        $this->assertNotNull($authenticationInformation->loginRestriction()->nextLoginAllowedAt());
+        $this->assertEquals(10, $authenticationInformation->loginRestriction()->failedLoginCount());
         $this->assertTrue($this->capturedLoginResult->accountLocked);
     }
 }

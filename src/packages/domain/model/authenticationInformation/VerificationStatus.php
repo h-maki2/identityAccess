@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\domain\model\authenticationInformaion;
+namespace packages\domain\model\AuthenticationInformation;
 
 enum VerificationStatus: string
 {

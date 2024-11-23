@@ -1,32 +1,32 @@
 <?php
 
 use packages\adapter\persistence\inMemory\InMemoryAuthConfirmationRepository;
-use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformaionRepository;
+use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
 use packages\application\authentication\oneTimeTokenAndPasswordRegeneration\OneTimeTokenAndPasswordRegenerationApplicationService;
 use packages\application\authentication\oneTimeTokenAndPasswordRegeneration\OneTimeTokenAndPasswordRegenerationOutputBoundary;
 use packages\application\authentication\oneTimeTokenAndPasswordRegeneration\OneTimeTokenAndPasswordRegenerationResult;
 use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
-use packages\domain\model\authenticationInformaion\UserEmail;
-use packages\domain\model\authenticationInformaion\VerificationStatus;
+use packages\domain\model\AuthenticationInformation\UserEmail;
+use packages\domain\model\AuthenticationInformation\VerificationStatus;
 use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
-use packages\test\helpers\authenticationInformaion\AuthenticationInformaionTestDataCreator;
+use packages\test\helpers\AuthenticationInformation\AuthenticationInformationTestDataCreator;
 use PHPUnit\Framework\TestCase;
 
 class OneTimeTokenAndPasswordRegenerationApplicationServiceTest extends TestCase
 {
     private InMemoryAuthConfirmationRepository $authConfirmationRepository;
-    private InMemoryAuthenticationInformaionRepository $authenticationInformaionRepository;
+    private InMemoryAuthenticationInformationRepository $authenticationInformationRepository;
     private OneTimeTokenAndPasswordRegenerationApplicationService $oneTimeTokenAndPasswordRegenerationApplicationService;
     private AuthConfirmationTestDataCreator $authConfirmationTestDataCreator;
-    private AuthenticationInformaionTestDataCreator $authenticationInformaionTestDataCreator;
+    private AuthenticationInformationTestDataCreator $authenticationInformationTestDataCreator;
     private OneTimeTokenAndPasswordRegenerationResult $catchedResult;
     private OneTimeTokenAndPasswordRegenerationOutputBoundary $outputBoundary;
 
     public function setUp(): void
     {
         $this->authConfirmationRepository = new InMemoryAuthConfirmationRepository();
-        $this->authenticationInformaionRepository = new InMemoryAuthenticationInformaionRepository();
+        $this->authenticationInformationRepository = new InMemoryAuthenticationInformationRepository();
 
         $outputBoundary = $this->createMock(OneTimeTokenAndPasswordRegenerationOutputBoundary::class);
         $outputBoundary
@@ -39,11 +39,11 @@ class OneTimeTokenAndPasswordRegenerationApplicationServiceTest extends TestCase
 
         $this->oneTimeTokenAndPasswordRegenerationApplicationService = new OneTimeTokenAndPasswordRegenerationApplicationService(
             $this->authConfirmationRepository,
-            $this->authenticationInformaionRepository,
+            $this->authenticationInformationRepository,
             $this->outputBoundary
         );
-        $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator($this->authConfirmationRepository, $this->authenticationInformaionRepository);
-        $this->authenticationInformaionTestDataCreator = new AuthenticationInformaionTestDataCreator($this->authenticationInformaionRepository);
+        $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator($this->authConfirmationRepository, $this->authenticationInformationRepository);
+        $this->authenticationInformationTestDataCreator = new AuthenticationInformationTestDataCreator($this->authenticationInformationRepository);
     }
 
     public function test_認証情報が認証済みではない場合、ワンタイムトークンとワンタイムパスワードの再生成ができる()
@@ -51,7 +51,7 @@ class OneTimeTokenAndPasswordRegenerationApplicationServiceTest extends TestCase
         // given
         // 認証情報を作成して保存する
         $userEmail = new UserEmail('test@example.com');
-        $authenticationInformaion = $this->authenticationInformaionTestDataCreator->create(
+        $authenticationInformation = $this->authenticationInformationTestDataCreator->create(
             email: $userEmail,
             verificationStatus: VerificationStatus::Unverified // 認証済みではない
         );
@@ -60,7 +60,7 @@ class OneTimeTokenAndPasswordRegenerationApplicationServiceTest extends TestCase
         $oneTimeTokenValue = OneTimeTokenValue::create();
         $oneTimePasword = OneTimePassword::create();
         $this->authConfirmationTestDataCreator->create(
-            userId: $authenticationInformaion->id(),
+            userId: $authenticationInformation->id(),
             oneTimeTokenValue: $oneTimeTokenValue,
             oneTimePassword: $oneTimePasword
         );
@@ -77,7 +77,7 @@ class OneTimeTokenAndPasswordRegenerationApplicationServiceTest extends TestCase
         $this->assertNotEquals($oneTimeTokenValue->value, $this->catchedResult->oneTimeTokenValue);
 
         // ワンタイムパスワードが再生成されていることを確認
-        $actualAuthConfirmation = $this->authConfirmationRepository->findById($authenticationInformaion->id());
+        $actualAuthConfirmation = $this->authConfirmationRepository->findById($authenticationInformation->id());
         $this->assertNotEquals($oneTimePasword->value, $actualAuthConfirmation->oneTimePassword()->value);
     }
 
@@ -86,7 +86,7 @@ class OneTimeTokenAndPasswordRegenerationApplicationServiceTest extends TestCase
         // given
         // 認証情報を作成して保存する
         $userEmail = new UserEmail('test@example.com');
-        $authenticationInformaion = $this->authenticationInformaionTestDataCreator->create(
+        $authenticationInformation = $this->authenticationInformationTestDataCreator->create(
             email: $userEmail
         );
 
@@ -94,7 +94,7 @@ class OneTimeTokenAndPasswordRegenerationApplicationServiceTest extends TestCase
         $oneTimeTokenValue = OneTimeTokenValue::create();
         $oneTimePasword = OneTimePassword::create();
         $this->authConfirmationTestDataCreator->create(
-            userId: $authenticationInformaion->id(),
+            userId: $authenticationInformation->id(),
             oneTimeTokenValue: $oneTimeTokenValue,
             oneTimePassword: $oneTimePasword
         );
@@ -115,7 +115,7 @@ class OneTimeTokenAndPasswordRegenerationApplicationServiceTest extends TestCase
         // given
         // 認証情報を作成して保存する
         $userEmail = new UserEmail('test@example.com');
-        $authenticationInformation = $this->authenticationInformaionTestDataCreator->create(
+        $authenticationInformation = $this->authenticationInformationTestDataCreator->create(
             email: $userEmail,
             verificationStatus: VerificationStatus::Verified // 認証済み
         );
@@ -144,14 +144,14 @@ class OneTimeTokenAndPasswordRegenerationApplicationServiceTest extends TestCase
         // given
         // 認証情報を作成して保存する
         $userEmail = new UserEmail('test@example.com');
-        $authenticationInformaion = $this->authenticationInformaionTestDataCreator->create(
+        $authenticationInformation = $this->authenticationInformationTestDataCreator->create(
             email: $userEmail,
             verificationStatus: VerificationStatus::Unverified // 認証済みではない
         );
 
         // when・then
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('認証情報が存在しません。userId: ' . $authenticationInformaion->id()->value);
+        $this->expectExceptionMessage('認証情報が存在しません。userId: ' . $authenticationInformation->id()->value);
         $this->oneTimeTokenAndPasswordRegenerationApplicationService->regenerateOneTimeTokenAndPassword($userEmail->value);
     }
 }

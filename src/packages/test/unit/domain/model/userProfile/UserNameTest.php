@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-use packages\domain\model\authenticationInformaion\UserEmail;
-use packages\domain\model\authenticationInformaion\UserName;
+use packages\domain\model\AuthenticationInformation\UserEmail;
+use packages\domain\model\AuthenticationInformation\UserName;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 

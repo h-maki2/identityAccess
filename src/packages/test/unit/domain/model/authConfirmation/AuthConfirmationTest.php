@@ -5,7 +5,7 @@ use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
 use packages\test\helpers\authConfirmation\TestAuthConfirmationFactory;
 use packages\test\helpers\authConfirmation\TestOneTimeTokenFactory;
-use packages\test\helpers\authenticationInformaion\TestUserIdFactory;
+use packages\test\helpers\AuthenticationInformation\TestUserIdFactory;
 use PHPUnit\Framework\TestCase;
 
 class AuthConfirmationTest extends TestCase

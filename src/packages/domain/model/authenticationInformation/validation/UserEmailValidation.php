@@ -1,25 +1,25 @@
 <?php
 
-namespace packages\domain\model\authenticationInformaion\validation;
+namespace packages\domain\model\AuthenticationInformation\validation;
 
-use packages\domain\model\authenticationInformaion\IAuthenticationInformaionRepository;
-use packages\domain\model\authenticationInformaion\UserEmail;
+use packages\domain\model\AuthenticationInformation\IAuthenticationInformationRepository;
+use packages\domain\model\AuthenticationInformation\UserEmail;
 use packages\domain\model\common\validator\Validator;
-use packages\domain\service\authenticationInformaion\AuthenticationInformaionService;
+use packages\domain\service\AuthenticationInformation\AuthenticationInformationService;
 use PharIo\Manifest\Email;
 
 class UserEmailValidation extends Validator
 {
     private string $email;
-    private IAuthenticationInformaionRepository $authenticationInformaionRepository;
+    private IAuthenticationInformationRepository $authenticationInformationRepository;
 
     public function __construct(
         string $email, 
-        IAuthenticationInformaionRepository $authenticationInformaionRepository
+        IAuthenticationInformationRepository $authenticationInformationRepository
     )
     {
         $this->email = $email;
-        $this->authenticationInformaionRepository = $authenticationInformaionRepository;
+        $this->authenticationInformationRepository = $authenticationInformationRepository;
     }
 
     public function validate(): bool
@@ -30,8 +30,8 @@ class UserEmailValidation extends Validator
         }
 
         $userEmail = new UserEmail($this->email);
-        $authenticationInformaionService = new AuthenticationInformaionService($this->authenticationInformaionRepository);
-        if ($authenticationInformaionService->alreadyExistsEmail($userEmail)) {
+        $authenticationInformationService = new AuthenticationInformationService($this->authenticationInformationRepository);
+        if ($authenticationInformationService->alreadyExistsEmail($userEmail)) {
             $this->setErrorMessage('既に登録されているメールアドレスです。');
             return false;
         }

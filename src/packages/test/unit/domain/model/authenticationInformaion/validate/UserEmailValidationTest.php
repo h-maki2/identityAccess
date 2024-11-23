@@ -1,27 +1,27 @@
 <?php
 
-use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformaionRepository;
-use packages\domain\model\authenticationInformaion\UserEmail;
-use packages\domain\model\authenticationInformaion\validation\UserEmailValidation;
-use packages\test\helpers\authenticationInformaion\AuthenticationInformaionTestDataFactory;
+use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
+use packages\domain\model\AuthenticationInformation\UserEmail;
+use packages\domain\model\AuthenticationInformation\validation\UserEmailValidation;
+use packages\test\helpers\AuthenticationInformation\AuthenticationInformationTestDataFactory;
 use PHPUnit\Framework\TestCase;
 
 class UserEmailValidationTest extends TestCase
 {
-    private AuthenticationInformaionTestDataFactory $authenticationInformaionTestDataFactory;
-    private InMemoryAuthenticationInformaionRepository $authenticationInformaionRepository;
+    private AuthenticationInformationTestDataFactory $authenticationInformationTestDataFactory;
+    private InMemoryAuthenticationInformationRepository $authenticationInformationRepository;
 
     public function setUp(): void
     {
-        $this->authenticationInformaionRepository = new InMemoryAuthenticationInformaionRepository();
-        $this->authenticationInformaionTestDataFactory = new AuthenticationInformaionTestDataFactory($this->authenticationInformaionRepository);
+        $this->authenticationInformationRepository = new InMemoryAuthenticationInformationRepository();
+        $this->authenticationInformationTestDataFactory = new AuthenticationInformationTestDataFactory($this->authenticationInformationRepository);
     }
 
     public function test_メールアドレスの形式が不正な場合はバリデーションエラーが発生する()
     {
         // given
         $email = 'test';
-        $userEmailValidation = new UserEmailValidation($email, $this->authenticationInformaionRepository);
+        $userEmailValidation = new UserEmailValidation($email, $this->authenticationInformationRepository);
 
         // when
         $result = $userEmailValidation->validate();
@@ -37,7 +37,7 @@ class UserEmailValidationTest extends TestCase
     {
         // given
         $email = str_repeat('a', 244) . '@example.com';
-        $userEmailValidation = new UserEmailValidation($email, $this->authenticationInformaionRepository);
+        $userEmailValidation = new UserEmailValidation($email, $this->authenticationInformationRepository);
 
         // when
         $result = $userEmailValidation->validate();
@@ -55,9 +55,9 @@ class UserEmailValidationTest extends TestCase
         // test@example.comのメールアドレスが既に登録されている
         $emailString = 'test@example.com';
         $userEmail = new UserEmail($emailString);
-        $this->authenticationInformaionTestDataFactory->create($userEmail);
+        $this->authenticationInformationTestDataFactory->create($userEmail);
 
-        $userEmailValidation = new UserEmailValidation($emailString, $this->authenticationInformaionRepository);
+        $userEmailValidation = new UserEmailValidation($emailString, $this->authenticationInformationRepository);
 
         // when
         $result = $userEmailValidation->validate();
@@ -73,7 +73,7 @@ class UserEmailValidationTest extends TestCase
     {
         // given
         $email = 'test@example.com';
-        $userEmailValidation = new UserEmailValidation($email, $this->authenticationInformaionRepository);
+        $userEmailValidation = new UserEmailValidation($email, $this->authenticationInformationRepository);
 
         // when
         $result = $userEmailValidation->validate();

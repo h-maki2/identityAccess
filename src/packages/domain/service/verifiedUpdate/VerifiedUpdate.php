@@ -7,7 +7,7 @@ use packages\application\common\exception\TransactionException;
 use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authConfirmation\OneTimePassword;
-use packages\domain\model\authenticationInformaion\IAuthenticationInformaionRepository;
+use packages\domain\model\AuthenticationInformation\IAuthenticationInformationRepository;
 use packages\domain\model\common\unitOfWork\UnitOfWork;
 use RuntimeException;
 
@@ -16,16 +16,16 @@ use RuntimeException;
  */
 class VerifiedUpdate
 {
-    private IAuthenticationInformaionRepository $authenticationInformaionRepository;
+    private IAuthenticationInformationRepository $authenticationInformationRepository;
     private IAuthConfirmationRepository $authConfirmationRepository;
     private UnitOfWork $unitOfWork;
 
     public function __construct(
-        IAuthenticationInformaionRepository $authenticationInformaionRepository,
+        IAuthenticationInformationRepository $authenticationInformationRepository,
         IAuthConfirmationRepository $authConfirmationRepository,
         UnitOfWork $unitOfWork
     ) {
-        $this->authenticationInformaionRepository = $authenticationInformaionRepository;
+        $this->authenticationInformationRepository = $authenticationInformationRepository;
         $this->authConfirmationRepository = $authConfirmationRepository;
         $this->unitOfWork = $unitOfWork;
     }
@@ -40,13 +40,13 @@ class VerifiedUpdate
             return false;
         }
 
-        $authInformation = $this->authenticationInformaionRepository->findById($authConfirmation->userId);
+        $authInformation = $this->authenticationInformationRepository->findById($authConfirmation->userId);
         
         $authInformation->updateVerified();
 
         try {
             $this->unitOfWork->performTransaction(function () use ($authInformation, $authConfirmation) {
-                $this->authenticationInformaionRepository->save($authInformation);
+                $this->authenticationInformationRepository->save($authInformation);
                 $this->authConfirmationRepository->delete($authConfirmation);
             });
         } catch (\Exception $e) {

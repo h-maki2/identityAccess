@@ -5,8 +5,8 @@ namespace packages\application\authentication\oneTimeTokenAndPasswordRegeneratio
 use packages\application\authentication\oneTimeTokenAndPasswordRegeneration\OneTimeTokenAndPasswordRegenerationResult;
 use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
-use packages\domain\model\authenticationInformaion\IAuthenticationInformaionRepository;
-use packages\domain\model\authenticationInformaion\UserEmail;
+use packages\domain\model\AuthenticationInformation\IAuthenticationInformationRepository;
+use packages\domain\model\AuthenticationInformation\UserEmail;
 use RuntimeException;
 
 /**
@@ -15,17 +15,17 @@ use RuntimeException;
 class OneTimeTokenAndPasswordRegenerationApplicationService
 {
     private IAuthConfirmationRepository $authConfirmationRepository;
-    private IAuthenticationInformaionRepository $authenticationInformaionRepository;
+    private IAuthenticationInformationRepository $authenticationInformationRepository;
     private OneTimeTokenAndPasswordRegenerationOutputBoundary $outputBoundary;
 
     public function __construct(
         IAuthConfirmationRepository $authConfirmationRepository,
-        IAuthenticationInformaionRepository $authenticationInformaionRepository,
+        IAuthenticationInformationRepository $authenticationInformationRepository,
         OneTimeTokenAndPasswordRegenerationOutputBoundary $outputBoundary
     )
     {
         $this->authConfirmationRepository = $authConfirmationRepository;
-        $this->authenticationInformaionRepository = $authenticationInformaionRepository;
+        $this->authenticationInformationRepository = $authenticationInformationRepository;
         $this->outputBoundary = $outputBoundary;
     }
 
@@ -37,7 +37,7 @@ class OneTimeTokenAndPasswordRegenerationApplicationService
     ): void
     {
         $userEmail = new UserEmail($userEmailString);
-        $authInfo = $this->authenticationInformaionRepository->findByEmail($userEmail);
+        $authInfo = $this->authenticationInformationRepository->findByEmail($userEmail);
         if ($authInfo === null) {
             $this->outputBoundary->present(
                 OneTimeTokenAndPasswordRegenerationResult::createWhenValidationError('メールアドレスが登録されていません。')

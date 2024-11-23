@@ -3,7 +3,7 @@
 title 認証情報関連
 
 package "認証情報集約(Aggregation)" {
-    class "AuthenticationInformaion\n認証情報" as AuthenticationInformaion << (R,red) RootEntity >> {
+    class "AuthenticationInformation\n認証情報" as AuthenticationInformation << (R,red) RootEntity >> {
         userId: UserId
         email: Email
         password: Password
@@ -45,7 +45,7 @@ package "認証情報集約(Aggregation)" {
         - value: DatetimeImutable
     }
 
-    note bottom of AuthenticationInformaion
+    note bottom of AuthenticationInformation
         「認証済みの有無」が「認証済み」の場合のみ、ログインが行える
     end note
 
@@ -84,11 +84,11 @@ package "認証情報集約(Aggregation)" {
         ・ログイン制限が解除された場合、ログイン制限ステータスが「制限なし」になる
     end note
 
-    AuthenticationInformaion *-down- UserId
-    AuthenticationInformaion *-down- UserName
-    AuthenticationInformaion *-down- UserEmail
-    AuthenticationInformaion *-down- UserPassword
-    AuthenticationInformaion *-down- VerificationStatus
+    AuthenticationInformation *-down- UserId
+    AuthenticationInformation *-down- UserName
+    AuthenticationInformation *-down- UserEmail
+    AuthenticationInformation *-down- UserPassword
+    AuthenticationInformation *-down- VerificationStatus
 }
 
 package "認証確認(AuthenticationConfirmation)" {
@@ -124,7 +124,7 @@ package "認証確認(AuthenticationConfirmation)" {
     end note
 
     AuthenticationConfirmation *-down- OneTimeToken
-    AuthenticationConfirmation -down-> AuthenticationInformaion.UserId
+    AuthenticationConfirmation -down-> AuthenticationInformation.UserId
 }
 
 @enduml

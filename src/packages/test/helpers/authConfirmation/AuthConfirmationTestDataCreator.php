@@ -8,21 +8,21 @@ use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeToken;
 use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
-use packages\domain\model\authenticationInformaion\IAuthenticationInformaionRepository;
-use packages\domain\model\authenticationInformaion\UserId;
+use packages\domain\model\AuthenticationInformation\IAuthenticationInformationRepository;
+use packages\domain\model\AuthenticationInformation\UserId;
 
 class AuthConfirmationTestDataCreator
 {
     private IAuthConfirmationRepository $authConfirmationRepository;
-    private IAuthenticationInformaionRepository $authenticationInformaionRepository;
+    private IAuthenticationInformationRepository $authenticationInformationRepository;
 
     public function __construct(
         IAuthConfirmationRepository $authConfirmationRepository,
-        IAuthenticationInformaionRepository $authenticationInformaionRepository
+        IAuthenticationInformationRepository $authenticationInformationRepository
     )
     {
         $this->authConfirmationRepository = $authConfirmationRepository;
-        $this->authenticationInformaionRepository = $authenticationInformaionRepository;
+        $this->authenticationInformationRepository = $authenticationInformationRepository;
     }
 
     public function create(
@@ -32,8 +32,8 @@ class AuthConfirmationTestDataCreator
         ?OneTimePassword $oneTimePassword = null
     ): AuthConfirmation
     {
-        $authenticationInformaion = $this->authenticationInformaionRepository->findById($userId);
-        if ($authenticationInformaion === null) {
+        $authenticationInformation = $this->authenticationInformationRepository->findById($userId);
+        if ($authenticationInformation === null) {
             throw new \RuntimeException('認証情報テーブルに事前にデータを登録してください。');
         }
         $oneTimeToken = TestOneTimeTokenFactory::createOneTimeToken($oneTimeTokenValue, $oneTimeTokenExpiration);

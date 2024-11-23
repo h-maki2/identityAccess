@@ -8,31 +8,31 @@ use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authConfirmation\OneTimeToken;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
-use packages\domain\model\authenticationInformaion\AuthenticationInformaion;
-use packages\domain\model\authenticationInformaion\IAuthenticationInformaionRepository;
-use packages\domain\model\authenticationInformaion\UserEmail;
-use packages\domain\model\authenticationInformaion\UserPassword;
+use packages\domain\model\AuthenticationInformation\AuthenticationInformation;
+use packages\domain\model\AuthenticationInformation\IAuthenticationInformationRepository;
+use packages\domain\model\AuthenticationInformation\UserEmail;
+use packages\domain\model\AuthenticationInformation\UserPassword;
 use packages\domain\model\common\unitOfWork\UnitOfWork;
-use packages\domain\service\authenticationInformaion\AuthenticationInformaionService;
+use packages\domain\service\AuthenticationInformation\AuthenticationInformationService;
 
 class UserRegistration
 {
-    private IAuthenticationInformaionRepository $authenticationInformaionRepository;
+    private IAuthenticationInformationRepository $authenticationInformationRepository;
     private IAuthConfirmationRepository $authConfirmationRepository;
     private UnitOfWork $unitOfWork;
-    private AuthenticationInformaionService $authenticationInformaionService;
+    private AuthenticationInformationService $authenticationInformationService;
     private IUserRegistrationCompletionEmail $userRegistrationCompletionEmail;
 
     public function __construct(
-        IAuthenticationInformaionRepository $authenticationInformaionRepository,
+        IAuthenticationInformationRepository $authenticationInformationRepository,
         IAuthConfirmationRepository $authConfirmationRepository,
         UnitOfWork $unitOfWork,
         IUserRegistrationCompletionEmail $userRegistrationCompletionEmail
     ) {
-        $this->authenticationInformaionRepository = $authenticationInformaionRepository;
+        $this->authenticationInformationRepository = $authenticationInformationRepository;
         $this->authConfirmationRepository = $authConfirmationRepository;
         $this->unitOfWork = $unitOfWork;
-        $this->authenticationInformaionService = new AuthenticationInformaionService($authenticationInformaionRepository);
+        $this->authenticationInformationService = new AuthenticationInformationService($authenticationInformationRepository);
         $this->userRegistrationCompletionEmail = $userRegistrationCompletionEmail;
     }
 
@@ -42,17 +42,17 @@ class UserRegistration
      */
     public function handle(UserEmail $email, UserPassword $password)
     {
-        $authInformation = AuthenticationInformaion::create(
-            $this->authenticationInformaionRepository->nextUserId(),
+        $authInformation = AuthenticationInformation::create(
+            $this->authenticationInformationRepository->nextUserId(),
             $email,
             $password,
-            $this->authenticationInformaionService
+            $this->authenticationInformationService
         );
 
         $authConfirmation = AuthConfirmation::create($authInformation->id());
 
         $this->unitOfWork->performTransaction(function () use ($authInformation, $authConfirmation) {
-            $this->authenticationInformaionRepository->save($authInformation);
+            $this->authenticationInformationRepository->save($authInformation);
             $this->authConfirmationRepository->save($authConfirmation);
         });
 

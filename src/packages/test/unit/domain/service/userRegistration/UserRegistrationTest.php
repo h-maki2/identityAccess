@@ -1,12 +1,12 @@
 <?php
 
 use packages\adapter\persistence\inMemory\InMemoryAuthConfirmationRepository;
-use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformaionRepository;
+use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
 use packages\domain\model\common\email\SendEmailDto;
 use packages\domain\service\userRegistration\IUserRegistrationCompletionEmail;
-use packages\domain\model\authenticationInformaion\UserEmail;
-use packages\domain\model\authenticationInformaion\UserPassword;
-use packages\domain\model\authenticationInformaion\VerificationStatus;
+use packages\domain\model\AuthenticationInformation\UserEmail;
+use packages\domain\model\AuthenticationInformation\UserPassword;
+use packages\domain\model\AuthenticationInformation\VerificationStatus;
 use packages\domain\service\userRegistration\UserRegistration;
 use packages\test\helpers\unitOfWork\TestUnitOfWork;
 use PHPUnit\Framework\TestCase;
@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 class UserRegistrationTest extends TestCase
 {
     private InMemoryAuthConfirmationRepository $authConfirmationRepository;
-    private InMemoryAuthenticationInformaionRepository $authenticationInformaionRepository;
+    private InMemoryAuthenticationInformationRepository $authenticationInformationRepository;
     private TestUnitOfWork $unitOfWork;
     private IUserRegistrationCompletionEmail $userRegistrationCompletionEmail;
     private SendEmailDto $capturedSendEmailDto;
@@ -23,7 +23,7 @@ class UserRegistrationTest extends TestCase
     public function setUp(): void
     {
         $this->authConfirmationRepository = new InMemoryAuthConfirmationRepository();
-        $this->authenticationInformaionRepository = new InMemoryAuthenticationInformaionRepository();
+        $this->authenticationInformationRepository = new InMemoryAuthenticationInformationRepository();
         $this->unitOfWork = new TestUnitOfWork();
 
         $userRegistrationCompletionEmail = $this->createMock(IUserRegistrationCompletionEmail::class);
@@ -37,7 +37,7 @@ class UserRegistrationTest extends TestCase
         $this->userRegistrationCompletionEmail = $userRegistrationCompletionEmail;
 
         $this->userRegistration = new UserRegistration(
-            $this->authenticationInformaionRepository,
+            $this->authenticationInformationRepository,
             $this->authConfirmationRepository,
             $this->unitOfWork,
             $this->userRegistrationCompletionEmail
@@ -55,7 +55,7 @@ class UserRegistrationTest extends TestCase
 
         // then
         // ユーザーが未認証状態で登録されていることを確認
-        $actualAuthInfo = $this->authenticationInformaionRepository->findByEmail($userEmail);
+        $actualAuthInfo = $this->authenticationInformationRepository->findByEmail($userEmail);
         $this->assertEquals(VerificationStatus::Unverified, $actualAuthInfo->verificationStatus());
         $this->assertEquals($userPassword, $actualAuthInfo->password());
 

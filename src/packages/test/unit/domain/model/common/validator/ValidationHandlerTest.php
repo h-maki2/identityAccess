@@ -1,22 +1,22 @@
 <?php
 
-use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformaionRepository;
+use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
 use packages\application\common\validation\ValidationErrorMessageData;
-use packages\domain\model\authenticationInformaion\validation\UserEmailValidation;
-use packages\domain\model\authenticationInformaion\validation\UserPasswordValidation;
+use packages\domain\model\AuthenticationInformation\validation\UserEmailValidation;
+use packages\domain\model\AuthenticationInformation\validation\UserPasswordValidation;
 use packages\domain\model\common\validator\ValidationHandler;
-use packages\test\helpers\authenticationInformaion\AuthenticationInformaionTestDataFactory;
+use packages\test\helpers\AuthenticationInformation\AuthenticationInformationTestDataFactory;
 use PHPUnit\Framework\TestCase;
 
 class ValidationHandlerTest extends TestCase
 {
-    private AuthenticationInformaionTestDataFactory $authenticationInformaionTestDataFactory;
-    private InMemoryAuthenticationInformaionRepository $authenticationInformaionRepository;
+    private AuthenticationInformationTestDataFactory $authenticationInformationTestDataFactory;
+    private InMemoryAuthenticationInformationRepository $authenticationInformationRepository;
 
     public function setUp(): void
     {
-        $this->authenticationInformaionRepository = new InMemoryAuthenticationInformaionRepository();
-        $this->authenticationInformaionTestDataFactory = new AuthenticationInformaionTestDataFactory($this->authenticationInformaionRepository);
+        $this->authenticationInformationRepository = new InMemoryAuthenticationInformationRepository();
+        $this->authenticationInformationTestDataFactory = new AuthenticationInformationTestDataFactory($this->authenticationInformationRepository);
     }
 
     public function test_バリデーションエラーが発生した場合、エラーメッセージを取得できる()
@@ -24,7 +24,7 @@ class ValidationHandlerTest extends TestCase
         // given
         // メールアドレスとパスワードのバリデーションを行う
         // 不正なメールアドレスとパスワードを設定
-        $userEmailValidation = new UserEmailValidation('test', $this->authenticationInformaionRepository);
+        $userEmailValidation = new UserEmailValidation('test', $this->authenticationInformationRepository);
         $userPasswordValidation = new UserPasswordValidation('pass');
 
         $validationHandler = new ValidationHandler();
@@ -59,7 +59,7 @@ class ValidationHandlerTest extends TestCase
     {
         // given
         // メールアドレスとパスワードのバリデーションを行う
-        $userEmailValidation = new UserEmailValidation('test@example.com', $this->authenticationInformaionRepository);
+        $userEmailValidation = new UserEmailValidation('test@example.com', $this->authenticationInformationRepository);
         $userPasswordValidation = new UserPasswordValidation('passWord1!');
 
         $validationHandler = new ValidationHandler();

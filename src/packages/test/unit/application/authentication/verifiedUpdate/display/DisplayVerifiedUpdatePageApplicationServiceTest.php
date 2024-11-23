@@ -1,7 +1,7 @@
 <?php
 
 use packages\adapter\persistence\inMemory\InMemoryAuthConfirmationRepository;
-use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformaionRepository;
+use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
 use packages\application\authentication\verifiedUpdate\display\DisplayVerifiedUpdatePageApplicationService;
 use packages\application\authentication\verifiedUpdate\display\DisplayVerifiedUpdatePageOutputBoundary;
 use packages\application\authentication\verifiedUpdate\display\DisplayVerifiedUpdatePageResult;
@@ -9,9 +9,9 @@ use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
-use packages\domain\model\authenticationInformaion\VerificationStatus;
+use packages\domain\model\AuthenticationInformation\VerificationStatus;
 use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
-use packages\test\helpers\authenticationInformaion\AuthenticationInformaionTestDataCreator;
+use packages\test\helpers\AuthenticationInformation\AuthenticationInformationTestDataCreator;
 use PHPUnit\Framework\TestCase;
 
 class DisplayVerifiedUpdatePageApplicationServiceTest extends TestCase
@@ -21,21 +21,21 @@ class DisplayVerifiedUpdatePageApplicationServiceTest extends TestCase
     private DisplayVerifiedUpdatePageApplicationService $displayVerifiedUpdatePageApplicationService;
     private DisplayVerifiedUpdatePageOutputBoundary $outputBoundary;
     private DisplayVerifiedUpdatePageResult $capturedResult;
-    private InMemoryAuthenticationInformaionRepository $authenticationInformaionRepository;
-    private AuthenticationInformaionTestDataCreator $authenticationInformaionTestDataCreator;
+    private InMemoryAuthenticationInformationRepository $authenticationInformationRepository;
+    private AuthenticationInformationTestDataCreator $authenticationInformationTestDataCreator;
 
     public function setUp(): void
     {
         $this->authConfirmationRepository = new InMemoryAuthConfirmationRepository();
-        $this->authenticationInformaionRepository = new InMemoryAuthenticationInformaionRepository();
+        $this->authenticationInformationRepository = new InMemoryAuthenticationInformationRepository();
 
         $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator(
             $this->authConfirmationRepository,
-            $this->authenticationInformaionRepository
+            $this->authenticationInformationRepository
         );
 
-        $this->authenticationInformaionTestDataCreator = new AuthenticationInformaionTestDataCreator(
-            $this->authenticationInformaionRepository
+        $this->authenticationInformationTestDataCreator = new AuthenticationInformationTestDataCreator(
+            $this->authenticationInformationRepository
         );
 
         $outputBoundary = $this->createMock(DisplayVerifiedUpdatePageOutputBoundary::class);
@@ -57,7 +57,7 @@ class DisplayVerifiedUpdatePageApplicationServiceTest extends TestCase
     {
         // given
         // 認証情報を作成して保存する
-        $authenticationInformation = $this->authenticationInformaionTestDataCreator->create(
+        $authenticationInformation = $this->authenticationInformationTestDataCreator->create(
             verificationStatus: VerificationStatus::Unverified // 認証済みではない
         );
 
@@ -89,7 +89,7 @@ class DisplayVerifiedUpdatePageApplicationServiceTest extends TestCase
     {
         // given
         // 認証情報を作成して保存する
-        $authenticationInformation = $this->authenticationInformaionTestDataCreator->create(
+        $authenticationInformation = $this->authenticationInformationTestDataCreator->create(
             verificationStatus: VerificationStatus::Unverified // 認証済みではない
         );
 

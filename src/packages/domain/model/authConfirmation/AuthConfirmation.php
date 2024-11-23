@@ -3,7 +3,7 @@
 namespace packages\domain\model\authConfirmation;
 
 use DateTimeImmutable;
-use packages\domain\model\authenticationInformaion\UserId;
+use packages\domain\model\AuthenticationInformation\UserId;
 
 class AuthConfirmation
 {
