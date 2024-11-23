@@ -18,11 +18,13 @@ class VerifiedUpdateApplicationService
 {
     private IAuthConfirmationRepository $authConfirmationRepository;
     private VerifiedUpdate $verifiedUpdate;
+    private VerifiedUpdateOutputBoundary $outputBoundary;
 
     public function __construct(
         IAuthenticationInformaionRepository $authenticationInformaionRepository,
         IAuthConfirmationRepository $authConfirmationRepository,
-        UnitOfWork $unitOfWork
+        UnitOfWork $unitOfWork,
+        VerifiedUpdateOutputBoundary $outputBoundary
     )
     {
         $this->authConfirmationRepository = $authConfirmationRepository;
@@ -31,26 +33,35 @@ class VerifiedUpdateApplicationService
             $this->authConfirmationRepository,
             $unitOfWork
         );
+        $this->outputBoundary = $outputBoundary;
     }
 
     /**
      * 認証済み更新を行う
      */
-    public function verifiedUpdate(string $oneTimeTokenValueString, string $oneTimePasswordString): VerifiedUpdateResult
+    public function verifiedUpdate(string $oneTimeTokenValueString, string $oneTimePasswordString): void
     {
         $oneTimeTokenValue = OneTimeTokenValue::reconstruct($oneTimeTokenValueString);
         $authConfirmation = $this->authConfirmationRepository->findByToken($oneTimeTokenValue);
         if (!AuthConfirmationValidation::validateExpirationDate($authConfirmation, new DateTimeImmutable())) {
-            return VerifiedUpdateResult::createWhenValidationError('ワンタイムトークンが無効です。');
+            $this->outputBoundary->present(
+                VerifiedUpdateResult::createWhenValidationError('ワンタイムトークンが無効です。')
+            );
+            return;
         }
 
         $oneTimePassword = OneTimePassword::reconstruct($oneTimePasswordString);
         $verifiedUpdateResult = $this->verifiedUpdate->handle($authConfirmation, $oneTimePassword);
 
         if (!$verifiedUpdateResult) {
-            return VerifiedUpdateResult::createWhenValidationError('ワンタイムトークンかワンタイムパスワードが無効です。');
+            $this->outputBoundary->present(
+                VerifiedUpdateResult::createWhenValidationError('ワンタイムトークンかワンタイムパスワードが無効です。')
+            );
+            return;
         }
 
-        return VerifiedUpdateResult::createWhenSuccess();
+        $this->outputBoundary->present(
+            VerifiedUpdateResult::createWhenSuccess()
+        );
     }
 }
