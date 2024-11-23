@@ -4,9 +4,9 @@ namespace packages\application\authentication\login;
 
 class LoginResult
 {
-    private string $authorizationUrl;
-    private bool $loginSucceeded;
-    private bool $accountLocked;
+    readonly string $authorizationUrl;
+    readonly bool $loginSucceeded;
+    readonly bool $accountLocked;
 
     private function __construct(
         string $authorizationUrl,
@@ -35,20 +35,5 @@ class LoginResult
             true,
             false
         );
-    }
-    
-    public function authorizationUrl(): string
-    {
-        return $this->authorizationUrl;
-    }
-
-    public function loginSucceeded(): bool
-    {
-        return $this->loginSucceeded;
-    }
-
-    public function accountLocked(): bool
-    {
-        return $this->accountLocked;
     }
 }

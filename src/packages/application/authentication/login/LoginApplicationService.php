@@ -14,34 +14,39 @@ class LoginApplicationService
     private IAuthenticationInformaionRepository $authenticationInformaionRepository;
     private SessionAuthentication $sessionAuthentication;
     private IClientFetcher $clientFetcher;
+    private LoginOutputBoundary $outputBoundary;
 
     public function __construct(
         IAuthenticationInformaionRepository $authenticationInformaionRepository,
         SessionAuthentication $sessionAuthentication,
-        IClientFetcher $clientFetcher
+        IClientFetcher $clientFetcher,
+        LoginOutputBoundary $outputBoundary
     )
     {
         $this->authenticationInformaionRepository = $authenticationInformaionRepository;
         $this->sessionAuthentication = $sessionAuthentication;
         $this->clientFetcher = $clientFetcher;
+        $this->outputBoundary = $outputBoundary;
     }
 
     public function login(
         string $inputedEmail,
         string $inputedPassword,
         string $clientId
-    ): LoginResult
+    ): void
     {
         $email = new UserEmail($inputedEmail);
         $authenticationInformaion = $this->authenticationInformaionRepository->findByEmail($email);
 
         if ($authenticationInformaion === null) {
-            return LoginResult::createWhenLoginFailed(false);
+            $this->outputBoundary->present(LoginResult::createWhenLoginFailed(false));
+            return;
         }
 
         $currentDateTime = new DateTimeImmutable();
         if (!$authenticationInformaion->canLoggedIn($currentDateTime)) {
-            return LoginResult::createWhenLoginFailed(true);
+            $this->outputBoundary->present(LoginResult::createWhenLoginFailed(true));
+            return;
         }
 
         if ($authenticationInformaion->canDisableLoginRestriction($currentDateTime)) {
@@ -53,7 +58,8 @@ class LoginApplicationService
             $urlForObtainingAuthorizationCode = $this->urlForObtainingAuthorizationCode($clientId);
 
             $this->authenticationInformaionRepository->save($authenticationInformaion);
-            return LoginResult::createWhenLoginSucceeded($urlForObtainingAuthorizationCode);
+            $this->outputBoundary->present(LoginResult::createWhenLoginSucceeded($urlForObtainingAuthorizationCode));
+            return;
         }
 
         $authenticationInformaion->addFailedLoginCount($currentDateTime);
@@ -63,10 +69,11 @@ class LoginApplicationService
         $this->authenticationInformaionRepository->save($authenticationInformaion);
 
         if (!$authenticationInformaion->canLoggedIn($currentDateTime)) {
-            return LoginResult::createWhenLoginFailed(true);
+            $this->outputBoundary->present(LoginResult::createWhenLoginFailed(true));
+            return;
         }
 
-        return LoginResult::createWhenLoginFailed(false);
+        $this->outputBoundary->present(LoginResult::createWhenLoginFailed(false));
     }
 
     /**
