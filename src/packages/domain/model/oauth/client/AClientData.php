@@ -8,18 +8,18 @@ abstract class AClientData
 {
     private ClientId $clientId;
     private ClientSecret $clientSecret;
-    private RedirectUrl $redirectUri;
+    private RedirectUrl $redirectUrl;
     // private array $scope;
 
     protected function __construct(
         ClientId $clientId,
         ClientSecret $clientSecret,
-        RedirectUrl $redirectUri
+        RedirectUrl $redirectUrl
     )
     {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
-        $this->redirectUri = $redirectUri;
+        $this->redirectUrl = $redirectUrl;
     }
 
     public function clientId(): string
@@ -32,9 +32,9 @@ abstract class AClientData
         return $this->clientSecret->value;
     }
 
-    public function redirectUri(): string
+    public function redirectUrl(): string
     {
-        return $this->redirectUri->value;
+        return $this->redirectUrl->value;
     }
 
     /**
@@ -42,27 +42,23 @@ abstract class AClientData
      * レスポンスタイプとリダイレクトURLが正しくない場合は例外を投げる
      */
     public function urlForObtainingAuthorizationCode(
-        ResponseType $reponseType,
-        RedirectUrl $enteredRedirectUri
+        RedirectUrl $enteredRedirectUrl,
+        string $reponseType
     ): string
     {
-        if (!$reponseType->isCode()) {
-            throw new InvalidArgumentException('無効なレスポンスタイプです。');
-        }
-
-        if (!$this->hasRedirectUriEntered($enteredRedirectUri)) {
+        if (!$this->hasRedirectUrlEntered($enteredRedirectUrl)) {
             throw new InvalidArgumentException('リダイレクトURIが一致しません。');
         }
 
         return $this->baseUrl() . '/oauth/authorize?' . $this->queryParam($reponseType);
     }
 
-    protected function queryParam(ResponseType $reponseType): string
+    protected function queryParam(string $reponseType): string
     {
         return http_build_query([
-            'response_type' => $reponseType->value,
+            'response_type' => $reponseType,
             'client_id' => $this->clientId->value,
-            'redirect_uri' => $this->redirectUri->value
+            'redirect_uri' => $this->redirectUrl->value
         ]);
     }
 
@@ -77,9 +73,9 @@ abstract class AClientData
     /**
      * リダイレクトURIが入力されたリダイレクトURIと一致しているか判定する
      */
-    protected function hasRedirectUriEntered(RedirectUrl $enteredRedirectUri): bool
+    protected function hasRedirectUrlEntered(RedirectUrl $enteredRedirectUrl): bool
     {
-        return $this->redirectUri->equals($enteredRedirectUri);
+        return $this->redirectUrl->equals($enteredRedirectUrl);
     }
 
     abstract protected function baseUrl(): string;

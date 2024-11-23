@@ -7,6 +7,9 @@ use packages\domain\model\oauth\client\IClientFetcher;
 use packages\domain\model\authenticationInformaion\IAuthenticationInformaionRepository;
 use packages\domain\model\authenticationInformaion\SessionAuthentication;
 use packages\domain\model\authenticationInformaion\UserEmail;
+use packages\domain\model\oauth\client\ClientId;
+use packages\domain\model\oauth\client\RedirectUrl;
+use packages\domain\model\oauth\client\ResponseType;
 use UnexpectedValueException;
 
 class LoginApplicationService
@@ -32,7 +35,9 @@ class LoginApplicationService
     public function login(
         string $inputedEmail,
         string $inputedPassword,
-        string $clientId
+        string $clientId,
+        string $redirectUrl,
+        string $responseType
     ): void
     {
         $email = new UserEmail($inputedEmail);
@@ -55,7 +60,11 @@ class LoginApplicationService
 
         if ($authenticationInformaion->password()->equals($inputedPassword)) {
             $this->sessionAuthentication->markAsLoggedIn($authenticationInformaion->id());
-            $urlForObtainingAuthorizationCode = $this->urlForObtainingAuthorizationCode($clientId);
+            $urlForObtainingAuthorizationCode = $this->urlForObtainingAuthorizationCode(
+                $clientId,
+                $redirectUrl,
+                $responseType
+            );
 
             $this->authenticationInformaionRepository->save($authenticationInformaion);
             $this->outputBoundary->present(LoginResult::createWhenLoginSucceeded($urlForObtainingAuthorizationCode));
@@ -79,13 +88,19 @@ class LoginApplicationService
     /**
      * 認可コード取得用URLを取得する
      */
-    private function urlForObtainingAuthorizationCode(string $clientId): string
+    private function urlForObtainingAuthorizationCode(
+        string $clientId,
+        string $redirectUrl,
+        string $responseType
+    ): string
     {
+        $clientId = new ClientId($clientId);
         $client = $this->clientFetcher->fetchById($clientId);
         if ($client === null) {
             throw new UnexpectedValueException("{$clientId}のクライアントが見つかりません。");
         }
-            
-        return $client->urlForObtainingAuthorizationCode();
+
+        $redirectUrl = new RedirectUrl($redirectUrl);
+        return $client->urlForObtainingAuthorizationCode($redirectUrl, $responseType);
     }
 }
