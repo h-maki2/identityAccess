@@ -1,6 +1,6 @@
 @startuml identityManagement
 
-entity "ユーザープロフィール\nuser_profiles" as user_profiles {
+entity "認証情報\nauthentication_informaion" as authentication_informaion {
     user_id: CHAR(26)
     --
     email: VARCHAR(M)
@@ -14,9 +14,9 @@ entity "ユーザープロフィール\nuser_profiles" as user_profiles {
 entity "認証情報\nauth_confirmations" as auth_confirmations {
     user_id(FK): CHAR(26)
     --
-    temp_token: CHAR(26)
-    temp_token_expiration: DATETIME
-    authentication_code: int
+    one_time_token_value: CHAR(26)
+    one_time_token_expiration: DATETIME
+    one_time_password: CHAR(6)
 }
 
 entity "グループ\ngroup" as group {
