@@ -2,6 +2,7 @@
 
 namespace packages\test\helpers\authenticationInformation;
 
+use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
 use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
 use packages\domain\model\authenticationInformation\LoginRestriction;
 use packages\domain\model\authenticationInformation\UserEmail;
@@ -21,8 +22,9 @@ class TestAuthenticationInformationFactory
         ?LoginRestriction $LoginRestriction = null
     ): AuthenticationInformation
     {
+        $authInfoRepository = new InMemoryAuthenticationInformationRepository();
         return AuthenticationInformation::reconstruct(
-            $id ?? new UserId(new IdentifierFromUUIDver7(), '0188b2a6-bd94-7ccf-9666-1df7e26ac6b8'),
+            $id ?? $authInfoRepository->nextUserId(),
             $email ?? new UserEmail('test@example.com'),
             $password ?? UserPassword::create('ABCabc123_'),
             $verificationStatus ?? VerificationStatus::Verified,
