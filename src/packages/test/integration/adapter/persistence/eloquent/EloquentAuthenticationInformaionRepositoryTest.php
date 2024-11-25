@@ -8,6 +8,7 @@ use packages\domain\model\authenticationInformation\UserEmail;
 use packages\domain\model\authenticationInformation\UserPassword;
 use packages\domain\model\authenticationInformation\VerificationStatus;
 use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataCreator;
+use packages\test\helpers\authenticationInformation\TestAuthenticationInformationFactory;
 use Tests\TestCase;
 
 class EloquentAuthenticationInformaionRepositoryTest extends TestCase
@@ -33,7 +34,7 @@ class EloquentAuthenticationInformaionRepositoryTest extends TestCase
         $verificationStatus = VerificationStatus::Verified;
         $userId = $this->authenticationInformationRepository->nextUserId();
         $loginRestriction = LoginRestriction::initialization();
-        $authenticationInformation = $this->authenticationInformationTestDataCreator->create(
+        $authenticationInformation = TestAuthenticationInformationFactory::create(
             $userEmail,
             $userPassword,
             $verificationStatus,

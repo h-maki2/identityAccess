@@ -63,7 +63,7 @@ class VerifiedUpdateTest extends TestCase
         $this->assertEquals(VerificationStatus::Verified, $updatedAuthenticationInformation->verificationStatus());
 
         // 認証確認情報が削除されていることを確認
-        $deletedAuthConfirmation = $this->authConfirmationRepository->findByToken(OneTimeTokenValue::reconstruct($authConfirmation->oneTimeToken()->value()));
+        $deletedAuthConfirmation = $this->authConfirmationRepository->findByTokenValue(OneTimeTokenValue::reconstruct($authConfirmation->oneTimeToken()->value()));
         $this->assertNull($deletedAuthConfirmation);
     }
 
@@ -102,7 +102,7 @@ class VerifiedUpdateTest extends TestCase
         $this->assertEquals(VerificationStatus::Unverified, $updatedAuthenticationInformation->verificationStatus());
 
         // 認証確認情報が削除されていないことを確認
-        $actualAuthConfirmation = $this->authConfirmationRepository->findByToken(OneTimeTokenValue::reconstruct($authConfirmation->oneTimeToken()->value()));
+        $actualAuthConfirmation = $this->authConfirmationRepository->findByTokenValue(OneTimeTokenValue::reconstruct($authConfirmation->oneTimeToken()->value()));
         $this->assertEquals($authConfirmation->userId, $actualAuthConfirmation->userId);
         $this->assertEquals($authConfirmation->oneTimeToken()->value(), $actualAuthConfirmation->oneTimeToken()->value());
         $this->assertEquals($authConfirmation->oneTimeToken()->expirationDate(), $actualAuthConfirmation->oneTimeToken()->expirationDate());

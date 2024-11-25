@@ -88,7 +88,7 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
         $this->assertEquals(VerificationStatus::Verified, $updatedAuthenticationInformation->verificationStatus());
 
         // 認証確認情報が削除されていることを確認
-        $deletedAuthConfirmation = $this->authConfirmationRepository->findByToken($oneTimeTokenValue);
+        $deletedAuthConfirmation = $this->authConfirmationRepository->findByTokenValue($oneTimeTokenValue);
         $this->assertNull($deletedAuthConfirmation);
     }
 

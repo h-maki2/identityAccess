@@ -16,7 +16,7 @@ class InMemoryAuthConfirmationRepository implements IAuthConfirmationRepository
 {
     private array $authConfirmationsObjList = [];
 
-    public function findByToken(OneTimeTokenValue $tokenValue): ?AuthConfirmation
+    public function findByTokenValue(OneTimeTokenValue $tokenValue): ?AuthConfirmation
     {
         foreach ($this->authConfirmationsObjList as $authConfirmationsObj) {
             if ($authConfirmationsObj->one_time_token === $tokenValue->value) {

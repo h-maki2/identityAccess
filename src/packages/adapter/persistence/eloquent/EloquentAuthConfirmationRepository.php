@@ -15,7 +15,7 @@ use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
 
 class EloquentAuthConfirmationRepository implements IAuthConfirmationRepository
 {
-    public function findByToken(OneTimeTokenValue $tokenValue): ?AuthConfirmation
+    public function findByTokenValue(OneTimeTokenValue $tokenValue): ?AuthConfirmation
     {
         $result = EloquentAuthConfirmation::where('one_time_token_value', $tokenValue->value)->first();
 
@@ -54,7 +54,7 @@ class EloquentAuthConfirmationRepository implements IAuthConfirmationRepository
         return AuthConfirmation::reconstruct(
             new UserId(new IdentifierFromUUIDver7(), $eloquentAuthConfirmation->user_id),
             OneTimeToken::reconstruct(
-                OneTimeTokenValue::reconstruct($eloquentAuthConfirmation->one_time_token),
+                OneTimeTokenValue::reconstruct($eloquentAuthConfirmation->one_time_token_value),
                 OneTimeTokenExpiration::reconstruct(new DateTimeImmutable($eloquentAuthConfirmation->one_time_token_expiration))
             ),
             OneTimePassword::reconstruct($eloquentAuthConfirmation->one_time_password)
@@ -69,14 +69,14 @@ class EloquentAuthConfirmationRepository implements IAuthConfirmationRepository
             $eloquentAuthConfirmation = new EloquentAuthConfirmation();
             $eloquentAuthConfirmation->user_id = $authConfirmation->userId->value;
         }
-        $eloquentAuthConfirmation->one_time_token = $authConfirmation->oneTimeToken()->value();
+        $eloquentAuthConfirmation->one_time_token_value = $authConfirmation->oneTimeToken()->value();
         $eloquentAuthConfirmation->one_time_token_expiration = $authConfirmation->oneTimeToken()->expirationDate();
         $eloquentAuthConfirmation->one_time_password = $authConfirmation->oneTimePassword()->value;
 
         return $eloquentAuthConfirmation;
     }
 
-    private function eloquentAuthConfirmationFrom(UserId $userId): EloquentAuthConfirmation
+    private function eloquentAuthConfirmationFrom(UserId $userId): ?EloquentAuthConfirmation
     {
         return EloquentAuthConfirmation::where('user_id', $userId->value)->first();
     }

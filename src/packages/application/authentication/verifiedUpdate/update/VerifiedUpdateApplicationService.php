@@ -42,7 +42,7 @@ class VerifiedUpdateApplicationService
     public function verifiedUpdate(string $oneTimeTokenValueString, string $oneTimePasswordString): void
     {
         $oneTimeTokenValue = OneTimeTokenValue::reconstruct($oneTimeTokenValueString);
-        $authConfirmation = $this->authConfirmationRepository->findByToken($oneTimeTokenValue);
+        $authConfirmation = $this->authConfirmationRepository->findByTokenValue($oneTimeTokenValue);
         if (!AuthConfirmationValidation::validateExpirationDate($authConfirmation, new DateTimeImmutable())) {
             $this->outputBoundary->present(
                 VerifiedUpdateResult::createWhenValidationError('ワンタイムトークンが無効です。')

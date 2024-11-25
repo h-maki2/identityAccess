@@ -30,7 +30,7 @@ class DisplayVerifiedUpdatePageApplicationService
     public function displayVerifiedUpdatePage(string $oneTimeTokenValueString): void
     {
         $oneTimeTokenValue = OneTimeTokenValue::reconstruct($oneTimeTokenValueString);
-        $authConfirmation = $this->authConfirmationRepository->findByToken($oneTimeTokenValue);
+        $authConfirmation = $this->authConfirmationRepository->findByTokenValue($oneTimeTokenValue);
         if (!AuthConfirmationValidation::validateExpirationDate($authConfirmation, new DateTimeImmutable())) {
             $this->outputBoundary->present(
                 DisplayVerifiedUpdatePageResult::createWhenValidationError('無効なワンタイムトークンです。')

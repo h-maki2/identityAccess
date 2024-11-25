@@ -6,7 +6,7 @@ use packages\domain\model\authenticationInformation\UserId;
 
 interface IAuthConfirmationRepository
 {
-    public function findByToken(OneTimeTokenValue $tokenValue): ?AuthConfirmation;
+    public function findByTokenValue(OneTimeTokenValue $tokenValue): ?AuthConfirmation;
 
     public function findById(UserId $userId): ?AuthConfirmation;
 
