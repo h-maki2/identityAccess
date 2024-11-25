@@ -1,6 +1,6 @@
 <?php
 
-use packages\domain\model\AuthenticationInformation\LoginRestrictionStatus;
+use packages\domain\model\authenticationInformation\LoginRestrictionStatus;
 use PHPUnit\Framework\TestCase;
 
 class LoginRestrictionStatusTest extends TestCase

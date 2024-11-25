@@ -1,6 +1,6 @@
 <?php
 
-use packages\domain\model\AuthenticationInformation\VerificationStatus;
+use packages\domain\model\authenticationInformation\VerificationStatus;
 use PHPUnit\Framework\TestCase;
 
 class VerificationStatusTest extends TestCase

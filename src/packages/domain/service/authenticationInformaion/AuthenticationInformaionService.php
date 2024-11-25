@@ -2,8 +2,8 @@
 
 namespace packages\domain\service\AuthenticationInformation;
 
-use packages\domain\model\AuthenticationInformation\IAuthenticationInformationRepository;
-use packages\domain\model\AuthenticationInformation\UserEmail;
+use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
+use packages\domain\model\authenticationInformation\UserEmail;
 
 class AuthenticationInformationService
 {

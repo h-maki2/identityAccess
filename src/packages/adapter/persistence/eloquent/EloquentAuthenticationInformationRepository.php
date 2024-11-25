@@ -5,16 +5,16 @@ namespace packages\adapter\persistence\eloquent;
 use App\Models\AuthenticationInformation as EloquentAuthenticationInformation;
 use DateTimeImmutable;
 use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
-use packages\domain\model\AuthenticationInformation\LoginRestriction;
-use packages\domain\model\AuthenticationInformation\FailedLoginCount;
-use packages\domain\model\AuthenticationInformation\IAuthenticationInformationRepository;
-use packages\domain\model\AuthenticationInformation\NextLoginAllowedAt;
-use packages\domain\model\AuthenticationInformation\UserEmail;
-use packages\domain\model\AuthenticationInformation\UserId;
-use packages\domain\model\AuthenticationInformation\UserPassword;
-use packages\domain\model\AuthenticationInformation\AuthenticationInformation;
-use packages\domain\model\AuthenticationInformation\LoginRestrictionStatus;
-use packages\domain\model\AuthenticationInformation\VerificationStatus;
+use packages\domain\model\authenticationInformation\LoginRestriction;
+use packages\domain\model\authenticationInformation\FailedLoginCount;
+use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
+use packages\domain\model\authenticationInformation\NextLoginAllowedAt;
+use packages\domain\model\authenticationInformation\UserEmail;
+use packages\domain\model\authenticationInformation\UserId;
+use packages\domain\model\authenticationInformation\UserPassword;
+use packages\domain\model\authenticationInformation\AuthenticationInformation;
+use packages\domain\model\authenticationInformation\LoginRestrictionStatus;
+use packages\domain\model\authenticationInformation\VerificationStatus;
 use Ramsey\Uuid\Uuid;
 
 class EloquentAuthenticationInformationRepository implements IAuthenticationInformationRepository

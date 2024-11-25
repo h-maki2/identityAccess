@@ -1,9 +1,9 @@
 <?php
 
-namespace packages\domain\model\AuthenticationInformation;
+namespace packages\domain\model\authenticationInformation;
 
 use InvalidArgumentException;
-use packages\domain\model\AuthenticationInformation\validation\UserEmailFormatChecker;
+use packages\domain\model\authenticationInformation\validation\UserEmailFormatChecker;
 
 class UserEmail
 {

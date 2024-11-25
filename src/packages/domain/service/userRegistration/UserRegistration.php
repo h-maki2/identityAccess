@@ -8,10 +8,10 @@ use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authConfirmation\OneTimeToken;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
-use packages\domain\model\AuthenticationInformation\AuthenticationInformation;
-use packages\domain\model\AuthenticationInformation\IAuthenticationInformationRepository;
-use packages\domain\model\AuthenticationInformation\UserEmail;
-use packages\domain\model\AuthenticationInformation\UserPassword;
+use packages\domain\model\authenticationInformation\AuthenticationInformation;
+use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
+use packages\domain\model\authenticationInformation\UserEmail;
+use packages\domain\model\authenticationInformation\UserPassword;
 use packages\domain\model\common\unitOfWork\UnitOfWork;
 use packages\domain\service\AuthenticationInformation\AuthenticationInformationService;
 

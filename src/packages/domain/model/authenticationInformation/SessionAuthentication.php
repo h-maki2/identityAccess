@@ -1,8 +1,8 @@
 <?php
 
-namespace packages\domain\model\AuthenticationInformation;
+namespace packages\domain\model\authenticationInformation;
 
-use packages\domain\model\AuthenticationInformation\UserId;
+use packages\domain\model\authenticationInformation\UserId;
 
 interface SessionAuthentication
 {

@@ -8,8 +8,8 @@ use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeToken;
 use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
-use packages\domain\model\AuthenticationInformation\IAuthenticationInformationRepository;
-use packages\domain\model\AuthenticationInformation\UserId;
+use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
+use packages\domain\model\authenticationInformation\UserId;
 
 class AuthConfirmationTestDataCreator
 {

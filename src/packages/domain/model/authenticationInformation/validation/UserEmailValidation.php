@@ -1,9 +1,9 @@
 <?php
 
-namespace packages\domain\model\AuthenticationInformation\validation;
+namespace packages\domain\model\authenticationInformation\validation;
 
-use packages\domain\model\AuthenticationInformation\IAuthenticationInformationRepository;
-use packages\domain\model\AuthenticationInformation\UserEmail;
+use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
+use packages\domain\model\authenticationInformation\UserEmail;
 use packages\domain\model\common\validator\Validator;
 use packages\domain\service\AuthenticationInformation\AuthenticationInformationService;
 use PharIo\Manifest\Email;

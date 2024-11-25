@@ -2,7 +2,7 @@
 
 namespace packages\domain\model\authConfirmation;
 
-use packages\domain\model\AuthenticationInformation\UserId;
+use packages\domain\model\authenticationInformation\UserId;
 
 interface IAuthConfirmationRepository
 {

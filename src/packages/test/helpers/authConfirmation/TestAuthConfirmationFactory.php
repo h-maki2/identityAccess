@@ -5,8 +5,8 @@ namespace packages\test\helpers\authConfirmation;
 use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeToken;
-use packages\domain\model\AuthenticationInformation\UserId;
-use packages\test\helpers\AuthenticationInformation\TestUserIdFactory;
+use packages\domain\model\authenticationInformation\UserId;
+use packages\test\helpers\authenticationInformation\TestUserIdFactory;
 
 class TestAuthConfirmationFactory
 {

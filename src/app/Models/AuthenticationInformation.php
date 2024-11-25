@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class AuthenticationInformation extends Model
 {
     use HasFactory;
-
+    
     protected $table = 'authentication_informations';
 
     protected $primaryKey = 'user_id';

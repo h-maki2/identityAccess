@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\domain\model\AuthenticationInformation\validation;
+namespace packages\domain\model\authenticationInformation\validation;
 
 class UserEmailFormatChecker
 {

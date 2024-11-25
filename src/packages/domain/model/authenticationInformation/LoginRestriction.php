@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\domain\model\AuthenticationInformation;
+namespace packages\domain\model\authenticationInformation;
 
 use DateTimeImmutable;
 use DomainException;

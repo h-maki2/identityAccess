@@ -2,10 +2,10 @@
 
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
 use packages\application\common\validation\ValidationErrorMessageData;
-use packages\domain\model\AuthenticationInformation\validation\UserEmailValidation;
-use packages\domain\model\AuthenticationInformation\validation\UserPasswordValidation;
+use packages\domain\model\authenticationInformation\validation\UserEmailValidation;
+use packages\domain\model\authenticationInformation\validation\UserPasswordValidation;
 use packages\domain\model\common\validator\ValidationHandler;
-use packages\test\helpers\AuthenticationInformation\AuthenticationInformationTestDataFactory;
+use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataFactory;
 use PHPUnit\Framework\TestCase;
 
 class ValidationHandlerTest extends TestCase

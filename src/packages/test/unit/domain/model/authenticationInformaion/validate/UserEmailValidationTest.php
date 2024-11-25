@@ -1,9 +1,9 @@
 <?php
 
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
-use packages\domain\model\AuthenticationInformation\UserEmail;
-use packages\domain\model\AuthenticationInformation\validation\UserEmailValidation;
-use packages\test\helpers\AuthenticationInformation\AuthenticationInformationTestDataFactory;
+use packages\domain\model\authenticationInformation\UserEmail;
+use packages\domain\model\authenticationInformation\validation\UserEmailValidation;
+use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataFactory;
 use PHPUnit\Framework\TestCase;
 
 class UserEmailValidationTest extends TestCase

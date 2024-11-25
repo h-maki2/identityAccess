@@ -4,11 +4,11 @@ use packages\adapter\persistence\inMemory\InMemoryAuthConfirmationRepository;
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
 use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
-use packages\domain\model\AuthenticationInformation\VerificationStatus;
+use packages\domain\model\authenticationInformation\VerificationStatus;
 use packages\domain\service\verifiedUpdate\VerifiedUpdate;
 use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
-use packages\test\helpers\AuthenticationInformation\AuthenticationInformationTestDataCreator;
-use packages\test\helpers\AuthenticationInformation\AuthenticationInformationTestDataFactory;
+use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataCreator;
+use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataFactory;
 use packages\test\helpers\unitOfWork\TestUnitOfWork;
 use PHPUnit\Framework\TestCase;
 

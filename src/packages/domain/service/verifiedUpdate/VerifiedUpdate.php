@@ -7,7 +7,7 @@ use packages\application\common\exception\TransactionException;
 use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authConfirmation\OneTimePassword;
-use packages\domain\model\AuthenticationInformation\IAuthenticationInformationRepository;
+use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
 use packages\domain\model\common\unitOfWork\UnitOfWork;
 use RuntimeException;
 

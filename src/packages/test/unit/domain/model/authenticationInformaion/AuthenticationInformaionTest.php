@@ -2,19 +2,19 @@
 
 use Lcobucci\JWT\Signer\Key\InMemory;
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
-use packages\domain\model\AuthenticationInformation\LoginRestriction;
-use packages\domain\model\AuthenticationInformation\FailedLoginCount;
-use packages\domain\model\AuthenticationInformation\IAuthenticationInformationRepository;
-use packages\domain\model\AuthenticationInformation\NextLoginAllowedAt;
-use packages\domain\model\AuthenticationInformation\UserEmail;
-use packages\domain\model\AuthenticationInformation\UserName;
-use packages\domain\model\AuthenticationInformation\UserPassword;
-use packages\domain\model\AuthenticationInformation\AuthenticationInformation;
-use packages\domain\model\AuthenticationInformation\LoginRestrictionStatus;
-use packages\domain\model\AuthenticationInformation\VerificationStatus;
+use packages\domain\model\authenticationInformation\LoginRestriction;
+use packages\domain\model\authenticationInformation\FailedLoginCount;
+use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
+use packages\domain\model\authenticationInformation\NextLoginAllowedAt;
+use packages\domain\model\authenticationInformation\UserEmail;
+use packages\domain\model\authenticationInformation\UserName;
+use packages\domain\model\authenticationInformation\UserPassword;
+use packages\domain\model\authenticationInformation\AuthenticationInformation;
+use packages\domain\model\authenticationInformation\LoginRestrictionStatus;
+use packages\domain\model\authenticationInformation\VerificationStatus;
 use packages\domain\service\AuthenticationInformation\AuthenticationInformationService;
-use packages\test\helpers\AuthenticationInformation\TestAuthenticationInformationFactory;
-use packages\test\helpers\AuthenticationInformation\AuthenticationInformationTestDataFactory;
+use packages\test\helpers\authenticationInformation\TestAuthenticationInformationFactory;
+use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataFactory;
 use PHPUnit\Framework\TestCase;
 
 class AuthenticationInformationTest extends TestCase

@@ -3,8 +3,8 @@
 namespace packages\adapter\session;
 
 use Illuminate\Support\Facades\Auth;
-use packages\domain\model\AuthenticationInformation\SessionAuthentication;
-use packages\domain\model\AuthenticationInformation\UserId;
+use packages\domain\model\authenticationInformation\SessionAuthentication;
+use packages\domain\model\authenticationInformation\UserId;
 use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
 
 class LaravelSessionAuthentication implements SessionAuthentication

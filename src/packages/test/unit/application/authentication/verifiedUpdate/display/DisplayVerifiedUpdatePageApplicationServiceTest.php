@@ -9,9 +9,9 @@ use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
-use packages\domain\model\AuthenticationInformation\VerificationStatus;
+use packages\domain\model\authenticationInformation\VerificationStatus;
 use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
-use packages\test\helpers\AuthenticationInformation\AuthenticationInformationTestDataCreator;
+use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataCreator;
 use PHPUnit\Framework\TestCase;
 
 class DisplayVerifiedUpdatePageApplicationServiceTest extends TestCase

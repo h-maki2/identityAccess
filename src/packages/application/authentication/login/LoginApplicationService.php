@@ -4,9 +4,9 @@ namespace packages\application\authentication\login;
 
 use DateTimeImmutable;
 use packages\domain\model\oauth\client\IClientFetcher;
-use packages\domain\model\AuthenticationInformation\IAuthenticationInformationRepository;
-use packages\domain\model\AuthenticationInformation\SessionAuthentication;
-use packages\domain\model\AuthenticationInformation\UserEmail;
+use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
+use packages\domain\model\authenticationInformation\SessionAuthentication;
+use packages\domain\model\authenticationInformation\UserEmail;
 use packages\domain\model\oauth\client\ClientId;
 use packages\domain\model\oauth\client\RedirectUrl;
 use packages\domain\model\oauth\client\ResponseType;
