@@ -98,4 +98,53 @@ class EloquentAuthenticationInformaionRepositoryTest extends TestCase
         // then
         $this->assertEquals($検索対象の認証情報, $actualAuthenticationInformation);
     }
+
+    public function test_ユーザーIDから認証情報を取得できる()
+    {
+        // given
+        $検索対象のユーザーID = $this->authenticationInformationRepository->nextUserId();
+        $検索対象の認証情報 = $this->authenticationInformationTestDataCreator->create(
+            id: $検索対象のユーザーID
+        );
+
+        // 検索対象ではない認証情報を作成しておく
+        $this->authenticationInformationTestDataCreator->create(
+            id: $this->authenticationInformationRepository->nextUserId()
+        );
+        $this->authenticationInformationTestDataCreator->create(
+            id: $this->authenticationInformationRepository->nextUserId()
+        );
+
+        // when
+        $actualAuthenticationInformation = $this->authenticationInformationRepository->findById($検索対象のユーザーID);
+
+        // then
+        $this->assertEquals($検索対象の認証情報, $actualAuthenticationInformation);
+    }
+
+    public function test_認証情報を削除できる()
+    {
+        // given
+        $削除対象のユーザーID = $this->authenticationInformationRepository->nextUserId();
+        $削除対象の認証情報 = $this->authenticationInformationTestDataCreator->create(
+            id: $削除対象のユーザーID
+        );
+
+        // 削除対象ではない認証情報を作成しておく
+        $削除対象ではないユーザーID = $this->authenticationInformationRepository->nextUserId();
+        $削除対象ではない認証情報 = $this->authenticationInformationTestDataCreator->create(
+            id: $削除対象ではないユーザーID
+        );
+
+        // when
+        $this->authenticationInformationRepository->delete($削除対象のユーザーID);
+
+        // then
+        // 削除した認証情報を取得できないことを確認する
+        $this->assertNull($this->authenticationInformationRepository->findById($削除対象のユーザーID));
+
+        // 削除対象ではない認証情報は取得できることを確認する
+        $actualAuthenticationInformation = $this->authenticationInformationRepository->findById($削除対象ではないユーザーID);
+        $this->assertEquals($削除対象ではない認証情報, $actualAuthenticationInformation);
+    }
 }
