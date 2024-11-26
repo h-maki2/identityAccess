@@ -145,12 +145,12 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
         );
 
         // 検索対象ではない認証情報と認証確認情報を保存する
-        $検索対象ではないユーザーid1 = $this->eloquentAuthenticationInformationRepository->nextUserId();
+        $検索対象ではないユーザーid = $this->eloquentAuthenticationInformationRepository->nextUserId();
         $this->authenticationInformationTestDataCreator->create(
-            id: $検索対象ではないユーザーid1
+            id: $検索対象ではないユーザーid
         );
         $this->authConfirmationTestDataCreator->create(
-            userId: $検索対象ではないユーザーid1,
+            userId: $検索対象ではないユーザーid,
             oneTimeTokenValue: OneTimeTokenValue::create(),
         );
 
@@ -165,6 +165,30 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
 
     public function test_認証確認情報を削除できる()
     {
-        
+        // given
+        // 認証確認情報を作成して保存する
+        $削除対象のユーザーID =  $this->eloquentAuthenticationInformationRepository->nextUserId();
+        $this->authenticationInformationTestDataCreator->create(
+            id: $削除対象のユーザーID
+        );
+
+        $削除対象の認証確認情報 = $this->authConfirmationTestDataCreator->create(
+            userId: $削除対象のユーザーID
+        );
+
+        $削除対象ではないuserId = $this->eloquentAuthenticationInformationRepository->nextUserId();
+        $this->authenticationInformationTestDataCreator->create(
+            id: $削除対象ではないuserId
+        );
+        $this->authConfirmationTestDataCreator->create(
+            userId: $削除対象ではないuserId
+        );
+
+        // when
+        $this->eloquentAuthConfirmationRepository->delete($削除対象の認証確認情報);
+
+        // then
+        $actualAuthConfirmation = $this->eloquentAuthConfirmationRepository->findById($削除対象のユーザーID);
+        $this->assertNull($actualAuthConfirmation);
     }
 }
