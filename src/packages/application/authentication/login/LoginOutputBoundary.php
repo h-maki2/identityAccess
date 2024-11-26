@@ -2,9 +2,8 @@
 
 namespace packages\application\authentication\login;
 
-abstract class LoginOutputBoundary
+interface LoginOutputBoundary
 {
-    abstract protected function __construct(LoginResult $loginResult);
-    abstract public static function create(LoginResult $loginResult): self;
-    abstract public function response(): void;
+    public function formatForResponse(LoginResult $loginResult): void;
+    public function response(): void;
 }

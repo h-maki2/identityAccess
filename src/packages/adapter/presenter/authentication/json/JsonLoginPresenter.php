@@ -10,15 +10,10 @@ class JsonLoginPresenter extends LoginOutputBoundary
     private array $responseData;
     private int $statusCode;
 
-    protected function __construct(LoginResult $loginResult)
+    public function formatForResponse(LoginResult $loginResult): void
     {
         $this->setResponseData($loginResult);
         $this->setStatusCode($loginResult);
-    }
-
-    public static function create(LoginResult $loginResult): self
-    {
-        return new self($loginResult);
     }
 
     public function response(): void
@@ -28,7 +23,7 @@ class JsonLoginPresenter extends LoginOutputBoundary
 
     private function setResponseData(LoginResult $loginResult): void
     {
-        $this->responseData = [
+        $this->responseData =  [
             'authorizationUrl' => $loginResult->authorizationUrl,
             'loginSucceeded' => $loginResult->loginSucceeded,
             'accountLocked' => $loginResult->accountLocked
@@ -37,6 +32,6 @@ class JsonLoginPresenter extends LoginOutputBoundary
 
     private function setStatusCode(LoginResult $loginResult): void
     {
-        $this->statusCode = $loginResult->loginSucceeded ? 200 : 400;
+        $this->statusCode =  $loginResult->loginSucceeded ? 200 : 400;
     }
 }
