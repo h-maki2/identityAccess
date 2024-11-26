@@ -10,10 +10,6 @@ class LoginController extends Controller
 {
     public function login(Request $request, LoginInputBoundary $loginInputBoundary)
     {
-        if ($request->method() === 'post') {
-            return;
-        }
-
         $output = $loginInputBoundary->login(
             $request->input('email'),
             $request->input('password'),
