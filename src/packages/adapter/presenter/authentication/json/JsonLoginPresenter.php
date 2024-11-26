@@ -5,15 +5,20 @@ namespace packages\adapter\presenter\json\authentication;
 use packages\application\authentication\login\LoginOutputBoundary;
 use packages\application\authentication\login\LoginResult;
 
-class JsonLoginPresenter implements LoginOutputBoundary
+class JsonLoginPresenter extends LoginOutputBoundary
 {
     private array $responseData;
     private int $statusCode;
 
-    public function formatForResponse(LoginResult $loginResult): void
+    protected function __construct(LoginResult $loginResult)
     {
         $this->setResponseData($loginResult);
         $this->setStatusCode($loginResult);
+    }
+
+    public static function create(LoginResult $loginResult): self
+    {
+        return new self($loginResult);
     }
 
     public function response(): void

@@ -38,20 +38,18 @@ class LoginApplicationService
         string $clientId,
         string $redirectUrl,
         string $responseType
-    ): void
+    ): LoginOutputBoundary
     {
         $email = new UserEmail($inputedEmail);
         $authenticationInformation = $this->authenticationInformationRepository->findByEmail($email);
 
         if ($authenticationInformation === null) {
-            $this->outputBoundary->formatForResponse(LoginResult::createWhenLoginFailed(false));
-            return;
+            return $this->outputBoundary->create(LoginResult::createWhenLoginFailed(false));
         }
 
         $currentDateTime = new DateTimeImmutable();
         if (!$authenticationInformation->canLoggedIn($currentDateTime)) {
-            $this->outputBoundary->formatForResponse(LoginResult::createWhenLoginFailed(true));
-            return;
+            return $this->outputBoundary->create(LoginResult::createWhenLoginFailed(true));
         }
 
         if ($authenticationInformation->canDisableLoginRestriction($currentDateTime)) {
@@ -67,8 +65,7 @@ class LoginApplicationService
             );
 
             $this->authenticationInformationRepository->save($authenticationInformation);
-            $this->outputBoundary->formatForResponse(LoginResult::createWhenLoginSucceeded($urlForObtainingAuthorizationCode));
-            return;
+            return $this->outputBoundary->create(LoginResult::createWhenLoginSucceeded($urlForObtainingAuthorizationCode));
         }
 
         $authenticationInformation->addFailedLoginCount($currentDateTime);
@@ -78,11 +75,10 @@ class LoginApplicationService
         $this->authenticationInformationRepository->save($authenticationInformation);
 
         if (!$authenticationInformation->canLoggedIn($currentDateTime)) {
-            $this->outputBoundary->formatForResponse(LoginResult::createWhenLoginFailed(true));
-            return;
+            return $this->outputBoundary->create(LoginResult::createWhenLoginFailed(true));
         }
 
-        $this->outputBoundary->formatForResponse(LoginResult::createWhenLoginFailed(false));
+        return $this->outputBoundary->create(LoginResult::createWhenLoginFailed(false));
     }
 
     /**
