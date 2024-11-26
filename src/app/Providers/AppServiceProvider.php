@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use EloquentUnitOfWork;
 use Illuminate\Support\ServiceProvider;
+use LoginInputBoundary;
 use packages\adapter\oauth\authToken\LaravelPassportAccessTokenDeactivationService;
 use packages\adapter\oauth\authToken\LaravelPassportRefreshokenDeactivationService;
 use packages\adapter\oauth\client\LaravelPassportClientFetcher;
@@ -11,6 +12,7 @@ use packages\adapter\persistence\eloquent\EloquentAuthConfirmationRepository;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationInformationRepository;
 use packages\adapter\presenter\json\authentication\JsonLoginPresenter;
 use packages\adapter\session\LaravelSessionAuthentication;
+use packages\application\authentication\login\LoginApplicationService;
 use packages\application\authentication\login\LoginOutputBoundary;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
@@ -44,6 +46,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Laravel
         $this->app->bind(SessionAuthentication::class, LaravelSessionAuthentication::class);
+
+        // アプリケーションサービス
+        $this->app->bind(LoginInputBoundary::class, LoginApplicationService::class);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace packages\application\authentication\login;
 
 use DateTimeImmutable;
+use LoginInputBoundary;
 use packages\domain\model\oauth\client\IClientFetcher;
 use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
 use packages\domain\model\authenticationInformation\SessionAuthentication;
@@ -12,7 +13,7 @@ use packages\domain\model\oauth\client\RedirectUrl;
 use packages\domain\model\oauth\client\ResponseType;
 use UnexpectedValueException;
 
-class LoginApplicationService
+class LoginApplicationService implements LoginInputBoundary
 {
     private IAuthenticationInformationRepository $authenticationInformationRepository;
     private SessionAuthentication $sessionAuthentication;
