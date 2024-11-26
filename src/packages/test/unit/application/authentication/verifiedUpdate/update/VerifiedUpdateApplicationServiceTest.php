@@ -41,7 +41,7 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
 
         $outputBoundary = $this->createMock(VerifiedUpdateOutputBoundary::class);
         $outputBoundary
-            ->method('present')
+            ->method('formatForResponse')
             ->with($this->callback(function (VerifiedUpdateResult $capturedResult) {
                 $this->capturedResult = $capturedResult;
                 return true;

@@ -44,7 +44,7 @@ class VerifiedUpdateApplicationService
         $oneTimeTokenValue = OneTimeTokenValue::reconstruct($oneTimeTokenValueString);
         $authConfirmation = $this->authConfirmationRepository->findByTokenValue($oneTimeTokenValue);
         if (!AuthConfirmationValidation::validateExpirationDate($authConfirmation, new DateTimeImmutable())) {
-            $this->outputBoundary->present(
+            $this->outputBoundary->formatForResponse(
                 VerifiedUpdateResult::createWhenValidationError('ワンタイムトークンが無効です。')
             );
             return;
@@ -54,13 +54,13 @@ class VerifiedUpdateApplicationService
         $verifiedUpdateResult = $this->verifiedUpdate->handle($authConfirmation, $oneTimePassword);
 
         if (!$verifiedUpdateResult) {
-            $this->outputBoundary->present(
+            $this->outputBoundary->formatForResponse(
                 VerifiedUpdateResult::createWhenValidationError('ワンタイムトークンかワンタイムパスワードが無効です。')
             );
             return;
         }
 
-        $this->outputBoundary->present(
+        $this->outputBoundary->formatForResponse(
             VerifiedUpdateResult::createWhenSuccess()
         );
     }

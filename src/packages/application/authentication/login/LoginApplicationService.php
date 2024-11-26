@@ -44,13 +44,13 @@ class LoginApplicationService
         $authenticationInformation = $this->authenticationInformationRepository->findByEmail($email);
 
         if ($authenticationInformation === null) {
-            $this->outputBoundary->present(LoginResult::createWhenLoginFailed(false));
+            $this->outputBoundary->formatForResponse(LoginResult::createWhenLoginFailed(false));
             return;
         }
 
         $currentDateTime = new DateTimeImmutable();
         if (!$authenticationInformation->canLoggedIn($currentDateTime)) {
-            $this->outputBoundary->present(LoginResult::createWhenLoginFailed(true));
+            $this->outputBoundary->formatForResponse(LoginResult::createWhenLoginFailed(true));
             return;
         }
 
@@ -67,7 +67,7 @@ class LoginApplicationService
             );
 
             $this->authenticationInformationRepository->save($authenticationInformation);
-            $this->outputBoundary->present(LoginResult::createWhenLoginSucceeded($urlForObtainingAuthorizationCode));
+            $this->outputBoundary->formatForResponse(LoginResult::createWhenLoginSucceeded($urlForObtainingAuthorizationCode));
             return;
         }
 
@@ -78,11 +78,11 @@ class LoginApplicationService
         $this->authenticationInformationRepository->save($authenticationInformation);
 
         if (!$authenticationInformation->canLoggedIn($currentDateTime)) {
-            $this->outputBoundary->present(LoginResult::createWhenLoginFailed(true));
+            $this->outputBoundary->formatForResponse(LoginResult::createWhenLoginFailed(true));
             return;
         }
 
-        $this->outputBoundary->present(LoginResult::createWhenLoginFailed(false));
+        $this->outputBoundary->formatForResponse(LoginResult::createWhenLoginFailed(false));
     }
 
     /**

@@ -40,7 +40,7 @@ class DisplayVerifiedUpdatePageApplicationServiceTest extends TestCase
 
         $outputBoundary = $this->createMock(DisplayVerifiedUpdatePageOutputBoundary::class);
         $outputBoundary
-            ->method('present')
+            ->method('formatForResponse')
             ->with($this->callback(function (DisplayVerifiedUpdatePageResult $capturedResult) {
                 $this->capturedResult = $capturedResult;
                 return true;

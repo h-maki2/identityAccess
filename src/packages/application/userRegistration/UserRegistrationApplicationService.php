@@ -57,7 +57,7 @@ class UserRegistrationApplicationService
         $validationHandler->addValidator(new UserEmailValidation($inputedEmail, $this->authenticationInformationRepository));
         $validationHandler->addValidator(new UserPasswordValidation($inputedPassword));
         if (!$validationHandler->validate()) {
-            $this->outputBoundary->present(
+            $this->outputBoundary->formatForResponse(
                 UserRegistrationResult::createWhenValidationError($validationHandler->errorMessages())
             );
             return;
@@ -71,7 +71,7 @@ class UserRegistrationApplicationService
             throw new TransactionException($e->getMessage());
         }
 
-        $this->outputBoundary->present(
+        $this->outputBoundary->formatForResponse(
             UserRegistrationResult::createWhenSuccess()
         );
         return;

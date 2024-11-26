@@ -30,7 +30,7 @@ class OneTimeTokenAndPasswordRegenerationApplicationServiceTest extends TestCase
 
         $outputBoundary = $this->createMock(OneTimeTokenAndPasswordRegenerationOutputBoundary::class);
         $outputBoundary
-            ->method('present')
+            ->method('formatForResponse')
             ->with($this->callback(function (OneTimeTokenAndPasswordRegenerationResult $catchedResult) {
                 $this->catchedResult = $catchedResult;
                 return true;

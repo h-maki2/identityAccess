@@ -30,7 +30,7 @@ class UserRegistrationApplicationServiceTest extends TestCase
 
         $outputBoundary = $this->createMock(UserRegistrationOutputBoundary::class);
         $outputBoundary
-            ->method('present')
+            ->method('formatForResponse')
             ->with($this->callback(function (UserRegistrationResult $capturedResult) {
                 $this->capturedResult = $capturedResult;
                 return true;

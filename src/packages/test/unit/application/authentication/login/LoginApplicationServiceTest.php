@@ -57,7 +57,7 @@ class LoginApplicationServiceTest extends TestCase
         // presentメソッドが呼ばれた際に引数の値をキャプチャする
         $outputBoundary = $this->createMock(LoginOutputBoundary::class);
         $outputBoundary
-            ->method('present')
+            ->method('formatForResponse')
             ->with($this->callback(function (LoginResult $capturedLoginResult) {
                 $this->capturedLoginResult = $capturedLoginResult;
                 return true;

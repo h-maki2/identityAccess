@@ -39,14 +39,14 @@ class OneTimeTokenAndPasswordRegenerationApplicationService
         $userEmail = new UserEmail($userEmailString);
         $authInfo = $this->authenticationInformationRepository->findByEmail($userEmail);
         if ($authInfo === null) {
-            $this->outputBoundary->present(
+            $this->outputBoundary->formatForResponse(
                 OneTimeTokenAndPasswordRegenerationResult::createWhenValidationError('メールアドレスが登録されていません。')
             );
             return;
         }
 
         if ($authInfo->isVerified()) {
-            $this->outputBoundary->present(
+            $this->outputBoundary->formatForResponse(
                 OneTimeTokenAndPasswordRegenerationResult::createWhenValidationError('既にアカウントが認証済みです。')
             );
             return;
@@ -61,7 +61,7 @@ class OneTimeTokenAndPasswordRegenerationApplicationService
         $authConfirmation->reObtain();
         $this->authConfirmationRepository->save($authConfirmation);
 
-        $this->outputBoundary->present(
+        $this->outputBoundary->formatForResponse(
             OneTimeTokenAndPasswordRegenerationResult::createWhenSuccess($authConfirmation->oneTimeToken()->value())
         );
     }
