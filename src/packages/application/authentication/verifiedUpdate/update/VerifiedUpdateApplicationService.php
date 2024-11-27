@@ -14,7 +14,7 @@ use packages\domain\service\verifiedUpdate\VerifiedUpdate;
 /**
  * 認証済み更新を行うアプリケーションサービス
  */
-class VerifiedUpdateApplicationService
+class VerifiedUpdateApplicationService implements VerifiedUpdateInputBoundary
 {
     private IAuthConfirmationRepository $authConfirmationRepository;
     private VerifiedUpdate $verifiedUpdate;
@@ -39,7 +39,7 @@ class VerifiedUpdateApplicationService
     /**
      * 認証済み更新を行う
      */
-    public function verifiedUpdate(string $oneTimeTokenValueString, string $oneTimePasswordString): void
+    public function verifiedUpdate(string $oneTimeTokenValueString, string $oneTimePasswordString): VerifiedUpdateOutputBoundary
     {
         $oneTimeTokenValue = OneTimeTokenValue::reconstruct($oneTimeTokenValueString);
         $authConfirmation = $this->authConfirmationRepository->findByTokenValue($oneTimeTokenValue);
@@ -47,7 +47,7 @@ class VerifiedUpdateApplicationService
             $this->outputBoundary->formatForResponse(
                 VerifiedUpdateResult::createWhenValidationError('ワンタイムトークンが無効です。')
             );
-            return;
+            return $this->outputBoundary;
         }
 
         $oneTimePassword = OneTimePassword::reconstruct($oneTimePasswordString);
@@ -57,11 +57,12 @@ class VerifiedUpdateApplicationService
             $this->outputBoundary->formatForResponse(
                 VerifiedUpdateResult::createWhenValidationError('ワンタイムトークンかワンタイムパスワードが無効です。')
             );
-            return;
+            return $this->outputBoundary;
         }
 
         $this->outputBoundary->formatForResponse(
             VerifiedUpdateResult::createWhenSuccess()
         );
+        return $this->outputBoundary;
     }
 }

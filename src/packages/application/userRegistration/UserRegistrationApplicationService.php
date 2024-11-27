@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\domain\service\userRegistration;
+namespace packages\application\userRegistration;
 
 use Exception;
 use packages\domain\model\common\email\SendEmailDto;
@@ -16,12 +16,13 @@ use packages\domain\model\authenticationInformation\validation\UserPasswordValid
 use packages\domain\model\common\unitOfWork\UnitOfWork;
 use packages\domain\model\common\validator\ValidationHandler;
 use packages\domain\service\AuthenticationInformation\AuthenticationInformationService;
+use packages\domain\service\userRegistration\IUserRegistrationCompletionEmail;
 use packages\domain\service\userRegistration\UserRegistration;
 
 /**
  * ユーザー登録のアプリケーションサービス
  */
-class UserRegistrationApplicationService
+class UserRegistrationApplicationService implements UserRegistrationInputBoundary
 {
     private IAuthenticationInformationRepository $authenticationInformationRepository;
     private UserRegistration $userRegistration;
@@ -51,7 +52,7 @@ class UserRegistrationApplicationService
     public function userRegister(
         string $inputedEmail, 
         string $inputedPassword
-    ): void
+    ): UserRegistrationOutputBoundary
     {
         $validationHandler = new ValidationHandler();
         $validationHandler->addValidator(new UserEmailValidation($inputedEmail, $this->authenticationInformationRepository));
@@ -60,7 +61,7 @@ class UserRegistrationApplicationService
             $this->outputBoundary->formatForResponse(
                 UserRegistrationResult::createWhenValidationError($validationHandler->errorMessages())
             );
-            return;
+            return $this->outputBoundary;
         }
 
         $userEmail = new UserEmail($inputedEmail);
@@ -74,6 +75,6 @@ class UserRegistrationApplicationService
         $this->outputBoundary->formatForResponse(
             UserRegistrationResult::createWhenSuccess()
         );
-        return;
+        return $this->outputBoundary;
     }
 }

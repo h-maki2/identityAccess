@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\domain\service\userRegistration;
+namespace packages\application\userRegistration;
 
 class UserRegistrationResult
 {

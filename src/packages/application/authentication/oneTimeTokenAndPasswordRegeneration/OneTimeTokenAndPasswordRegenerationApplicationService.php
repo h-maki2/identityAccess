@@ -12,7 +12,7 @@ use RuntimeException;
 /**
  * ワンタイムトークンとワンタイムパスワードの再生成を行うアプリケーションサービス
  */
-class OneTimeTokenAndPasswordRegenerationApplicationService
+class OneTimeTokenAndPasswordRegenerationApplicationService implements OneTimeTokenAndPasswordRegenerationInputBoundary
 {
     private IAuthConfirmationRepository $authConfirmationRepository;
     private IAuthenticationInformationRepository $authenticationInformationRepository;
@@ -34,7 +34,7 @@ class OneTimeTokenAndPasswordRegenerationApplicationService
      */
     public function regenerateOneTimeTokenAndPassword(
         string $userEmailString
-    ): void
+    ): OneTimeTokenAndPasswordRegenerationOutputBoundary
     {
         $userEmail = new UserEmail($userEmailString);
         $authInfo = $this->authenticationInformationRepository->findByEmail($userEmail);
@@ -42,14 +42,14 @@ class OneTimeTokenAndPasswordRegenerationApplicationService
             $this->outputBoundary->formatForResponse(
                 OneTimeTokenAndPasswordRegenerationResult::createWhenValidationError('メールアドレスが登録されていません。')
             );
-            return;
+            return $this->outputBoundary;
         }
 
         if ($authInfo->isVerified()) {
             $this->outputBoundary->formatForResponse(
                 OneTimeTokenAndPasswordRegenerationResult::createWhenValidationError('既にアカウントが認証済みです。')
             );
-            return;
+            return $this->outputBoundary;
         }
 
         $userId = $authInfo->id();
@@ -64,5 +64,6 @@ class OneTimeTokenAndPasswordRegenerationApplicationService
         $this->outputBoundary->formatForResponse(
             OneTimeTokenAndPasswordRegenerationResult::createWhenSuccess($authConfirmation->oneTimeToken()->value())
         );
+        return $this->outputBoundary;
     }
 }

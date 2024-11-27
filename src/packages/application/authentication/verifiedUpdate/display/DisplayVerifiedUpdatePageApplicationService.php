@@ -10,7 +10,7 @@ use packages\domain\model\authConfirmation\validation\AuthConfirmationValidation
 /**
  * 認証済み更新ページを表示するアプリケーションサービス
  */
-class DisplayVerifiedUpdatePageApplicationService
+class DisplayVerifiedUpdatePageApplicationService implements DisplayVerifiedUpdatePageInputBoundary
 {
     private IAuthConfirmationRepository $authConfirmationRepository;
     private DisplayVerifiedUpdatePageOutputBoundary $outputBoundary;
@@ -27,7 +27,7 @@ class DisplayVerifiedUpdatePageApplicationService
     /**
      * 認証済み更新ページを表示する
      */
-    public function displayVerifiedUpdatePage(string $oneTimeTokenValueString): void
+    public function displayVerifiedUpdatePage(string $oneTimeTokenValueString): DisplayVerifiedUpdatePageOutputBoundary
     {
         $oneTimeTokenValue = OneTimeTokenValue::reconstruct($oneTimeTokenValueString);
         $authConfirmation = $this->authConfirmationRepository->findByTokenValue($oneTimeTokenValue);
@@ -35,12 +35,12 @@ class DisplayVerifiedUpdatePageApplicationService
             $this->outputBoundary->formatForResponse(
                 DisplayVerifiedUpdatePageResult::createWhenValidationError('無効なワンタイムトークンです。')
             );
-            return;
+            return $this->outputBoundary;
         }
 
         $this->outputBoundary->formatForResponse(
             DisplayVerifiedUpdatePageResult::createWhenSuccess($oneTimeTokenValue, $authConfirmation->oneTimePassword())
         );
-        return;
+        return $this->outputBoundary;
     }
 }

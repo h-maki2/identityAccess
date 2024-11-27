@@ -2,8 +2,8 @@
 
 namespace packages\adapter\presenter\authentication\userRegistration\json;
 
-use packages\domain\service\userRegistration\UserRegistrationOutputBoundary;
-use packages\domain\service\userRegistration\UserRegistrationResult;
+use packages\application\userRegistration\UserRegistrationOutputBoundary;
+use packages\application\userRegistration\UserRegistrationResult;
 
 class JsonUserRegistrationPresenter implements UserRegistrationOutputBoundary
 {
