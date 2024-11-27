@@ -2,8 +2,8 @@
 
 namespace packages\application\authentication\oneTimeTokenAndPasswordRegeneration;
 
-abstract class OneTimeTokenAndPasswordRegenerationOutputBoundary
+interface OneTimeTokenAndPasswordRegenerationOutputBoundary
 {
-    abstract public function formatForResponse(OneTimeTokenAndPasswordRegenerationResult $oneTimeTokenAndPasswordRegenerationResult): void;
-    abstract public function formatForResponse();
+    public function formatForResponse(OneTimeTokenAndPasswordRegenerationResult $oneTimeTokenAndPasswordRegenerationResult): void;
+    public function response();
 }
