@@ -34,7 +34,6 @@ class LoginControllerTest extends TestCase
     {
         $this->withExceptionHandling();
         // given
-        $存在しないメールアドレス = 'test';
         // when
         $response = $this->get('/test_aaa?email=maki');
 
