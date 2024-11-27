@@ -5,5 +5,5 @@ namespace packages\application\authentication\oneTimeTokenAndPasswordRegeneratio
 interface OneTimeTokenAndPasswordRegenerationOutputBoundary
 {
     public function formatForResponse(OneTimeTokenAndPasswordRegenerationResult $oneTimeTokenAndPasswordRegenerationResult): void;
-    public function response();
+    public function response(): mixed;
 }
