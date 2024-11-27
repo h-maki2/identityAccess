@@ -28,16 +28,10 @@ class LoginControllerTest extends TestCase
 
         // then
         $response->assertStatus(400);
-    }
-
-    public function test()
-    {
-        $this->withExceptionHandling();
-        // given
-        // when
-        $response = $this->get('/test_aaa?email=maki');
-
-        // then
-        $response->assertStatus(400);
+        $response->assertJson([
+            'authorizationUrl' => '',
+            'loginSucceeded' => false,
+            'accountLocked' => false
+        ]);
     }
 }
