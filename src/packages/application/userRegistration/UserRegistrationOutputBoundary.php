@@ -2,8 +2,8 @@
 
 namespace packages\domain\service\userRegistration;
 
-abstract class UserRegistrationOutputBoundary
+interface UserRegistrationOutputBoundary
 {
-    abstract public function formatForResponse(UserRegistrationResult $result): void;
-    abstract public function formatForResponse();
+    public function formatForResponse(UserRegistrationResult $result): void;
+    public function response();
 }
