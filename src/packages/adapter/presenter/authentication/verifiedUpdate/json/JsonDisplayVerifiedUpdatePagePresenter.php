@@ -1,5 +1,7 @@
 <?php
 
+namespace packages\adapter\presenter\authentication\verifiedUpdate\json;
+
 use packages\application\authentication\verifiedUpdate\display\DisplayVerifiedUpdatePageOutputBoundary;
 use packages\application\authentication\verifiedUpdate\display\DisplayVerifiedUpdatePageResult;
 
@@ -30,6 +32,6 @@ class JsonDisplayVerifiedUpdatePagePresenter implements DisplayVerifiedUpdatePag
 
     private function setStatusCode(DisplayVerifiedUpdatePageResult $displayVerifiedUpdatePageResult): void
     {
-        $this->statusCode = $displayVerifiedUpdatePageResult->validationError ? 200 : 400;
+        $this->statusCode = $displayVerifiedUpdatePageResult->validationError ? 400 : 200;
     }
 }

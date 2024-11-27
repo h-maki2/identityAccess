@@ -2,8 +2,8 @@
 
 namespace packages\application\authentication\verifiedUpdate\update;
 
-abstract class  VerifiedUpdateOutputBoundary
+interface VerifiedUpdateOutputBoundary
 {
-    abstract public function formatForResponse(VerifiedUpdateResult $result): void;
-    abstract public function formatForResponse();
+    public function formatForResponse(VerifiedUpdateResult $result): void;
+    public function response();
 }
