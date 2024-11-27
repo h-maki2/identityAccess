@@ -10,7 +10,7 @@ use packages\domain\model\authenticationInformation\UserEmail;
 use RuntimeException;
 
 /**
- * ワンタイムトークンとワンタイムパスワードの再生成を行うアプリケーションサービス
+ * 本登録確認メール再送のアプリケーションサービス
  */
 class ResendRegistrationConfirmationEmailApplicationService implements ResendRegistrationConfirmationEmailInputBoundary
 {
@@ -30,9 +30,9 @@ class ResendRegistrationConfirmationEmailApplicationService implements ResendReg
     }
 
     /**
-     * ワンタイムトークンとワンタイムパスワードの再生成を行う
+     * 本人確認メールの再送を行う
      */
-    public function regenerateOneTimeTokenAndPassword(
+    public function resendRegistrationConfirmationEmail(
         string $userEmailString
     ): ResendRegistrationConfirmationEmailOutputBoundary
     {

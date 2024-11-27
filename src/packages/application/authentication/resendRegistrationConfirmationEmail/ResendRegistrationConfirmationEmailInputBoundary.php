@@ -4,5 +4,5 @@ namespace packages\application\authentication\ResendRegistrationConfirmationEmai
 
 interface ResendRegistrationConfirmationEmailInputBoundary
 {
-    public function regenerateOneTimeTokenAndPassword(string $email): ResendRegistrationConfirmationEmailOutputBoundary;
+    public function resendRegistrationConfirmationEmail(string $email): ResendRegistrationConfirmationEmailOutputBoundary;
 }

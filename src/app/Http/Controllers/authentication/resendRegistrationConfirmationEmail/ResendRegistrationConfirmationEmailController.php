@@ -15,9 +15,9 @@ class ResendRegistrationConfirmationEmailController extends Controller
         $this->ResendRegistrationConfirmationEmailInputBoundary = $ResendRegistrationConfirmationEmailInputBoundary;
     }
 
-    public function regenerateOneTimeTokenAndPassword(Request $request)
+    public function resendRegistrationConfirmationEmail(Request $request)
     {
-        $output = $this->ResendRegistrationConfirmationEmailInputBoundary->regenerateOneTimeTokenAndPassword(
+        $output = $this->ResendRegistrationConfirmationEmailInputBoundary->resendRegistrationConfirmationEmail(
             $request->input('email')
         );
 
