@@ -1,19 +1,19 @@
 <?php
 
-namespace packages\adapter\presenter\authentication\oneTimeTokenAndPasswordRegeneration\json;
+namespace packages\adapter\presenter\authentication\ResendRegistrationConfirmationEmail\json;
 
-use packages\application\authentication\oneTimeTokenAndPasswordRegeneration\OneTimeTokenAndPasswordRegenerationOutputBoundary;
-use packages\application\authentication\oneTimeTokenAndPasswordRegeneration\OneTimeTokenAndPasswordRegenerationResult;
+use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailOutputBoundary;
+use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailResult;
 
-class JsonOneTimeTokenAndPasswordRegenerationPresenter implements OneTimeTokenAndPasswordRegenerationOutputBoundary
+class JsonResendRegistrationConfirmationEmailPresenter implements ResendRegistrationConfirmationEmailOutputBoundary
 {
     private array $responseData;
     private int $statusCode;
 
-    public function formatForResponse(OneTimeTokenAndPasswordRegenerationResult $oneTimeTokenAndPasswordRegenerationResult): void
+    public function formatForResponse(ResendRegistrationConfirmationEmailResult $resendRegistrationConfirmationEmailResult): void
     {
-        $this->setResponseData($oneTimeTokenAndPasswordRegenerationResult);
-        $this->setStatusCode($oneTimeTokenAndPasswordRegenerationResult);
+        $this->setResponseData($resendRegistrationConfirmationEmailResult);
+        $this->setStatusCode($resendRegistrationConfirmationEmailResult);
     }
 
     public function response(): mixed
@@ -21,16 +21,16 @@ class JsonOneTimeTokenAndPasswordRegenerationPresenter implements OneTimeTokenAn
         return response()->json($this->responseData, $this->statusCode);
     }
 
-    private function setResponseData(OneTimeTokenAndPasswordRegenerationResult $oneTimeTokenAndPasswordRegenerationResult): void
+    private function setResponseData(ResendRegistrationConfirmationEmailResult $resendRegistrationConfirmationEmailResult): void
     {
         $this->responseData = [
-            'validationErrorMessage' => $oneTimeTokenAndPasswordRegenerationResult->validationErrorMessage,
-            'oneTimeTokenValue' => $oneTimeTokenAndPasswordRegenerationResult->oneTimeTokenValue
+            'validationErrorMessage' => $resendRegistrationConfirmationEmailResult->validationErrorMessage,
+            'oneTimeTokenValue' => $resendRegistrationConfirmationEmailResult->oneTimeTokenValue
         ];
     }
 
-    private function setStatusCode(OneTimeTokenAndPasswordRegenerationResult $oneTimeTokenAndPasswordRegenerationResult): void
+    private function setStatusCode(ResendRegistrationConfirmationEmailResult $resendRegistrationConfirmationEmailResult): void
     {
-        $this->statusCode = $oneTimeTokenAndPasswordRegenerationResult->validationError ? 400 : 200;
+        $this->statusCode = $resendRegistrationConfirmationEmailResult->validationError ? 400 : 200;
     }
 }
