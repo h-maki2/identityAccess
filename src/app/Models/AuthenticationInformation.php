@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class AuthenticationInformation extends Model
+class AuthenticationInformation extends Authenticatable
 {
     use HasFactory;
     
@@ -18,5 +18,10 @@ class AuthenticationInformation extends Model
     public function authConfirmations()
     {
         return $this->hasOne(AuthConfirmation::class, 'user_id', 'user_id');
+    }
+
+    public function getAuthIdentifierName()
+    {
+        return $this->primaryKey;
     }
 }
