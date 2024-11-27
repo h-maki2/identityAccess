@@ -1,10 +1,10 @@
 <?php
 
-namespace packages\domain\service\userRegistration;
+namespace packages\service\common\email;
 
 use packages\domain\model\common\email\SendEmailDto;
 
-interface IUserRegistrationCompletionEmail
+interface IEmailSender
 {
     public function send(SendEmailDto $sendEmailDto): void;
 }

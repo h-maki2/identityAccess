@@ -16,8 +16,8 @@ use packages\domain\model\authenticationInformation\validation\UserPasswordValid
 use packages\domain\model\common\unitOfWork\UnitOfWork;
 use packages\domain\model\common\validator\ValidationHandler;
 use packages\domain\service\AuthenticationInformation\AuthenticationInformationService;
-use packages\domain\service\userRegistration\IUserRegistrationCompletionEmail;
 use packages\domain\service\userRegistration\UserRegistration;
+use packages\service\common\email\IEmailSender;
 
 /**
  * ユーザー登録のアプリケーションサービス
@@ -32,8 +32,8 @@ class UserRegistrationApplicationService implements UserRegistrationInputBoundar
         IAuthConfirmationRepository $authConfirmationRepository,
         IAuthenticationInformationRepository $authenticationInformationRepository,
         UnitOfWork $unitOfWork,
-        IUserRegistrationCompletionEmail $userRegistrationCompletionEmail,
-        UserRegistrationOutputBoundary $outputBoundary
+        UserRegistrationOutputBoundary $outputBoundary,
+        IEmailSender $emailSender
     )
     {
         $this->authenticationInformationRepository = $authenticationInformationRepository;
@@ -41,7 +41,7 @@ class UserRegistrationApplicationService implements UserRegistrationInputBoundar
             $authenticationInformationRepository,
             $authConfirmationRepository,
             $unitOfWork,
-            $userRegistrationCompletionEmail
+            $emailSender
         );
         $this->outputBoundary = $outputBoundary;
     }

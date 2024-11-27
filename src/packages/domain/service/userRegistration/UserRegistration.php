@@ -14,6 +14,7 @@ use packages\domain\model\authenticationInformation\UserEmail;
 use packages\domain\model\authenticationInformation\UserPassword;
 use packages\domain\model\common\unitOfWork\UnitOfWork;
 use packages\domain\service\AuthenticationInformation\AuthenticationInformationService;
+use packages\service\common\email\IEmailSender;
 
 class UserRegistration
 {
@@ -21,19 +22,19 @@ class UserRegistration
     private IAuthConfirmationRepository $authConfirmationRepository;
     private UnitOfWork $unitOfWork;
     private AuthenticationInformationService $authenticationInformationService;
-    private IUserRegistrationCompletionEmail $userRegistrationCompletionEmail;
+    private IEmailSender $emailSender;
 
     public function __construct(
         IAuthenticationInformationRepository $authenticationInformationRepository,
         IAuthConfirmationRepository $authConfirmationRepository,
         UnitOfWork $unitOfWork,
-        IUserRegistrationCompletionEmail $userRegistrationCompletionEmail
+        IEmailSender $emailSender
     ) {
         $this->authenticationInformationRepository = $authenticationInformationRepository;
         $this->authConfirmationRepository = $authConfirmationRepository;
         $this->unitOfWork = $unitOfWork;
         $this->authenticationInformationService = new AuthenticationInformationService($authenticationInformationRepository);
-        $this->userRegistrationCompletionEmail = $userRegistrationCompletionEmail;
+        $this->emailSender = $emailSender;
     }
 
     /**
@@ -56,8 +57,8 @@ class UserRegistration
             $this->authConfirmationRepository->save($authConfirmation);
         });
 
-        $this->userRegistrationCompletionEmail->send(
-            $this->sendEmailDto(
+        $this->emailSender->send(
+            $this->createUserRegistrationCompletionEmailDto(
                 $email->value,
                 $authConfirmation->oneTimeToken()->value(),
                 $authConfirmation->oneTimePassword()->value
@@ -65,7 +66,7 @@ class UserRegistration
         );
     }
 
-    private function sendEmailDto(
+    private function createUserRegistrationCompletionEmailDto(
         string $toAddress,
         string $oneTimeToken,
         string $oneTimePassword
