@@ -14,7 +14,8 @@ use packages\domain\model\authenticationInformation\UserEmail;
 use packages\domain\model\authenticationInformation\UserPassword;
 use packages\domain\model\common\unitOfWork\UnitOfWork;
 use packages\domain\service\AuthenticationInformation\AuthenticationInformationService;
-use packages\service\common\email\IEmailSender;
+use packages\domain\model\email\IEmailSender;
+use packages\domain\model\email\RegistrationConfirmationEmailDtoFactory;
 
 class UserRegistration
 {
@@ -58,31 +59,11 @@ class UserRegistration
         });
 
         $this->emailSender->send(
-            $this->createUserRegistrationCompletionEmailDto(
-                $email->value,
-                $authConfirmation->oneTimeToken()->value(),
-                $authConfirmation->oneTimePassword()->value
+            RegistrationConfirmationEmailDtoFactory::create(
+                $email,
+                $authConfirmation->oneTimeToken(),
+                $authConfirmation->oneTimePassword()
             )
-        );
-    }
-
-    private function createUserRegistrationCompletionEmailDto(
-        string $toAddress,
-        string $oneTimeToken,
-        string $oneTimePassword
-    ): SendEmailDto
-    {
-        $templateValiables = [
-            'oneTimeToken' => $oneTimeToken,
-            'oneTimePassword' => $oneTimePassword
-        ];
-        return new SendEmailDto(
-            'test@example.com',
-            $toAddress,
-            'システムテスト',
-            '会員登録完了のお知らせ',
-            'email.test',
-            $templateValiables
         );
     }
 }

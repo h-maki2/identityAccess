@@ -17,7 +17,7 @@ use packages\domain\model\common\unitOfWork\UnitOfWork;
 use packages\domain\model\common\validator\ValidationHandler;
 use packages\domain\service\AuthenticationInformation\AuthenticationInformationService;
 use packages\domain\service\userRegistration\UserRegistration;
-use packages\service\common\email\IEmailSender;
+use packages\domain\model\email\IEmailSender;
 
 /**
  * ユーザー登録のアプリケーションサービス
