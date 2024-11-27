@@ -2,9 +2,9 @@
 
 use packages\adapter\persistence\inMemory\InMemoryAuthConfirmationRepository;
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
-use packages\application\authentication\oneTimeTokenAndPasswordRegeneration\OneTimeTokenAndPasswordRegenerationApplicationService;
-use packages\application\authentication\oneTimeTokenAndPasswordRegeneration\OneTimeTokenAndPasswordRegenerationOutputBoundary;
-use packages\application\authentication\oneTimeTokenAndPasswordRegeneration\OneTimeTokenAndPasswordRegenerationResult;
+use packages\application\authentication\ResendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailApplicationService;
+use packages\application\authentication\ResendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailOutputBoundary;
+use packages\application\authentication\ResendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailResult;
 use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationInformation\UserEmail;
@@ -13,31 +13,31 @@ use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
 use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataCreator;
 use PHPUnit\Framework\TestCase;
 
-class OneTimeTokenAndPasswordRegenerationApplicationServiceTest extends TestCase
+class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
 {
     private InMemoryAuthConfirmationRepository $authConfirmationRepository;
     private InMemoryAuthenticationInformationRepository $authenticationInformationRepository;
-    private OneTimeTokenAndPasswordRegenerationApplicationService $oneTimeTokenAndPasswordRegenerationApplicationService;
+    private ResendRegistrationConfirmationEmailApplicationService $resendRegistrationConfirmationEmailApplicationService;
     private AuthConfirmationTestDataCreator $authConfirmationTestDataCreator;
     private AuthenticationInformationTestDataCreator $authenticationInformationTestDataCreator;
-    private OneTimeTokenAndPasswordRegenerationResult $catchedResult;
-    private OneTimeTokenAndPasswordRegenerationOutputBoundary $outputBoundary;
+    private ResendRegistrationConfirmationEmailResult $catchedResult;
+    private ResendRegistrationConfirmationEmailOutputBoundary $outputBoundary;
 
     public function setUp(): void
     {
         $this->authConfirmationRepository = new InMemoryAuthConfirmationRepository();
         $this->authenticationInformationRepository = new InMemoryAuthenticationInformationRepository();
 
-        $outputBoundary = $this->createMock(OneTimeTokenAndPasswordRegenerationOutputBoundary::class);
+        $outputBoundary = $this->createMock(ResendRegistrationConfirmationEmailOutputBoundary::class);
         $outputBoundary
             ->method('formatForResponse')
-            ->with($this->callback(function (OneTimeTokenAndPasswordRegenerationResult $catchedResult) {
+            ->with($this->callback(function (ResendRegistrationConfirmationEmailResult $catchedResult) {
                 $this->catchedResult = $catchedResult;
                 return true;
             }));
         $this->outputBoundary = $outputBoundary;
 
-        $this->oneTimeTokenAndPasswordRegenerationApplicationService = new OneTimeTokenAndPasswordRegenerationApplicationService(
+        $this->resendRegistrationConfirmationEmailApplicationService = new ResendRegistrationConfirmationEmailApplicationService(
             $this->authConfirmationRepository,
             $this->authenticationInformationRepository,
             $this->outputBoundary
@@ -66,7 +66,7 @@ class OneTimeTokenAndPasswordRegenerationApplicationServiceTest extends TestCase
         );
 
         // when
-        $this->oneTimeTokenAndPasswordRegenerationApplicationService->regenerateOneTimeTokenAndPassword($userEmail->value);
+        $this->resendRegistrationConfirmationEmailApplicationService->resendRegistrationConfirmationEmail($userEmail->value);
 
         // then
         // バリデーションエラーが発生していないことを確認
@@ -101,7 +101,7 @@ class OneTimeTokenAndPasswordRegenerationApplicationServiceTest extends TestCase
 
         // when
         $正しくないメールアドレス = 'other@example.com';
-        $this->oneTimeTokenAndPasswordRegenerationApplicationService->regenerateOneTimeTokenAndPassword($正しくないメールアドレス);
+        $this->resendRegistrationConfirmationEmailApplicationService->resendRegistrationConfirmationEmail($正しくないメールアドレス);
 
         // then
         // バリデーションエラーが発生していることを確認
@@ -130,7 +130,7 @@ class OneTimeTokenAndPasswordRegenerationApplicationServiceTest extends TestCase
         );
 
         // when
-        $result = $this->oneTimeTokenAndPasswordRegenerationApplicationService->regenerateOneTimeTokenAndPassword($userEmail->value);
+        $result = $this->resendRegistrationConfirmationEmailApplicationService->resendRegistrationConfirmationEmail($userEmail->value);
 
         // then
         // バリデーションエラーが発生していることを確認
@@ -152,6 +152,6 @@ class OneTimeTokenAndPasswordRegenerationApplicationServiceTest extends TestCase
         // when・then
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('認証情報が存在しません。userId: ' . $authenticationInformation->id()->value);
-        $this->oneTimeTokenAndPasswordRegenerationApplicationService->regenerateOneTimeTokenAndPassword($userEmail->value);
+        $this->resendRegistrationConfirmationEmailApplicationService->resendRegistrationConfirmationEmail($userEmail->value);
     }
 }
