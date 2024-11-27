@@ -94,5 +94,17 @@ class LoginControllerTest extends TestCase
 
         // then
         $response->assertStatus(200);
+        
+        $expectedQueryParams = http_build_query([
+            'response_type' => 'code',
+            'client_id' => '6',
+            'redirect_uri' => 'http://identity.todoapp.local/auth/callback'
+        ]);
+        $expectedAuthorizationUrl = 'http://identity.todoapp.local/oauth/authorize?' . $expectedQueryParams;
+        $response->assertJson([
+            'authorizationUrl' => $expectedAuthorizationUrl,
+            'loginSucceeded' => true,
+            'accountLocked' => false
+        ]);
     }
 }
