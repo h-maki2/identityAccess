@@ -3,7 +3,10 @@
 namespace packages\domain\service\oneTimeTokenAndPasswordRegeneration;
 
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
+use packages\domain\model\authenticationInformation\AuthenticationInformation;
 use packages\domain\model\email\IEmailSender;
+use packages\domain\model\email\RegistrationConfirmationEmailDtoFactory;
+use RuntimeException;
 
 class OneTimeTokenAndPasswordRegeneration
 {
@@ -18,11 +21,26 @@ class OneTimeTokenAndPasswordRegeneration
         $this->emailSender = $emailSender;
     }
 
-
-    public function handle()
+    /**
+     * ワンタイムトークンとワンタイムパスワードの再生成を行う
+     * 再生成後に本登録確認メールメールを再送する
+     */
+    public function handle(AuthenticationInformation $authInfo)
     {
+        $authConfirmation = $this->authConfirmationRepository->findById($authInfo->id());
+        if ($authConfirmation === null) {
+            throw new RuntimeException('認証情報が存在しません。userId: ' . $authInfo->id()->value);
+        }
 
+        $authConfirmation->reObtain();
+        $this->authConfirmationRepository->save($authConfirmation);
+
+        $this->emailSender->send(
+            RegistrationConfirmationEmailDtoFactory::create(
+                $authInfo->email(),
+                $authConfirmation->oneTimeToken(),
+                $authConfirmation->oneTimePassword()
+            )
+        );
     }
-
-
 }
