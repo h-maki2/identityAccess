@@ -5,7 +5,7 @@ namespace packages\domain\model\email;
 use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeToken;
 use packages\domain\model\authenticationInformation\UserEmail;
-use packages\domain\model\common\email\SendEmailDto;
+use packages\domain\model\email\SendEmailDto;
 
 /**
  * 本登録確認メールDTOのファクトリ

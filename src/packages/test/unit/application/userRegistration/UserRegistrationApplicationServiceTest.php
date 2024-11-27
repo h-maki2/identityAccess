@@ -2,7 +2,7 @@
 
 use packages\adapter\persistence\inMemory\InMemoryAuthConfirmationRepository;
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
-use packages\domain\model\common\email\SendEmailDto;
+use packages\domain\model\email\SendEmailDto;
 use packages\application\common\validation\ValidationErrorMessageData;
 use packages\domain\service\userRegistration\IUserRegistrationCompletionEmail;
 use packages\domain\service\userRegistration\UserRegistrationApplicationService;

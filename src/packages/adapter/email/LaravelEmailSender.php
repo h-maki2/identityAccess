@@ -2,12 +2,12 @@
 
 namespace packages\adapter\email;
 
-use packages\domain\service\userRegistration\IUserRegistrationCompletionEmail;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailHandler;
-use packages\domain\model\common\email\SendEmailDto;
+use packages\domain\model\email\SendEmailDto;
+use packages\domain\model\email\IEmailSender;
 
-class UserRegistrationCompletionEmail implements IUserRegistrationCompletionEmail
+class LaravelEmailSender implements IEmailSender
 {
     public function send(SendEmailDto $sendEmailDto): void
     {

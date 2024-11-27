@@ -2,7 +2,7 @@
 
 namespace packages\domain\model\email;
 
-use packages\domain\model\common\email\SendEmailDto;
+use packages\domain\model\email\SendEmailDto;
 
 interface IEmailSender
 {

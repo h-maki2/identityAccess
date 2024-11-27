@@ -3,7 +3,7 @@
 namespace packages\application\userRegistration;
 
 use Exception;
-use packages\domain\model\common\email\SendEmailDto;
+use packages\domain\model\email\SendEmailDto;
 use packages\application\common\exception\TransactionException;
 use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;

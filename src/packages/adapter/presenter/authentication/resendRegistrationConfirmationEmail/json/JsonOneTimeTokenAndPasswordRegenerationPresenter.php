@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\adapter\presenter\authentication\ResendRegistrationConfirmationEmail\json;
+namespace packages\adapter\presenter\authentication\resendRegistrationConfirmationEmail\json;
 
 use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailOutputBoundary;
 use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailResult;
@@ -24,8 +24,7 @@ class JsonResendRegistrationConfirmationEmailPresenter implements ResendRegistra
     private function setResponseData(ResendRegistrationConfirmationEmailResult $resendRegistrationConfirmationEmailResult): void
     {
         $this->responseData = [
-            'validationErrorMessage' => $resendRegistrationConfirmationEmailResult->validationErrorMessage,
-            'oneTimeTokenValue' => $resendRegistrationConfirmationEmailResult->oneTimeTokenValue
+            'validationErrorMessage' => $resendRegistrationConfirmationEmailResult->validationErrorMessage
         ];
     }
 

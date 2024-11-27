@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use EloquentUnitOfWork;
 use Illuminate\Support\ServiceProvider;
+use packages\adapter\email\LaravelEmailSender;
 use packages\adapter\oauth\authToken\LaravelPassportAccessTokenDeactivationService;
 use packages\adapter\oauth\authToken\LaravelPassportRefreshokenDeactivationService;
 use packages\adapter\oauth\client\LaravelPassportClientFetcher;
@@ -36,6 +37,7 @@ use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
 use packages\domain\model\authenticationInformation\SessionAuthentication;
 use packages\domain\model\common\unitOfWork\UnitOfWork;
+use packages\domain\model\email\IEmailSender;
 use packages\domain\model\oauth\authToken\IAccessTokenDeactivationService;
 use packages\domain\model\oauth\authToken\IRefreshTokenDeactivationService;
 use packages\domain\model\oauth\client\IClientFetcher;
@@ -76,6 +78,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(DisplayVerifiedUpdatePageInputBoundary::class, DisplayVerifiedUpdatePageApplicationService::class);
         $this->app->bind(VerifiedUpdateInputBoundary::class, VerifiedUpdateApplicationService::class);
         $this->app->bind(UserRegistrationInputBoundary::class, UserRegistrationApplicationService::class);
+
+        // メール送信
+        $this->app->bind(IEmailSender::class, LaravelEmailSender::class);
     }
 
     /**
