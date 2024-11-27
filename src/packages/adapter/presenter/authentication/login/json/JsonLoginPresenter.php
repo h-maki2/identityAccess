@@ -1,8 +1,7 @@
 <?php
 
-namespace packages\adapter\presenter\authentication\json;
+namespace packages\adapter\presenter\authentication\login\json;
 
-use Illuminate\Support\Facades\Log;
 use packages\application\authentication\login\LoginOutputBoundary;
 use packages\application\authentication\login\LoginResult;
 

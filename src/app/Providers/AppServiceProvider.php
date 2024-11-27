@@ -9,7 +9,7 @@ use packages\adapter\oauth\authToken\LaravelPassportRefreshokenDeactivationServi
 use packages\adapter\oauth\client\LaravelPassportClientFetcher;
 use packages\adapter\persistence\eloquent\EloquentAuthConfirmationRepository;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationInformationRepository;
-use packages\adapter\presenter\authentication\json\JsonLoginPresenter;
+use packages\adapter\presenter\authentication\login\json\JsonLoginPresenter;
 use packages\adapter\presenter\errorResponse\ErrorResponse;
 use packages\adapter\presenter\errorResponse\JsonErrorResponse;
 use packages\adapter\session\LaravelSessionAuthentication;

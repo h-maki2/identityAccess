@@ -2,8 +2,8 @@
 
 namespace packages\application\authentication\verifiedUpdate\display;
 
-abstract class DisplayVerifiedUpdatePageOutputBoundary
+interface DisplayVerifiedUpdatePageOutputBoundary
 {
-    abstract public function formatForResponse(DisplayVerifiedUpdatePageResult $result): void;
-    abstract public function formatForResponse();
+    public function formatForResponse(DisplayVerifiedUpdatePageResult $result): void;
+    public function response(): mixed;
 }
