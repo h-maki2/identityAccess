@@ -1,8 +1,8 @@
 <?php
 
-namespace packages\application\authentication\oneTimeTokenAndPasswordRegeneration;
+namespace packages\application\authentication\ResendRegistrationConfirmationEmail;
 
-class OneTimeTokenAndPasswordRegenerationResult
+class ResendRegistrationConfirmationEmailResult
 {
     readonly bool $validationError;
     readonly string $validationErrorMessage;

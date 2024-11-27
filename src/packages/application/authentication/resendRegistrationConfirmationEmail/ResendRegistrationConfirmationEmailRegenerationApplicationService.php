@@ -1,8 +1,8 @@
 <?php
 
-namespace packages\application\authentication\oneTimeTokenAndPasswordRegeneration;
+namespace packages\application\authentication\ResendRegistrationConfirmationEmail;
 
-use packages\application\authentication\oneTimeTokenAndPasswordRegeneration\OneTimeTokenAndPasswordRegenerationResult;
+use packages\application\authentication\ResendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailResult;
 use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
@@ -12,16 +12,16 @@ use RuntimeException;
 /**
  * ワンタイムトークンとワンタイムパスワードの再生成を行うアプリケーションサービス
  */
-class OneTimeTokenAndPasswordRegenerationApplicationService implements OneTimeTokenAndPasswordRegenerationInputBoundary
+class ResendRegistrationConfirmationEmailApplicationService implements ResendRegistrationConfirmationEmailInputBoundary
 {
     private IAuthConfirmationRepository $authConfirmationRepository;
     private IAuthenticationInformationRepository $authenticationInformationRepository;
-    private OneTimeTokenAndPasswordRegenerationOutputBoundary $outputBoundary;
+    private ResendRegistrationConfirmationEmailOutputBoundary $outputBoundary;
 
     public function __construct(
         IAuthConfirmationRepository $authConfirmationRepository,
         IAuthenticationInformationRepository $authenticationInformationRepository,
-        OneTimeTokenAndPasswordRegenerationOutputBoundary $outputBoundary
+        ResendRegistrationConfirmationEmailOutputBoundary $outputBoundary
     )
     {
         $this->authConfirmationRepository = $authConfirmationRepository;
@@ -34,20 +34,20 @@ class OneTimeTokenAndPasswordRegenerationApplicationService implements OneTimeTo
      */
     public function regenerateOneTimeTokenAndPassword(
         string $userEmailString
-    ): OneTimeTokenAndPasswordRegenerationOutputBoundary
+    ): ResendRegistrationConfirmationEmailOutputBoundary
     {
         $userEmail = new UserEmail($userEmailString);
         $authInfo = $this->authenticationInformationRepository->findByEmail($userEmail);
         if ($authInfo === null) {
             $this->outputBoundary->formatForResponse(
-                OneTimeTokenAndPasswordRegenerationResult::createWhenValidationError('メールアドレスが登録されていません。')
+                ResendRegistrationConfirmationEmailResult::createWhenValidationError('メールアドレスが登録されていません。')
             );
             return $this->outputBoundary;
         }
 
         if ($authInfo->isVerified()) {
             $this->outputBoundary->formatForResponse(
-                OneTimeTokenAndPasswordRegenerationResult::createWhenValidationError('既にアカウントが認証済みです。')
+                ResendRegistrationConfirmationEmailResult::createWhenValidationError('既にアカウントが認証済みです。')
             );
             return $this->outputBoundary;
         }
@@ -62,7 +62,7 @@ class OneTimeTokenAndPasswordRegenerationApplicationService implements OneTimeTo
         $this->authConfirmationRepository->save($authConfirmation);
 
         $this->outputBoundary->formatForResponse(
-            OneTimeTokenAndPasswordRegenerationResult::createWhenSuccess($authConfirmation->oneTimeToken()->value())
+            ResendRegistrationConfirmationEmailResult::createWhenSuccess($authConfirmation->oneTimeToken()->value())
         );
         return $this->outputBoundary;
     }
