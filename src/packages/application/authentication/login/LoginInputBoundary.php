@@ -1,5 +1,7 @@
 <?php
 
+namespace packages\application\authentication\login;
+
 use packages\application\authentication\login\LoginOutputBoundary;
 
 interface LoginInputBoundary

@@ -3,7 +3,6 @@
 namespace packages\application\authentication\login;
 
 use DateTimeImmutable;
-use LoginInputBoundary;
 use packages\domain\model\oauth\client\IClientFetcher;
 use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
 use packages\domain\model\authenticationInformation\SessionAuthentication;

@@ -4,13 +4,20 @@ namespace App\Http\Controllers\authentication\login;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use LoginInputBoundary;
+use packages\application\authentication\login\LoginInputBoundary;
 
 class LoginController extends Controller
 {
-    public function login(Request $request, LoginInputBoundary $loginInputBoundary)
+    private LoginInputBoundary $loginInputBoundary;
+
+    public function __construct(LoginInputBoundary $loginInputBoundary)
     {
-        $output = $loginInputBoundary->login(
+        $this->loginInputBoundary = $loginInputBoundary;
+    }
+
+    public function login(Request $request)
+    {
+        $output = $this->loginInputBoundary->login(
             $request->input('email'),
             $request->input('password'),
             $request->input('client_id'),
@@ -18,6 +25,6 @@ class LoginController extends Controller
             $request->input('response_type')
         );
 
-        $output->response();
+        return $output->response();
     }
 }

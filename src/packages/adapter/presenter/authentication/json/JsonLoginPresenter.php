@@ -1,11 +1,12 @@
 <?php
 
-namespace packages\adapter\presenter\json\authentication;
+namespace packages\adapter\presenter\authentication\json;
 
+use Illuminate\Support\Facades\Log;
 use packages\application\authentication\login\LoginOutputBoundary;
 use packages\application\authentication\login\LoginResult;
 
-class JsonLoginPresenter extends LoginOutputBoundary
+class JsonLoginPresenter implements LoginOutputBoundary
 {
     private array $responseData;
     private int $statusCode;
@@ -16,14 +17,14 @@ class JsonLoginPresenter extends LoginOutputBoundary
         $this->setStatusCode($loginResult);
     }
 
-    public function response(): void
+    public function response(): mixed
     {
-        response()->json($this->responseData, $this->statusCode)->send();
+        return response()->json($this->responseData, $this->statusCode);
     }
 
     private function setResponseData(LoginResult $loginResult): void
     {
-        $this->responseData =  [
+        $this->responseData = [
             'authorizationUrl' => $loginResult->authorizationUrl,
             'loginSucceeded' => $loginResult->loginSucceeded,
             'accountLocked' => $loginResult->accountLocked
@@ -32,6 +33,6 @@ class JsonLoginPresenter extends LoginOutputBoundary
 
     private function setStatusCode(LoginResult $loginResult): void
     {
-        $this->statusCode =  $loginResult->loginSucceeded ? 200 : 400;
+        $this->statusCode = $loginResult->loginSucceeded ? 200 : 400;
     }
 }
