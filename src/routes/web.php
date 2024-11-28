@@ -7,6 +7,7 @@
 use App\Http\Controllers\authentication\login\LoginController;
 use App\Http\Controllers\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailController;
 use App\Http\Controllers\authentication\verifiedUpdate\DisplayVerifiedUpdatePageController;
+use App\Http\Controllers\authentication\verifiedUpdate\VerifiedUpdateController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('test', function () {
@@ -21,3 +22,4 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::post('/resendRegistrationConfirmationEmail', [ResendRegistrationConfirmationEmailController::class, 'resendRegistrationConfirmationEmail']);
 
 Route::get('/verifiedUpdate', [DisplayVerifiedUpdatePageController::class, 'displayVerifiedUpdatePage']);
+Route::post('/verifiedUpdate', [VerifiedUpdateController::class, 'verifiedUpdate']);

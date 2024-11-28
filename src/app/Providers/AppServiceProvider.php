@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use EloquentUnitOfWork;
 use Illuminate\Support\ServiceProvider;
 use packages\adapter\email\LaravelEmailSender;
 use packages\adapter\oauth\authToken\LaravelPassportAccessTokenDeactivationService;
@@ -18,6 +17,7 @@ use packages\adapter\presenter\authentication\verifiedUpdate\json\JsonVerifiedUp
 use packages\adapter\presenter\errorResponse\ErrorResponse;
 use packages\adapter\presenter\errorResponse\JsonErrorResponse;
 use packages\adapter\session\LaravelSessionAuthentication;
+use packages\adapter\unitOfWork\EloquentUnitOfWork;
 use packages\application\authentication\login\LoginApplicationService;
 use packages\application\authentication\login\LoginInputBoundary;
 use packages\application\authentication\login\LoginOutputBoundary;

@@ -1,5 +1,7 @@
 <?php
 
+namespace packages\adapter\unitOfWork;
+
 use Illuminate\Support\Facades\DB;
 use packages\domain\model\common\unitOfWork\UnitOfWork;
 
