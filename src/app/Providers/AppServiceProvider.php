@@ -11,7 +11,7 @@ use packages\adapter\oauth\client\LaravelPassportClientFetcher;
 use packages\adapter\persistence\eloquent\EloquentAuthConfirmationRepository;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationInformationRepository;
 use packages\adapter\presenter\authentication\login\json\JsonLoginPresenter;
-use packages\adapter\presenter\authentication\ResendRegistrationConfirmationEmail\json\JsonResendRegistrationConfirmationEmailPresenter;
+use packages\adapter\presenter\authentication\resendRegistrationConfirmationEmail\json\JsonResendRegistrationConfirmationEmailPresenter;
 use packages\adapter\presenter\authentication\userRegistration\json\JsonUserRegistrationPresenter;
 use packages\adapter\presenter\authentication\verifiedUpdate\json\JsonDisplayVerifiedUpdatePagePresenter;
 use packages\adapter\presenter\authentication\verifiedUpdate\json\JsonVerifiedUpdatePresenter;
@@ -21,9 +21,9 @@ use packages\adapter\session\LaravelSessionAuthentication;
 use packages\application\authentication\login\LoginApplicationService;
 use packages\application\authentication\login\LoginInputBoundary;
 use packages\application\authentication\login\LoginOutputBoundary;
-use packages\application\authentication\ResendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailApplicationService;
-use packages\application\authentication\ResendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailInputBoundary;
-use packages\application\authentication\ResendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailOutputBoundary;
+use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailApplicationService;
+use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailInputBoundary;
+use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailOutputBoundary;
 use packages\application\authentication\verifiedUpdate\display\DisplayVerifiedUpdatePageApplicationService;
 use packages\application\authentication\verifiedUpdate\display\DisplayVerifiedUpdatePageInputBoundary;
 use packages\application\authentication\verifiedUpdate\display\DisplayVerifiedUpdatePageOutputBoundary;
@@ -61,7 +61,7 @@ class AppServiceProvider extends ServiceProvider
         // ユニットオブワーク
         $this->app->bind(UnitOfWork::class, EloquentUnitOfWork::class);
 
-        // プレゼンテーション
+        // プレゼンター
         $this->app->bind(LoginOutputBoundary::class, JsonLoginPresenter::class);
         $this->app->bind(DisplayVerifiedUpdatePageOutputBoundary::class, JsonDisplayVerifiedUpdatePagePresenter::class);
         $this->app->bind(VerifiedUpdateOutputBoundary::class, JsonVerifiedUpdatePresenter::class);

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\authentication\ResendRegistrationConfirmationEmail;
+namespace App\Http\Controllers\authentication\resendRegistrationConfirmationEmail;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;

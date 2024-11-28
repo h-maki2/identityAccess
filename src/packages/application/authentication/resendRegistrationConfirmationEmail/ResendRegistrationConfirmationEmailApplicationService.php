@@ -1,8 +1,8 @@
 <?php
 
-namespace packages\application\authentication\ResendRegistrationConfirmationEmail;
+namespace packages\application\authentication\resendRegistrationConfirmationEmail;
 
-use packages\application\authentication\ResendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailResult;
+use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailResult;
 use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;

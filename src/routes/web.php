@@ -5,7 +5,7 @@
 // use App\Http\Controllers\authentication\login\LoginController;
 
 use App\Http\Controllers\authentication\login\LoginController;
-use App\Http\Controllers\authentication\ResendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailController;
+use App\Http\Controllers\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('test', function () {

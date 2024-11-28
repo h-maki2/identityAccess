@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\application\authentication\ResendRegistrationConfirmationEmail;
+namespace packages\application\authentication\resendRegistrationConfirmationEmail;
 
 interface ResendRegistrationConfirmationEmailInputBoundary
 {
