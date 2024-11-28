@@ -43,10 +43,13 @@ class ResendRegistrationConfirmationEmailControllerTest extends TestCase
         $this->authConfirmationTestDataCreator->create(userId: $userId);
 
         // when
-        // 本登録確認メールを送信する
+        // 本登録確認メールを再送信する
         $response = $this->post('/resendRegistrationConfirmationEmail', ['email' => $userEmail->value]);
 
         // then
         $response->assertStatus(200);
+        $response->assertJson([
+            'validationErrorMessage' => ''
+        ]);
     }
 }
