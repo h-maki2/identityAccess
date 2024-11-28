@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\adapter\presenter\authentication\userRegistration\json;
+namespace packages\adapter\presenter\userRegistration\json;
 
 use packages\application\userRegistration\UserRegistrationOutputBoundary;
 use packages\application\userRegistration\UserRegistrationResult;

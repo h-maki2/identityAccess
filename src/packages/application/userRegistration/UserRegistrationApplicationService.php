@@ -15,7 +15,6 @@ use packages\domain\model\authenticationInformation\validation\UserEmailValidati
 use packages\domain\model\authenticationInformation\validation\UserPasswordValidation;
 use packages\domain\model\common\unitOfWork\UnitOfWork;
 use packages\domain\model\common\validator\ValidationHandler;
-use packages\domain\service\AuthenticationInformation\AuthenticationInformationService;
 use packages\domain\service\userRegistration\UserRegistration;
 use packages\domain\model\email\IEmailSender;
 

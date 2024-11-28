@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\domain\service\AuthenticationInformation;
+namespace packages\domain\service\authenticationInformation;
 
 use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
 use packages\domain\model\authenticationInformation\UserEmail;

@@ -13,9 +13,9 @@ use packages\domain\model\authenticationInformation\IAuthenticationInformationRe
 use packages\domain\model\authenticationInformation\UserEmail;
 use packages\domain\model\authenticationInformation\UserPassword;
 use packages\domain\model\common\unitOfWork\UnitOfWork;
-use packages\domain\service\AuthenticationInformation\AuthenticationInformationService;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\model\email\RegistrationConfirmationEmailDtoFactory;
+use packages\domain\service\authenticationInformation\AuthenticationInformationService;
 
 class UserRegistration
 {
