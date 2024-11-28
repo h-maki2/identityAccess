@@ -43,10 +43,6 @@ class Handler extends ExceptionHandler
             return $this->errorResponse->response('Internal Server Error', 500);
         }
 
-        if ($exception instanceof Exception) {
-            return $this->errorResponse->response('Internal Server Error', 500);
-        }
-
         // デフォルトの例外処理
         return parent::render($request, $exception);
     }

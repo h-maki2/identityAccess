@@ -25,8 +25,7 @@ class JsonDisplayVerifiedUpdatePagePresenter implements DisplayVerifiedUpdatePag
     {
         $this->responseData = [
             'validationErrorMessage' => $displayVerifiedUpdatePageResult->validationErrorMessage,
-            'oneTimeTokenValue' => $displayVerifiedUpdatePageResult->oneTimeTokenValue,
-            'oneTimePassword' => $displayVerifiedUpdatePageResult->oneTimePassword
+            'oneTimeTokenValue' => $displayVerifiedUpdatePageResult->oneTimeTokenValue
         ];
     }
 

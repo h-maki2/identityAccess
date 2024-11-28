@@ -39,7 +39,7 @@ class DisplayVerifiedUpdatePageApplicationService implements DisplayVerifiedUpda
         }
 
         $this->outputBoundary->formatForResponse(
-            DisplayVerifiedUpdatePageResult::createWhenSuccess($oneTimeTokenValue, $authConfirmation->oneTimePassword())
+            DisplayVerifiedUpdatePageResult::createWhenSuccess($oneTimeTokenValue)
         );
         return $this->outputBoundary;
     }
