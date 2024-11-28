@@ -2,7 +2,6 @@
 
 namespace packages\domain\model\authenticationInformation;
 
-use DomainException;
 use InvalidArgumentException;
 
 class FailedLoginCount
