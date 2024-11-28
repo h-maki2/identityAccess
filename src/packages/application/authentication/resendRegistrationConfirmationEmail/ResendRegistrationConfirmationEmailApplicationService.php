@@ -7,6 +7,8 @@ use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
 use packages\domain\model\authenticationInformation\UserEmail;
+use packages\domain\model\email\IEmailSender;
+use packages\domain\service\oneTimeTokenAndPasswordRegeneration\OneTimeTokenAndPasswordRegeneration;
 use RuntimeException;
 
 /**
@@ -17,16 +19,22 @@ class ResendRegistrationConfirmationEmailApplicationService implements ResendReg
     private IAuthConfirmationRepository $authConfirmationRepository;
     private IAuthenticationInformationRepository $authenticationInformationRepository;
     private ResendRegistrationConfirmationEmailOutputBoundary $outputBoundary;
+    private OneTimeTokenAndPasswordRegeneration $oneTimeTokenAndPasswordRegeneration;
 
     public function __construct(
         IAuthConfirmationRepository $authConfirmationRepository,
         IAuthenticationInformationRepository $authenticationInformationRepository,
-        ResendRegistrationConfirmationEmailOutputBoundary $outputBoundary
+        ResendRegistrationConfirmationEmailOutputBoundary $outputBoundary,
+        IEmailSender $emailSender
     )
     {
         $this->authConfirmationRepository = $authConfirmationRepository;
         $this->authenticationInformationRepository = $authenticationInformationRepository;
         $this->outputBoundary = $outputBoundary;
+        $this->oneTimeTokenAndPasswordRegeneration = new OneTimeTokenAndPasswordRegeneration(
+            $this->authConfirmationRepository,
+            $emailSender
+        );
     }
 
     /**
@@ -52,17 +60,10 @@ class ResendRegistrationConfirmationEmailApplicationService implements ResendReg
             return $this->outputBoundary;
         }
 
-        $userId = $authInfo->id();
-        $authConfirmation = $this->authConfirmationRepository->findById($userId);
-        if ($authConfirmation === null) {
-            throw new RuntimeException('認証情報が存在しません。userId: ' . $userId->value);
-        }
-        
-        $authConfirmation->reObtain();
-        $this->authConfirmationRepository->save($authConfirmation);
+        $this->oneTimeTokenAndPasswordRegeneration->handle($authInfo);
 
         $this->outputBoundary->formatForResponse(
-            ResendRegistrationConfirmationEmailResult::createWhenSuccess($authConfirmation->oneTimeToken()->value())
+            ResendRegistrationConfirmationEmailResult::createWhenSuccess()
         );
         return $this->outputBoundary;
     }

@@ -2,7 +2,9 @@
 
 namespace packages\domain\service\oneTimeTokenAndPasswordRegeneration;
 
+use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
+use packages\domain\model\authConfirmation\OneTimeToken;
 use packages\domain\model\authenticationInformation\AuthenticationInformation;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\model\email\RegistrationConfirmationEmailDtoFactory;

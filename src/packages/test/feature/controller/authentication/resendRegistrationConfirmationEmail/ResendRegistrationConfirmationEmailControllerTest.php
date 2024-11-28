@@ -4,6 +4,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use packages\adapter\persistence\eloquent\EloquentAuthConfirmationRepository;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationInformationRepository;
 use packages\domain\model\authenticationInformation\UserEmail;
+use packages\domain\model\authenticationInformation\VerificationStatus;
 use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
 use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataCreator;
 use Tests\TestCase;
@@ -29,10 +30,14 @@ class ResendRegistrationConfirmationEmailControllerTest extends TestCase
     public function test_登録済みのメールアドレスの場合に、本登録確認メールを再送信できる()
     {
         // given
-        // 認証情報を作成して保存する
-        $userEmail = new UserEmail('test@example.com');
+        // 未認証の認証情報を作成して保存する
+        $userEmail = new UserEmail('hello@example.com');
         $userId = $this->eloquentAuthenticationInformationRepository->nextUserId();
-        $this->authenticationInformationTestDataCreator->create(email: $userEmail, id: $userId);
+        $this->authenticationInformationTestDataCreator->create(
+            email: $userEmail, 
+            id: $userId,
+            verificationStatus: VerificationStatus::Unverified
+        );
 
         // 認証確認を作成して保存する
         $this->authConfirmationTestDataCreator->create(userId: $userId);
