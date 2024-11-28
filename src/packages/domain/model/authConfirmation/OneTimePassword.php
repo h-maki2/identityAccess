@@ -10,9 +10,9 @@ class OneTimePassword
 
     private const LENGTH = 6;
 
-    private function __construct(int $value)
+    private function __construct(string $value)
     {
-        if (strlen((string)$value) !== self::LENGTH) {
+        if (strlen($value) !== self::LENGTH) {
             throw new InvalidArgumentException('無効なワンタイムパスワードです。');
         }
 
@@ -21,7 +21,7 @@ class OneTimePassword
 
     public static function create(): self
     {
-        return new self(random_int(100000, 999999));
+        return new self((string)random_int(100000, 999999));
     }
 
     public static function reconstruct(int $value): self

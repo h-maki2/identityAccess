@@ -33,9 +33,6 @@ class FailedLoginCount
     public function add(): self
     {
         $addedValue = $this->value + 1;
-        if ($addedValue > self::MAX_VALUE) {
-            throw new DomainException('ログイン失敗回数が最大値を超えました。');
-        }
         return new self($addedValue);
     }
 
