@@ -15,7 +15,7 @@ class DisplayVerifiedUpdatePageController extends Controller
         $this->displayVerifiedUpdatePageInputBoundary = $displayVerifiedUpdatePageInputBoundary;
     }
 
-    public function displayVerifiedUpdatePage(Request $request)
+    public function displayVerifiedUpdatePage(Request $request): mixed
     {
         $output = $this->displayVerifiedUpdatePageInputBoundary->displayVerifiedUpdatePage(
             $request->query('oneTimeTokenValue')

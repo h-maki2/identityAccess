@@ -14,7 +14,7 @@ class VerifiedUpdateController
         $this->verifiedUpdateInputBoundary = $verifiedUpdateInputBoundary;
     }
 
-    public function verifiedUpdate(Request $request)
+    public function verifiedUpdate(Request $request): mixed
     {
         $output = $this->verifiedUpdateInputBoundary->verifiedUpdate(
             $request->input('oneTimeTokenValue'),

@@ -15,7 +15,7 @@ class LoginController extends Controller
         $this->loginInputBoundary = $loginInputBoundary;
     }
 
-    public function login(Request $request)
+    public function login(Request $request): mixed
     {
         $output = $this->loginInputBoundary->login(
             $request->input('email'),

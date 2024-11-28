@@ -15,7 +15,7 @@ class ResendRegistrationConfirmationEmailController extends Controller
         $this->ResendRegistrationConfirmationEmailInputBoundary = $ResendRegistrationConfirmationEmailInputBoundary;
     }
 
-    public function resendRegistrationConfirmationEmail(Request $request)
+    public function resendRegistrationConfirmationEmail(Request $request): mixed
     {
         $output = $this->ResendRegistrationConfirmationEmailInputBoundary->resendRegistrationConfirmationEmail(
             $request->input('email')

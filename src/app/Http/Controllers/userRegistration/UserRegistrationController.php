@@ -15,7 +15,7 @@ class UserRegistrationController extends Controller
         $this->userRegistrationInputBoundary = $userRegistrationInputBoundary;
     }
 
-    public function userRegister(Request $request)
+    public function userRegister(Request $request): mixed
     {
         $output = $this->userRegistrationInputBoundary->userRegister(
             $request->input('email'),
