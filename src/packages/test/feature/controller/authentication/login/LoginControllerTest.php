@@ -7,6 +7,7 @@ use packages\domain\model\authenticationInformation\UserEmail;
 use packages\domain\model\authenticationInformation\UserPassword;
 use packages\domain\model\authenticationInformation\VerificationStatus;
 use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataCreator;
+use packages\test\helpers\authenticationInformation\TestAccessTokenCreator;
 use packages\test\helpers\client\ClientTestDataCreator;
 use Tests\TestCase;
 
@@ -87,11 +88,14 @@ class LoginControllerTest extends TestCase
         $emailString = 'test@example.com';
         $passwordString = 'abcABC123!';
 
-        $this->authenticationInformationTestDataCreator->create(
+        $authInfo = $this->authenticationInformationTestDataCreator->create(
             email: new UserEmail($emailString),
             password: UserPassword::create($passwordString),
             verificationStatus: VerificationStatus::Verified // 認証済み
         );
+
+        $test = TestAccessTokenCreator::create($authInfo->id());
+        print $test;
 
         // クライアントを作成する
         $clientData = ClientTestDataCreator::create(
