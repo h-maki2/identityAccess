@@ -3,7 +3,6 @@
 namespace packages\domain\model\userProfile;
 
 use InvalidArgumentException;
-use packages\domain\model\authenticationInformation\validation\UserNameValidation;
 use packages\domain\model\userProfile\validation\UserNameFormatChecker;
 
 class UserName
