@@ -7,6 +7,7 @@ use packages\domain\model\authenticationInformation\UserEmail;
 use packages\domain\model\authenticationInformation\UserPassword;
 use packages\domain\model\authenticationInformation\VerificationStatus;
 use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataCreator;
+use packages\test\helpers\client\ClientTestDataCreator;
 use Tests\TestCase;
 
 class LoginControllerTest extends TestCase
@@ -29,12 +30,17 @@ class LoginControllerTest extends TestCase
         $存在しないメールアドレス = 'test@example.com';
         $存在しないパスワード = 'abcABC123!';
 
+        // クライアントを作成する
+        $clientData = ClientTestDataCreator::create(
+            redirectUrl: 'http://identity.todoapp.local/auth/callback'
+        );
+
         // when
         $response = $this->post('/login', [
             'email' => $存在しないメールアドレス,
             'password' => $存在しないパスワード,
-            'client_id' => '6',
-            'redirect_url' => 'http://identity.todoapp.local/auth/callback',
+            'client_id' => $clientData->id,
+            'redirect_url' => $clientData->redirect,
             'response_type' => 'code'
         ]);
 
@@ -53,12 +59,17 @@ class LoginControllerTest extends TestCase
         $不正なメールアドレス = '不正なメールアドレス';
         $存在しないパスワード = 'abcABC123!';
 
+        // クライアントを作成する
+        $clientData = ClientTestDataCreator::create(
+            redirectUrl: 'http://identity.todoapp.local/auth/callback'
+        );
+
         // when
         $response = $this->post('/login', [
             'email' => $不正なメールアドレス,
             'password' => $存在しないパスワード,
-            'client_id' => '6',
-            'redirect_url' => 'http://identity.todoapp.local/auth/callback',
+            'client_id' => $clientData->id,
+            'redirect_url' => $clientData->redirect,
             'response_type' => 'code'
         ]);
 
@@ -82,13 +93,18 @@ class LoginControllerTest extends TestCase
             verificationStatus: VerificationStatus::Verified // 認証済み
         );
 
+        // クライアントを作成する
+        $clientData = ClientTestDataCreator::create(
+            redirectUrl: 'http://identity.todoapp.local/auth/callback'
+        );
+
         // when
         // ログインする
         $response = $this->post('/login', [
             'email' => $emailString,
             'password' => $passwordString,
-            'client_id' => '6',
-            'redirect_url' => 'http://identity.todoapp.local/auth/callback',
+            'client_id' => $clientData->id,
+            'redirect_url' => $clientData->redirect,
             'response_type' => 'code'
         ]);
 
@@ -97,8 +113,8 @@ class LoginControllerTest extends TestCase
         
         $expectedQueryParams = http_build_query([
             'response_type' => 'code',
-            'client_id' => '6',
-            'redirect_uri' => 'http://identity.todoapp.local/auth/callback'
+            'client_id' => $clientData->id,
+            'redirect_uri' => $clientData->redirect
         ]);
         $expectedAuthorizationUrl = 'http://identity.todoapp.local/oauth/authorize?' . $expectedQueryParams;
         $response->assertJson([
