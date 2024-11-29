@@ -88,14 +88,11 @@ class LoginControllerTest extends TestCase
         $emailString = 'test@example.com';
         $passwordString = 'abcABC123!';
 
-        $authInfo = $this->authenticationInformationTestDataCreator->create(
+        $this->authenticationInformationTestDataCreator->create(
             email: new UserEmail($emailString),
             password: UserPassword::create($passwordString),
             verificationStatus: VerificationStatus::Verified // 認証済み
         );
-
-        $test = TestAccessTokenCreator::create($authInfo->id());
-        print $test;
 
         // クライアントを作成する
         $clientData = ClientTestDataCreator::create(
