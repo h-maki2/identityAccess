@@ -1,11 +1,11 @@
 <?php
 
-namespace packages\domain\model\authenticationInformation;
+namespace packages\domain\model\userProfile;
 
 use InvalidArgumentException;
 use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
 
-class UserId
+class UserProfileId
 {
     readonly string $value;
 

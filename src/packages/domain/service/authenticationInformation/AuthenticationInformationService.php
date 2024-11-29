@@ -4,6 +4,7 @@ namespace packages\domain\service\authenticationInformation;
 
 use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
 use packages\domain\model\authenticationInformation\UserEmail;
+use packages\domain\model\authenticationInformation\UserId;
 
 class AuthenticationInformationService
 {

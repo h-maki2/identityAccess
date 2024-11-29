@@ -11,7 +11,7 @@ class IdentifierFromUUIDver7
      */
     public static function isValidLength(string $value): bool
     {
-        return strlen($value) !== self::TOKEN_LENGTH;
+        return strlen($value) === self::TOKEN_LENGTH;
     }
 
     /**
