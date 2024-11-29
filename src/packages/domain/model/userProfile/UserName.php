@@ -1,38 +1,25 @@
 <?php
 
-namespace packages\domain\model\authenticationInformation;
+namespace packages\domain\model\userProfile;
 
 use InvalidArgumentException;
 use packages\domain\model\authenticationInformation\validation\UserNameValidation;
+use packages\domain\model\userProfile\validation\UserNameFormatChecker;
 
 class UserName
 {
     readonly string $value;
 
-    private function __construct(string $value) {
-        $validation = new UserNameValidation();
+    public function __construct(string $value) {
 
-        if ($validation->invalidUserNameLength($value)) {
+        if (UserNameFormatChecker::invalidUserNameLength($value)) {
             throw new InvalidArgumentException('ユーザー名が無効です。');
         }
 
-        if ($validation->onlyWhiteSpace($value)) {
+        if (UserNameFormatChecker::onlyWhiteSpace($value)) {
             throw new InvalidArgumentException('ユーザー名が空です。');
         }
 
         $this->value = $value;        
-    }
-
-    /**
-     * ユーザー名の初期値はメールアドレスのローカル部
-     */
-    public static function initialization(UserEmail $userEmail): self
-    {
-        return new self(substr($userEmail->localPart(), 0, UserNameValidation::maxUserNameLength()));
-    }
-
-    public static function create(string $value): self
-    {
-        return new self($value);
     }
 }

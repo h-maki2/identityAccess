@@ -60,13 +60,13 @@ class EloquentAuthenticationInformationRepository implements IAuthenticationInfo
 
     public function nextUserId(): UserId
     {
-        return new UserId(new IdentifierFromUUIDver7(), Uuid::uuid7());
+        return new UserId(Uuid::uuid7());
     }
 
     private function toAuthenticationInformation(EloquentAuthenticationInformation $eloquentAuthenticationInformation): AuthenticationInformation
     {
         return AuthenticationInformation::reconstruct(
-            new UserId(new IdentifierFromUUIDver7(), $eloquentAuthenticationInformation->user_id),
+            new UserId($eloquentAuthenticationInformation->user_id),
             new UserEmail($eloquentAuthenticationInformation->email),
             UserPassword::reconstruct($eloquentAuthenticationInformation->password),
             VerificationStatus::from($eloquentAuthenticationInformation->verification_status),

@@ -52,7 +52,7 @@ class EloquentAuthConfirmationRepository implements IAuthConfirmationRepository
     private function toAuthConfirmation(object $eloquentAuthConfirmation): AuthConfirmation
     {
         return AuthConfirmation::reconstruct(
-            new UserId(new IdentifierFromUUIDver7(), $eloquentAuthConfirmation->user_id),
+            new UserId($eloquentAuthConfirmation->user_id),
             OneTimeToken::reconstruct(
                 OneTimeTokenValue::reconstruct($eloquentAuthConfirmation->one_time_token_value),
                 OneTimeTokenExpiration::reconstruct(new DateTimeImmutable($eloquentAuthConfirmation->one_time_token_expiration))

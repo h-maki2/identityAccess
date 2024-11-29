@@ -58,7 +58,7 @@ class InMemoryAuthConfirmationRepository implements IAuthConfirmationRepository
     private function toAuthConfirmation(object $authConfirmationsObj): AuthConfirmation
     {
         return AuthConfirmation::reconstruct(
-            new UserId(new IdentifierFromUUIDver7(), $authConfirmationsObj->user_id),
+            new UserId($authConfirmationsObj->user_id),
             OneTimeToken::reconstruct(
                 OneTimeTokenValue::reconstruct($authConfirmationsObj->one_time_token),
                 OneTimeTokenExpiration::reconstruct(new DateTimeImmutable($authConfirmationsObj->one_time_token_expiration))

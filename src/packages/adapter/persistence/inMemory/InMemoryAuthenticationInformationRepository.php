@@ -57,13 +57,13 @@ class InMemoryAuthenticationInformationRepository implements IAuthenticationInfo
 
     public function nextUserId(): UserId
     {
-        return new UserId(new IdentifierFromUUIDver7(), Uuid::uuid7());
+        return new UserId(Uuid::uuid7());
     }
 
     private function toAuthenticationInformation(object $authenticationInformationObj): AuthenticationInformation
     {
         return AuthenticationInformation::reconstruct(
-            new UserId(new IdentifierFromUUIDver7(), $authenticationInformationObj->user_id),
+            new UserId($authenticationInformationObj->user_id),
             new UserEmail($authenticationInformationObj->email),
             UserPassword::reconstruct($authenticationInformationObj->password),
             VerificationStatus::from($authenticationInformationObj->verification_status),
