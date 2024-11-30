@@ -19,6 +19,14 @@ entity "認証情報\nauth_confirmations" as auth_confirmations {
     one_time_password: CHAR(6)
 }
 
+entity "ユーザプロファイル\nuser_profiles" as user_profiles {
+    user_profile_id: CHAR(26)
+    --
+    user_id(FK): CHAR(26)
+    user_name: VARCHAR(50)
+    self_introduction_text: VARCHAR(500)
+}
+
 entity "グループ\ngroup" as group {
     group_id: CHAR(26)
     --
