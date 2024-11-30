@@ -16,6 +16,7 @@ use packages\domain\model\authenticationInformation\AuthenticationInformation;
 use packages\domain\model\authenticationInformation\LoginRestrictionStatus;
 use packages\domain\model\authenticationInformation\VerificationStatus;
 use Ramsey\Uuid\Uuid;
+use RuntimeException;
 
 class EloquentAuthenticationInformationRepository implements IAuthenticationInformationRepository
 {
@@ -52,7 +53,7 @@ class EloquentAuthenticationInformationRepository implements IAuthenticationInfo
         $eloquentAuthenticationInformation = $this->eloquentAuthenticationInformationFrom($id);
 
         if ($eloquentAuthenticationInformation === null) {
-            // 例外を発生させる予定
+            throw new RuntimeException('認証情報が存在しません。user_id: ' . $id->value);
         }
 
         $eloquentAuthenticationInformation->delete();

@@ -78,6 +78,6 @@ class EloquentAuthConfirmationRepository implements IAuthConfirmationRepository
 
     private function eloquentAuthConfirmationFrom(UserId $userId): ?EloquentAuthConfirmation
     {
-        return EloquentAuthConfirmation::where('user_id', $userId->value)->first();
+        return EloquentAuthConfirmation::find($userId->value);
     }
 }
