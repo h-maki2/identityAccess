@@ -10,6 +10,7 @@ use packages\domain\model\userProfile\UserProfile;
 use packages\domain\model\userProfile\UserProfileId;
 use App\Models\UserProfile as EloquentUserProfile;
 use RuntimeException;
+use Ramsey\Uuid\Uuid;
 
 class EloquentUserProfileRepository implements IUserProfileRepository
 {
@@ -62,6 +63,11 @@ class EloquentUserProfileRepository implements IUserProfileRepository
         }
 
         $eloquentUserProfile->delete();
+    }
+
+    public function nextUserProfileId(): UserProfileId
+    {
+        return new UserProfileId(Uuid::uuid7()->toString());
     }
 
     private function toUserProfile(object $record): UserProfile
