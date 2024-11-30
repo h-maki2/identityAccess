@@ -54,7 +54,7 @@ class LoginApplicationServiceTest extends TestCase
         $clientFetcher->method('fetchById')->willReturn($this->expectedClientData);
         $this->clientFetcher = $clientFetcher;
 
-        // presentメソッドが呼ばれた際に引数の値をキャプチャする
+        // formatForResponseメソッドが呼ばれた際に引数の値をキャプチャする
         $outputBoundary = $this->createMock(LoginOutputBoundary::class);
         $outputBoundary
             ->method('formatForResponse')
