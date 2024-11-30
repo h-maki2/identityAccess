@@ -3,7 +3,6 @@
 namespace packages\domain\model\userProfile;
 
 use DomainException;
-use InvalidArgumentException;
 use packages\domain\model\authenticationInformation\UserId;
 use packages\domain\service\userProfile\UserProfileService;
 

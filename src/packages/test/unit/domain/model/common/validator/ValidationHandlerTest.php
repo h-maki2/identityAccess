@@ -5,18 +5,18 @@ use packages\application\common\validation\ValidationErrorMessageData;
 use packages\domain\model\authenticationInformation\validation\UserEmailValidation;
 use packages\domain\model\authenticationInformation\validation\UserPasswordValidation;
 use packages\domain\model\common\validator\ValidationHandler;
-use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataFactory;
+use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataCreator;
 use PHPUnit\Framework\TestCase;
 
 class ValidationHandlerTest extends TestCase
 {
-    private AuthenticationInformationTestDataFactory $authenticationInformationTestDataFactory;
+    private AuthenticationInformationTestDataCreator $authenticationInformationTestDataFactory;
     private InMemoryAuthenticationInformationRepository $authenticationInformationRepository;
 
     public function setUp(): void
     {
         $this->authenticationInformationRepository = new InMemoryAuthenticationInformationRepository();
-        $this->authenticationInformationTestDataFactory = new AuthenticationInformationTestDataFactory($this->authenticationInformationRepository);
+        $this->authenticationInformationTestDataFactory = new AuthenticationInformationTestDataCreator($this->authenticationInformationRepository);
     }
 
     public function test_バリデーションエラーが発生した場合、エラーメッセージを取得できる()
