@@ -66,7 +66,7 @@ class UserProfile
         return $this->userName;
     }
 
-    public function selfIntroduction(): SelfIntroductionText
+    public function selfIntroductionText(): SelfIntroductionText
     {
         return $this->selfIntroductionText;
     }

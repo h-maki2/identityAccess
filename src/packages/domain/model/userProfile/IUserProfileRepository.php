@@ -10,6 +10,8 @@ interface IUserProfileRepository
 
     public function findByUserId(UserId $userId): ?UserProfile;
 
+    public function findByProfileId(UserProfileId $userProfileId): ?UserProfile;
+
     public function save(UserProfile $userProfile): void;
 
     public function delete(UserProfile $userProfile): void;
