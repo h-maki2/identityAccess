@@ -16,9 +16,14 @@ class AuthenticationInformation extends Authenticatable
     public $incrementing = false;
     protected $keyType = 'string';
 
-    public function authConfirmations()
+    public function authConfirmation()
     {
         return $this->hasOne(AuthConfirmation::class, 'user_id', 'user_id');
+    }
+
+    public function userProfile()
+    {
+        return $this->hasOne(UserProfile::class, 'user_id', 'user_id');
     }
 
     public function getAuthIdentifierName()

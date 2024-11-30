@@ -4,6 +4,7 @@ namespace packages\adapter\persistence\inMemory;
 
 use packages\domain\model\authenticationInformation\UserId;
 use packages\domain\model\userProfile\IUserProfileRepository;
+use packages\domain\model\userProfile\SelfIntroductionText;
 use packages\domain\model\userProfile\UserName;
 use packages\domain\model\userProfile\UserProfile;
 use packages\domain\model\userProfile\UserProfileId;
@@ -73,11 +74,11 @@ class InMemoryUserProfileRepository implements IUserProfileRepository
 
     private function toUserProfile(object $record): UserProfile
     {
-        return new UserProfile(
-            $record->user_profile_id,
-            $record->user_id,
-            $record->user_name,
-            $record->self_introduction_text
+        return UserProfile::reconstruct(
+            new UserId($record->user_id),
+            new UserProfileId($record->user_profile_id),
+            new UserName($record->user_name),
+            new SelfIntroductionText($record->self_introduction_text)
         );
     }
 }
