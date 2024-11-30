@@ -31,7 +31,7 @@ class DisplayVerifiedUpdatePageApplicationService implements DisplayVerifiedUpda
     {
         $oneTimeTokenValue = OneTimeTokenValue::reconstruct($oneTimeTokenValueString);
         $authConfirmation = $this->authConfirmationRepository->findByTokenValue($oneTimeTokenValue);
-        if (!AuthConfirmationValidation::validateExpirationDate($authConfirmation, new DateTimeImmutable())) {
+        if (!AuthConfirmationValidation::validate($authConfirmation, new DateTimeImmutable())) {
             $this->outputBoundary->formatForResponse(
                 DisplayVerifiedUpdatePageResult::createWhenValidationError('無効なワンタイムトークンです。')
             );

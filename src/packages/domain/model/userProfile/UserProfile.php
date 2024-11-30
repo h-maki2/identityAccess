@@ -2,6 +2,7 @@
 
 namespace packages\domain\model\userProfile;
 
+use DomainException;
 use InvalidArgumentException;
 use packages\domain\model\authenticationInformation\UserId;
 use packages\domain\service\userProfile\UserProfileService;
@@ -35,7 +36,7 @@ class UserProfile
     ): self
     {
         if ($userProfileService->alreadyExistsUserName($userName)) {
-            throw new InvalidArgumentException('既に登録されているユーザー名です。userName: ' . $userName->value);
+            throw new DomainException('既に登録されているユーザー名です。userName: ' . $userName->value);
         }
 
         return new self($userId, $userProfileId, $userName, $selfIntroductionText);
@@ -77,7 +78,7 @@ class UserProfile
     public function changeName(UserName $userName, UserProfileService $userProfileService): void
     {
         if ($userProfileService->alreadyExistsUserName($userName)) {
-            throw new InvalidArgumentException('既に登録されているユーザー名です。userName: ' . $userName->value);
+            throw new DomainException('既に登録されているユーザー名です。userName: ' . $userName->value);
         }
 
         $this->userName = $userName;
@@ -86,7 +87,7 @@ class UserProfile
     /**
      * 自己紹介文を変更する
      */
-    public function changeSelfIntroduction(SelfIntroductionText $selfIntroductionText): void
+    public function changeSelfIntroductionText(SelfIntroductionText $selfIntroductionText): void
     {
         $this->selfIntroductionText = $selfIntroductionText;
     }

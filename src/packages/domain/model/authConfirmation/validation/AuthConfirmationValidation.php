@@ -8,8 +8,7 @@ use packages\domain\model\authConfirmation\OneTimePassword;
 
 class AuthConfirmationValidation
 {
-    
-    public static function validateExpirationDate(?AuthConfirmation $authConfirmation, DateTimeImmutable $currentDateTime): bool
+    public static function validate(?AuthConfirmation $authConfirmation, DateTimeImmutable $currentDateTime): bool
     {
         if ($authConfirmation === null) {
             return false;

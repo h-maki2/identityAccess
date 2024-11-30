@@ -14,7 +14,7 @@ class AuthConfirmationValidationTest extends TestCase
         $authConfirmation = null;
 
         // when
-        $result = AuthConfirmationValidation::validateExpirationDate($authConfirmation, new DateTimeImmutable());
+        $result = AuthConfirmationValidation::validate($authConfirmation, new DateTimeImmutable());
 
         // then
         $this->assertFalse($result);
@@ -33,7 +33,7 @@ class AuthConfirmationValidationTest extends TestCase
         );
 
         // when
-        $result = AuthConfirmationValidation::validateExpirationDate($authConfirmation, new DateTimeImmutable());
+        $result = AuthConfirmationValidation::validate($authConfirmation, new DateTimeImmutable());
 
         // then
         $this->assertFalse($result);
@@ -52,7 +52,7 @@ class AuthConfirmationValidationTest extends TestCase
         );
 
         // when
-        $result = AuthConfirmationValidation::validateExpirationDate($authConfirmation, new DateTimeImmutable());
+        $result = AuthConfirmationValidation::validate($authConfirmation, new DateTimeImmutable());
 
         // then
         $this->assertTrue($result);
