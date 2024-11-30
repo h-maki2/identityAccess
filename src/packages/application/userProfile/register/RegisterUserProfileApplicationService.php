@@ -9,9 +9,9 @@ use packages\domain\model\common\validator\ValidationHandler;
 use packages\domain\model\userProfile\IUserProfileRepository;
 use packages\domain\model\userProfile\SelfIntroductionText;
 use packages\domain\model\userProfile\UserName;
-use packages\domain\model\userProfile\UserNameValidation;
 use packages\domain\model\userProfile\UserProfile;
 use packages\domain\model\userProfile\validation\SelfIntroductionTextValidation;
+use packages\domain\model\userProfile\validation\UserNameValidation;
 use packages\domain\service\userProfile\UserProfileService;
 use RuntimeException;
 

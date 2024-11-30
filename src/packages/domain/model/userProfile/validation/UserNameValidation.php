@@ -1,8 +1,10 @@
 <?php
 
-namespace packages\domain\model\userProfile;
+namespace packages\domain\model\userProfile\validation;
 
 use packages\domain\model\common\validator\Validator;
+use packages\domain\model\userProfile\IUserProfileRepository;
+use packages\domain\model\userProfile\UserName;
 use packages\domain\model\userProfile\validation\UserNameFormatChecker;
 use packages\domain\service\userProfile\UserProfileService;
 
