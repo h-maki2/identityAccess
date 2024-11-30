@@ -5,7 +5,6 @@ namespace packages\adapter\session;
 use Illuminate\Support\Facades\Auth;
 use packages\domain\model\authenticationInformation\SessionAuthentication;
 use packages\domain\model\authenticationInformation\UserId;
-use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
 
 class LaravelSessionAuthentication implements SessionAuthentication
 {
@@ -17,7 +16,7 @@ class LaravelSessionAuthentication implements SessionAuthentication
     public function getUserId(): ?UserId
     {
         if (Auth::check()) {
-            return new UserId(new IdentifierFromUUIDver7, Auth::id());
+            return new UserId(Auth::id());
         }
 
         return null;
