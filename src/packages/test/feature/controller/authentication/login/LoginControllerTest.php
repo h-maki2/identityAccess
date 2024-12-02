@@ -33,7 +33,7 @@ class LoginControllerTest extends TestCase
 
         // クライアントを作成する
         $clientData = ClientTestDataCreator::create(
-            redirectUrl: 'http://identity.todoapp.local/auth/callback'
+            redirectUrl: config('app.url') . '/auth/callback'
         );
 
         // when
@@ -62,7 +62,7 @@ class LoginControllerTest extends TestCase
 
         // クライアントを作成する
         $clientData = ClientTestDataCreator::create(
-            redirectUrl: 'http://identity.todoapp.local/auth/callback'
+            redirectUrl:  config('app.url') . '/auth/callback'
         );
 
         // when
@@ -96,7 +96,7 @@ class LoginControllerTest extends TestCase
 
         // クライアントを作成する
         $clientData = ClientTestDataCreator::create(
-            redirectUrl: 'http://identity.todoapp.local/auth/callback'
+            redirectUrl: config('app.url') . '/auth/callback'
         );
 
         // when
@@ -117,7 +117,7 @@ class LoginControllerTest extends TestCase
             'client_id' => $clientData->id,
             'redirect_uri' => $clientData->redirect
         ]);
-        $expectedAuthorizationUrl = 'http://identity.todoapp.local/oauth/authorize?' . $expectedQueryParams;
+        $expectedAuthorizationUrl = config('app.url') . '/oauth/authorize?' . $expectedQueryParams;
         $response->assertJson([
             'authorizationUrl' => $expectedAuthorizationUrl,
             'loginSucceeded' => true,

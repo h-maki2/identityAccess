@@ -21,10 +21,9 @@ class ClientDataTest extends TestCase
 
         // when
         $enterdRedirectUri = new RedirectUrl('http://example.com/callback');
-        $responseType = ResponseType::Code;
-        $urlForObtainingAuthorizationCode = $clientData->urlForObtainingAuthorizationCode($responseType, $enterdRedirectUri);
+        $urlForObtainingAuthorizationCode = $clientData->urlForObtainingAuthorizationCode($enterdRedirectUri, 'code');
 
         // then
-        $this->assertEquals('http://identity.todoapp.local/oauth/authorize?response_type=code&client_id=1&redirect_uri=http%3A%2F%2Fexample.com%2Fcallback', $urlForObtainingAuthorizationCode);
+        $this->assertEquals( config('app.url') . '/oauth/authorize?response_type=code&client_id=1&redirect_uri=http%3A%2F%2Fexample.com%2Fcallback', $urlForObtainingAuthorizationCode);
     }
 }
