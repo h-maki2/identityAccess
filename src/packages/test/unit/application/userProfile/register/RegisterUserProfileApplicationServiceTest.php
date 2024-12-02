@@ -66,6 +66,6 @@ class RegisterUserProfileApplicationServiceTest extends TestCase
 
     public function test_ユーザープロフィール登録の際にバリデーションエラーが発生する()
     {
-
+        
     }
 }
