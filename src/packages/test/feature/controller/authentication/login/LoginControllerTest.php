@@ -42,7 +42,8 @@ class LoginControllerTest extends TestCase
             'password' => $存在しないパスワード,
             'client_id' => $clientData->id,
             'redirect_url' => $clientData->redirect,
-            'response_type' => 'code'
+            'response_type' => 'code',
+            'state' => 'abcdefg'
         ]);
 
         // then
@@ -71,7 +72,8 @@ class LoginControllerTest extends TestCase
             'password' => $存在しないパスワード,
             'client_id' => $clientData->id,
             'redirect_url' => $clientData->redirect,
-            'response_type' => 'code'
+            'response_type' => 'code',
+            'state' => 'abcdefg'
         ]);
 
         // then
@@ -100,13 +102,15 @@ class LoginControllerTest extends TestCase
         );
 
         // when
+        $state = 'abcdefg';
         // ログインする
         $response = $this->post('/login', [
             'email' => $emailString,
             'password' => $passwordString,
             'client_id' => $clientData->id,
             'redirect_url' => $clientData->redirect,
-            'response_type' => 'code'
+            'response_type' => 'code',
+            'state' => $state
         ]);
 
         // then
@@ -115,7 +119,8 @@ class LoginControllerTest extends TestCase
         $expectedQueryParams = http_build_query([
             'response_type' => 'code',
             'client_id' => $clientData->id,
-            'redirect_uri' => $clientData->redirect
+            'redirect_uri' => $clientData->redirect,
+            'state' => $state
         ]);
         $expectedAuthorizationUrl = config('app.url') . '/oauth/authorize?' . $expectedQueryParams;
         $response->assertJson([

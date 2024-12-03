@@ -85,6 +85,7 @@ class LoginApplicationServiceTest extends TestCase
         $clientId = '1';
         $redirectUrl = 'http://localhost:8080/callback';
         $responseType = 'code';
+        $state = 'abcdefg';
 
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationInformationRepository,
@@ -97,7 +98,8 @@ class LoginApplicationServiceTest extends TestCase
             $inputedPassword, 
             $clientId,
             $redirectUrl,
-            $responseType
+            $responseType,
+            $state
         );
 
         // then
@@ -106,7 +108,8 @@ class LoginApplicationServiceTest extends TestCase
         // 認可コード取得用のURLが返されていることを確認する
         $expectedAuthorizationUrl = $this->expectedClientData->urlForObtainingAuthorizationCode(
             new RedirectUrl($redirectUrl),
-            $responseType
+            $responseType,
+            $state
         );
         $this->assertEquals($expectedAuthorizationUrl, $this->capturedLoginResult->authorizationUrl);
         // 正しいuserIdでログインされていることを確認する
@@ -134,6 +137,7 @@ class LoginApplicationServiceTest extends TestCase
         $clientId = '1';
         $redirectUrl = 'http://localhost:8080/callback';
         $responseType = 'code';
+        $state = 'abcdefg';
 
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationInformationRepository,
@@ -146,7 +150,8 @@ class LoginApplicationServiceTest extends TestCase
             $inputedPassword, 
             $clientId,
             $redirectUrl,
-            $responseType
+            $responseType,
+            $state
         );
 
         // then
@@ -174,6 +179,7 @@ class LoginApplicationServiceTest extends TestCase
         $clientId = '1';
         $redirectUrl = 'http://localhost:8080/callback';
         $responseType = 'code';
+        $state = 'abcdefg';
 
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationInformationRepository,
@@ -186,7 +192,8 @@ class LoginApplicationServiceTest extends TestCase
             $inputedPassword, 
             $clientId,
             $redirectUrl,
-            $responseType
+            $responseType,
+            $state
         );
 
         // then
@@ -221,6 +228,8 @@ class LoginApplicationServiceTest extends TestCase
         $clientId = '1';
         $redirectUrl = 'http://localhost:8080/callback';
         $responseType = 'code';
+        $state = 'abcdefg';
+
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationInformationRepository,
             $this->sessionAuthentication,
@@ -232,7 +241,8 @@ class LoginApplicationServiceTest extends TestCase
             $inputedPassword, 
             $clientId,
             $redirectUrl,
-            $responseType
+            $responseType,
+            $state
         );
 
         // then
@@ -270,6 +280,8 @@ class LoginApplicationServiceTest extends TestCase
         $clientId = '1';
         $redirectUrl = 'http://localhost:8080/callback';
         $responseType = 'code';
+        $state = 'abcdefg';
+
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationInformationRepository,
             $this->sessionAuthentication,
@@ -281,7 +293,8 @@ class LoginApplicationServiceTest extends TestCase
             $inputedPassword, 
             $clientId,
             $redirectUrl,
-            $responseType
+            $responseType,
+            $state
         );
 
         // then
@@ -290,7 +303,8 @@ class LoginApplicationServiceTest extends TestCase
         // 認可コード取得用のURLが返されていることを確認する
         $expectedAuthorizationUrl = $this->expectedClientData->urlForObtainingAuthorizationCode(
             new RedirectUrl($redirectUrl),
-            $responseType
+            $responseType,
+            $state
         );
         $this->assertEquals($expectedAuthorizationUrl, $this->capturedLoginResult->authorizationUrl);
         // 正しいuserIdでログインされていることを確認する
@@ -325,6 +339,7 @@ class LoginApplicationServiceTest extends TestCase
         $clientId = '1';
         $redirectUrl = 'http://localhost:8080/callback';
         $responseType = 'code';
+        $state = 'abcdefg';
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationInformationRepository,
             $this->sessionAuthentication,
@@ -336,7 +351,8 @@ class LoginApplicationServiceTest extends TestCase
             $inputedPassword, 
             $clientId,
             $redirectUrl,
-            $responseType
+            $responseType,
+            $state
         );
 
         // then
@@ -371,6 +387,8 @@ class LoginApplicationServiceTest extends TestCase
         $clientId = '1';
         $redirectUrl = 'http://localhost:8080/callback';
         $responseType = 'code';
+        $state = 'abcdefg';
+
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationInformationRepository,
             $this->sessionAuthentication,
@@ -384,7 +402,8 @@ class LoginApplicationServiceTest extends TestCase
                 $inputedPassword, 
                 $clientId,
                 $redirectUrl,
-                $responseType
+                $responseType,
+                $state
             );
         }
 
@@ -395,7 +414,8 @@ class LoginApplicationServiceTest extends TestCase
             $inputedPassword, 
             $clientId,
             $redirectUrl,
-            $responseType
+            $responseType,
+            $state
         );
 
         // then

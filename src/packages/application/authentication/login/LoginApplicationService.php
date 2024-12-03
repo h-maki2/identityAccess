@@ -37,7 +37,8 @@ class LoginApplicationService implements LoginInputBoundary
         string $inputedPassword,
         string $clientId,
         string $redirectUrl,
-        string $responseType
+        string $responseType,
+        string $state
     ): LoginOutputBoundary
     {
         $email = new UserEmail($inputedEmail);
@@ -63,7 +64,8 @@ class LoginApplicationService implements LoginInputBoundary
             $urlForObtainingAuthorizationCode = $this->urlForObtainingAuthorizationCode(
                 $clientId,
                 $redirectUrl,
-                $responseType
+                $responseType,
+                $state
             );
 
             $this->authenticationInformationRepository->save($authenticationInformation);
@@ -92,7 +94,8 @@ class LoginApplicationService implements LoginInputBoundary
     private function urlForObtainingAuthorizationCode(
         string $clientId,
         string $redirectUrl,
-        string $responseType
+        string $responseType,
+        string $state
     ): string
     {
         $clientId = new ClientId($clientId);
@@ -102,6 +105,6 @@ class LoginApplicationService implements LoginInputBoundary
         }
 
         $redirectUrl = new RedirectUrl($redirectUrl);
-        return $client->urlForObtainingAuthorizationCode($redirectUrl, $responseType);
+        return $client->urlForObtainingAuthorizationCode($redirectUrl, $responseType, $state);
     }
 }

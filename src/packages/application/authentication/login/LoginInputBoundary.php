@@ -14,6 +14,7 @@ interface LoginInputBoundary
         string $inputedPassword,
         string $clientId,
         string $redirectUrl,
-        string $responseType
+        string $responseType,
+        string $state
     ): LoginOutputBoundary;
 }

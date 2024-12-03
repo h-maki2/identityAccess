@@ -22,7 +22,8 @@ class LoginController extends Controller
             $request->input('password'),
             $request->input('client_id'),
             $request->input('redirect_url'),
-            $request->input('response_type')
+            $request->input('response_type'),
+            $request->input('state')
         );
 
         return $output->response();

@@ -43,22 +43,24 @@ abstract class AClientData
      */
     public function urlForObtainingAuthorizationCode(
         RedirectUrl $enteredRedirectUrl,
-        string $reponseType
+        string $reponseType,
+        string $state
     ): string
     {
         if (!$this->hasRedirectUrlEntered($enteredRedirectUrl)) {
             throw new InvalidArgumentException('リダイレクトURIが一致しません。');
         }
 
-        return $this->baseUrl() . '/oauth/authorize?' . $this->queryParam($reponseType);
+        return $this->baseUrl() . '/oauth/authorize?' . $this->queryParam($reponseType, $state);
     }
 
-    protected function queryParam(string $reponseType): string
+    protected function queryParam(string $reponseType, string $state): string
     {
         return http_build_query([
             'response_type' => $reponseType,
             'client_id' => $this->clientId->value,
-            'redirect_uri' => $this->redirectUrl->value
+            'redirect_uri' => $this->redirectUrl->value,
+            'state' => $state
         ]);
     }
 
