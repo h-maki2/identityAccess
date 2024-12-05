@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationInformationRepository;
+use packages\adapter\presenter\common\json\JsonResponseStatus;
 use packages\domain\model\authenticationInformation\UserEmail;
 use packages\domain\model\authenticationInformation\UserPassword;
 use packages\domain\model\authenticationInformation\VerificationStatus;
@@ -49,9 +50,13 @@ class LoginControllerTest extends TestCase
         // then
         $response->assertStatus(400);
         $response->assertJson([
-            'authorizationUrl' => '',
-            'loginSucceeded' => false,
-            'accountLocked' => false
+            'status' => JsonResponseStatus::AuthenticationError->value,
+            'message' => JsonResponseStatus::AuthenticationError->message(),
+            'data' => [
+                'authorizationUrl' => '',
+                'loginSucceeded' => false,
+                'accountLocked' => false
+            ]
         ]);
     }
 
@@ -79,7 +84,9 @@ class LoginControllerTest extends TestCase
         // then
         $response->assertStatus(400);
         $response->assertJson([
-            'error' => 'Bad Request'
+            'status' => JsonResponseStatus::Error->value,
+            'message' => JsonResponseStatus::Error->message(),
+            'data' => null
         ]);
     }
 
@@ -124,9 +131,13 @@ class LoginControllerTest extends TestCase
         ]);
         $expectedAuthorizationUrl = config('app.url') . '/oauth/authorize?' . $expectedQueryParams;
         $response->assertJson([
-            'authorizationUrl' => $expectedAuthorizationUrl,
-            'loginSucceeded' => true,
-            'accountLocked' => false
+            'status' => JsonResponseStatus::Success->value,
+            'message' => JsonResponseStatus::Success->message(),
+            'data' => [
+                'authorizationUrl' => $expectedAuthorizationUrl,
+                'loginSucceeded' => true,
+                'accountLocked' => false
+            ]
         ]);
     }
 }
