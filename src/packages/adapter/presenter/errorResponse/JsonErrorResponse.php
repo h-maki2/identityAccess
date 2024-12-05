@@ -2,12 +2,13 @@
 
 namespace packages\adapter\presenter\errorResponse;
 
-class JsonErrorResponse implements ErrorResponse
+use packages\adapter\presenter\common\json\JsonPresenter;
+use packages\adapter\presenter\common\json\JsonResponseStatus;
+
+class JsonErrorResponse extends JsonPresenter implements ErrorResponse
 {
     public function response(string $errorMessage, int $statusCode): mixed
     {
-        return response()->json([
-            'error' => $errorMessage,
-        ], $statusCode);
+        return $this->jsonResponse(null, JsonResponseStatus::Error, $statusCode);
     }
 }
