@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\authentication\verifiedUpdate;
+namespace App\Http\Controllers\Api\v1\authentication\verifiedUpdate;
 
 use Illuminate\Http\Request;
 use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateInputBoundary;

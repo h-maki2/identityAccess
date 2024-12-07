@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\userRegistration;
+namespace App\Http\Controllers\Api\v1\userRegistration;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
