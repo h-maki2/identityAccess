@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1\userRegistration;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use packages\application\userRegistration\UserRegistrationInputBoundary;
 
 class UserRegistrationController extends Controller
@@ -19,7 +19,8 @@ class UserRegistrationController extends Controller
     {
         $output = $this->userRegistrationInputBoundary->userRegister(
             $request->input('email'),
-            $request->input('password')
+            $request->input('password'),
+            $request->input('password_confirmation')
         );
 
         return $output->response();

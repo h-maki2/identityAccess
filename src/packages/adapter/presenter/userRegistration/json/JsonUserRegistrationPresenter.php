@@ -27,9 +27,9 @@ class JsonUserRegistrationPresenter extends JsonPresenter implements UserRegistr
     private function setResponseData(UserRegistrationResult $result): void
     {
         if ($result->validationError) {
-            $this->responseData = [
-                'validationErrorMessageList' => $result->validationErrorMessageList
-            ];
+            foreach ($result->validationErrorMessageList as $validationError) {
+                $this->responseData[$validationError->fieldName] = $validationError->errorMessageList;
+            }
             return;
         }
         

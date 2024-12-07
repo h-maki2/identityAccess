@@ -2,6 +2,8 @@
 
 namespace packages\application\userRegistration;
 
+use packages\application\common\validation\ValidationErrorMessageData;
+
 class UserRegistrationResult
 {
     readonly bool $validationError;
