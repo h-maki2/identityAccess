@@ -12,6 +12,7 @@ use packages\domain\model\authenticationInformation\IAuthenticationInformationRe
 use packages\domain\model\authenticationInformation\UserEmail;
 use packages\domain\model\authenticationInformation\UserPassword;
 use packages\domain\model\authenticationInformation\validation\UserEmailValidation;
+use packages\domain\model\authenticationInformation\validation\UserPasswordConfirmationValidation;
 use packages\domain\model\authenticationInformation\validation\UserPasswordValidation;
 use packages\domain\model\common\unitOfWork\UnitOfWork;
 use packages\domain\model\common\validator\ValidationHandler;
@@ -50,12 +51,14 @@ class UserRegistrationApplicationService implements UserRegistrationInputBoundar
      */
     public function userRegister(
         string $inputedEmail, 
-        string $inputedPassword
+        string $inputedPassword,
+        string $inputedPasswordConfirmation
     ): UserRegistrationOutputBoundary
     {
         $validationHandler = new ValidationHandler();
         $validationHandler->addValidator(new UserEmailValidation($inputedEmail, $this->authenticationInformationRepository));
         $validationHandler->addValidator(new UserPasswordValidation($inputedPassword));
+        $validationHandler->addValidator(new UserPasswordConfirmationValidation($inputedPassword, $inputedPasswordConfirmation));
         if (!$validationHandler->validate()) {
             $this->outputBoundary->formatForResponse(
                 UserRegistrationResult::createWhenValidationError($validationHandler->errorMessages())

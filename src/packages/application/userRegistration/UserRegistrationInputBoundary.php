@@ -6,6 +6,7 @@ interface UserRegistrationInputBoundary
 {
     public function userRegister(
         string $email,
-        string $password
+        string $password,
+        string $passwordConfirmation
     ): UserRegistrationOutputBoundary;
 }
