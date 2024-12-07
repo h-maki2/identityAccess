@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\ApiVersionResolver;
 use Illuminate\Support\ServiceProvider;
 use packages\adapter\email\LaravelEmailSender;
 use packages\adapter\oauth\authToken\LaravelPassportAccessTokenDeactivationService;
@@ -78,6 +79,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(DisplayVerifiedUpdatePageInputBoundary::class, DisplayVerifiedUpdatePageApplicationService::class);
         $this->app->bind(VerifiedUpdateInputBoundary::class, VerifiedUpdateApplicationService::class);
         $this->app->bind(UserRegistrationInputBoundary::class, UserRegistrationApplicationService::class);
+
+        // その他　フレームワークに関する設定
+        $this->app->bind(ApiVersionResolver::class, ApiVersionResolver::class);
 
         // メール送信
         $this->app->bind(IEmailSender::class, LaravelEmailSender::class);
