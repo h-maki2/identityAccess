@@ -52,12 +52,12 @@ class LoginControllerTest extends TestCase
         // then
         $response->assertStatus(400);
         $response->assertJson([
-            'status' => JsonResponseStatus::AuthenticationError->value,
-            'message' => JsonResponseStatus::AuthenticationError->message(),
-            'data' => [
-                'authorizationUrl' => '',
-                'loginSucceeded' => false,
-                'accountLocked' => false
+            'success' => false,
+            'error' => [
+                'code' => 'Bad Request',
+                'details' => [
+                    'accountLocked' => false
+                ]
             ]
         ]);
     }
@@ -88,9 +88,11 @@ class LoginControllerTest extends TestCase
         // then
         $response->assertStatus(400);
         $response->assertJson([
-            'status' => JsonResponseStatus::Error->value,
-            'message' => JsonResponseStatus::Error->message(),
-            'data' => null
+            'success' => false,
+            'error' => [
+                'code' => 'Bad Request',
+                'details' => null
+            ]
         ]);
     }
 
@@ -137,12 +139,9 @@ class LoginControllerTest extends TestCase
         ]);
         $expectedAuthorizationUrl = config('app.url') . '/oauth/authorize?' . $expectedQueryParams;
         $response->assertJson([
-            'status' => JsonResponseStatus::Success->value,
-            'message' => JsonResponseStatus::Success->message(),
+            'success' => true,
             'data' => [
-                'authorizationUrl' => $expectedAuthorizationUrl,
-                'loginSucceeded' => true,
-                'accountLocked' => false
+                'authorizationUrl' => $expectedAuthorizationUrl
             ]
         ]);
     }
