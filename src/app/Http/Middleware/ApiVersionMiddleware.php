@@ -8,9 +8,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ApiVersionMiddleware
 {
-
     private const API_DEFAULT_VERSION = 'v1';
-    
+
     public function handle(Request $request, Closure $next): Response
     {
         $acceptHeader = $request->header('Accept');

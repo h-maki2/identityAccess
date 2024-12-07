@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\v1\authentication\verifiedUpdate;
+namespace App\Http\Controllers\Api\V1\authentication\verifiedUpdate;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
