@@ -52,6 +52,10 @@ Route::middleware(['api.version'])->group(function () {
     });
 });
 
+Route::get('/csrf-token', function (Request $request) {
+    return response()->json(['csrfToken' => csrf_token()]);
+});
+
 Route::middleware(['api.version', 'auth:api'])->group(function () {
     // 認証が必要なAPIのルーティング
 });
