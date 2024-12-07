@@ -2,7 +2,9 @@
 
 namespace packages\adapter\presenter\errorResponse;
 
+use packages\adapter\presenter\common\json\HttpStatus;
+
 interface ErrorResponse
 {
-    public function response(string $errorMesasge, int $statusCode): mixed;
+    public function response(HttpStatus $statusCode): mixed;
 }

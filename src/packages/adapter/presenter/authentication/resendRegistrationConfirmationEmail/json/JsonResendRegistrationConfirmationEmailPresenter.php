@@ -2,6 +2,7 @@
 
 namespace packages\adapter\presenter\authentication\resendRegistrationConfirmationEmail\json;
 
+use packages\adapter\presenter\common\json\HttpStatus;
 use packages\adapter\presenter\common\json\JsonPresenter;
 use packages\adapter\presenter\common\json\JsonResponseStatus;
 use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailOutputBoundary;
@@ -10,35 +11,33 @@ use packages\application\authentication\resendRegistrationConfirmationEmail\Rese
 class JsonResendRegistrationConfirmationEmailPresenter extends JsonPresenter implements ResendRegistrationConfirmationEmailOutputBoundary
 {
     private array $responseData;
-    private int $statusCode;
-    private JsonResponseStatus $jsonResponseStatus;
+    private HttpStatus $httpStatus;
 
     public function formatForResponse(ResendRegistrationConfirmationEmailResult $resendRegistrationConfirmationEmailResult): void
     {
         $this->setResponseData($resendRegistrationConfirmationEmailResult);
-        $this->setStatusCode($resendRegistrationConfirmationEmailResult);
-        $this->setJsonResponseStatus($resendRegistrationConfirmationEmailResult);
+        $this->setHttpStatus($resendRegistrationConfirmationEmailResult);
     }
 
     public function response(): mixed
     {
-        return $this->jsonResponse($this->responseData, $this->jsonResponseStatus, $this->statusCode);
+        return $this->jsonResponse($this->responseData, $this->httpStatus);
     }
 
     private function setResponseData(ResendRegistrationConfirmationEmailResult $resendRegistrationConfirmationEmailResult): void
     {
-        $this->responseData = [
-            'validationErrorMessage' => $resendRegistrationConfirmationEmailResult->validationErrorMessage
-        ];
+        if ($resendRegistrationConfirmationEmailResult->validationError) {
+            $this->responseData = [
+                'validationErrorMessage' => $resendRegistrationConfirmationEmailResult->validationErrorMessage
+            ];
+            return;
+        }
+        
+        $this->responseData = [];
     }
 
-    private function setStatusCode(ResendRegistrationConfirmationEmailResult $resendRegistrationConfirmationEmailResult): void
+    private function setHttpStatus(ResendRegistrationConfirmationEmailResult $resendRegistrationConfirmationEmailResult): void
     {
-        $this->statusCode = $resendRegistrationConfirmationEmailResult->validationError ? 400 : 200;
-    }
-
-    private function setJsonResponseStatus(ResendRegistrationConfirmationEmailResult $resendRegistrationConfirmationEmailResult): void
-    {
-        $this->jsonResponseStatus = $resendRegistrationConfirmationEmailResult->validationError ? JsonResponseStatus::ValidationError : JsonResponseStatus::Success;
+        $this->httpStatus = $resendRegistrationConfirmationEmailResult->validationError ? HttpStatus::BadRequest : HttpStatus::Success;
     }
 }

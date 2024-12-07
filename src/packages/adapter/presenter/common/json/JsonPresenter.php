@@ -4,12 +4,21 @@ namespace packages\adapter\presenter\common\json;
 
 abstract class JsonPresenter
 {
-    protected function jsonResponse(?array $responseData, JsonResponseStatus $jsonResponseStatus, int $httpStatusCode): mixed
+    protected function jsonResponse(?array $responseData, HttpStatus $httpStatus): mixed
     {
+        if ($httpStatus->isSuccess()) {
+            return response()->json([
+                'success' => true,
+                'data' => $responseData,
+            ], $httpStatus->value);
+        }
+
         return response()->json([
-            'status' => $jsonResponseStatus->value,
-            'message' => $jsonResponseStatus->message(),
-            'data' => $responseData,
-        ], $httpStatusCode);
+            'success' => false,
+            'error' => [
+                'code' => $httpStatus->code(),
+                'details' => $responseData,
+            ]
+        ], $httpStatus->value);
     }
 }

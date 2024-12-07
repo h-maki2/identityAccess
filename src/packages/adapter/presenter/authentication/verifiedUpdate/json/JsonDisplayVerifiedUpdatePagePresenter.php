@@ -2,6 +2,7 @@
 
 namespace packages\adapter\presenter\authentication\verifiedUpdate\json;
 
+use packages\adapter\presenter\common\json\HttpStatus;
 use packages\adapter\presenter\common\json\JsonPresenter;
 use packages\adapter\presenter\common\json\JsonResponseStatus;
 use packages\application\authentication\verifiedUpdate\display\DisplayVerifiedUpdatePageOutputBoundary;
@@ -10,36 +11,35 @@ use packages\application\authentication\verifiedUpdate\display\DisplayVerifiedUp
 class JsonDisplayVerifiedUpdatePagePresenter extends JsonPresenter implements DisplayVerifiedUpdatePageOutputBoundary
 {
     private array $responseData;
-    private int $statusCode;
-    private JsonResponseStatus $jsonResponseStatus;
+    private HttpStatus $httpStatus;
 
     public function formatForResponse(DisplayVerifiedUpdatePageResult $displayVerifiedUpdatePageResult): void
     {
         $this->setResponseData($displayVerifiedUpdatePageResult);
-        $this->setStatusCode($displayVerifiedUpdatePageResult);
-        $this->setJsonResponseStatus($displayVerifiedUpdatePageResult);
+        $this->setHttpStatus($displayVerifiedUpdatePageResult);
     }
 
     public function response(): mixed
     {
-        return $this->jsonResponse($this->responseData, $this->jsonResponseStatus, $this->statusCode);
+        return $this->jsonResponse($this->responseData, $this->httpStatus);
     }
 
     private function setResponseData(DisplayVerifiedUpdatePageResult $displayVerifiedUpdatePageResult): void
     {
+        if ($displayVerifiedUpdatePageResult->validationError) {
+            $this->responseData = [
+                'validationErrorMessage' => $displayVerifiedUpdatePageResult->validationErrorMessage
+            ];
+            return;
+        }
+
         $this->responseData = [
-            'validationErrorMessage' => $displayVerifiedUpdatePageResult->validationErrorMessage,
             'oneTimeTokenValue' => $displayVerifiedUpdatePageResult->oneTimeTokenValue
         ];
     }
 
-    private function setStatusCode(DisplayVerifiedUpdatePageResult $displayVerifiedUpdatePageResult): void
+    private function setHttpStatus(DisplayVerifiedUpdatePageResult $displayVerifiedUpdatePageResult): void
     {
-        $this->statusCode = $displayVerifiedUpdatePageResult->validationError ? 400 : 200;
-    }
-
-    private function setJsonResponseStatus(DisplayVerifiedUpdatePageResult $displayVerifiedUpdatePageResult): void
-    {
-        $this->jsonResponseStatus = $displayVerifiedUpdatePageResult->validationError ? JsonResponseStatus::ValidationError : JsonResponseStatus::Success;
+        $this->httpStatus = $displayVerifiedUpdatePageResult->validationError ? HttpStatus::BadRequest : HttpStatus::Success;
     }
 }

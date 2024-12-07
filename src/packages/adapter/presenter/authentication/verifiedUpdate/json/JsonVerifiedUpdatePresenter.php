@@ -2,34 +2,40 @@
 
 namespace packages\adapter\presenter\authentication\verifiedUpdate\json;
 
+use packages\adapter\presenter\common\json\HttpStatus;
 use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateOutputBoundary;
 use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateResult;
 
 class JsonVerifiedUpdatePresenter implements VerifiedUpdateOutputBoundary
 {
     private array $responseData;
-    private int $statusCode;
+    private HttpStatus $httpStatus;
 
     public function formatForResponse(VerifiedUpdateResult $verifiedUpdateResult): void
     {
         $this->setResponseData($verifiedUpdateResult);
-        $this->setStatusCode($verifiedUpdateResult);
+        $this->setHttpStatus($verifiedUpdateResult);
     }
 
     public function response(): mixed
     {
-        return response()->json($this->responseData, $this->statusCode);
+        return response()->json($this->responseData, $this->httpStatus);
     }
 
     private function setResponseData(VerifiedUpdateResult $verifiedUpdateResult): void
     {
-        $this->responseData = [
-            'validationErrorMessage' => $verifiedUpdateResult->validationErrorMessage
-        ];
+        if ($verifiedUpdateResult->validationError) {
+            $this->responseData = [
+                'validationErrorMessage' => $verifiedUpdateResult->validationErrorMessage
+            ];
+            return;
+        }
+
+        $this->responseData = [];
     }
 
-    private function setStatusCode(VerifiedUpdateResult $verifiedUpdateResult): void
+    private function setHttpStatus(VerifiedUpdateResult $verifiedUpdateResult): void
     {
-        $this->statusCode = $verifiedUpdateResult->validationError ? 400 : 200;
+        $this->httpStatus = $verifiedUpdateResult->validationError ? HttpStatus::BadRequest : HttpStatus::Success;
     }
 }
