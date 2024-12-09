@@ -4,11 +4,6 @@
 
 // use App\Http\Controllers\authentication\login\LoginController;
 
-use App\Http\Controllers\authentication\login\LoginController;
-use App\Http\Controllers\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailController;
-use App\Http\Controllers\authentication\verifiedUpdate\DisplayVerifiedUpdatePageController;
-use App\Http\Controllers\authentication\verifiedUpdate\VerifiedUpdateController;
-use App\Http\Controllers\userRegistration\UserRegistrationController;
 use App\Services\ApiVersionResolver;
 use Illuminate\Container\Container;
 use Illuminate\Http\Request;

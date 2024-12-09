@@ -18,9 +18,9 @@ class UserRegistrationController extends Controller
     public function userRegister(Request $request): mixed
     {
         $output = $this->userRegistrationInputBoundary->userRegister(
-            $request->input('email'),
-            $request->input('password'),
-            $request->input('password_confirmation')
+            $request->input('email', ''),
+            $request->input('password', ''),
+            $request->input('passwordConfirmation', '')
         );
 
         return $output->response();

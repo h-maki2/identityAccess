@@ -19,13 +19,13 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://front.identityaccess.local'],
+    'allowed_origins' => ['http://www.identityaccess.local'],
 
     'allowed_origins_patterns' => [],
 
     'allowed_headers' => ['*'],
 
-    'exposed_headers' => ['XSRF-TOKEN', 'X-XSRF-TOKEN'],
+    'exposed_headers' => ['*'],
 
     'max_age' => 0,
 
