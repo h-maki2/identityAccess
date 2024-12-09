@@ -15,6 +15,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'api.version' => ApiVersionMiddleware::class,
         ]);
+        $middleware->statefulApi();
     })
     ->create();
 

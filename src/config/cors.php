@@ -25,7 +25,7 @@ return [
 
     'allowed_headers' => ['*'],
 
-    'exposed_headers' => [],
+    'exposed_headers' => ['XSRF-TOKEN', 'X-XSRF-TOKEN'],
 
     'max_age' => 0,
 
