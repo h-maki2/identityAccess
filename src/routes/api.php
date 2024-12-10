@@ -5,11 +5,6 @@ use Illuminate\Container\Container;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
 Route::middleware(['api.version'])->group(function () {
     Route::get('/verifiedUpdate', function (Request $request, ApiVersionResolver $resolver, Container $container) {
         $version = $request->attributes->get('api_version');
@@ -47,5 +42,9 @@ Route::middleware(['api.version'])->group(function () {
 });
 
 Route::middleware(['api.version', 'auth:api'])->group(function () {
-    // 認証が必要なAPIのルーティング
+    Route::post('/userProfile/register', function (Request $request, ApiVersionResolver $resolver, Container $container) {
+        $version = $request->attributes->get('api_version');
+        $controller = $resolver->resolve($version, 'userProfile\register\RegisterUserProfileController');
+        return $container->call([$controller, 'register']);
+    });
 });

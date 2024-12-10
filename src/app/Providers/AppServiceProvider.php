@@ -10,13 +10,16 @@ use packages\adapter\oauth\authToken\LaravelPassportRefreshokenDeactivationServi
 use packages\adapter\oauth\client\LaravelPassportClientFetcher;
 use packages\adapter\persistence\eloquent\EloquentAuthConfirmationRepository;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationInformationRepository;
+use packages\adapter\persistence\eloquent\EloquentUserProfileRepository;
 use packages\adapter\presenter\authentication\login\json\JsonLoginPresenter;
 use packages\adapter\presenter\authentication\resendRegistrationConfirmationEmail\json\JsonResendRegistrationConfirmationEmailPresenter;
 use packages\adapter\presenter\authentication\verifiedUpdate\json\JsonDisplayVerifiedUpdatePagePresenter;
 use packages\adapter\presenter\authentication\verifiedUpdate\json\JsonVerifiedUpdatePresenter;
 use packages\adapter\presenter\errorResponse\ErrorResponse;
 use packages\adapter\presenter\errorResponse\JsonErrorResponse;
+use packages\adapter\presenter\userProfile\register\json\JsonRegisterUserProfilePresenter;
 use packages\adapter\presenter\userRegistration\json\JsonUserRegistrationPresenter;
+use packages\adapter\service\laravel\LaravelAuthenticationService;
 use packages\adapter\service\laravel\LaravelSessionAuthentication;
 use packages\adapter\unitOfWork\EloquentUnitOfWork;
 use packages\application\authentication\login\LoginApplicationService;
@@ -31,10 +34,14 @@ use packages\application\authentication\verifiedUpdate\display\DisplayVerifiedUp
 use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateApplicationService;
 use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateInputBoundary;
 use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateOutputBoundary;
+use packages\application\userProfile\register\RegisterUserProfileApplicationService;
+use packages\application\userProfile\register\RegisterUserProfileInputBoundary;
+use packages\application\userProfile\register\RegisterUserProfileOutputBoundary;
 use packages\application\userRegistration\UserRegistrationApplicationService;
 use packages\application\userRegistration\UserRegistrationInputBoundary;
 use packages\application\userRegistration\UserRegistrationOutputBoundary;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
+use packages\domain\model\authenticationInformation\AuthenticationService;
 use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
 use packages\domain\model\authenticationInformation\SessionAuthentication;
 use packages\domain\model\common\unitOfWork\UnitOfWork;
@@ -42,6 +49,7 @@ use packages\domain\model\email\IEmailSender;
 use packages\domain\model\oauth\authToken\IAccessTokenDeactivationService;
 use packages\domain\model\oauth\authToken\IRefreshTokenDeactivationService;
 use packages\domain\model\oauth\client\IClientFetcher;
+use packages\domain\model\userProfile\IUserProfileRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -53,6 +61,7 @@ class AppServiceProvider extends ServiceProvider
         // リポジトリ
         $this->app->bind(IAuthConfirmationRepository::class, EloquentAuthConfirmationRepository::class);
         $this->app->bind(IAuthenticationInformationRepository::class, EloquentAuthenticationInformationRepository::class);
+        $this->app->bind(IUserProfileRepository::class, EloquentUserProfileRepository::class);
 
         // Laravel Passport
         $this->app->bind(IClientFetcher::class, LaravelPassportClientFetcher::class);
@@ -69,9 +78,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ResendRegistrationConfirmationEmailOutputBoundary::class, JsonResendRegistrationConfirmationEmailPresenter::class);
         $this->app->bind(UserRegistrationOutputBoundary::class, JsonUserRegistrationPresenter::class);
         $this->app->bind(ErrorResponse::class, JsonErrorResponse::class);
+        $this->app->bind(RegisterUserProfileOutputBoundary::class, JsonRegisterUserProfilePresenter::class);
 
-        // Laravel
-        $this->app->bind(SessionAuthentication::class, LaravelSessionAuthentication::class);
+        // サービス
+        $this->app->bind(AuthenticationService::class, LaravelAuthenticationService::class);
 
         // アプリケーションサービス
         $this->app->bind(LoginInputBoundary::class, LoginApplicationService::class);
@@ -79,6 +89,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(DisplayVerifiedUpdatePageInputBoundary::class, DisplayVerifiedUpdatePageApplicationService::class);
         $this->app->bind(VerifiedUpdateInputBoundary::class, VerifiedUpdateApplicationService::class);
         $this->app->bind(UserRegistrationInputBoundary::class, UserRegistrationApplicationService::class);
+        $this->app->bind(RegisterUserProfileInputBoundary::class, RegisterUserProfileApplicationService::class);
 
         // その他　フレームワークに関する設定
         $this->app->bind(ApiVersionResolver::class, ApiVersionResolver::class);

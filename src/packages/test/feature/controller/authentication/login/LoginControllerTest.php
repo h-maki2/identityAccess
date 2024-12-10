@@ -40,7 +40,7 @@ class LoginControllerTest extends TestCase
         // when
         $response = $this->withHeaders([
             'Accept' => 'application/vnd.example.v1+json'
-        ])->post('/login', [
+        ])->post('/api/login', [
             'email' => $存在しないメールアドレス,
             'password' => $存在しないパスワード,
             'client_id' => $clientData->id,
@@ -76,7 +76,7 @@ class LoginControllerTest extends TestCase
         // when
         $response = $this->withHeaders([
             'Accept' => 'application/vnd.example.v1+json'
-        ])->post('/login', [
+        ])->post('/api//login', [
             'email' => $不正なメールアドレス,
             'password' => $存在しないパスワード,
             'client_id' => $clientData->id,
@@ -119,7 +119,7 @@ class LoginControllerTest extends TestCase
         // ログインする
         $response = $this->withHeaders([
             'Accept' => 'application/vnd.example.v1+json'
-        ])->post('/login', [
+        ])->post('/api//login', [
             'email' => $emailString,
             'password' => $passwordString,
             'client_id' => $clientData->id,

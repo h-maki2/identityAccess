@@ -41,7 +41,7 @@ class DisplayVerifiedUpdatePageControllerTest extends TestCase
 
         // when
         // 認証済み更新ページを表示する
-        $response = $this->get('/verifiedUpdate?oneTimeTokenValue=' . $expectedAuthConfirmation->oneTimeToken()->value());
+        $response = $this->get('/api//verifiedUpdate?oneTimeTokenValue=' . $expectedAuthConfirmation->oneTimeToken()->value());
 
         // then
         $response->assertStatus(200);

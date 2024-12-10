@@ -44,7 +44,7 @@ class ResendRegistrationConfirmationEmailControllerTest extends TestCase
 
         // when
         // 本登録確認メールを再送信する
-        $response = $this->post('/resendRegistrationConfirmationEmail', ['email' => $userEmail->value]);
+        $response = $this->post('/api//resendRegistrationConfirmationEmail', ['email' => $userEmail->value]);
 
         // then
         $response->assertStatus(200);

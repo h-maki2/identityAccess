@@ -42,7 +42,7 @@ class VerifiedUpdateControllerTest extends TestCase
 
         // when
         // 認証済み更新を行う
-        $response = $this->post('/verifiedUpdate', [
+        $response = $this->post('/api//verifiedUpdate', [
             'oneTimeTokenValue' => $authConfirmation->oneTimeToken()->value(),
             'oneTimePassword' => $authConfirmation->oneTimePassword()->value
         ]);

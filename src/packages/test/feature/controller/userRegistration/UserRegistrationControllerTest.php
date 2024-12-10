@@ -17,7 +17,7 @@ class UserRegistrationControllerTest extends TestCase
         // when
         $response = $this->withHeaders([
             'Accept' => 'application/vnd.example.v1+json'
-        ])->post('/userRegistration', [
+        ])->post('/api//userRegistration', [
             'email' => $userEmail,
             'password' => $userPassword,
             'password_confirmation' => $userPasswordConfirmation
@@ -41,7 +41,7 @@ class UserRegistrationControllerTest extends TestCase
         // when
         $response = $this->withHeaders([
             'Accept' => 'application/vnd.example.v1+json'
-        ])->post('/userRegistration', [
+        ])->post('/api//userRegistration', [
             'email' => $userEmail,
             'password' => $userPassword,
             'password_confirmation' => $userPasswordConfirmation
