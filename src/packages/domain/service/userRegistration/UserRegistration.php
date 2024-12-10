@@ -14,7 +14,7 @@ use packages\domain\model\authenticationInformation\UserEmail;
 use packages\domain\model\authenticationInformation\UserPassword;
 use packages\domain\model\common\unitOfWork\UnitOfWork;
 use packages\domain\model\email\IEmailSender;
-use packages\domain\model\email\RegistrationConfirmationEmailDtoFactory;
+use packages\domain\model\email\VerifiedUpdateEmailDtoFactory;
 use packages\domain\service\authenticationInformation\AuthenticationInformationService;
 
 class UserRegistration
@@ -59,7 +59,7 @@ class UserRegistration
         });
 
         $this->emailSender->send(
-            RegistrationConfirmationEmailDtoFactory::create(
+            VerifiedUpdateEmailDtoFactory::create(
                 $email,
                 $authConfirmation->oneTimeToken(),
                 $authConfirmation->oneTimePassword()

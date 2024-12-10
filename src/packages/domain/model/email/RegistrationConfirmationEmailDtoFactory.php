@@ -8,9 +8,9 @@ use packages\domain\model\authenticationInformation\UserEmail;
 use packages\domain\model\email\SendEmailDto;
 
 /**
- * 本登録確認メールDTOのファクトリ
+ * 認証済み更新メールDTOのファクトリ
  */
-class RegistrationConfirmationEmailDtoFactory
+class VerifiedUpdateEmailDtoFactory
 {
     public static function create(
         UserEmail $toAddress,
@@ -26,8 +26,8 @@ class RegistrationConfirmationEmailDtoFactory
             'test@example.com',
             $toAddress->value,
             'システムテスト',
-            '本登録確認メール',
-            'email.test',
+            '認証済みメール',
+            'email.verifiedUpdate.verifiedUpdateMail',
             $templateValiables
         );
     }

@@ -7,7 +7,7 @@ use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authConfirmation\OneTimeToken;
 use packages\domain\model\authenticationInformation\AuthenticationInformation;
 use packages\domain\model\email\IEmailSender;
-use packages\domain\model\email\RegistrationConfirmationEmailDtoFactory;
+use packages\domain\model\email\VerifiedUpdateEmailDtoFactory;
 use RuntimeException;
 
 class OneTimeTokenAndPasswordRegeneration
@@ -38,7 +38,7 @@ class OneTimeTokenAndPasswordRegeneration
         $this->authConfirmationRepository->save($authConfirmation);
 
         $this->emailSender->send(
-            RegistrationConfirmationEmailDtoFactory::create(
+            VerifiedUpdateEmailDtoFactory::create(
                 $authInfo->email(),
                 $authConfirmation->oneTimeToken(),
                 $authConfirmation->oneTimePassword()
