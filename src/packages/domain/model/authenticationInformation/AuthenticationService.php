@@ -4,7 +4,7 @@ namespace packages\domain\model\authenticationInformation;
 
 use packages\domain\model\authenticationInformation\UserId;
 
-interface SessionAuthentication
+interface AuthenticationService
 {
     /**
      * ログイン済み状態にする
@@ -14,7 +14,7 @@ interface SessionAuthentication
     /**
      * ログインしているユーザーのIDを取得する
      */
-    public function getUserId(): ?UserId;
+    public function loggedInUserId(): ?UserId;
 
     public function logout(): void;
 }

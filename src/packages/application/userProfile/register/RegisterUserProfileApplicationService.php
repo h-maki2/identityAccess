@@ -3,8 +3,8 @@
 namespace packages\application\userProfile\register;
 
 use Illuminate\Contracts\Session\Session;
+use packages\domain\model\authenticationInformation\AuthenticationService;
 use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
-use packages\domain\model\authenticationInformation\SessionAuthentication;
 use packages\domain\model\common\validator\ValidationHandler;
 use packages\domain\model\userProfile\IUserProfileRepository;
 use packages\domain\model\userProfile\SelfIntroductionText;
@@ -19,18 +19,18 @@ class RegisterUserProfileApplicationService implements RegisterUserProfileInputB
 {
     private IUserProfileRepository $userProfileRepository;
     private UserProfileService $userProfileService;
-    private SessionAuthentication $sessionAuthentication;
+    private AuthenticationService $authService;
     private RegisterUserProfileOutputBoundary $outputBoundary;
 
     public function __construct(
         IUserProfileRepository $userProfileRepository,
-        SessionAuthentication $sessionAuthentication,
+        AuthenticationService $authService,
         RegisterUserProfileOutputBoundary $outputBoundary
     )
     {
         $this->userProfileRepository = $userProfileRepository;
         $this->userProfileService = new UserProfileService($userProfileRepository);
-        $this->sessionAuthentication = $sessionAuthentication;
+        $this->authService = $authService;
         $this->outputBoundary = $outputBoundary;
     }
 
@@ -39,7 +39,7 @@ class RegisterUserProfileApplicationService implements RegisterUserProfileInputB
      */
     public function register(string $userNameString, string $selfIntroductionTextString): RegisterUserProfileOutputBoundary
     {
-        $userId = $this->sessionAuthentication->getUserId();
+        $userId = $this->authService->loggedInUserId();
         if ($userId === null) {
             throw new RuntimeException('ユーザーがログインしていません');
         }
@@ -52,8 +52,8 @@ class RegisterUserProfileApplicationService implements RegisterUserProfileInputB
         $validationHandler->addValidator(new SelfIntroductionTextValidation($selfIntroductionTextString));
         if (!$validationHandler->validate()) {
             $this->outputBoundary->formatForResponse(
-                RegisterUserProfileResult::createWhenFailure($validationHandler->errorMessages()
-            ));
+                RegisterUserProfileResult::createWhenFailure($validationHandler->errorMessages())
+            );
             return $this->outputBoundary;
         }
 

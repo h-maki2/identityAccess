@@ -1,19 +1,19 @@
 <?php
 
-namespace packages\adapter\session;
+namespace packages\adapter\service\laravel;
 
 use Illuminate\Support\Facades\Auth;
-use packages\domain\model\authenticationInformation\SessionAuthentication;
+use packages\domain\model\authenticationInformation\AuthenticationService;
 use packages\domain\model\authenticationInformation\UserId;
 
-class LaravelSessionAuthentication implements SessionAuthentication
+class LaravelAuthenticationService implements AuthenticationService
 {
     public function markAsLoggedIn(UserId $userId): void
     {
-        Auth::guard('web')->loginUsingId($userId->value);
+        Auth::guard('api')->loginUsingId($userId->value);
     }
 
-    public function getUserId(): ?UserId
+    public function loggedInUserId(): ?UserId
     {
         if (Auth::check()) {
             return new UserId(Auth::id());
@@ -24,6 +24,6 @@ class LaravelSessionAuthentication implements SessionAuthentication
 
     public function logout(): void
     {
-        Auth::guard('web')->logout();
+        Auth::guard('api')->logout();
     }
 }

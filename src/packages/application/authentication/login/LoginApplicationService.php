@@ -3,31 +3,30 @@
 namespace packages\application\authentication\login;
 
 use DateTimeImmutable;
+use packages\domain\model\authenticationInformation\AuthenticationService;
 use packages\domain\model\oauth\client\IClientFetcher;
 use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
-use packages\domain\model\authenticationInformation\SessionAuthentication;
 use packages\domain\model\authenticationInformation\UserEmail;
 use packages\domain\model\oauth\client\ClientId;
 use packages\domain\model\oauth\client\RedirectUrl;
-use packages\domain\model\oauth\client\ResponseType;
 use UnexpectedValueException;
 
 class LoginApplicationService implements LoginInputBoundary
 {
     private IAuthenticationInformationRepository $authenticationInformationRepository;
-    private SessionAuthentication $sessionAuthentication;
+    private AuthenticationService $authService;
     private IClientFetcher $clientFetcher;
     private LoginOutputBoundary $outputBoundary;
 
     public function __construct(
         IAuthenticationInformationRepository $authenticationInformationRepository,
-        SessionAuthentication $sessionAuthentication,
+        AuthenticationService $authService,
         IClientFetcher $clientFetcher,
         LoginOutputBoundary $outputBoundary
     )
     {
         $this->authenticationInformationRepository = $authenticationInformationRepository;
-        $this->sessionAuthentication = $sessionAuthentication;
+        $this->authService = $authService;
         $this->clientFetcher = $clientFetcher;
         $this->outputBoundary = $outputBoundary;
     }
@@ -60,7 +59,7 @@ class LoginApplicationService implements LoginInputBoundary
         }
 
         if ($authenticationInformation->password()->equals($inputedPassword)) {
-            $this->sessionAuthentication->markAsLoggedIn($authenticationInformation->id());
+            $this->authService->markAsLoggedIn($authenticationInformation->id());
             $urlForObtainingAuthorizationCode = $this->urlForObtainingAuthorizationCode(
                 $clientId,
                 $redirectUrl,

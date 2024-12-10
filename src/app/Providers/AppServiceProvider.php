@@ -17,7 +17,7 @@ use packages\adapter\presenter\authentication\verifiedUpdate\json\JsonVerifiedUp
 use packages\adapter\presenter\errorResponse\ErrorResponse;
 use packages\adapter\presenter\errorResponse\JsonErrorResponse;
 use packages\adapter\presenter\userRegistration\json\JsonUserRegistrationPresenter;
-use packages\adapter\session\LaravelSessionAuthentication;
+use packages\adapter\service\laravel\LaravelSessionAuthentication;
 use packages\adapter\unitOfWork\EloquentUnitOfWork;
 use packages\application\authentication\login\LoginApplicationService;
 use packages\application\authentication\login\LoginInputBoundary;
