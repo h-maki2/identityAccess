@@ -4,10 +4,8 @@ use packages\adapter\persistence\inMemory\InMemoryAuthConfirmationRepository;
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
 use packages\domain\model\email\SendEmailDto;
 use packages\application\common\validation\ValidationErrorMessageData;
-use packages\domain\service\userRegistration\IUserRegistrationCompletionEmail;
-use packages\domain\service\userRegistration\UserRegistrationApplicationService;
-use packages\domain\service\userRegistration\UserRegistrationOutputBoundary;
-use packages\domain\service\userRegistration\UserRegistrationResult;
+use packages\application\userRegistration\UserRegistrationApplicationService;
+use packages\domain\model\email\IEmailSender;
 use packages\test\helpers\unitOfWork\TestUnitOfWork;
 use PHPUnit\Framework\TestCase;
 
@@ -16,11 +14,9 @@ class UserRegistrationApplicationServiceTest extends TestCase
     private InMemoryAuthConfirmationRepository $authConfirmationRepository;
     private InMemoryAuthenticationInformationRepository $authenticationInformationRepository;
     private TestUnitOfWork $unitOfWork;
-    private UserRegistrationOutputBoundary $outputBoundary;
-    private UserRegistrationResult $capturedResult;
-    private IUserRegistrationCompletionEmail $userRegistrationCompletionEmail;
     private SendEmailDto $capturedSendEmailDto;
     private UserRegistrationApplicationService $userRegistrationApplicationService;
+    private IEmailSender $emailSender;
 
     public function setUp(): void
     {
@@ -28,29 +24,20 @@ class UserRegistrationApplicationServiceTest extends TestCase
         $this->authenticationInformationRepository = new InMemoryAuthenticationInformationRepository();
         $this->unitOfWork = new TestUnitOfWork();
 
-        $outputBoundary = $this->createMock(UserRegistrationOutputBoundary::class);
-        $outputBoundary
-            ->method('formatForResponse')
-            ->with($this->callback(function (UserRegistrationResult $capturedResult) {
-                $this->capturedResult = $capturedResult;
-                return true;
-            }));
-        $this->outputBoundary = $outputBoundary;
-
-        $userRegistrationCompletionEmail = $this->createMock(IUserRegistrationCompletionEmail::class);
-        $userRegistrationCompletionEmail
+        $emailSender = $this->createMock(IEmailSender::class);
+        $emailSender
             ->method('send')
             ->with($this->callback(function (SendEmailDto $sendEmailDto) {
                 $this->capturedSendEmailDto = $sendEmailDto;
                 return true;
             }));
+        $this->emailSender = $emailSender;
 
         $this->userRegistrationApplicationService = new UserRegistrationApplicationService(
             $this->authConfirmationRepository,
             $this->authenticationInformationRepository,
             $this->unitOfWork,
-            $userRegistrationCompletionEmail,
-            $this->outputBoundary
+            $this->emailSender
         );
     }
 
@@ -59,14 +46,15 @@ class UserRegistrationApplicationServiceTest extends TestCase
         // given
         $userEmailString = 'test@exmaple.com';
         $userPasswordString = 'ABCabc123_';
+        $userPasswordConfirmationString = 'ABCabc123_';
 
         // when
-        $this->userRegistrationApplicationService->userRegister($userEmailString, $userPasswordString);
+        $result = $this->userRegistrationApplicationService->userRegister($userEmailString, $userPasswordString, $userPasswordConfirmationString);
 
         // then
         // バリデーションエラーがないことを確認
-        $this->assertFalse($this->capturedResult->validationError);
-        $this->assertEmpty($this->capturedResult->validationErrorMessageList);
+        $this->assertFalse($result->validationError);
+        $this->assertEmpty($result->validationErrorMessageList);
 
         // メール送信するデータが正しいことを確認
         $this->assertNotEmpty($this->capturedSendEmailDto->templateVariables['oneTimeToken']);
@@ -81,20 +69,25 @@ class UserRegistrationApplicationServiceTest extends TestCase
         $userEmailString = 'test';
         // パスワードの形式が不正な場合
         $userPasswordString = 'password';
+        // パスワード確認が一致しない場合
+        $userPasswordConfirmationString = 'ABCabc123_';
 
         // when
-        $this->userRegistrationApplicationService->userRegister($userEmailString, $userPasswordString);
+        $result = $this->userRegistrationApplicationService->userRegister($userEmailString, $userPasswordString, $userPasswordConfirmationString);
 
         // then
         // バリデーションエラーがあることを確認
-        $this->assertTrue($this->capturedResult->validationError);
+        $this->assertTrue($result->validationError);
         // バリデーションエラーメッセージが正しいことを確認
         $expectedErrorMessageDataList = [
             new ValidationErrorMessageData('email', ['不正なメールアドレスです。']),
             new ValidationErrorMessageData('password', [
                 'パスワードは大文字、小文字、数字、記号をそれぞれ1文字以上含めてください'
+            ]),
+            new ValidationErrorMessageData('passwordConfirmation', [
+                'パスワードが一致しません。'
             ])
         ];
-        $this->assertEquals($expectedErrorMessageDataList, $this->capturedResult->validationErrorMessageList);
+        $this->assertEquals($expectedErrorMessageDataList, $result->validationErrorMessageList);
     }
 }
