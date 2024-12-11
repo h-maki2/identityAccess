@@ -4,40 +4,36 @@ namespace packages\adapter\presenter\authentication\resendRegistrationConfirmati
 
 use packages\adapter\presenter\common\json\HttpStatus;
 use packages\adapter\presenter\common\json\JsonPresenter;
-use packages\adapter\presenter\common\json\JsonResponseStatus;
-use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailOutputBoundary;
 use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailResult;
 
-class JsonResendRegistrationConfirmationEmailPresenter extends JsonPresenter implements ResendRegistrationConfirmationEmailOutputBoundary
+class JsonResendRegistrationConfirmationEmailPresenter
 {
-    private array $responseData;
-    private HttpStatus $httpStatus;
+    private ResendRegistrationConfirmationEmailResult $resendRegistrationConfirmationEmailResult;
 
-    public function formatForResponse(ResendRegistrationConfirmationEmailResult $resendRegistrationConfirmationEmailResult): void
+    public function __construct(ResendRegistrationConfirmationEmailResult $resendRegistrationConfirmationEmailResult)
     {
-        $this->setResponseData($resendRegistrationConfirmationEmailResult);
-        $this->setHttpStatus($resendRegistrationConfirmationEmailResult);
+        $this->resendRegistrationConfirmationEmailResult = $resendRegistrationConfirmationEmailResult;
     }
 
-    public function response(): mixed
+    public function jsonResponseData(): array
     {
-        return $this->jsonResponse($this->responseData, $this->httpStatus);
+        $presenter = new JsonPresenter($this->responseData($this->resendRegistrationConfirmationEmailResult), $this->httpStatus());
+        return $presenter->responseData();
     }
 
-    private function setResponseData(ResendRegistrationConfirmationEmailResult $resendRegistrationConfirmationEmailResult): void
+    private function responseData(ResendRegistrationConfirmationEmailResult $resendRegistrationConfirmationEmailResult): array
     {
-        if ($resendRegistrationConfirmationEmailResult->validationError) {
-            $this->responseData = [
+        if ($this->resendRegistrationConfirmationEmailResult->validationError) {
+            return [
                 'validationErrorMessage' => $resendRegistrationConfirmationEmailResult->validationErrorMessage
             ];
-            return;
         }
         
-        $this->responseData = [];
+        return [];
     }
 
-    private function setHttpStatus(ResendRegistrationConfirmationEmailResult $resendRegistrationConfirmationEmailResult): void
+    private function httpStatus(): HttpStatus
     {
-        $this->httpStatus = $resendRegistrationConfirmationEmailResult->validationError ? HttpStatus::BadRequest : HttpStatus::Success;
+        return $this->resendRegistrationConfirmationEmailResult->validationError ? HttpStatus::BadRequest : HttpStatus::Success;
     }
 }

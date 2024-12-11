@@ -33,7 +33,6 @@ class JsonLoginPresenter
             ];
         }
 
-
         return [
             'accountLocked' => $this->loginResult->accountLocked
         ];
