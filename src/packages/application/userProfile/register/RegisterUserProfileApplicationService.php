@@ -20,24 +20,21 @@ class RegisterUserProfileApplicationService implements RegisterUserProfileInputB
     private IUserProfileRepository $userProfileRepository;
     private UserProfileService $userProfileService;
     private AuthenticationService $authService;
-    private RegisterUserProfileOutputBoundary $outputBoundary;
 
     public function __construct(
         IUserProfileRepository $userProfileRepository,
-        AuthenticationService $authService,
-        RegisterUserProfileOutputBoundary $outputBoundary
+        AuthenticationService $authService
     )
     {
         $this->userProfileRepository = $userProfileRepository;
         $this->userProfileService = new UserProfileService($userProfileRepository);
         $this->authService = $authService;
-        $this->outputBoundary = $outputBoundary;
     }
 
     /**
      * ユーザー登録を行う
      */
-    public function register(string $userNameString, string $selfIntroductionTextString): RegisterUserProfileOutputBoundary
+    public function register(string $userNameString, string $selfIntroductionTextString): RegisterUserProfileResult
     {
         $userId = $this->authService->loggedInUserId();
         if ($userId === null) {
@@ -51,10 +48,7 @@ class RegisterUserProfileApplicationService implements RegisterUserProfileInputB
         ));
         $validationHandler->addValidator(new SelfIntroductionTextValidation($selfIntroductionTextString));
         if (!$validationHandler->validate()) {
-            $this->outputBoundary->formatForResponse(
-                RegisterUserProfileResult::createWhenFailure($validationHandler->errorMessages())
-            );
-            return $this->outputBoundary;
+            return RegisterUserProfileResult::createWhenFailure($validationHandler->errorMessages());
         }
 
         $userName = New UserName($userNameString);
@@ -69,7 +63,6 @@ class RegisterUserProfileApplicationService implements RegisterUserProfileInputB
         );
         $this->userProfileRepository->save($userProfile);
 
-        $this->outputBoundary->formatForResponse(RegisterUserProfileResult::createWhenSuccess());
-        return $this->outputBoundary;
+        return RegisterUserProfileResult::createWhenSuccess();
     }
 }

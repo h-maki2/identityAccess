@@ -18,13 +18,11 @@ class VerifiedUpdateApplicationService implements VerifiedUpdateInputBoundary
 {
     private IAuthConfirmationRepository $authConfirmationRepository;
     private VerifiedUpdate $verifiedUpdate;
-    private VerifiedUpdateOutputBoundary $outputBoundary;
 
     public function __construct(
         IAuthenticationInformationRepository $authenticationInformationRepository,
         IAuthConfirmationRepository $authConfirmationRepository,
-        UnitOfWork $unitOfWork,
-        VerifiedUpdateOutputBoundary $outputBoundary
+        UnitOfWork $unitOfWork
     )
     {
         $this->authConfirmationRepository = $authConfirmationRepository;
@@ -33,36 +31,26 @@ class VerifiedUpdateApplicationService implements VerifiedUpdateInputBoundary
             $this->authConfirmationRepository,
             $unitOfWork
         );
-        $this->outputBoundary = $outputBoundary;
     }
 
     /**
      * 認証済み更新を行う
      */
-    public function verifiedUpdate(string $oneTimeTokenValueString, string $oneTimePasswordString): VerifiedUpdateOutputBoundary
+    public function verifiedUpdate(string $oneTimeTokenValueString, string $oneTimePasswordString): VerifiedUpdateResult
     {
         $oneTimeTokenValue = OneTimeTokenValue::reconstruct($oneTimeTokenValueString);
         $authConfirmation = $this->authConfirmationRepository->findByTokenValue($oneTimeTokenValue);
         if (!AuthConfirmationValidation::validate($authConfirmation, new DateTimeImmutable())) {
-            $this->outputBoundary->formatForResponse(
-                VerifiedUpdateResult::createWhenValidationError('ワンタイムトークンが無効です。')
-            );
-            return $this->outputBoundary;
+            return VerifiedUpdateResult::createWhenValidationError('ワンタイムトークンが無効です。');
         }
 
         $oneTimePassword = OneTimePassword::reconstruct($oneTimePasswordString);
         $verifiedUpdateResult = $this->verifiedUpdate->handle($authConfirmation, $oneTimePassword);
 
         if (!$verifiedUpdateResult) {
-            $this->outputBoundary->formatForResponse(
-                VerifiedUpdateResult::createWhenValidationError('ワンタイムトークンかワンタイムパスワードが無効です。')
-            );
-            return $this->outputBoundary;
+            return VerifiedUpdateResult::createWhenValidationError('ワンタイムトークンかワンタイムパスワードが無効です。');
         }
 
-        $this->outputBoundary->formatForResponse(
-            VerifiedUpdateResult::createWhenSuccess()
-        );
-        return $this->outputBoundary;
+        return VerifiedUpdateResult::createWhenSuccess();
     }
 }

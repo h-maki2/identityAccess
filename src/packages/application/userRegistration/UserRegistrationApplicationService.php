@@ -26,13 +26,11 @@ class UserRegistrationApplicationService implements UserRegistrationInputBoundar
 {
     private IAuthenticationInformationRepository $authenticationInformationRepository;
     private UserRegistration $userRegistration;
-    private UserRegistrationOutputBoundary $outputBoundary;
 
     public function __construct(
         IAuthConfirmationRepository $authConfirmationRepository,
         IAuthenticationInformationRepository $authenticationInformationRepository,
         UnitOfWork $unitOfWork,
-        UserRegistrationOutputBoundary $outputBoundary,
         IEmailSender $emailSender
     )
     {
@@ -43,7 +41,6 @@ class UserRegistrationApplicationService implements UserRegistrationInputBoundar
             $unitOfWork,
             $emailSender
         );
-        $this->outputBoundary = $outputBoundary;
     }
 
     /**
@@ -53,17 +50,14 @@ class UserRegistrationApplicationService implements UserRegistrationInputBoundar
         string $inputedEmail, 
         string $inputedPassword,
         string $inputedPasswordConfirmation
-    ): UserRegistrationOutputBoundary
+    ): UserRegistrationResult
     {
         $validationHandler = new ValidationHandler();
         $validationHandler->addValidator(new UserEmailValidation($inputedEmail, $this->authenticationInformationRepository));
         $validationHandler->addValidator(new UserPasswordValidation($inputedPassword));
         $validationHandler->addValidator(new UserPasswordConfirmationValidation($inputedPassword, $inputedPasswordConfirmation));
         if (!$validationHandler->validate()) {
-            $this->outputBoundary->formatForResponse(
-                UserRegistrationResult::createWhenValidationError($validationHandler->errorMessages())
-            );
-            return $this->outputBoundary;
+            return UserRegistrationResult::createWhenValidationError($validationHandler->errorMessages());
         }
 
         $userEmail = new UserEmail($inputedEmail);
@@ -74,9 +68,6 @@ class UserRegistrationApplicationService implements UserRegistrationInputBoundar
             throw new TransactionException($e->getMessage());
         }
 
-        $this->outputBoundary->formatForResponse(
-            UserRegistrationResult::createWhenSuccess()
-        );
-        return $this->outputBoundary;
+        return UserRegistrationResult::createWhenSuccess();
     }
 }

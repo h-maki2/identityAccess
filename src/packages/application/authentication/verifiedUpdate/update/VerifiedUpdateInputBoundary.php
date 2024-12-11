@@ -7,5 +7,5 @@ interface VerifiedUpdateInputBoundary
     public function verifiedUpdate(
         string $oneTimeTokenValueString,
         string $oneTimePasswordString
-    ): VerifiedUpdateOutputBoundary;
+    ): VerifiedUpdateResult;
 }

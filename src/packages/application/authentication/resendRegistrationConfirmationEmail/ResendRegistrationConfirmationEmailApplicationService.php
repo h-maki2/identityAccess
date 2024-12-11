@@ -18,19 +18,16 @@ class ResendRegistrationConfirmationEmailApplicationService implements ResendReg
 {
     private IAuthConfirmationRepository $authConfirmationRepository;
     private IAuthenticationInformationRepository $authenticationInformationRepository;
-    private ResendRegistrationConfirmationEmailOutputBoundary $outputBoundary;
     private OneTimeTokenAndPasswordRegeneration $oneTimeTokenAndPasswordRegeneration;
 
     public function __construct(
         IAuthConfirmationRepository $authConfirmationRepository,
         IAuthenticationInformationRepository $authenticationInformationRepository,
-        ResendRegistrationConfirmationEmailOutputBoundary $outputBoundary,
         IEmailSender $emailSender
     )
     {
         $this->authConfirmationRepository = $authConfirmationRepository;
         $this->authenticationInformationRepository = $authenticationInformationRepository;
-        $this->outputBoundary = $outputBoundary;
         $this->oneTimeTokenAndPasswordRegeneration = new OneTimeTokenAndPasswordRegeneration(
             $this->authConfirmationRepository,
             $emailSender
@@ -42,29 +39,20 @@ class ResendRegistrationConfirmationEmailApplicationService implements ResendReg
      */
     public function resendRegistrationConfirmationEmail(
         string $userEmailString
-    ): ResendRegistrationConfirmationEmailOutputBoundary
+    ): ResendRegistrationConfirmationEmailResult
     {
         $userEmail = new UserEmail($userEmailString);
         $authInfo = $this->authenticationInformationRepository->findByEmail($userEmail);
         if ($authInfo === null) {
-            $this->outputBoundary->formatForResponse(
-                ResendRegistrationConfirmationEmailResult::createWhenValidationError('メールアドレスが登録されていません。')
-            );
-            return $this->outputBoundary;
+            return ResendRegistrationConfirmationEmailResult::createWhenValidationError('メールアドレスが登録されていません。');
         }
 
         if ($authInfo->isVerified()) {
-            $this->outputBoundary->formatForResponse(
-                ResendRegistrationConfirmationEmailResult::createWhenValidationError('既にアカウントが認証済みです。')
-            );
-            return $this->outputBoundary;
+            return ResendRegistrationConfirmationEmailResult::createWhenValidationError('既にアカウントが認証済みです。');
         }
 
         $this->oneTimeTokenAndPasswordRegeneration->handle($authInfo);
 
-        $this->outputBoundary->formatForResponse(
-            ResendRegistrationConfirmationEmailResult::createWhenSuccess()
-        );
-        return $this->outputBoundary;
+        return ResendRegistrationConfirmationEmailResult::createWhenSuccess();
     }
 }

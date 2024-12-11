@@ -16,19 +16,16 @@ class LoginApplicationService implements LoginInputBoundary
     private IAuthenticationInformationRepository $authenticationInformationRepository;
     private AuthenticationService $authService;
     private IClientFetcher $clientFetcher;
-    private LoginOutputBoundary $outputBoundary;
 
     public function __construct(
         IAuthenticationInformationRepository $authenticationInformationRepository,
         AuthenticationService $authService,
-        IClientFetcher $clientFetcher,
-        LoginOutputBoundary $outputBoundary
+        IClientFetcher $clientFetcher
     )
     {
         $this->authenticationInformationRepository = $authenticationInformationRepository;
         $this->authService = $authService;
         $this->clientFetcher = $clientFetcher;
-        $this->outputBoundary = $outputBoundary;
     }
 
     public function login(
@@ -38,20 +35,18 @@ class LoginApplicationService implements LoginInputBoundary
         string $redirectUrl,
         string $responseType,
         string $state
-    ): LoginOutputBoundary
+    ): LoginResult
     {
         $email = new UserEmail($inputedEmail);
         $authenticationInformation = $this->authenticationInformationRepository->findByEmail($email);
 
         if ($authenticationInformation === null) {
-            $this->outputBoundary->formatForResponse(LoginResult::createWhenLoginFailed(false));
-            return $this->outputBoundary;
+            return LoginResult::createWhenLoginFailed(false);
         }
 
         $currentDateTime = new DateTimeImmutable();
         if (!$authenticationInformation->canLoggedIn($currentDateTime)) {
-            $this->outputBoundary->formatForResponse(LoginResult::createWhenLoginFailed(true));
-            return $this->outputBoundary;
+            return LoginResult::createWhenLoginFailed(true);
         }
 
         if ($authenticationInformation->canDisableLoginRestriction($currentDateTime)) {
@@ -68,8 +63,7 @@ class LoginApplicationService implements LoginInputBoundary
             );
 
             $this->authenticationInformationRepository->save($authenticationInformation);
-            $this->outputBoundary->formatForResponse(LoginResult::createWhenLoginSucceeded($urlForObtainingAuthorizationCode));
-            return $this->outputBoundary;
+            return LoginResult::createWhenLoginSucceeded($urlForObtainingAuthorizationCode);
         }
 
         $authenticationInformation->addFailedLoginCount($currentDateTime);
@@ -79,12 +73,10 @@ class LoginApplicationService implements LoginInputBoundary
         $this->authenticationInformationRepository->save($authenticationInformation);
 
         if (!$authenticationInformation->canLoggedIn($currentDateTime)) {
-            $this->outputBoundary->formatForResponse(LoginResult::createWhenLoginFailed(true));
-            return $this->outputBoundary;
+            return LoginResult::createWhenLoginFailed(true);
         }
 
-        $this->outputBoundary->formatForResponse(LoginResult::createWhenLoginFailed(false));
-        return $this->outputBoundary;
+        return LoginResult::createWhenLoginFailed(false);
     }
 
     /**

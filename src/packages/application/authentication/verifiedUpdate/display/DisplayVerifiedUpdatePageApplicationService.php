@@ -13,34 +13,25 @@ use packages\domain\model\authConfirmation\validation\AuthConfirmationValidation
 class DisplayVerifiedUpdatePageApplicationService implements DisplayVerifiedUpdatePageInputBoundary
 {
     private IAuthConfirmationRepository $authConfirmationRepository;
-    private DisplayVerifiedUpdatePageOutputBoundary $outputBoundary;
 
     public function __construct(
-        IAuthConfirmationRepository $authConfirmationRepository,
-        DisplayVerifiedUpdatePageOutputBoundary $outputBoundary
+        IAuthConfirmationRepository $authConfirmationRepository
     )
     {
         $this->authConfirmationRepository = $authConfirmationRepository;
-        $this->outputBoundary = $outputBoundary;
     }
 
     /**
      * 認証済み更新ページを表示する
      */
-    public function displayVerifiedUpdatePage(string $oneTimeTokenValueString): DisplayVerifiedUpdatePageOutputBoundary
+    public function displayVerifiedUpdatePage(string $oneTimeTokenValueString): DisplayVerifiedUpdatePageResult
     {
         $oneTimeTokenValue = OneTimeTokenValue::reconstruct($oneTimeTokenValueString);
         $authConfirmation = $this->authConfirmationRepository->findByTokenValue($oneTimeTokenValue);
         if (!AuthConfirmationValidation::validate($authConfirmation, new DateTimeImmutable())) {
-            $this->outputBoundary->formatForResponse(
-                DisplayVerifiedUpdatePageResult::createWhenValidationError('無効なワンタイムトークンです。')
-            );
-            return $this->outputBoundary;
+            return DisplayVerifiedUpdatePageResult::createWhenValidationError('無効なワンタイムトークンです。');
         }
 
-        $this->outputBoundary->formatForResponse(
-            DisplayVerifiedUpdatePageResult::createWhenSuccess($oneTimeTokenValue)
-        );
-        return $this->outputBoundary;
+        return DisplayVerifiedUpdatePageResult::createWhenSuccess($oneTimeTokenValue);
     }
 }

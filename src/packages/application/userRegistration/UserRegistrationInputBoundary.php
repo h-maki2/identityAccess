@@ -8,5 +8,5 @@ interface UserRegistrationInputBoundary
         string $email,
         string $password,
         string $passwordConfirmation
-    ): UserRegistrationOutputBoundary;
+    ): UserRegistrationResult;
 }

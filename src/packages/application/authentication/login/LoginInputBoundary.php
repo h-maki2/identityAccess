@@ -2,8 +2,6 @@
 
 namespace packages\application\authentication\login;
 
-use packages\application\authentication\login\LoginOutputBoundary;
-
 interface LoginInputBoundary
 {
     /**
@@ -16,5 +14,5 @@ interface LoginInputBoundary
         string $redirectUrl,
         string $responseType,
         string $state
-    ): LoginOutputBoundary;
+    ): LoginResult;
 }

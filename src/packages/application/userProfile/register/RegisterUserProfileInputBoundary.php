@@ -4,5 +4,5 @@ namespace packages\application\userProfile\register;
 
 interface RegisterUserProfileInputBoundary
 {
-    public function register(string $userNameString, string $selfIntroductionTextString): RegisterUserProfileOutputBoundary;
+    public function register(string $userNameString, string $selfIntroductionTextString): RegisterUserProfileResult;
 }
