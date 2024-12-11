@@ -12,6 +12,8 @@ use packages\domain\model\email\SendEmailDto;
  */
 class VerifiedUpdateEmailDtoFactory
 {
+    private const verifiedUpdateBaseUrl = 'http://localhost:3000/verifiedUpdate';
+        
     public static function create(
         UserEmail $toAddress,
         OneTimeToken $oneTimeToken,
@@ -19,7 +21,7 @@ class VerifiedUpdateEmailDtoFactory
     ): SendEmailDto
     {
         $templateValiables = [
-            'oneTimeToken' => $oneTimeToken->value(),
+            'verifiedUpdateBaseUrl' => self::verifiedUpdateBaseUrl . '?token=' . $oneTimeToken->value(),
             'oneTimePassword' => $oneTimePassword->value
         ];
         return new SendEmailDto(

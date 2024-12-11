@@ -11,14 +11,6 @@ use packages\adapter\oauth\client\LaravelPassportClientFetcher;
 use packages\adapter\persistence\eloquent\EloquentAuthConfirmationRepository;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationInformationRepository;
 use packages\adapter\persistence\eloquent\EloquentUserProfileRepository;
-use packages\adapter\presenter\authentication\login\json\JsonLoginPresenter;
-use packages\adapter\presenter\authentication\resendRegistrationConfirmationEmail\json\JsonResendRegistrationConfirmationEmailPresenter;
-use packages\adapter\presenter\authentication\verifiedUpdate\json\JsonDisplayVerifiedUpdatePagePresenter;
-use packages\adapter\presenter\authentication\verifiedUpdate\json\JsonVerifiedUpdatePresenter;
-use packages\adapter\presenter\errorResponse\ErrorResponse;
-use packages\adapter\presenter\errorResponse\JsonErrorResponse;
-use packages\adapter\presenter\userProfile\register\json\JsonRegisterUserProfilePresenter;
-use packages\adapter\presenter\userRegistration\json\JsonUserRegistrationPresenter;
 use packages\adapter\service\laravel\LaravelAuthenticationService;
 use packages\adapter\service\laravel\LaravelSessionAuthentication;
 use packages\adapter\unitOfWork\EloquentUnitOfWork;
@@ -71,22 +63,12 @@ class AppServiceProvider extends ServiceProvider
         // ユニットオブワーク
         $this->app->bind(UnitOfWork::class, EloquentUnitOfWork::class);
 
-        // プレゼンター
-        $this->app->bind(LoginOutputBoundary::class, JsonLoginPresenter::class);
-        $this->app->bind(DisplayVerifiedUpdatePageOutputBoundary::class, JsonDisplayVerifiedUpdatePagePresenter::class);
-        $this->app->bind(VerifiedUpdateOutputBoundary::class, JsonVerifiedUpdatePresenter::class);
-        $this->app->bind(ResendRegistrationConfirmationEmailOutputBoundary::class, JsonResendRegistrationConfirmationEmailPresenter::class);
-        $this->app->bind(UserRegistrationOutputBoundary::class, JsonUserRegistrationPresenter::class);
-        $this->app->bind(ErrorResponse::class, JsonErrorResponse::class);
-        $this->app->bind(RegisterUserProfileOutputBoundary::class, JsonRegisterUserProfilePresenter::class);
-
         // サービス
         $this->app->bind(AuthenticationService::class, LaravelAuthenticationService::class);
 
         // アプリケーションサービス
         $this->app->bind(LoginInputBoundary::class, LoginApplicationService::class);
         $this->app->bind(ResendRegistrationConfirmationEmailInputBoundary::class, ResendRegistrationConfirmationEmailApplicationService::class);
-        $this->app->bind(DisplayVerifiedUpdatePageInputBoundary::class, DisplayVerifiedUpdatePageApplicationService::class);
         $this->app->bind(VerifiedUpdateInputBoundary::class, VerifiedUpdateApplicationService::class);
         $this->app->bind(UserRegistrationInputBoundary::class, UserRegistrationApplicationService::class);
         $this->app->bind(RegisterUserProfileInputBoundary::class, RegisterUserProfileApplicationService::class);
