@@ -8,36 +8,35 @@ use packages\adapter\presenter\common\json\JsonResponseStatus;
 use packages\application\userRegistration\UserRegistrationOutputBoundary;
 use packages\application\userRegistration\UserRegistrationResult;
 
-class JsonUserRegistrationPresenter extends JsonPresenter implements UserRegistrationOutputBoundary
+class JsonUserRegistrationPresenter
 {
-    private array $responseData;
-    private HttpStatus $httpStatus;
+    private UserRegistrationResult $result;
 
-    public function formatForResponse(UserRegistrationResult $result): void
+    public function __construct(UserRegistrationResult $result)
     {
-        $this->setResponseData($result);
-        $this->setHttpStatusCode($result);
+        $this->result = $result;
     }
 
-    public function response(): mixed
+    public function jsonResponseData(): JsonPresenter
     {
-        return $this->jsonResponse($this->responseData, $this->httpStatus);
+        return new JsonPresenter($this->responseData($this->result), $this->httpStatus());
     }
 
-    private function setResponseData(UserRegistrationResult $result): void
+    private function responseData(UserRegistrationResult $result): array
     {
-        if ($result->validationError) {
-            foreach ($result->validationErrorMessageList as $validationError) {
-                $this->responseData[$validationError->fieldName] = $validationError->errorMessageList;
-            }
-            return;
+        if (!$result->validationError) {
+            return [];
         }
-        
-        $this->responseData = [];
+
+        $responseData = [];
+        foreach ($result->validationErrorMessageList as $validationError) {
+            $responseData[$validationError->fieldName] = $validationError->errorMessageList;
+        }
+        return $responseData;
     }
 
-    private function setHttpStatusCode(UserRegistrationResult $result): void
+    private function httpStatus(): HttpStatus
     {
-        $this->httpStatus = $result->validationError ? HttpStatus::BadRequest : HttpStatus::Success;
+        return $this->result->validationError ? HttpStatus::BadRequest : HttpStatus::Success;
     }
 }

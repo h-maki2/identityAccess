@@ -7,37 +7,35 @@ use packages\adapter\presenter\common\json\JsonPresenter;
 use packages\application\userProfile\register\RegisterUserProfileOutputBoundary;
 use packages\application\userProfile\register\RegisterUserProfileResult;
 
-class JsonRegisterUserProfilePresenter extends JsonPresenter implements RegisterUserProfileOutputBoundary
+class JsonRegisterUserProfilePresenter
 {
-    private array $responseData;
-    private HttpStatus $httpStatus;
+    private RegisterUserProfileResult $registerUserProfileResult;
 
-    public function formatForResponse(RegisterUserProfileResult $registerUserProfileResult): void
+    public function __construct(RegisterUserProfileResult $registerUserProfileResult)
     {
-        $this->setResponseData($registerUserProfileResult);
-        $this->setHttpStatusCode($registerUserProfileResult);
+        $this->registerUserProfileResult = $registerUserProfileResult;
     }
 
-    public function response(): mixed
+    public function jsonResponseData(): JsonPresenter
     {
-        return $this->jsonResponse($this->responseData, $this->httpStatus);
+        return new JsonPresenter($this->responseData(), $this->httpStatus());
     }
 
-    private function setResponseData(RegisterUserProfileResult $registerUserProfileResult): void
+    private function responseData(): array
     {
-        if ($registerUserProfileResult->isSucess) {
-            $this->responseData = [];
-            return;
+        if ($this->registerUserProfileResult->isSuccess) {
+            return [];
         }
 
-
-        foreach ($registerUserProfileResult->validationErrorMessageList as $validationErrorMessage) {
-            $this->responseData[$validationErrorMessage->fieldName] = $validationErrorMessage->errorMessageList;
+        $responseData = [];
+        foreach ($this->registerUserProfileResult->validationErrorMessageList as $validationErrorMessage) {
+            $responseData[$validationErrorMessage->fieldName] = $validationErrorMessage->errorMessageList;
         }
+        return $responseData;
     }
 
-    private function setHttpStatusCode(RegisterUserProfileResult $registerUserProfileResult): void
+    private function httpStatus(): HttpStatus
     {
-        $this->httpStatus = $registerUserProfileResult->isSucess ? HttpStatus::Success : HttpStatus::BadRequest;
+        return $this->registerUserProfileResult->isSuccess ? HttpStatus::Success : HttpStatus::BadRequest;
     }
 }

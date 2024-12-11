@@ -17,10 +17,9 @@ class JsonDisplayVerifiedUpdatePagePresenter
         $this->displayVerifiedUpdatePageResult = $displayVerifiedUpdatePageResult;   
     }
 
-    public function jsonResponseData(): array
+    public function jsonResponseData(): JsonPresenter
     {
-        $presenter = new JsonPresenter($this->responseData(), $this->httpStatus());
-        return $presenter->responseData();
+        return new JsonPresenter($this->responseData(), $this->httpStatus());
     }
 
     private function responseData(): array

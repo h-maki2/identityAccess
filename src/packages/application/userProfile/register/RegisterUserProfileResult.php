@@ -4,7 +4,7 @@ namespace packages\application\userProfile\register;
 
 class RegisterUserProfileResult
 {
-    readonly bool $isSucess;
+    readonly bool $isSuccess;
     readonly array $validationErrorMessageList;
 
     /**
@@ -12,7 +12,7 @@ class RegisterUserProfileResult
      */
     private function __construct(bool $isSucess, array $validationErrorMessageList)
     {
-        $this->isSucess = $isSucess;
+        $this->isSuccess = $isSucess;
         $this->validationErrorMessageList = $validationErrorMessageList;
     }
 
