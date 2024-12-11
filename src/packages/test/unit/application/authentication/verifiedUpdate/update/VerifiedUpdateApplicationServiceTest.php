@@ -23,7 +23,6 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
     private AuthConfirmationTestDataCreator $authConfirmationTestDataCreator;
     private AuthenticationInformationTestDataCreator $authenticationInformationTestDataCreator;
     private VerifiedUpdateApplicationService $verifiedUpdateApplicationService;
-    private VerifiedUpdateOutputBoundary $outputBoundary;
     private VerifiedUpdateResult $capturedResult;
 
     public function setUp(): void
@@ -39,20 +38,10 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
         $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator($this->authConfirmationRepository, $this->authenticationInformationRepository);
         $this->authenticationInformationTestDataCreator = new AuthenticationInformationTestDataCreator($this->authenticationInformationRepository);
 
-        $outputBoundary = $this->createMock(VerifiedUpdateOutputBoundary::class);
-        $outputBoundary
-            ->method('formatForResponse')
-            ->with($this->callback(function (VerifiedUpdateResult $capturedResult) {
-                $this->capturedResult = $capturedResult;
-                return true;
-            }));
-        $this->outputBoundary = $outputBoundary;
-
         $this->verifiedUpdateApplicationService = new VerifiedUpdateApplicationService(
             $this->authenticationInformationRepository,
             $this->authConfirmationRepository,
-            $this->unitOfWork,
-            $this->outputBoundary
+            $this->unitOfWork
         );
     }
 
@@ -76,12 +65,12 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
 
         // when
         // 正しいワンタイムトークンとワンタイムパスワードを入力する
-        $this->verifiedUpdateApplicationService->verifiedUpdate($oneTimeTokenValue->value, $oneTimePassword->value);
+        $result = $this->verifiedUpdateApplicationService->verifiedUpdate($oneTimeTokenValue->value, $oneTimePassword->value);
 
         // then
         // バリデーションエラーが発生していないことを確認
-        $this->assertFalse($this->capturedResult->validationError);
-        $this->assertEmpty($this->capturedResult->validationErrorMessage);
+        $this->assertFalse($result->validationError);
+        $this->assertEmpty($result->validationErrorMessage);
 
         // 認証情報が認証済みになっていることを確認
         $updatedAuthenticationInformation = $this->authenticationInformationRepository->findById($userId);
@@ -117,8 +106,8 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
 
         // then
         // バリデーションエラーが発生していることを確認
-        $this->assertTrue($this->capturedResult->validationError);
-        $this->assertEquals('ワンタイムトークンが無効です。', $this->capturedResult->validationErrorMessage);
+        $this->assertTrue($result->validationError);
+        $this->assertEquals('ワンタイムトークンが無効です。', $result->validationErrorMessage);
     }
 
     public function test_ワンタイムパスワードが正しくない場合、認証情報を認証済みに更新できない()
@@ -146,7 +135,7 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
 
         // then
         // バリデーションエラーが発生していることを確認
-        $this->assertTrue($this->capturedResult->validationError);
-        $this->assertEquals('ワンタイムトークンかワンタイムパスワードが無効です。', $this->capturedResult->validationErrorMessage);
+        $this->assertTrue($result->validationError);
+        $this->assertEquals('ワンタイムトークンかワンタイムパスワードが無効です。', $result->validationErrorMessage);
     }
 }
