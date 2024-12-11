@@ -9,6 +9,8 @@ use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationInformation\UserEmail;
 use packages\domain\model\authenticationInformation\VerificationStatus;
+use packages\domain\model\email\IEmailSender;
+use packages\domain\model\email\SendEmailDto;
 use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
 use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataCreator;
 use PHPUnit\Framework\TestCase;
@@ -21,26 +23,27 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
     private AuthConfirmationTestDataCreator $authConfirmationTestDataCreator;
     private AuthenticationInformationTestDataCreator $authenticationInformationTestDataCreator;
     private ResendRegistrationConfirmationEmailResult $catchedResult;
-    private ResendRegistrationConfirmationEmailOutputBoundary $outputBoundary;
+    private IEmailSender $emailSender;
+    private SendEmailDto $catchedSendEmailDto;
 
     public function setUp(): void
     {
         $this->authConfirmationRepository = new InMemoryAuthConfirmationRepository();
         $this->authenticationInformationRepository = new InMemoryAuthenticationInformationRepository();
 
-        $outputBoundary = $this->createMock(ResendRegistrationConfirmationEmailOutputBoundary::class);
-        $outputBoundary
-            ->method('formatForResponse')
-            ->with($this->callback(function (ResendRegistrationConfirmationEmailResult $catchedResult) {
-                $this->catchedResult = $catchedResult;
+        $emailSender = $this->createMock(IEmailSender::class);
+        $emailSender
+            ->method('send')
+            ->with($this->callback(function (SendEmailDto $sendEmailDto) {
+                $this->catchedSendEmailDto = $sendEmailDto;
                 return true;
             }));
-        $this->outputBoundary = $outputBoundary;
+        $this->emailSender = $emailSender;
 
         $this->resendRegistrationConfirmationEmailApplicationService = new ResendRegistrationConfirmationEmailApplicationService(
             $this->authConfirmationRepository,
             $this->authenticationInformationRepository,
-            $this->outputBoundary
+            $this->emailSender
         );
         $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator($this->authConfirmationRepository, $this->authenticationInformationRepository);
         $this->authenticationInformationTestDataCreator = new AuthenticationInformationTestDataCreator($this->authenticationInformationRepository);
@@ -66,19 +69,20 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
         );
 
         // when
-        $this->resendRegistrationConfirmationEmailApplicationService->resendRegistrationConfirmationEmail($userEmail->value);
+        $result = $this->resendRegistrationConfirmationEmailApplicationService->resendRegistrationConfirmationEmail($userEmail->value);
 
         // then
         // バリデーションエラーが発生していないことを確認
-        $this->assertFalse($this->catchedResult->validationError);
-        $this->assertEmpty($this->catchedResult->validationErrorMessage);
-
-        // ワンタイムトークンが再生成されていることを確認
-        $this->assertNotEquals($oneTimeTokenValue->value, $this->catchedResult->oneTimeTokenValue);
+        $this->assertFalse($result->validationError);
+        $this->assertEmpty($result->validationErrorMessage);
 
         // ワンタイムパスワードが再生成されていることを確認
         $actualAuthConfirmation = $this->authConfirmationRepository->findById($authenticationInformation->id());
         $this->assertNotEquals($oneTimePasword->value, $actualAuthConfirmation->oneTimePassword()->value);
+
+        // 正しいデータで本登録確認メールが送信できていることを確認
+        $this->assertEquals($this->catchedSendEmailDto->templateVariables['oneTimeToken'], $actualAuthConfirmation->oneTimeToken()->value());
+        $this->assertEquals($this->catchedSendEmailDto->templateVariables['oneTimePassword'], $actualAuthConfirmation->oneTimePassword()->value);
     }
 
     public function test_入力されたメールアドレスに紐づく認証情報が存在しない場合、バリデーションエラーが発生する()
@@ -101,13 +105,12 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
 
         // when
         $正しくないメールアドレス = 'other@example.com';
-        $this->resendRegistrationConfirmationEmailApplicationService->resendRegistrationConfirmationEmail($正しくないメールアドレス);
+        $result = $this->resendRegistrationConfirmationEmailApplicationService->resendRegistrationConfirmationEmail($正しくないメールアドレス);
 
         // then
         // バリデーションエラーが発生していることを確認
-        $this->assertTrue($this->catchedResult->validationError);
-        $this->assertEquals('メールアドレスが登録されていません。', $this->catchedResult->validationErrorMessage);
-        $this->assertEmpty($this->catchedResult->oneTimeTokenValue);
+        $this->assertTrue($result->validationError);
+        $this->assertEquals('メールアドレスが登録されていません。', $result->validationErrorMessage);
     }
 
     public function test_認証情報がすでに認証済みの場合、バリデーションエラーが発生する()
@@ -134,9 +137,8 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
 
         // then
         // バリデーションエラーが発生していることを確認
-        $this->assertTrue($this->catchedResult->validationError);
-        $this->assertEquals('既にアカウントが認証済みです。', $this->catchedResult->validationErrorMessage);
-        $this->assertEmpty($this->catchedResult->oneTimeTokenValue);
+        $this->assertTrue($result->validationError);
+        $this->assertEquals('既にアカウントが認証済みです。', $result->validationErrorMessage);
     }
 
     public function test_認証情報に紐づく認証確認情報が存在しない場合は例外が発生する()
