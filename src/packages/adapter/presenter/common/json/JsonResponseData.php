@@ -14,6 +14,8 @@ class JsonResponseData
         } else {
             $this->setErrorResponse($responseData, $httpStatus);
         }
+
+        $this->httpStatus = $httpStatus;
     }
     
     public function httpStatusCode(): int

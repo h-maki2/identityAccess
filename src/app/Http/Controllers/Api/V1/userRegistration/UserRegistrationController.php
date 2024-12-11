@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\userRegistration;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Casts\Json;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use packages\adapter\presenter\userRegistration\json\JsonUserRegistrationPresenter;
 use packages\application\userRegistration\UserRegistrationInputBoundary;
@@ -17,7 +18,7 @@ class UserRegistrationController extends Controller
         $this->userRegistrationInputBoundary = $userRegistrationInputBoundary;
     }
 
-    public function userRegister(Request $request): mixed
+    public function userRegister(Request $request): JsonResponse
     {
         $output = $this->userRegistrationInputBoundary->userRegister(
             $request->input('email', ''),

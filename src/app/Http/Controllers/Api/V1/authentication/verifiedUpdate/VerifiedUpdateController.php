@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api\V1\authentication\verifiedUpdate;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use packages\adapter\presenter\authentication\verifiedUpdate\json\JsonVerifiedUpdatePresenter;
 use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateInputBoundary;
 
-class VerifiedUpdateController
+class VerifiedUpdateController extends Controller
 {
     private VerifiedUpdateInputBoundary $verifiedUpdateInputBoundary;
 
@@ -15,11 +17,11 @@ class VerifiedUpdateController
         $this->verifiedUpdateInputBoundary = $verifiedUpdateInputBoundary;
     }
 
-    public function verifiedUpdate(Request $request): mixed
+    public function verifiedUpdate(Request $request): JsonResponse
     {
         $output = $this->verifiedUpdateInputBoundary->verifiedUpdate(
-            $request->input('oneTimeTokenValue'),
-            $request->input('oneTimePassword')
+            $request->input('oneTimeToken', ''),
+            $request->input('oneTimePassword', '')
         );
 
         $presenter = new JsonVerifiedUpdatePresenter($output);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\userProfile\register;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use packages\adapter\presenter\userProfile\register\json\JsonRegisterUserProfilePresenter;
 use packages\application\userProfile\register\RegisterUserProfileInputBoundary;
@@ -19,7 +20,7 @@ class RegisterUserProfileController extends Controller
     /**
      * ユーザー登録を行う
      */
-    public function register(Request $request): mixed
+    public function register(Request $request): JsonResponse
     {
         $result = $this->registerUserProfileInputBoundary->register(
             $request->input('userName', ''),

@@ -6,13 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['api.version'])->group(function () {
-    Route::get('/verifiedUpdate', function (Request $request, ApiVersionResolver $resolver, Container $container) {
-        $version = $request->attributes->get('api_version');
-        $controller = $resolver->resolve($version, 'authentication\verifiedUpdate\DisplayVerifiedUpdatePageController');
-
-        return $container->call([$controller, 'displayVerifiedUpdatePage']);
-    });
-
     Route::post('/verifiedUpdate', function (Request $request, ApiVersionResolver $resolver, Container $container) {
         $version = $request->attributes->get('api_version');
         $controller = $resolver->resolve($version, 'authentication\verifiedUpdate\VerifiedUpdateController');
