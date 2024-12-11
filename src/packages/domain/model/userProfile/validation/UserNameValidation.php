@@ -21,13 +21,13 @@ class UserNameValidation extends Validator
 
     public function validate(): bool
     {
-        if (UserNameFormatChecker::onlyWhiteSpace($this->userName)) {
-            $this->setErrorMessage('ユーザー名に空白文字列のみは使用できません。');
-            return false;
-        }
-
         if (UserNameFormatChecker::invalidUserNameLength($this->userName)) {
             $this->setErrorMessage('ユーザー名は1文字以上50文字以内で入力してください。');
+            return false;
+        }
+        
+        if (UserNameFormatChecker::onlyWhiteSpace($this->userName)) {
+            $this->setErrorMessage('ユーザー名に空白文字列のみは使用できません。');
             return false;
         }
 
