@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\userProfile\register;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use packages\adapter\presenter\userProfile\register\json\JsonRegisterUserProfilePresenter;
 use packages\application\userProfile\register\RegisterUserProfileInputBoundary;
 
 class RegisterUserProfileController extends Controller
@@ -25,6 +26,8 @@ class RegisterUserProfileController extends Controller
             $request->input('selfIntroductionText', '')
         );
 
-        return $result->response();
+        $presenter = new JsonRegisterUserProfilePresenter($result);
+        $jsonResponseData = $presenter->jsonResponseData();
+        return response()->json($jsonResponseData->value, $jsonResponseData->httpStatusCode());
     }
 }

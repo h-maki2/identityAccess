@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api\V1\authentication\login;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use packages\adapter\presenter\authentication\login\json\JsonLoginPresenter;
 use packages\application\authentication\login\LoginInputBoundary;
 
 class LoginController extends Controller
@@ -15,7 +17,7 @@ class LoginController extends Controller
         $this->loginInputBoundary = $loginInputBoundary;
     }
 
-    public function login(Request $request): mixed
+    public function login(Request $request): JsonResponse
     {
         $output = $this->loginInputBoundary->login(
             $request->input('email'),
@@ -26,6 +28,8 @@ class LoginController extends Controller
             $request->input('state')
         );
 
-        return $output->response();
+        $presenter = new JsonLoginPresenter($output);
+        $jsonResponseData = $presenter->jsonResponseData();
+        return response()->json($jsonResponseData->value, $jsonResponseData->httpStatusCode());
     }
 }

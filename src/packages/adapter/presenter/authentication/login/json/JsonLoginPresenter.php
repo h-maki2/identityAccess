@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Support\Facades\Http;
 use packages\adapter\presenter\common\json\HttpStatus;
 use packages\adapter\presenter\common\json\JsonPresenter;
+use packages\adapter\presenter\common\json\JsonResponseData;
 use packages\adapter\presenter\common\json\JsonResponseStatus;
 use packages\application\authentication\login\LoginOutputBoundary;
 use packages\application\authentication\login\LoginResult;
 
-class JsonLoginPresenter
+class JsonLoginPresenter implements JsonPresenter
 {
     private LoginResult $loginResult;
 
@@ -20,9 +21,9 @@ class JsonLoginPresenter
         $this->loginResult = $loginResult;
     }
 
-    public function jsonResponseData(): JsonPresenter
+    public function jsonResponseData(): JsonResponseData
     {
-        return new JsonPresenter($this->responseData(), $this->httpStatus());
+        return new JsonResponseData($this->responseData(), $this->httpStatus());
     }
 
     private function responseData(): array

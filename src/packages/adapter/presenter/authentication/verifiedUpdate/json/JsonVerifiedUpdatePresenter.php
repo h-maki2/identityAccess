@@ -4,10 +4,11 @@ namespace packages\adapter\presenter\authentication\verifiedUpdate\json;
 
 use packages\adapter\presenter\common\json\HttpStatus;
 use packages\adapter\presenter\common\json\JsonPresenter;
+use packages\adapter\presenter\common\json\JsonResponseData;
 use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateOutputBoundary;
 use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateResult;
 
-class JsonVerifiedUpdatePresenter
+class JsonVerifiedUpdatePresenter implements JsonPresenter
 {
     private VerifiedUpdateResult $verifiedUpdateResult;
 
@@ -16,9 +17,9 @@ class JsonVerifiedUpdatePresenter
         $this->verifiedUpdateResult = $verifiedUpdateResult;
     }
 
-    public function jsonResponseData(): JsonPresenter
+    public function jsonResponseData(): JsonResponseData
     {
-        return new JsonPresenter($this->responseData(), $this->httpStatus());
+        return new JsonResponseData($this->responseData(), $this->httpStatus());
     }
 
     private function responseData(): array

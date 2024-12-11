@@ -4,10 +4,11 @@ namespace packages\adapter\presenter\userProfile\register\json;
 
 use packages\adapter\presenter\common\json\HttpStatus;
 use packages\adapter\presenter\common\json\JsonPresenter;
+use packages\adapter\presenter\common\json\JsonResponseData;
 use packages\application\userProfile\register\RegisterUserProfileOutputBoundary;
 use packages\application\userProfile\register\RegisterUserProfileResult;
 
-class JsonRegisterUserProfilePresenter
+class JsonRegisterUserProfilePresenter implements JsonPresenter
 {
     private RegisterUserProfileResult $registerUserProfileResult;
 
@@ -16,9 +17,9 @@ class JsonRegisterUserProfilePresenter
         $this->registerUserProfileResult = $registerUserProfileResult;
     }
 
-    public function jsonResponseData(): JsonPresenter
+    public function jsonResponseData(): JsonResponseData
     {
-        return new JsonPresenter($this->responseData(), $this->httpStatus());
+        return new JsonResponseData($this->responseData(), $this->httpStatus());
     }
 
     private function responseData(): array

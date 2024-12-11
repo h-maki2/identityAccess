@@ -27,23 +27,23 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         if ($exception instanceof InvalidArgumentException) {
-            $jsonResponse = JsonErrorResponse::get(HttpStatus::BadRequest);
-            return response()->json($jsonResponse->responseData, $jsonResponse->httpStatusCode());
+            $jsonResponseData = JsonErrorResponse::get(HttpStatus::BadRequest);
+            return response()->json($jsonResponseData->value, $jsonResponseData->httpStatusCode());
         }
 
         if ($exception instanceof DomainException) {
-            $jsonResponse = JsonErrorResponse::get(HttpStatus::BadRequest);
-            return response()->json($jsonResponse->responseData, $jsonResponse->httpStatusCode());
+            $jsonResponseData = JsonErrorResponse::get(HttpStatus::BadRequest);
+            return response()->json($jsonResponseData->value, $jsonResponseData->httpStatusCode());
         }
 
         if ($exception instanceof AuthenticationException) {
-            $jsonResponse = JsonErrorResponse::get(HttpStatus::Unauthorized);
-            return response()->json($jsonResponse->responseData, $jsonResponse->httpStatusCode());
+            $jsonResponseData = JsonErrorResponse::get(HttpStatus::Unauthorized);
+            return response()->json($jsonResponseData->value, $jsonResponseData->httpStatusCode());
         }
 
         if ($exception instanceof TransactionException) {
-            $jsonResponse = JsonErrorResponse::get(HttpStatus::InternalServerError);
-            return response()->json($jsonResponse->responseData, $jsonResponse->httpStatusCode());
+            $jsonResponseData = JsonErrorResponse::get(HttpStatus::InternalServerError);
+            return response()->json($jsonResponseData->value, $jsonResponseData->httpStatusCode());
         }
 
         // デフォルトの例外処理

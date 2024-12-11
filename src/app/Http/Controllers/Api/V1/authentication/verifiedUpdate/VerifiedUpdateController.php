@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\authentication\verifiedUpdate;
 
 use Illuminate\Http\Request;
+use packages\adapter\presenter\authentication\verifiedUpdate\json\JsonVerifiedUpdatePresenter;
 use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateInputBoundary;
 
 class VerifiedUpdateController
@@ -21,6 +22,8 @@ class VerifiedUpdateController
             $request->input('oneTimePassword')
         );
 
-        return $output->response();
+        $presenter = new JsonVerifiedUpdatePresenter($output);
+        $jsonResponseData = $presenter->jsonResponseData();
+        return response()->json($jsonResponseData->value, $jsonResponseData->httpStatusCode());
     }
 }

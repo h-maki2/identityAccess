@@ -4,9 +4,10 @@ namespace packages\adapter\presenter\authentication\resendRegistrationConfirmati
 
 use packages\adapter\presenter\common\json\HttpStatus;
 use packages\adapter\presenter\common\json\JsonPresenter;
+use packages\adapter\presenter\common\json\JsonResponseData;
 use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailResult;
 
-class JsonResendRegistrationConfirmationEmailPresenter
+class JsonResendRegistrationConfirmationEmailPresenter implements JsonPresenter
 {
     private ResendRegistrationConfirmationEmailResult $resendRegistrationConfirmationEmailResult;
 
@@ -15,9 +16,9 @@ class JsonResendRegistrationConfirmationEmailPresenter
         $this->resendRegistrationConfirmationEmailResult = $resendRegistrationConfirmationEmailResult;
     }
 
-    public function jsonResponseData(): JsonPresenter
+    public function jsonResponseData(): JsonResponseData
     {
-        return new JsonPresenter($this->responseData($this->resendRegistrationConfirmationEmailResult), $this->httpStatus());
+        return new JsonResponseData($this->responseData($this->resendRegistrationConfirmationEmailResult), $this->httpStatus());
     }
 
     private function responseData(ResendRegistrationConfirmationEmailResult $resendRegistrationConfirmationEmailResult): array
