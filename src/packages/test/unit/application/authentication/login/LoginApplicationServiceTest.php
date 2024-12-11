@@ -4,6 +4,7 @@ use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepos
 use packages\application\authentication\login\LoginApplicationService;
 use packages\application\authentication\login\LoginOutputBoundary;
 use packages\application\authentication\login\LoginResult;
+use packages\domain\model\authenticationInformation\AuthenticationService;
 use packages\domain\model\authenticationInformation\FailedLoginCount;
 use packages\domain\model\authenticationInformation\LoginRestriction;
 use packages\domain\model\authenticationInformation\LoginRestrictionStatus;
@@ -25,11 +26,12 @@ class LoginApplicationServiceTest extends TestCase
     private InMemoryAuthenticationInformationRepository $authenticationInformationRepository;
     private IClientFetcher $clientFetcher;
     private AuthenticationInformationTestDataCreator $authenticationInformationTestDataCreator;
-    private SessionAuthentication $sessionAuthentication;
+    private AuthenticationService $authenticationService;
     private UserId $capturedUserId;
-    private LoginOutputBoundary $outputBoundary;
     private LoginResult $capturedLoginResult;
     private ClientDataForTest $expectedClientData;
+
+    private const REDIRECT_URL = 'http://localhost:8080/callback';
 
     public function setUp(): void
     {
@@ -37,32 +39,22 @@ class LoginApplicationServiceTest extends TestCase
         $this->authenticationInformationTestDataCreator = new AuthenticationInformationTestDataCreator($this->authenticationInformationRepository);
 
         // markAsLoggedInメソッドが呼ばれた際に引数の値をキャプチャする
-        $sessionAuthentication = $this->createMock(SessionAuthentication::class);
-        $sessionAuthentication
+        $authenticationService = $this->createMock(AuthenticationService::class);
+        $authenticationService
             ->method('markAsLoggedIn')
             ->with($this->callback(function (UserId $userId) {
                 $this->capturedUserId = $userId;
                 return true;
             }));
-        $this->sessionAuthentication = $sessionAuthentication;
+        $this->authenticationService = $authenticationService;
 
         // fetchByIdメソッドが呼ばれた際に返すデータを設定する
         $this->expectedClientData = TestClientDataFactory::create(
-            redirectUri: new RedirectUrl('http://localhost:8080/callback')
+            redirectUri: new RedirectUrl(self::REDIRECT_URL)
         );
         $clientFetcher = $this->createMock(IClientFetcher::class);
         $clientFetcher->method('fetchById')->willReturn($this->expectedClientData);
         $this->clientFetcher = $clientFetcher;
-
-        // formatForResponseメソッドが呼ばれた際に引数の値をキャプチャする
-        $outputBoundary = $this->createMock(LoginOutputBoundary::class);
-        $outputBoundary
-            ->method('formatForResponse')
-            ->with($this->callback(function (LoginResult $capturedLoginResult) {
-                $this->capturedLoginResult = $capturedLoginResult;
-                return true;
-            }));
-        $this->outputBoundary = $outputBoundary;
     }
 
     public function test_メールアドレスとパスワードが正しい場合にログインができる()
@@ -83,39 +75,37 @@ class LoginApplicationServiceTest extends TestCase
         $inputedEmail = 'test@example.com';
         $inputedPassword = 'ABCabc123_';
         $clientId = '1';
-        $redirectUrl = 'http://localhost:8080/callback';
         $responseType = 'code';
         $state = 'abcdefg';
 
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationInformationRepository,
-            $this->sessionAuthentication,
+            $this->authenticationService,
             $this->clientFetcher,
-            $this->outputBoundary
         );
-        $loginApplicationService->login(
+        $result = $loginApplicationService->login(
             $inputedEmail, 
             $inputedPassword, 
             $clientId,
-            $redirectUrl,
+            self::REDIRECT_URL,
             $responseType,
             $state
         );
 
         // then
         // ログインが成功していることを確認する
-        $this->assertTrue($this->capturedLoginResult->loginSucceeded);
+        $this->assertTrue($result->loginSucceeded);
         // 認可コード取得用のURLが返されていることを確認する
         $expectedAuthorizationUrl = $this->expectedClientData->urlForObtainingAuthorizationCode(
-            new RedirectUrl($redirectUrl),
+            new RedirectUrl(self::REDIRECT_URL),
             $responseType,
             $state
         );
-        $this->assertEquals($expectedAuthorizationUrl, $this->capturedLoginResult->authorizationUrl);
+        $this->assertEquals($expectedAuthorizationUrl, $result->authorizationUrl);
         // 正しいuserIdでログインされていることを確認する
         $this->assertEquals($userId, $this->capturedUserId);
         // アカウントがロックされていないことを確認する
-        $this->assertFalse($this->capturedLoginResult->accountLocked);
+        $this->assertFalse($result->accountLocked);
     }
 
     public function test_メールアドレスが正しくない場合にログインが失敗する()
@@ -135,29 +125,27 @@ class LoginApplicationServiceTest extends TestCase
         $inputedEmail = 'mistake@example.com';
         $inputedPassword = 'ABCabc123_';
         $clientId = '1';
-        $redirectUrl = 'http://localhost:8080/callback';
         $responseType = 'code';
         $state = 'abcdefg';
 
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationInformationRepository,
-            $this->sessionAuthentication,
-            $this->clientFetcher,
-            $this->outputBoundary
+            $this->authenticationService,
+            $this->clientFetcher
         );
-        $loginApplicationService->login(
+        $result = $loginApplicationService->login(
             $inputedEmail, 
             $inputedPassword, 
             $clientId,
-            $redirectUrl,
+            self::REDIRECT_URL,
             $responseType,
             $state
         );
 
         // then
         // ログインが失敗していることを確認する
-        $this->assertFalse($this->capturedLoginResult->loginSucceeded);
-        $this->assertEmpty($this->capturedLoginResult->authorizationUrl);
+        $this->assertFalse($result->loginSucceeded);
+        $this->assertEmpty($result->authorizationUrl);
     }
 
     public function test_パスワードが正しくない場合にログインが失敗する()
@@ -177,29 +165,27 @@ class LoginApplicationServiceTest extends TestCase
         // パスワードが間違っている
         $inputedPassword = 'ABCabc123_!!jdn';
         $clientId = '1';
-        $redirectUrl = 'http://localhost:8080/callback';
         $responseType = 'code';
         $state = 'abcdefg';
 
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationInformationRepository,
-            $this->sessionAuthentication,
-            $this->clientFetcher,
-            $this->outputBoundary
+            $this->authenticationService,
+            $this->clientFetcher
         );
-        $loginApplicationService->login(
+        $result = $loginApplicationService->login(
             $inputedEmail, 
             $inputedPassword, 
             $clientId,
-            $redirectUrl,
+            self::REDIRECT_URL,
             $responseType,
             $state
         );
 
         // then
         // ログインが失敗していることを確認する
-        $this->assertFalse($this->capturedLoginResult->loginSucceeded);
-        $this->assertEmpty($this->capturedLoginResult->authorizationUrl);
+        $this->assertFalse($result->loginSucceeded);
+        $this->assertEmpty($result->authorizationUrl);
     }
 
     public function test_アカウントがロックされている場合はログインが失敗する()
@@ -226,31 +212,29 @@ class LoginApplicationServiceTest extends TestCase
         $inputedEmail = 'test@example.com';
         $inputedPassword = 'ABCabc123_';
         $clientId = '1';
-        $redirectUrl = 'http://localhost:8080/callback';
         $responseType = 'code';
         $state = 'abcdefg';
 
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationInformationRepository,
-            $this->sessionAuthentication,
-            $this->clientFetcher,
-            $this->outputBoundary
+            $this->authenticationService,
+            $this->clientFetcher
         );
-        $loginApplicationService->login(
+        $result = $loginApplicationService->login(
             $inputedEmail, 
             $inputedPassword, 
             $clientId,
-            $redirectUrl,
+            self::REDIRECT_URL,
             $responseType,
             $state
         );
 
         // then
         // ログインが失敗していることを確認する
-        $this->assertFalse($this->capturedLoginResult->loginSucceeded);
-        $this->assertEmpty($this->capturedLoginResult->authorizationUrl);
+        $this->assertFalse($result->loginSucceeded);
+        $this->assertEmpty($result->authorizationUrl);
         // アカウントがロックされていることを確認する
-        $this->assertTrue($this->capturedLoginResult->accountLocked);
+        $this->assertTrue($result->accountLocked);
     }
 
     public function test_アカウントロックの有効期限外の場合、正しいメールアドレスとパスワードでログインできる()
@@ -278,39 +262,37 @@ class LoginApplicationServiceTest extends TestCase
         $inputedEmail = 'test@example.com';
         $inputedPassword = 'ABCabc123_';
         $clientId = '1';
-        $redirectUrl = 'http://localhost:8080/callback';
         $responseType = 'code';
         $state = 'abcdefg';
 
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationInformationRepository,
-            $this->sessionAuthentication,
-            $this->clientFetcher,
-            $this->outputBoundary
+            $this->authenticationService,
+            $this->clientFetcher
         );
-        $loginApplicationService->login(
+        $result = $loginApplicationService->login(
             $inputedEmail, 
             $inputedPassword, 
             $clientId,
-            $redirectUrl,
+            self::REDIRECT_URL,
             $responseType,
             $state
         );
 
         // then
         // ログインが成功していることを確認する
-        $this->assertTrue($this->capturedLoginResult->loginSucceeded);
+        $this->assertTrue($result->loginSucceeded);
         // 認可コード取得用のURLが返されていることを確認する
         $expectedAuthorizationUrl = $this->expectedClientData->urlForObtainingAuthorizationCode(
-            new RedirectUrl($redirectUrl),
+            new RedirectUrl(self::REDIRECT_URL),
             $responseType,
             $state
         );
-        $this->assertEquals($expectedAuthorizationUrl, $this->capturedLoginResult->authorizationUrl);
+        $this->assertEquals($expectedAuthorizationUrl, $result->authorizationUrl);
         // 正しいuserIdでログインされていることを確認する
         $this->assertEquals($userId, $this->capturedUserId);
         // アカウントがロックされていないことを確認する
-        $this->assertFalse($this->capturedLoginResult->accountLocked);
+        $this->assertFalse($result->accountLocked);
     }
 
     public function test_ログインに失敗した場合、ログイン失敗回数が更新される()
@@ -337,20 +319,18 @@ class LoginApplicationServiceTest extends TestCase
         // 不正なパスワード
         $inputedPassword = 'ABCabc123_!!!';
         $clientId = '1';
-        $redirectUrl = 'http://localhost:8080/callback';
         $responseType = 'code';
         $state = 'abcdefg';
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationInformationRepository,
-            $this->sessionAuthentication,
-            $this->clientFetcher,
-            $this->outputBoundary
+            $this->authenticationService,
+            $this->clientFetcher
         );
         $loginApplicationService->login(
             $inputedEmail, 
             $inputedPassword, 
             $clientId,
-            $redirectUrl,
+            self::REDIRECT_URL,
             $responseType,
             $state
         );
@@ -385,15 +365,13 @@ class LoginApplicationServiceTest extends TestCase
         // パスワードが不正
         $inputedPassword = 'ABCabc123_!!';
         $clientId = '1';
-        $redirectUrl = 'http://localhost:8080/callback';
         $responseType = 'code';
         $state = 'abcdefg';
 
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationInformationRepository,
-            $this->sessionAuthentication,
+            $this->authenticationService,
             $this->clientFetcher,
-            $this->outputBoundary
         );
         // 9回ログインに失敗する
         for ($i = 0; $i < 9; $i++) {
@@ -401,7 +379,7 @@ class LoginApplicationServiceTest extends TestCase
                 $inputedEmail, 
                 $inputedPassword, 
                 $clientId,
-                $redirectUrl,
+                self::REDIRECT_URL,
                 $responseType,
                 $state
             );
@@ -409,11 +387,11 @@ class LoginApplicationServiceTest extends TestCase
 
         // when
         // 10回目のログインに失敗する
-        $loginApplicationService->login(
+        $result = $loginApplicationService->login(
             $inputedEmail, 
             $inputedPassword, 
             $clientId,
-            $redirectUrl,
+            self::REDIRECT_URL,
             $responseType,
             $state
         );
@@ -424,6 +402,6 @@ class LoginApplicationServiceTest extends TestCase
         $this->assertEquals(LoginRestrictionStatus::Restricted->value, $authenticationInformation->loginRestriction()->loginRestrictionStatus());
         $this->assertNotNull($authenticationInformation->loginRestriction()->nextLoginAllowedAt());
         $this->assertEquals(10, $authenticationInformation->loginRestriction()->failedLoginCount());
-        $this->assertTrue($this->capturedLoginResult->accountLocked);
+        $this->assertTrue($result->accountLocked);
     }
 }
