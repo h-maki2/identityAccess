@@ -3,39 +3,37 @@
 namespace packages\adapter\presenter\authentication\verifiedUpdate\json;
 
 use packages\adapter\presenter\common\json\HttpStatus;
+use packages\adapter\presenter\common\json\JsonPresenter;
 use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateOutputBoundary;
 use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateResult;
 
-class JsonVerifiedUpdatePresenter implements VerifiedUpdateOutputBoundary
+class JsonVerifiedUpdatePresenter
 {
-    private array $responseData;
-    private HttpStatus $httpStatus;
+    private VerifiedUpdateResult $verifiedUpdateResult;
 
-    public function formatForResponse(VerifiedUpdateResult $verifiedUpdateResult): void
+    public function __construct(VerifiedUpdateResult $verifiedUpdateResult)
     {
-        $this->setResponseData($verifiedUpdateResult);
-        $this->setHttpStatus($verifiedUpdateResult);
+        $this->verifiedUpdateResult = $verifiedUpdateResult;
     }
 
-    public function response(): mixed
+    public function jsonResponseData(): JsonPresenter
     {
-        return response()->json($this->responseData, $this->httpStatus);
+        return new JsonPresenter($this->responseData(), $this->httpStatus());
     }
 
-    private function setResponseData(VerifiedUpdateResult $verifiedUpdateResult): void
+    private function responseData(): array
     {
-        if ($verifiedUpdateResult->validationError) {
-            $this->responseData = [
-                'validationErrorMessage' => $verifiedUpdateResult->validationErrorMessage
+        if ($this->verifiedUpdateResult->validationError) {
+            return [
+                'validationErrorMessage' => $this->verifiedUpdateResult->validationErrorMessage
             ];
-            return;
         }
 
-        $this->responseData = [];
+        return [];
     }
 
-    private function setHttpStatus(VerifiedUpdateResult $verifiedUpdateResult): void
+    private function httpStatus(): HttpStatus
     {
-        $this->httpStatus = $verifiedUpdateResult->validationError ? HttpStatus::BadRequest : HttpStatus::Success;
+        return $this->verifiedUpdateResult->validationError ? HttpStatus::BadRequest : HttpStatus::Success;
     }
 }

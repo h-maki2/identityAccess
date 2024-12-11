@@ -8,38 +8,36 @@ use packages\adapter\presenter\common\json\JsonResponseStatus;
 use packages\application\authentication\verifiedUpdate\display\DisplayVerifiedUpdatePageOutputBoundary;
 use packages\application\authentication\verifiedUpdate\display\DisplayVerifiedUpdatePageResult;
 
-class JsonDisplayVerifiedUpdatePagePresenter extends JsonPresenter implements DisplayVerifiedUpdatePageOutputBoundary
+class JsonDisplayVerifiedUpdatePagePresenter
 {
-    private array $responseData;
-    private HttpStatus $httpStatus;
+    private DisplayVerifiedUpdatePageResult $displayVerifiedUpdatePageResult;
 
-    public function formatForResponse(DisplayVerifiedUpdatePageResult $displayVerifiedUpdatePageResult): void
+    public function __construct(DisplayVerifiedUpdatePageResult $displayVerifiedUpdatePageResult)
     {
-        $this->setResponseData($displayVerifiedUpdatePageResult);
-        $this->setHttpStatus($displayVerifiedUpdatePageResult);
+        $this->displayVerifiedUpdatePageResult = $displayVerifiedUpdatePageResult;   
     }
 
-    public function response(): mixed
+    public function jsonResponseData(): array
     {
-        return $this->jsonResponse($this->responseData, $this->httpStatus);
+        $presenter = new JsonPresenter($this->responseData(), $this->httpStatus());
+        return $presenter->responseData();
     }
 
-    private function setResponseData(DisplayVerifiedUpdatePageResult $displayVerifiedUpdatePageResult): void
+    private function responseData(): array
     {
-        if ($displayVerifiedUpdatePageResult->validationError) {
-            $this->responseData = [
-                'validationErrorMessage' => $displayVerifiedUpdatePageResult->validationErrorMessage
+        if ($this->displayVerifiedUpdatePageResult->validationError) {
+            return [
+                'validationErrorMessage' => $this->displayVerifiedUpdatePageResult->validationErrorMessage
             ];
-            return;
         }
 
-        $this->responseData = [
-            'oneTimeTokenValue' => $displayVerifiedUpdatePageResult->oneTimeTokenValue
+        return [
+            'oneTimeTokenValue' => $this->displayVerifiedUpdatePageResult->oneTimeTokenValue
         ];
     }
 
-    private function setHttpStatus(DisplayVerifiedUpdatePageResult $displayVerifiedUpdatePageResult): void
+    private function httpStatus(): HttpStatus
     {
-        $this->httpStatus = $displayVerifiedUpdatePageResult->validationError ? HttpStatus::BadRequest : HttpStatus::Success;
+        return $this->displayVerifiedUpdatePageResult->validationError ? HttpStatus::BadRequest : HttpStatus::Success;
     }
 }

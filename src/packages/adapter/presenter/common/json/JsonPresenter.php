@@ -4,7 +4,7 @@ namespace packages\adapter\presenter\common\json;
 
 class JsonPresenter
 {
-    private array $responseData;
+    readonly array $responseData;
     private HttpStatus $httpStatus;
 
     public function __construct(array $responseData, HttpStatus $httpStatus)
@@ -15,12 +15,7 @@ class JsonPresenter
             $this->setErrorResponse($responseData, $httpStatus);
         }
     }
-
-    public function responseData(): array
-    {
-        return $this->responseData;
-    }
-
+    
     public function httpStatusCode(): int
     {
         return (int) $this->httpStatus->value;

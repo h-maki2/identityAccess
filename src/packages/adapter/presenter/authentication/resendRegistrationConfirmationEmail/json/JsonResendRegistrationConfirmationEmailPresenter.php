@@ -15,10 +15,9 @@ class JsonResendRegistrationConfirmationEmailPresenter
         $this->resendRegistrationConfirmationEmailResult = $resendRegistrationConfirmationEmailResult;
     }
 
-    public function jsonResponseData(): array
+    public function jsonResponseData(): JsonPresenter
     {
-        $presenter = new JsonPresenter($this->responseData($this->resendRegistrationConfirmationEmailResult), $this->httpStatus());
-        return $presenter->responseData();
+        return new JsonPresenter($this->responseData($this->resendRegistrationConfirmationEmailResult), $this->httpStatus());
     }
 
     private function responseData(ResendRegistrationConfirmationEmailResult $resendRegistrationConfirmationEmailResult): array

@@ -4,12 +4,11 @@ namespace packages\adapter\presenter\errorResponse;
 
 use packages\adapter\presenter\common\json\HttpStatus;
 use packages\adapter\presenter\common\json\JsonPresenter;
-use packages\adapter\presenter\common\json\JsonResponseStatus;
 
-class JsonErrorResponse extends JsonPresenter implements ErrorResponse
+class JsonErrorResponse
 {
-    public function response(HttpStatus $httpStatus): mixed
+    public static function get(HttpStatus $httpStatus): JsonPresenter
     {
-        return $this->jsonResponse(null, $httpStatus);
+        return new JsonPresenter([], $httpStatus);
     }
 }
