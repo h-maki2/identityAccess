@@ -2,6 +2,7 @@
 
 namespace packages\adapter\presenter\authentication\login\json;
 
+use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Http;
 use packages\adapter\presenter\common\json\HttpStatus;
 use packages\adapter\presenter\common\json\JsonPresenter;
@@ -9,39 +10,37 @@ use packages\adapter\presenter\common\json\JsonResponseStatus;
 use packages\application\authentication\login\LoginOutputBoundary;
 use packages\application\authentication\login\LoginResult;
 
-class JsonLoginPresenter extends JsonPresenter implements LoginOutputBoundary
+class JsonLoginPresenter
 {
-    private array $responseData;
-    private HttpStatus $httpStatus;
+    private LoginResult $loginResult;
 
-    public function formatForResponse(LoginResult $loginResult): void
+    public function __construct(LoginResult $loginResult)
     {
-        $this->setResponseData($loginResult);
-        $this->setHttpStatus($loginResult);
+        $this->loginResult = $loginResult;
     }
 
-    public function response(): mixed
+    public function jsonResponseData(): array
     {
-        return $this->jsonResponse($this->responseData, $this->httpStatus);
+        $presneter = new JsonPresenter($this->responseData(), $this->httpStatus());
+        return $presneter->responseData();
     }
 
-    private function setResponseData(LoginResult $loginResult): void
+    private function responseData(): array
     {
-        if ($loginResult->loginSucceeded) {
-            $this->responseData = [
-                'authorizationUrl' => $loginResult->authorizationUrl
+        if ($this->loginResult->loginSucceeded) {
+            return [
+                'authorizationUrl' => $this->loginResult->authorizationUrl
             ];
-            return;
         }
 
 
-        $this->responseData = [
-            'accountLocked' => $loginResult->accountLocked
+        return [
+            'accountLocked' => $this->loginResult->accountLocked
         ];
     }
 
-    private function setHttpStatus(LoginResult $loginResult): void
+    private function httpStatus(): HttpStatus
     {
-        $this->httpStatus = $loginResult->loginSucceeded ? HttpStatus::Success : HttpStatus::BadRequest;
+        return $this->loginResult->loginSucceeded ? HttpStatus::Success : HttpStatus::BadRequest;
     }
 }

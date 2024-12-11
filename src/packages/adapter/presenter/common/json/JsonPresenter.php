@@ -2,23 +2,46 @@
 
 namespace packages\adapter\presenter\common\json;
 
-abstract class JsonPresenter
+class JsonPresenter
 {
-    protected function jsonResponse(?array $responseData, HttpStatus $httpStatus): mixed
+    private array $responseData;
+    private HttpStatus $httpStatus;
+
+    public function __construct(array $responseData, HttpStatus $httpStatus)
     {
         if ($httpStatus->isSuccess()) {
-            return response()->json([
-                'success' => true,
-                'data' => $responseData,
-            ], $httpStatus->value);
+            $this->setSuccessResponse($responseData, $httpStatus);
+        } else {
+            $this->setErrorResponse($responseData, $httpStatus);
         }
+    }
 
-        return response()->json([
+    public function responseData(): array
+    {
+        return $this->responseData;
+    }
+
+    public function httpStatusCode(): int
+    {
+        return (int) $this->httpStatus->value;
+    }
+
+    private function setSuccessResponse(array $responseData, HttpStatus $httpStatus)
+    {
+        $this->responseData = [
+            'success' => true,
+            'data' => $responseData,
+        ];
+    }
+
+    private function setErrorResponse(array $responseData, HttpStatus $httpStatus)
+    {
+        $this->responseData = [
             'success' => false,
             'error' => [
                 'code' => $httpStatus->code(),
                 'details' => $responseData,
             ]
-        ], $httpStatus->value);
+        ];
     }
 }
