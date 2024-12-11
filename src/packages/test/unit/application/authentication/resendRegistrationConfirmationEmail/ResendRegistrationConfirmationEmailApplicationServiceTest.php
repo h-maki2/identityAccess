@@ -81,7 +81,7 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
         $this->assertNotEquals($oneTimePasword->value, $actualAuthConfirmation->oneTimePassword()->value);
 
         // 正しいデータで本登録確認メールが送信できていることを確認
-        $this->assertStringContainsString($actualAuthConfirmation->oneTimeToken()->value(), $this->catchedSendEmailDto->templateVariables['verifiedUpdateBaseUrl']);
+        $this->assertStringContainsString($actualAuthConfirmation->oneTimeToken()->value(), $this->catchedSendEmailDto->templateVariables['verifiedUpdateUrl']);
         $this->assertEquals($this->catchedSendEmailDto->templateVariables['oneTimePassword'], $actualAuthConfirmation->oneTimePassword()->value);
     }
 
