@@ -5,6 +5,7 @@ namespace packages\application\userProfile\register;
 use Illuminate\Contracts\Session\Session;
 use packages\domain\model\authenticationInformation\AuthenticationService;
 use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
+use packages\domain\model\common\exception\AuthenticationException;
 use packages\domain\model\common\validator\ValidationHandler;
 use packages\domain\model\userProfile\IUserProfileRepository;
 use packages\domain\model\userProfile\SelfIntroductionText;
@@ -38,7 +39,7 @@ class RegisterUserProfileApplicationService implements RegisterUserProfileInputB
     {
         $userId = $this->authService->loggedInUserId();
         if ($userId === null) {
-            throw new RuntimeException('ユーザーがログインしていません');
+            throw new AuthenticationException('ユーザーがログインしていません');
         }
 
         $validationHandler = new ValidationHandler();

@@ -5,12 +5,12 @@ namespace App\Exceptions;
 use DomainException;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Auth\AuthenticationException;
 use InvalidArgumentException;
 use packages\adapter\presenter\common\json\HttpStatus;
 use packages\adapter\presenter\errorResponse\ErrorResponse;
 use packages\adapter\presenter\errorResponse\JsonErrorResponse;
 use packages\application\common\exception\TransactionException;
+use packages\domain\model\common\exception\AuthenticationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
