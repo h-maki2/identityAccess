@@ -60,6 +60,7 @@ class UserRegistrationApplicationService implements UserRegistrationInputBoundar
 
         $oneTimeToken = OneTimeToken::create();
         $validationHandler->addValidator(new OneTimeTokenValidation($this->authConfirmationRepository, $oneTimeToken));
+        
         if (!$validationHandler->validate()) {
             return UserRegistrationResult::createWhenValidationError($validationHandler->errorMessages());
         }
@@ -67,7 +68,7 @@ class UserRegistrationApplicationService implements UserRegistrationInputBoundar
         $userEmail = new UserEmail($inputedEmail);
         $userPassword = UserPassword::create($inputedPassword);
         try {
-            $this->userRegistration->handle($userEmail, $userPassword);
+            $this->userRegistration->handle($userEmail, $userPassword, $oneTimeToken);
         } catch (Exception $e) {
             throw new TransactionException($e->getMessage());
         }
