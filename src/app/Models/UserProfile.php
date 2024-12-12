@@ -17,6 +17,14 @@ class UserProfile extends Model
 
     protected $keyType = 'string';
 
+    protected $fillable = [
+        'user_profile_id',
+        'user_id',
+        'name',
+        'user_name',
+        'self_introduction_text',
+    ];
+
     public function authenticationInformation()
     {
         return $this->belongsTo(AuthenticationInformation::class, 'user_id', 'user_id');
