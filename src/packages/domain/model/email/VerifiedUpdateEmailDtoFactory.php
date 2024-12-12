@@ -21,7 +21,7 @@ class VerifiedUpdateEmailDtoFactory
     ): SendEmailDto
     {
         $templateValiables = [
-            'verifiedUpdateUrl' => self::verifiedUpdateBaseUrl . '?token=' . $oneTimeToken->value(),
+            'verifiedUpdateUrl' => self::verifiedUpdateBaseUrl . '?token=' . $oneTimeToken->tokenValue()->value,
             'oneTimePassword' => $oneTimePassword->value
         ];
         return new SendEmailDto(

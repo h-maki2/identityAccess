@@ -41,7 +41,7 @@ class EloquentAuthConfirmationRepository implements IAuthConfirmationRepository
         EloquentAuthConfirmation::updateOrCreate(
             ['user_id' => $authConfirmation->userId->value],
             [
-                'one_time_token_value' => $authConfirmation->oneTimeToken()->value(),
+                'one_time_token_value' => $authConfirmation->oneTimeToken()->tokenValue()->value,
                 'one_time_token_expiration' => $authConfirmation->oneTimeToken()->expirationDate(),
                 'one_time_password' => $authConfirmation->oneTimePassword()->value
             ]

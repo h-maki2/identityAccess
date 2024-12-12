@@ -40,7 +40,7 @@ class InMemoryAuthConfirmationRepository implements IAuthConfirmationRepository
     {
         $this->authConfirmationsObjList[$authConfirmation->userId->value] = (object) [
             'user_id' => $authConfirmation->userId->value,
-            'one_time_token' => $authConfirmation->oneTimeToken()->value(),
+            'one_time_token' => $authConfirmation->oneTimeToken()->tokenValue()->value,
             'one_time_token_expiration' => $authConfirmation->oneTimeToken()->expirationDate(),
             'one_time_password' => $authConfirmation->oneTimePassword()->value
         ];
