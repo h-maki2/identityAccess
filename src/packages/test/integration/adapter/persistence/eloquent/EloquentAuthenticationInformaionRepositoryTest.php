@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\AuthenticationInformation as EloquentAuthenticationInformation;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationInformationRepository;
@@ -23,6 +24,9 @@ class EloquentAuthenticationInformaionRepositoryTest extends TestCase
         parent::setUp();
         $this->authenticationInformationRepository = new EloquentAuthenticationInformationRepository();
         $this->authenticationInformationTestDataCreator = new AuthenticationInformationTestDataCreator($this->authenticationInformationRepository);
+
+        // テスト前にデータを全削除する
+        EloquentAuthenticationInformation::query()->delete();
     }
 
     public function test_認証情報をインサートできる()

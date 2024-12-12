@@ -23,7 +23,7 @@ class TestAuthenticationInformationFactory
         $authInfoRepository = new InMemoryAuthenticationInformationRepository();
         return AuthenticationInformation::reconstruct(
             $id ?? $authInfoRepository->nextUserId(),
-            $email ?? new UserEmail('test@example.com'),
+            $email ?? TestUserEmailFactory::create(),
             $password ?? UserPassword::create('ABCabc123_'),
             $verificationStatus ?? VerificationStatus::Verified,
             $LoginRestriction ?? LoginRestriction::initialization()
