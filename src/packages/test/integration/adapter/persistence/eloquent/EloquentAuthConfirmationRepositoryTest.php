@@ -172,7 +172,7 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
             id: $削除対象のユーザーID
         );
 
-        $削除対象の認証確認情報 = $this->authConfirmationTestDataCreator->create(
+        $this->authConfirmationTestDataCreator->create(
             userId: $削除対象のユーザーID
         );
 
@@ -185,7 +185,7 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
         );
 
         // when
-        $this->eloquentAuthConfirmationRepository->delete($削除対象の認証確認情報);
+        $this->eloquentAuthConfirmationRepository->delete($削除対象のユーザーID);
 
         // then
         $actualAuthConfirmation = $this->eloquentAuthConfirmationRepository->findById($削除対象のユーザーID);

@@ -47,7 +47,7 @@ class VerifiedUpdate
         try {
             $this->unitOfWork->performTransaction(function () use ($authInformation, $authConfirmation) {
                 $this->authenticationInformationRepository->save($authInformation);
-                $this->authConfirmationRepository->delete($authConfirmation);
+                $this->authConfirmationRepository->delete($authInformation->id());
             });
         } catch (\Exception $e) {
             throw new TransactionException($e->getMessage());

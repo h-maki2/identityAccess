@@ -12,5 +12,5 @@ interface IAuthConfirmationRepository
 
     public function save(AuthConfirmation $authInformation): void;
 
-    public function delete(AuthConfirmation $authInformation): void;
+    public function delete(UserId $id): void;
 }

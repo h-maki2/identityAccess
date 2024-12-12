@@ -46,13 +46,9 @@ class InMemoryAuthConfirmationRepository implements IAuthConfirmationRepository
         ];
     }
 
-    public function delete(AuthConfirmation $authInformation): void
+    public function delete(UserId $id): void
     {
-        foreach ($this->authConfirmationsObjList as $key => $authConfirmationsObj) {
-            if ($authConfirmationsObj->one_time_token === $authInformation->oneTimeToken()->value()) {
-                unset($this->authConfirmationsObjList[$key]);
-            }
-        }
+        unset($this->authConfirmationsObjList[$id->value]);
     }
 
     private function toAuthConfirmation(object $authConfirmationsObj): AuthConfirmation

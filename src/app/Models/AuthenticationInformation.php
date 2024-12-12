@@ -16,6 +16,17 @@ class AuthenticationInformation extends Authenticatable
     public $incrementing = false;
     protected $keyType = 'string';
 
+    protected $fillable = [
+        'user_id',
+        'email',
+        'password',
+        'login_restriction',
+        'login_restriction_status',
+        'failed_login_count',
+        'next_login_allowed_at',
+        'verification_status',
+    ];
+
     public function authConfirmation()
     {
         return $this->hasOne(AuthConfirmation::class, 'user_id', 'user_id');

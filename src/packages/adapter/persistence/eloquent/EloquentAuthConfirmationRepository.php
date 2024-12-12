@@ -11,7 +11,6 @@ use packages\domain\model\authConfirmation\OneTimeToken;
 use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationInformation\UserId;
-use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
 
 class EloquentAuthConfirmationRepository implements IAuthConfirmationRepository
 {
@@ -28,24 +27,30 @@ class EloquentAuthConfirmationRepository implements IAuthConfirmationRepository
 
     public function findById(UserId $userId): ?AuthConfirmation
     {
-        $result = $this->eloquentAuthConfirmationFrom($userId);
+        $eloquentAuthConfirmation = EloquentAuthConfirmation::find($userId->value);
 
-        if ($result === null) {
+        if ($eloquentAuthConfirmation === null) {
             return null;
         }
 
-        return $this->toAuthConfirmation($result);
+        return $this->toAuthConfirmation($eloquentAuthConfirmation);
     }
 
     public function save(AuthConfirmation $authConfirmation): void
     {
-        $eloquentAuthConfirmation = $this->toEloquentAuthConfirmation($authConfirmation);
-        $eloquentAuthConfirmation->save();
+        EloquentAuthConfirmation::updateOrCreate(
+            ['user_id' => $authConfirmation->userId->value],
+            [
+                'one_time_token_value' => $authConfirmation->oneTimeToken()->value(),
+                'one_time_token_expiration' => $authConfirmation->oneTimeToken()->expirationDate(),
+                'one_time_password' => $authConfirmation->oneTimePassword()->value
+            ]
+        );
     }
 
-    public function delete(AuthConfirmation $authConfirmation): void
+    public function delete(UserId $id): void
     {
-        $eloquentAuthConfirmation = $this->eloquentAuthConfirmationFrom($authConfirmation->userId);
+        $eloquentAuthConfirmation = $this->eloquentAuthConfirmationFrom($id);
         $eloquentAuthConfirmation->delete();
     }
 
@@ -59,21 +64,6 @@ class EloquentAuthConfirmationRepository implements IAuthConfirmationRepository
             ),
             OneTimePassword::reconstruct($eloquentAuthConfirmation->one_time_password)
         );
-    }
-
-    private function toEloquentAuthConfirmation(AuthConfirmation $authConfirmation): EloquentAuthConfirmation
-    {
-        $eloquentAuthConfirmation = $this->eloquentAuthConfirmationFrom($authConfirmation->userId);
-
-        if ($eloquentAuthConfirmation === null) {
-            $eloquentAuthConfirmation = new EloquentAuthConfirmation();
-            $eloquentAuthConfirmation->user_id = $authConfirmation->userId->value;
-        }
-        $eloquentAuthConfirmation->one_time_token_value = $authConfirmation->oneTimeToken()->value();
-        $eloquentAuthConfirmation->one_time_token_expiration = $authConfirmation->oneTimeToken()->expirationDate();
-        $eloquentAuthConfirmation->one_time_password = $authConfirmation->oneTimePassword()->value;
-
-        return $eloquentAuthConfirmation;
     }
 
     private function eloquentAuthConfirmationFrom(UserId $userId): ?EloquentAuthConfirmation
