@@ -15,6 +15,7 @@ use packages\domain\model\authenticationInformation\UserPassword;
 use packages\domain\model\common\unitOfWork\UnitOfWork;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\model\email\VerifiedUpdateEmailDtoFactory;
+use packages\domain\service\authConfirmation\AuthConfirmationService;
 use packages\domain\service\authenticationInformation\AuthenticationInformationService;
 
 class UserRegistration
@@ -42,7 +43,7 @@ class UserRegistration
      * ユーザー登録を行う
      * ユーザー登録後にメールを送信する
      */
-    public function handle(UserEmail $email, UserPassword $password)
+    public function handle(UserEmail $email, UserPassword $password, OneTimeToken $oneTimeToken)
     {
         $authInformation = AuthenticationInformation::create(
             $this->authenticationInformationRepository->nextUserId(),
@@ -51,7 +52,11 @@ class UserRegistration
             $this->authenticationInformationService
         );
 
-        $authConfirmation = AuthConfirmation::create($authInformation->id());
+        $authConfirmation = AuthConfirmation::create(
+            $authInformation->id(), 
+            $oneTimeToken, 
+            new AuthConfirmationService($this->authConfirmationRepository)
+        );
 
         $this->unitOfWork->performTransaction(function () use ($authInformation, $authConfirmation) {
             $this->authenticationInformationRepository->save($authInformation);

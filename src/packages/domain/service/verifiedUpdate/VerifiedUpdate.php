@@ -45,7 +45,7 @@ class VerifiedUpdate
         $authInformation->updateVerified();
 
         try {
-            $this->unitOfWork->performTransaction(function () use ($authInformation, $authConfirmation) {
+            $this->unitOfWork->performTransaction(function () use ($authInformation) {
                 $this->authenticationInformationRepository->save($authInformation);
                 $this->authConfirmationRepository->delete($authInformation->id());
             });

@@ -34,9 +34,9 @@ class OneTimeToken
         return new self($value, $tokenExpiration);
     }
 
-    public function value(): string
+    public function tokenValue(): OneTimeTokenValue
     {
-        return $this->tokenValue->value;
+        return $this->tokenValue;
     }
 
     public function expirationDate(): string

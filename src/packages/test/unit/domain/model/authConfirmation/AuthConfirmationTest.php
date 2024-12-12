@@ -24,8 +24,8 @@ class AuthConfirmationTest extends TestCase
 
         // ワンタイムトークンが生成されていることを確認
         $expectedOneTimeTokenExpiration = new DateTimeImmutable('+24 hours');
-        $this->assertEquals($expectedOneTimeTokenExpiration->format('Y-m-d H:i'), $authConfirmation->oneTimeToken()->expiration()->formattedValue());
-        $this->assertEquals(26, strlen($authConfirmation->oneTimeToken()->value));
+        $this->assertEquals($expectedOneTimeTokenExpiration->format('Y-m-d H:i'), $authConfirmation->oneTimeToken()->expirationDate());
+        $this->assertEquals(26, strlen($authConfirmation->oneTimeToken()->tokenValue()->value));
 
         // ワンタイムパスワードが生成されていることを確認
         $this->assertEquals(6, strlen((string)$authConfirmation->oneTimePassword()->value));
@@ -94,7 +94,7 @@ class AuthConfirmationTest extends TestCase
         $this->assertNotEquals($oneTimeToken, $authConfirmation->oneTimeToken());
         $expectedOneTimeTokenExpiration = new DateTimeImmutable('+24 hours');
         // ワンタイムトークンの有効期限が24時間後であることを確認
-        $this->assertEquals($expectedOneTimeTokenExpiration->format('Y-m-d H:i'), $authConfirmation->oneTimeToken()->expiration()->formattedValue());
+        $this->assertEquals($expectedOneTimeTokenExpiration->format('Y-m-d H:i'), $authConfirmation->oneTimeToken()->expirationDate());
 
         // ワンタイムパスワードが再生成されていることを確認する
         $this->assertNotEquals($oneTimePassword, $authConfirmation->oneTimePassword());
