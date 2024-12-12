@@ -33,7 +33,7 @@ class EloquentAuthenticationInformationRepository implements IAuthenticationInfo
 
     public function findById(UserId $id): ?AuthenticationInformation
     {
-        $result = $this->eloquentAuthenticationInformationFrom($id);
+        $result = EloquentAuthenticationInformation::find($id->value);
 
         if ($result === null) {
             return null;
@@ -44,13 +44,22 @@ class EloquentAuthenticationInformationRepository implements IAuthenticationInfo
 
     public function save(AuthenticationInformation $authenticationInformation): void
     {
-        $eloquentAuthenticationInformation = $this->toEloquentAuthenticationInformation($authenticationInformation);
-        $eloquentAuthenticationInformation->save();
+        EloquentAuthenticationInformation::updateOrCreate(
+            ['user_id' => $authenticationInformation->id()->value],
+            [
+                'email' => $authenticationInformation->email()->value,
+                'password' => $authenticationInformation->password()->hashedValue,
+                'verification_status' => $authenticationInformation->verificationStatus()->value,
+                'failed_login_count' => $authenticationInformation->loginRestriction()->failedLoginCount(),
+                'login_restriction_status' => $authenticationInformation->loginRestriction()->loginRestrictionStatus(),
+                'next_login_allowed_at' => $authenticationInformation->loginRestriction()->nextLoginAllowedAt()
+            ]
+        );
     }
 
     public function delete(UserId $id): void
     {
-        $eloquentAuthenticationInformation = $this->eloquentAuthenticationInformationFrom($id);
+        $eloquentAuthenticationInformation = EloquentAuthenticationInformation::find($id->value);
 
         if ($eloquentAuthenticationInformation === null) {
             throw new RuntimeException('認証情報が存在しません。user_id: ' . $id->value);
@@ -77,29 +86,5 @@ class EloquentAuthenticationInformationRepository implements IAuthenticationInfo
                 $eloquentAuthenticationInformation->next_login_allowed_at !== null ? NextLoginAllowedAt::reconstruct(new DateTimeImmutable($eloquentAuthenticationInformation->next_login_allowed_at)) : null
             )
         );
-    }
-
-    private function toEloquentAuthenticationInformation(AuthenticationInformation $authenticationInformation): EloquentAuthenticationInformation
-    {
-        $eloquentAuthenticationInformation = $this->eloquentAuthenticationInformationFrom($authenticationInformation->id());
-
-        if ($eloquentAuthenticationInformation === null) {
-            $eloquentAuthenticationInformation = new EloquentAuthenticationInformation();
-            $eloquentAuthenticationInformation->user_id = $authenticationInformation->id()->value;
-        }
-
-        $eloquentAuthenticationInformation->email = $authenticationInformation->email()->value;
-        $eloquentAuthenticationInformation->password = $authenticationInformation->password()->hashedValue;
-        $eloquentAuthenticationInformation->verification_status = $authenticationInformation->verificationStatus()->value;
-        $eloquentAuthenticationInformation->failed_login_count = $authenticationInformation->loginRestriction()->failedLoginCount();
-        $eloquentAuthenticationInformation->login_restriction_status = $authenticationInformation->loginRestriction()->loginRestrictionStatus();
-        $eloquentAuthenticationInformation->next_login_allowed_at = $authenticationInformation->loginRestriction()->nextLoginAllowedAt();
-
-        return $eloquentAuthenticationInformation;        
-    }
-
-    private function eloquentAuthenticationInformationFrom(UserId $userId): ?EloquentAuthenticationInformation
-    {
-        return EloquentAuthenticationInformation::find($userId->value);
     }
 }

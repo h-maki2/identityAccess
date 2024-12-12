@@ -3,11 +3,9 @@
 namespace packages\test\helpers\authenticationInformation;
 
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
-use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
 use packages\domain\model\authenticationInformation\LoginRestriction;
 use packages\domain\model\authenticationInformation\UserEmail;
 use packages\domain\model\authenticationInformation\UserId;
-use packages\domain\model\authenticationInformation\UserName;
 use packages\domain\model\authenticationInformation\UserPassword;
 use packages\domain\model\authenticationInformation\AuthenticationInformation;
 use packages\domain\model\authenticationInformation\VerificationStatus;

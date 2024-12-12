@@ -14,7 +14,7 @@ interface IUserProfileRepository
 
     public function save(UserProfile $userProfile): void;
 
-    public function delete(UserProfile $userProfile): void;
+    public function delete(UserProfileId $id): void;
 
     public function nextUserProfileId(): UserProfileId;
 }

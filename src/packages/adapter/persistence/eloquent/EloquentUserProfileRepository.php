@@ -39,7 +39,7 @@ class EloquentUserProfileRepository implements IUserProfileRepository
 
     public function findByProfileId(UserProfileId $userProfileId): ?UserProfile
     {
-        $result = $this->eloquentUserProfileFrom($userProfileId);
+        $result = EloquentUserProfile::find($userProfileId->value);
 
         if ($result === null) {
             return null;
@@ -50,16 +50,21 @@ class EloquentUserProfileRepository implements IUserProfileRepository
 
     public function save(UserProfile $userProfile): void
     {
-        $eloquentUserProfile = $this->toEloquentUserProfile($userProfile);
-        $eloquentUserProfile->save();
+        EloquentUserProfile::updateOrCreate(
+            ['user_profile_id' => $userProfile->profileId()->value, 'user_id' => $userProfile->userId()->value],
+            [
+                'user_name' => $userProfile->name()->value,
+                'self_introduction_text' => $userProfile->selfIntroductionText()->value
+            ]
+        );
     }
 
-    public function delete(UserProfile $userProfile): void
+    public function delete(UserProfileId $id): void
     {
-        $eloquentUserProfile = $this->eloquentUserProfileFrom($userProfile->profileId());
+        $eloquentUserProfile = EloquentUserProfile::find($id->value);
 
         if ($eloquentUserProfile === null) {
-            throw new RuntimeException('ユーザープロフィールが存在しません。user_profile_id: ' . $userProfile->profileId()->value);
+            throw new RuntimeException('ユーザープロフィールが存在しません。user_profile_id: ' . $id->value);
         }
 
         $eloquentUserProfile->delete();
@@ -78,26 +83,5 @@ class EloquentUserProfileRepository implements IUserProfileRepository
             new UserName($record->user_name),
             new SelfIntroductionText($record->self_introduction_text)
         );
-    }
-
-    private function toEloquentUserProfile(UserProfile $userProfile): EloquentUserProfile
-    {
-        $eloquentUserProfile = $this->eloquentUserProfileFrom($userProfile->profileId());
-
-        if ($eloquentUserProfile === null) {
-            $eloquentUserProfile = new EloquentUserProfile();
-            $eloquentUserProfile->user_profile_id = $userProfile->profileId()->value;
-        }
-
-        $eloquentUserProfile->user_id = $userProfile->userId()->value;
-        $eloquentUserProfile->user_name = $userProfile->name()->value;
-        $eloquentUserProfile->self_introduction_text = $userProfile->selfIntroductionText()->value;
-
-        return $eloquentUserProfile;
-    }
-
-    private function eloquentUserProfileFrom(UserProfileId $userProfileId): ?EloquentUserProfile
-    {
-        return EloquentUserProfile::find($userProfileId->value);
     }
 }
