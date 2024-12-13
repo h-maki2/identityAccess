@@ -3,24 +3,40 @@
 namespace packages\application\userProfile\fetch;
 
 use packages\domain\model\authenticationInformation\AuthenticationService;
+use packages\domain\model\oauth\scope\IScopeAuthorizationChecker;
+use packages\domain\model\oauth\scope\Scope;
 use packages\domain\model\userProfile\IUserProfileRepository;
+use packages\domain\service\authenticationInformation\LoggedInUserIdFetcher;
 
-class FetchUserProfileApplicationService
+class FetchUserProfileApplicationService implements FetchUserProfileInputBoundary
 {
     private IUserProfileRepository $userProfileRepository;
-    private AuthenticationService $authService;
+    private LoggedInUserIdFetcher $loggedInUserIdFetcher;
 
     public function __construct(
         IUserProfileRepository $userProfileRepository,
-        AuthenticationService $authService
+        AuthenticationService $authService,
+        IScopeAuthorizationChecker $scopeAuthorizationChecker
     )
     {
         $this->userProfileRepository = $userProfileRepository;
-        $this->authService = $authService;
+        $this->loggedInUserIdFetcher = new LoggedInUserIdFetcher($authService, $scopeAuthorizationChecker);
     }
 
-    public function handle()
+    public function handle(string $scope): FetchUserProfileResult
     {
-        
+        $userId = $this->loggedInUserIdFetcher->fetch(Scope::from($scope));
+
+        $userProfile = $this->userProfileRepository->findByUserId($userId);
+
+        if ($userProfile === null) {
+            return FetchUserProfileResult::createWhenNotFound();
+        }
+
+        return FetchUserProfileResult::createWhenFound(
+            $userProfile->profileId()->value,
+            $userProfile->name()->value,
+            $userProfile->selfIntroductionText()->value
+        );
     }
 }

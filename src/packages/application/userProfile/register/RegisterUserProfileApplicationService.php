@@ -13,6 +13,7 @@ use packages\domain\model\userProfile\UserName;
 use packages\domain\model\userProfile\UserProfile;
 use packages\domain\model\userProfile\validation\SelfIntroductionTextValidation;
 use packages\domain\model\userProfile\validation\UserNameValidation;
+use packages\domain\service\authenticationInformation\LoggedInUserIdFetcher;
 use packages\domain\service\userProfile\UserProfileService;
 use RuntimeException;
 
@@ -20,8 +21,7 @@ class RegisterUserProfileApplicationService implements RegisterUserProfileInputB
 {
     private IUserProfileRepository $userProfileRepository;
     private UserProfileService $userProfileService;
-    private AuthenticationService $authService;
-    private IScopeAuthorizationChecker $scopeAuthorizationChecker;
+    private LoggedInUserIdFetcher $loggedInUserIdFetcher;
 
     public function __construct(
         IUserProfileRepository $userProfileRepository,
@@ -31,8 +31,7 @@ class RegisterUserProfileApplicationService implements RegisterUserProfileInputB
     {
         $this->userProfileRepository = $userProfileRepository;
         $this->userProfileService = new UserProfileService($userProfileRepository);
-        $this->authService = $authService;
-        $this->scopeAuthorizationChecker = $scopeAuthorizationChecker;
+        $this->loggedInUserIdFetcher = new LoggedInUserIdFetcher($authService, $scopeAuthorizationChecker);
     }
 
     /**
@@ -44,15 +43,7 @@ class RegisterUserProfileApplicationService implements RegisterUserProfileInputB
         string $scopeString
     ): RegisterUserProfileResult
     {
-        $userId = $this->authService->loggedInUserId();
-        if ($userId === null) {
-            throw new AuthenticationException('ユーザーがログインしていません');
-        }
-
-        $scope = Scope::from($scopeString);
-        if (!$this->scopeAuthorizationChecker->isAuthorized($scope)) {
-            throw new AuthenticationException('許可されていないリクエストです。');
-        }
+        $userId = $this->loggedInUserIdFetcher->fetch(Scope::from($scopeString));
 
         $validationHandler = new ValidationHandler();
         $validationHandler->addValidator(new UserNameValidation(
