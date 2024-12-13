@@ -28,6 +28,8 @@ use packages\application\authentication\verifiedUpdate\display\DisplayVerifiedUp
 use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateApplicationService;
 use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateInputBoundary;
 use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateOutputBoundary;
+use packages\application\userProfile\fetch\FetchUserProfileApplicationService;
+use packages\application\userProfile\fetch\FetchUserProfileInputBoundary;
 use packages\application\userProfile\register\RegisterUserProfileApplicationService;
 use packages\application\userProfile\register\RegisterUserProfileInputBoundary;
 use packages\application\userProfile\register\RegisterUserProfileOutputBoundary;
@@ -76,6 +78,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(VerifiedUpdateInputBoundary::class, VerifiedUpdateApplicationService::class);
         $this->app->bind(UserRegistrationInputBoundary::class, UserRegistrationApplicationService::class);
         $this->app->bind(RegisterUserProfileInputBoundary::class, RegisterUserProfileApplicationService::class);
+        $this->app->bind(FetchUserProfileInputBoundary::class, FetchUserProfileApplicationService::class);
 
         // その他　フレームワークに関する設定
         $this->app->bind(ApiVersionResolver::class, ApiVersionResolver::class);
