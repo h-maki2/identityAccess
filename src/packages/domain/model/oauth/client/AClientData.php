@@ -62,7 +62,7 @@ abstract class AClientData
             'client_id' => $this->clientId->value,
             'redirect_uri' => $this->redirectUrl->value,
             'state' => $state,
-            'scope' => $scopeList->value()
+            'scope' => $scopeList->stringValue()
         ]);
     }
 

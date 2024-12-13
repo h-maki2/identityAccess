@@ -9,6 +9,7 @@ use packages\test\helpers\authenticationInformation\AuthenticationInformationTes
 use packages\test\helpers\authenticationInformation\TestAuthenticationInformationFactory;
 use App\Models\AuthenticationInformation as EloquentAuthenticationInformation;
 use packages\adapter\oauth\authToken\LaravelPassportAccessToken;
+use packages\domain\model\oauth\scope\ScopeList;
 
 class AccessTokenTestDataCreator
 {
@@ -22,10 +23,13 @@ class AccessTokenTestDataCreator
     /**
      * テスト用のアクセストークンを作成する
      */
-    public function create(): LaravelPassportAccessToken
+    public function create(
+        ?ScopeList $scopeList = null
+    ): LaravelPassportAccessToken
     {
+        $scopeList = $scopeList ? $scopeList->stringValue() : '';
         $authInfo = $this->authenticationInformationTestDataCreator->create();
         $eloquentAuthenticationInformation = EloquentAuthenticationInformation::find($authInfo->id()->value);
-        return new LaravelPassportAccessToken($eloquentAuthenticationInformation->createToken('Test Token')->accessToken);
+        return new LaravelPassportAccessToken($eloquentAuthenticationInformation->createToken('Test Token', [$scopeList])->accessToken);
     }
 }

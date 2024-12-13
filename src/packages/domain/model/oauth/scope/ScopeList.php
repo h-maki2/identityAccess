@@ -24,12 +24,9 @@ class ScopeList
         return new self($scopeList);
     }
 
-    public function value(): array
+    public function stringValue(): string
     {
-        return array_map(
-            fn(Scope $scope) => $scope->value,
-            $this->value
-        );
+        return implode(' ', $this->value);
     }
 
     private static function scopeStringList(string $scopeString): array
