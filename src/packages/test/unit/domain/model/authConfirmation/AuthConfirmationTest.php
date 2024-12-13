@@ -5,7 +5,7 @@ use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeToken;
 use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
-use packages\domain\service\authConfirmation\AuthConfirmationService;
+use packages\domain\service\authConfirmation\OneTimeTokenExistsService;
 use packages\test\helpers\authConfirmation\TestAuthConfirmationFactory;
 use packages\test\helpers\authConfirmation\TestOneTimeTokenFactory;
 use packages\test\helpers\authenticationInformation\TestUserIdFactory;
@@ -13,11 +13,11 @@ use PHPUnit\Framework\TestCase;
 
 class AuthConfirmationTest extends TestCase
 {
-    private AuthConfirmationService $authConfirmationService;
+    private OneTimeTokenExistsService $oneTimeTokenExistsService;
 
     public function setUp(): void
     {
-        $this->authConfirmationService = new AuthConfirmationService(new InMemoryAuthConfirmationRepository());
+        $this->OneTimeTokenExistsService = new OneTimeTokenExistsService(new InMemoryAuthConfirmationRepository());
     }
 
     public function test_認証情報を作成する()
@@ -27,7 +27,7 @@ class AuthConfirmationTest extends TestCase
         $oneToken = OneTimeToken::create();
 
         // when
-        $authConfirmation = AuthConfirmation::create($userId, $oneToken, $this->authConfirmationService);
+        $authConfirmation = AuthConfirmation::create($userId, $oneToken, $this->OneTimeTokenExistsService);
 
         // then
         // 入力したユーザーIDが取得できることを確認

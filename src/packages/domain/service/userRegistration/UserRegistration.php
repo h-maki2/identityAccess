@@ -15,7 +15,7 @@ use packages\domain\model\authenticationInformation\UserPassword;
 use packages\domain\model\common\unitOfWork\UnitOfWork;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\model\email\VerifiedUpdateEmailDtoFactory;
-use packages\domain\service\authConfirmation\AuthConfirmationService;
+use packages\domain\service\authConfirmation\OneTimeTokenExistsService;
 use packages\domain\service\authenticationInformation\AuthenticationInformationService;
 
 class UserRegistration
@@ -55,7 +55,7 @@ class UserRegistration
         $authConfirmation = AuthConfirmation::create(
             $authInformation->id(), 
             $oneTimeToken, 
-            new AuthConfirmationService($this->authConfirmationRepository)
+            new OneTimeTokenExistsService($this->authConfirmationRepository)
         );
 
         $this->unitOfWork->performTransaction(function () use ($authInformation, $authConfirmation) {

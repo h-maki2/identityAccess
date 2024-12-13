@@ -5,7 +5,7 @@ namespace packages\domain\service\authConfirmation;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
 
-class AuthConfirmationService
+class OneTimeTokenExistsService
 {
     private IAuthConfirmationRepository $authConfirmationRepository;
 
@@ -14,7 +14,7 @@ class AuthConfirmationService
         $this->authConfirmationRepository = $authConfirmationRepository;
     }
 
-    public function isExistsOneTimeToken(OneTimeTokenValue $oneTimeTokenValue): bool
+    public function isExists(OneTimeTokenValue $oneTimeTokenValue): bool
     {
         return $this->authConfirmationRepository->findByTokenValue($oneTimeTokenValue) !== null;
     }

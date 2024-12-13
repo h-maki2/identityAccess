@@ -5,7 +5,7 @@ namespace packages\domain\model\authConfirmation;
 use DateTimeImmutable;
 use InvalidArgumentException;
 use packages\domain\model\authenticationInformation\UserId;
-use packages\domain\service\authConfirmation\AuthConfirmationService;
+use packages\domain\service\authConfirmation\OneTimeTokenExistsService;
 
 class AuthConfirmation
 {
@@ -27,10 +27,10 @@ class AuthConfirmation
     public static function create(
         UserId $userId, 
         OneTimeToken $oneTimeToken,
-        AuthConfirmationService $authConfirmationService
+        OneTimeTokenExistsService $oneTimeTokenExistsService
     ): self
     {
-        if ($authConfirmationService->isExistsOneTimeToken($oneTimeToken->tokenValue())) {
+        if ($oneTimeTokenExistsService->isExists($oneTimeToken->tokenValue())) {
             throw new InvalidArgumentException('OneTimeToken is already exists.');
         }
 
