@@ -24,7 +24,8 @@ class RegisterUserProfileController extends Controller
     {
         $result = $this->registerUserProfileInputBoundary->register(
             $request->input('userName', ''),
-            $request->input('selfIntroductionText', '')
+            $request->input('selfIntroductionText', ''),
+            $request->input('scope', '')
         );
 
         $presenter = new JsonRegisterUserProfilePresenter($result);

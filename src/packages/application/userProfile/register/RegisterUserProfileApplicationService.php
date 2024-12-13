@@ -5,6 +5,8 @@ namespace packages\application\userProfile\register;
 use packages\domain\model\authenticationInformation\AuthenticationService;
 use packages\domain\model\common\exception\AuthenticationException;
 use packages\domain\model\common\validator\ValidationHandler;
+use packages\domain\model\oauth\scope\IScopeAuthorizationChecker;
+use packages\domain\model\oauth\scope\Scope;
 use packages\domain\model\userProfile\IUserProfileRepository;
 use packages\domain\model\userProfile\SelfIntroductionText;
 use packages\domain\model\userProfile\UserName;
@@ -19,25 +21,37 @@ class RegisterUserProfileApplicationService implements RegisterUserProfileInputB
     private IUserProfileRepository $userProfileRepository;
     private UserProfileService $userProfileService;
     private AuthenticationService $authService;
+    private IScopeAuthorizationChecker $scopeAuthorizationChecker;
 
     public function __construct(
         IUserProfileRepository $userProfileRepository,
-        AuthenticationService $authService
+        AuthenticationService $authService,
+        IScopeAuthorizationChecker $scopeAuthorizationChecker
     )
     {
         $this->userProfileRepository = $userProfileRepository;
         $this->userProfileService = new UserProfileService($userProfileRepository);
         $this->authService = $authService;
+        $this->scopeAuthorizationChecker = $scopeAuthorizationChecker;
     }
 
     /**
      * ユーザー登録を行う
      */
-    public function register(string $userNameString, string $selfIntroductionTextString): RegisterUserProfileResult
+    public function register(
+        string $userNameString, 
+        string $selfIntroductionTextString,
+        string $scopeString
+    ): RegisterUserProfileResult
     {
         $userId = $this->authService->loggedInUserId();
         if ($userId === null) {
             throw new AuthenticationException('ユーザーがログインしていません');
+        }
+
+        $scope = Scope::from($scopeString);
+        if (!$this->scopeAuthorizationChecker->isAuthorized($scope)) {
+            throw new AuthenticationException('許可されていないリクエストです。');
         }
 
         $validationHandler = new ValidationHandler();

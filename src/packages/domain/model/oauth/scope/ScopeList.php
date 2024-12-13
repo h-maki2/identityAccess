@@ -26,7 +26,11 @@ class ScopeList
 
     public function stringValue(): string
     {
-        return implode(' ', $this->value);
+        $scopeStringList = array_map(
+            fn(Scope $scope) => $scope->value,
+            $this->value
+        );
+        return implode(' ', $scopeStringList);
     }
 
     private static function scopeStringList(string $scopeString): array

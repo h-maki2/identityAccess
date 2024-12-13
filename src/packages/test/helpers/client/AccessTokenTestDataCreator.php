@@ -27,9 +27,9 @@ class AccessTokenTestDataCreator
         ?ScopeList $scopeList = null
     ): LaravelPassportAccessToken
     {
-        $scopeList = $scopeList ? $scopeList->stringValue() : '';
+        $scopesString = $scopeList ? $scopeList->stringValue() : '';
         $authInfo = $this->authenticationInformationTestDataCreator->create();
         $eloquentAuthenticationInformation = EloquentAuthenticationInformation::find($authInfo->id()->value);
-        return new LaravelPassportAccessToken($eloquentAuthenticationInformation->createToken('Test Token', [$scopeList])->accessToken);
+        return new LaravelPassportAccessToken($eloquentAuthenticationInformation->createToken('Test Token', [$scopesString])->accessToken);
     }
 }

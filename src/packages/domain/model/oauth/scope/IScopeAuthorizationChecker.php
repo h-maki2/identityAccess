@@ -9,5 +9,5 @@ interface IScopeAuthorizationChecker
     /**
      * 指定したスコープが許可されているかどうかを判定
      */
-    public function isAuthorized(UserId $userId, Scope $scope): bool;
+    public function isAuthorized(Scope $scope): bool;
 }

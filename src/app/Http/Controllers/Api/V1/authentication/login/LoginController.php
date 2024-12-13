@@ -25,7 +25,8 @@ class LoginController extends Controller
             $request->input('client_id'),
             $request->input('redirect_url'),
             $request->input('response_type'),
-            $request->input('state')
+            $request->input('state'),
+            $request->input('scope')
         );
 
         $presenter = new JsonLoginPresenter($output);

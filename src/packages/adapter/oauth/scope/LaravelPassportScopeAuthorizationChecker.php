@@ -2,21 +2,21 @@
 
 namespace packages\adapter\oauth\scope;
 
-use App\Models\AuthenticationInformation;
-use Illuminate\Support\Facades\Auth;
-use packages\domain\model\authenticationInformation\UserId;
-use packages\domain\model\common\exception\AuthenticationException;
+use Illuminate\Http\Request;
 use packages\domain\model\oauth\scope\IScopeAuthorizationChecker;
 use packages\domain\model\oauth\scope\Scope;
 
 class LaravelPassportScopeAuthorizationChecker implements IScopeAuthorizationChecker
 {
-    public function isAuthorized(UserId $userId, Scope $scope): bool
+    private Request $request;
+
+    public function __construct(Request $request)
     {
-        $authInfo = AuthenticationInformation::find($userId->value);
-        if ($authInfo === null) {
-            throw new AuthenticationException('認証情報が見つかりません');
-        }
-        return $authInfo->tokenCan($scope->value);
+        $this->request = $request;
+    }
+
+    public function isAuthorized(Scope $scope): bool
+    {
+        return $this->request->user()->tokenCan($scope->value);
     }
 }
