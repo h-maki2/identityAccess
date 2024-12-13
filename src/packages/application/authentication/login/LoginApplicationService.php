@@ -9,6 +9,7 @@ use packages\domain\model\authenticationInformation\IAuthenticationInformationRe
 use packages\domain\model\authenticationInformation\UserEmail;
 use packages\domain\model\oauth\client\ClientId;
 use packages\domain\model\oauth\client\RedirectUrl;
+use packages\domain\model\oauth\scope\ScopeList;
 use UnexpectedValueException;
 
 class LoginApplicationService implements LoginInputBoundary
@@ -34,7 +35,8 @@ class LoginApplicationService implements LoginInputBoundary
         string $clientId,
         string $redirectUrl,
         string $responseType,
-        string $state
+        string $state,
+        string $scopes
     ): LoginResult
     {
         $email = new UserEmail($inputedEmail);
@@ -59,7 +61,8 @@ class LoginApplicationService implements LoginInputBoundary
                 $clientId,
                 $redirectUrl,
                 $responseType,
-                $state
+                $state,
+                $scopes
             );
 
             $this->authenticationInformationRepository->save($authenticationInformation);
@@ -86,7 +89,8 @@ class LoginApplicationService implements LoginInputBoundary
         string $clientId,
         string $redirectUrl,
         string $responseType,
-        string $state
+        string $state,
+        string $scopes
     ): string
     {
         $clientId = new ClientId($clientId);
@@ -96,6 +100,7 @@ class LoginApplicationService implements LoginInputBoundary
         }
 
         $redirectUrl = new RedirectUrl($redirectUrl);
-        return $client->urlForObtainingAuthorizationCode($redirectUrl, $responseType, $state);
+        $scopeList = ScopeList::createFromString($scopes);
+        return $client->urlForObtainingAuthorizationCode($redirectUrl, $responseType, $state, $scopeList);
     }
 }

@@ -3,13 +3,13 @@
 namespace packages\domain\model\oauth\client;
 
 use InvalidArgumentException;
+use packages\domain\model\oauth\scope\ScopeList;
 
 abstract class AClientData
 {
     private ClientId $clientId;
     private ClientSecret $clientSecret;
     private RedirectUrl $redirectUrl;
-    // private array $scope;
 
     public function __construct(
         ClientId $clientId,
@@ -44,32 +44,26 @@ abstract class AClientData
     public function urlForObtainingAuthorizationCode(
         RedirectUrl $enteredRedirectUrl,
         string $reponseType,
-        string $state
+        string $state,
+        ScopeList $scopeList
     ): string
     {
         if (!$this->hasRedirectUrlEntered($enteredRedirectUrl)) {
             throw new InvalidArgumentException('リダイレクトURIが一致しません。');
         }
 
-        return $this->baseUrl() . '/oauth/authorize?' . $this->queryParam($reponseType, $state);
+        return $this->baseUrl() . '/oauth/authorize?' . $this->queryParam($reponseType, $state, $scopeList);
     }
 
-    protected function queryParam(string $reponseType, string $state): string
+    protected function queryParam(string $reponseType, string $state, ScopeList $scopeList): string
     {
         return http_build_query([
             'response_type' => $reponseType,
             'client_id' => $this->clientId->value,
             'redirect_uri' => $this->redirectUrl->value,
-            'state' => $state
+            'state' => $state,
+            'scope' => $scopeList->value()
         ]);
-    }
-
-    /**
-     * クライアントシークレットが入力されたクライアントシークレットと一致しているか判定する
-     */
-    protected function hasClientSecretEntered(ClientSecret $enterdClientSecret): bool
-    {
-        return $this->clientSecret->equals($enterdClientSecret);
     }
 
     /**

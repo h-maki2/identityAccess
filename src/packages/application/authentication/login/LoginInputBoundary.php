@@ -13,6 +13,7 @@ interface LoginInputBoundary
         string $clientId,
         string $redirectUrl,
         string $responseType,
-        string $state
+        string $state,
+        string $scope
     ): LoginResult;
 }

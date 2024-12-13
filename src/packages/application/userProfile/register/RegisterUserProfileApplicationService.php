@@ -2,9 +2,7 @@
 
 namespace packages\application\userProfile\register;
 
-use Illuminate\Contracts\Session\Session;
 use packages\domain\model\authenticationInformation\AuthenticationService;
-use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
 use packages\domain\model\common\exception\AuthenticationException;
 use packages\domain\model\common\validator\ValidationHandler;
 use packages\domain\model\userProfile\IUserProfileRepository;

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Services\ApiVersionResolver;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Passport\Passport;
 use packages\adapter\email\LaravelEmailSender;
 use packages\adapter\oauth\authToken\LaravelPassportAccessTokenDeactivationService;
 use packages\adapter\oauth\authToken\LaravelPassportRefreshokenDeactivationService;
@@ -85,6 +86,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        
+        Passport::tokensCan([
+            'view-profile' => 'View user profile information',
+            'edit-profile' => 'Edit user profile information',
+        ]);
     }
 }
