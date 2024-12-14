@@ -54,7 +54,7 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
         // 認証確認情報が保存されていることを確認する
         $actualAuthConfirmation = $this->eloquentAuthConfirmationRepository->findById($userId);
         $this->assertEquals($authConfirmation->oneTimePassword(), $actualAuthConfirmation->oneTimePassword());
-        $this->assertEquals($authConfirmation->oneTimeToken()->value(), $actualAuthConfirmation->oneTimeToken()->value());
+        $this->assertEquals($authConfirmation->oneTimeToken()->tokenValue(), $actualAuthConfirmation->oneTimeToken()->tokenValue());
         $this->assertEquals($authConfirmation->oneTimeToken()->expirationdate(), $actualAuthConfirmation->oneTimeToken()->expirationdate());
     }
 
@@ -84,7 +84,7 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
         // 認証情報が更新されていることを確認する
         $actualAuthConfirmation = $this->eloquentAuthConfirmationRepository->findById($userId);
         $this->assertEquals($expectedAuthConfirmation->oneTimePassword(), $actualAuthConfirmation->oneTimePassword());
-        $this->assertEquals($expectedAuthConfirmation->oneTimeToken()->value(), $actualAuthConfirmation->oneTimeToken()->value());
+        $this->assertEquals($expectedAuthConfirmation->oneTimeToken()->tokenValue(), $actualAuthConfirmation->oneTimeToken()->tokenValue());
         $this->assertEquals($expectedAuthConfirmation->oneTimeToken()->expirationdate(), $actualAuthConfirmation->oneTimeToken()->expirationdate());
     }
 
@@ -124,7 +124,7 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
 
         // then
         $this->assertEquals($検索対象の認証確認情報->oneTimePassword(), $actualAuthConfirmation->oneTimePassword());
-        $this->assertEquals($検索対象の認証確認情報->oneTimeToken()->value(), $actualAuthConfirmation->oneTimeToken()->value());
+        $this->assertEquals($検索対象の認証確認情報->oneTimeToken()->tokenValue(), $actualAuthConfirmation->oneTimeToken()->tokenValue());
         $this->assertEquals($検索対象の認証確認情報->oneTimeToken()->expirationdate(), $actualAuthConfirmation->oneTimeToken()->expirationdate());
     }
 
@@ -159,7 +159,7 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
 
         // then
         $this->assertEquals($検索対象の認証確認情報->oneTimePassword(), $actualAuthConfirmation->oneTimePassword());
-        $this->assertEquals($検索対象の認証確認情報->oneTimeToken()->value(), $actualAuthConfirmation->oneTimeToken()->value());
+        $this->assertEquals($検索対象の認証確認情報->oneTimeToken()->tokenValue(), $actualAuthConfirmation->oneTimeToken()->tokenValue());
         $this->assertEquals($検索対象の認証確認情報->oneTimeToken()->expirationdate(), $actualAuthConfirmation->oneTimeToken()->expirationdate());
     }
 
