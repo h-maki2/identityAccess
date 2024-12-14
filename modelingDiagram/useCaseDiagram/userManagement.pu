@@ -1,0 +1,9 @@
+@startuml
+title ユーザー管理
+left to right direction
+actor ユーザー
+rectangle {
+    ユーザー --> (ユーザー名を変更する)
+    ユーザー --> (パスワードを変更する)
+}
+@enduml

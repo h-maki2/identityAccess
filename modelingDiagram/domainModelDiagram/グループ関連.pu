@@ -1,0 +1,80 @@
+@startuml グループ関連
+
+title グループ関連
+
+package "グループ集約(GroupAggregation)" {
+    class Group << (R,red) RootEntity >> {
+        groupId: GroupId
+        groupName: GroupName
+        groupMemberList : GroupMemberList
+    }
+
+    class GroupId {
+        - value: string
+    }
+
+    class GroupName {
+        - value: string
+    }
+
+    class GroupMemberList << (E,green) Entity >> {
+        - groupId: GroupId
+        - groupMeberList: GroupMember[]
+    }
+
+    class GroupMember {
+        userId: UserId
+        role: GroupRole
+        inviteStatus 招待ステータス: InviteStatus
+    }
+
+    class "InviteStatus\n招待ステータス" as InviteStatus {
+        - value: Enum { invited(招待済み), uninvited(未招待)}
+    }
+
+    class GroupRole {
+        - value: Enum { admin(管理者), member(一般ユーザー)}
+    }
+
+    note bottom of Group
+        ・管理者のみグループ名の変更とグループの削除が行える
+        ・グループメンバーが1人以上いる場合は、グループの削除は行えない
+    end note
+
+    note bottom of GroupMemberList
+        ・管理者のみがユーザーをグループに招待できる
+        ・グループメンバーのステータスが「未招待」のメンバーは、まだグループへの参加が済んでいない
+        ・管理者がグループメンバーのステータスを「未招待」から「招待済み」に変更したときに
+        　グループメンバーは正式にグループに参加済みになる
+        ・管理者は特定の参加者の強制退出が行える
+        ・参加者は自由にグループから退出できる
+    end note
+
+    note bottom of GroupName
+        グループ名は1文字以上30文字以下
+        空文字列での登録は行えない
+    end note
+
+    note bottom of GroupId
+        ・GroupIdはULIDやUUIDv7などの時系列ソート可能なIDを用いる
+        ・グループを他のユーザーに共有する際は、GroupIdをJWT(JSON Web Token)を使って暗号化したものを共有する
+    end note
+
+    note bottom of InviteStatus
+        ・一般メンバーのステータス初期値は「未招待」
+        ・管理者のステータス初期値は「招待済み」
+        ・グループメンバーがグループへの参加を了承した段階では「未招待」
+        ・グループの管理者のみが「未招待」から「招待済み」に変更できる
+    end note
+
+    Group *-down- GroupId
+    Group *-down- GroupName
+    Group *-down- PublicationId
+    Group *-down- GroupMemberList
+    Group -down-> AuthenticationInformation.UserId
+    GroupMemberList "1" *-down- "0..n" GroupMember
+    GroupMember -down-> AuthenticationInformation.UserId
+    GroupMember *-down- InviteStatus
+}
+
+@enduml

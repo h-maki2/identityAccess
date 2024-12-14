@@ -1,0 +1,49 @@
+@startuml identityManagement
+
+entity "認証情報\nauthentication_informaion" as authentication_informaion {
+    user_id: CHAR(26)
+    --
+    email: VARCHAR(M)
+    password: VARCHAR(255)
+    verification_status: bool
+    failed_login_count: int
+    login_restriction_status: bool
+    next_login_allowed_at: DATETIME
+}
+
+entity "認証情報\nauth_confirmations" as auth_confirmations {
+    user_id(FK): CHAR(26)
+    --
+    one_time_token_value: CHAR(26)
+    one_time_token_expiration: DATETIME
+    one_time_password: CHAR(6)
+}
+
+entity "ユーザプロファイル\nuser_profiles" as user_profiles {
+    user_profile_id: CHAR(26)
+    --
+    user_id(FK): CHAR(26)
+    user_name: VARCHAR(50)
+    self_introduction_text: VARCHAR(500)
+}
+
+entity "グループ\ngroup" as group {
+    group_id: CHAR(26)
+    --
+    gourp_name: VARCHAR(30)
+}
+
+entity "グループメンバー\ngroup_member" as group_member {
+    group_id(FK): CHAR(26)
+    user_id(FK): CHAR(26)
+    --
+    invite_status: bool
+    role: bool
+}
+
+user_profiles ||--o| auth_confirmations
+user_profiles ||--o{ group
+group ||--o{ group_member
+user_profiles ||--o{ group_member
+
+@enduml
