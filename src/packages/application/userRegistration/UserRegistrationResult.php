@@ -7,24 +7,24 @@ use packages\application\common\validation\ValidationErrorMessageData;
 class UserRegistrationResult
 {
     readonly bool $isValidationError;
-    readonly mixed $validationError;
+    readonly mixed $validationErrors;
 
     private function __construct(
         bool $isValidationError,
-        mixed $validationError
+        mixed $validationErrors
     )
     {
         $this->isValidationError= $isValidationError;
-        $this->validationError = $validationError;
+        $this->validationErrors = $validationErrors;
     }
 
     public static function createWhenValidationError(
-        mixed $validationError
+        mixed $validationErrors
     ): self
     {
         return new self(
             true,
-            $validationError
+            $validationErrors
         );
     }
 

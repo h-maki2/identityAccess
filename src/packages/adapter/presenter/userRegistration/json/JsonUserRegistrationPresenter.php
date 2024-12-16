@@ -5,39 +5,50 @@ namespace packages\adapter\presenter\userRegistration\json;
 use packages\adapter\presenter\common\json\HttpStatus;
 use packages\adapter\presenter\common\json\JsonPresenter;
 use packages\adapter\presenter\common\json\JsonResponseData;
-use packages\adapter\presenter\common\json\JsonResponseStatus;
-use packages\application\userRegistration\UserRegistrationOutputBoundary;
+use packages\adapter\presenter\userRegistration\UserRegistrationPresenter;
+use packages\application\common\validation\ValidationErrorMessageData;
 use packages\application\userRegistration\UserRegistrationResult;
+use UserRegistrationView;
 
-class JsonUserRegistrationPresenter implements JsonPresenter
+class JsonUserRegistrationPresenter extends UserRegistrationPresenter
 {
-    private UserRegistrationResult $result;
-
-    public function __construct(UserRegistrationResult $result)
+    public function responseView(): JsonResponseData
     {
-        $this->result = $result;
+        $this->setHttpStatusToView();
+        $this->setResponseDataToView();
+        return $this->jsonResponse();
     }
 
-    public function jsonResponseData(): JsonResponseData
+    private function setResponseDataToView(): void
     {
-        return new JsonResponseData($this->responseData($this->result), $this->httpStatus());
-    }
-
-    private function responseData(UserRegistrationResult $result): array
-    {
-        if (!$result->validationError) {
-            return [];
+        if (!$this->result->isValidationError) {
+            $this->view->setResponseData([]);
+            return;
         }
 
         $responseData = [];
-        foreach ($result->validationErrorMessageList as $validationError) {
+        foreach ($this->validationErrorMessageList() as $validationError) {
             $responseData[$validationError->fieldName] = $validationError->errorMessageList;
         }
-        return $responseData;
+        $this->view->setResponseData($responseData);
     }
 
-    private function httpStatus(): HttpStatus
+    private function setHttpStatusToView(): void
     {
-        return $this->result->validationError ? HttpStatus::BadRequest : HttpStatus::Success;
+        $httpStatus = $this->result->isValidationError ? HttpStatus::BadRequest : HttpStatus::Success;
+        $this->view->setHttpStatus($httpStatus);
+    }
+
+    /**
+     * @return ValidationErrorMessageData[]
+     */
+    private function validationErrorMessageList(): array
+    {
+        return $this->result->validationErrors;
+    }
+
+    private function jsonResponse(): JsonResponseData
+    {
+        return $this->view->response();
     }
 }
