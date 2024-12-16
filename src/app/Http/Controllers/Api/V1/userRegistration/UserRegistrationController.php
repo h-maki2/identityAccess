@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use packages\adapter\presenter\userRegistration\json\JsonUserRegistrationPresenter;
+use packages\adapter\view\userRegistration\json\JsonUserRegistrationView;
 use packages\application\userRegistration\UserRegistrationInputBoundary;
 
 class UserRegistrationController extends Controller
@@ -27,7 +28,7 @@ class UserRegistrationController extends Controller
         );
 
         $presenter = new JsonUserRegistrationPresenter($output);
-        $jsonResponseData = $presenter->jsonResponseData();
-        return response()->json($jsonResponseData->value, $jsonResponseData->httpStatusCode());
+        $view = new JsonUserRegistrationView($presenter->viewResponse());
+        return $view->response();
     }
 }
