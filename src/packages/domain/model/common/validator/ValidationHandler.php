@@ -2,52 +2,24 @@
 
 namespace packages\domain\model\common\validator;
 
-use packages\application\common\validation\ValidationErrorMessageData;
-
-class ValidationHandler
+abstract class ValidationHandler
 {
-    private array $validatorList = [];
-    private array $errorMessages = []; // ValidationErrorMessageData[]
+    private array $validatorList = []; // Validator[]
 
-    public function validate(): bool
-    {
-        $valid = true;
-        foreach ($this->validatorList() as $validator) {
-            if (!$validator->validate()) {
-                $this->setErrorMessage($validator);
-                $valid = false;
-            }
-        }
+    abstract public function validate(): bool;
 
-        return $valid;
-    }
-
-    /**
-     * @return ValidationErrorMessageData[]
-     */
-    public function errorMessages(): array
-    {
-        return $this->errorMessages;
-    }
+    abstract public function getValidationError(): mixed;
 
     public function addValidator(Validator $validator): void
     {
-        $this->validatorList[] = $validator;
+        $this->validatorList[$validator->fieldName()] = $validator;
     }
 
     /**
      * @return Validator[]
      */
-    private function validatorList(): array
+    protected function validatorList(): array
     {
         return $this->validatorList;
-    }
-
-    private function setErrorMessage(Validator $validator): void
-    {
-        $this->errorMessages[] = new ValidationErrorMessageData(
-            $validator->fieldName(),
-            $validator->errorMessageList()
-        );
     }
 }
