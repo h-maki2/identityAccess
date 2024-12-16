@@ -2,6 +2,7 @@
 
 namespace packages\adapter\presenter\userRegistration\json;
 
+use App\Models\User;
 use packages\adapter\presenter\common\json\HttpStatus;
 use packages\adapter\presenter\common\json\JsonPresenter;
 use packages\adapter\presenter\common\json\JsonResponseData;
@@ -10,32 +11,42 @@ use packages\application\common\validation\ValidationErrorMessageData;
 use packages\application\userRegistration\UserRegistrationResult;
 use UserRegistrationView;
 
-class JsonUserRegistrationPresenter extends UserRegistrationPresenter
+class JsonUserRegistrationPresenter
 {
-    protected function setResponseDataToView(): void
+    private UserRegistrationResult $result;
+
+    public function __construct(UserRegistrationResult $result)
+    {
+        $this->result = $result;
+    }
+
+    public function jsonResponseData(): JsonResponseData
+    {
+        return new JsonResponseData($this->responseData(), $this->setHttpStatusToView());
+    }
+
+    protected function responseData(): array
     {
         if (!$this->result->isValidationError) {
-            $this->view->setResponseData([]);
-            return;
+            return [];
         }
 
         $responseData = [];
         foreach ($this->validationErrorMessageList() as $validationError) {
             $responseData[$validationError->fieldName] = $validationError->errorMessageList;
         }
-        $this->view->setResponseData($responseData);
+        return $responseData;
     }
 
-    protected function setHttpStatusToView(): void
+    protected function setHttpStatusToView(): HttpStatus
     {
-        $httpStatus = $this->result->isValidationError ? HttpStatus::BadRequest : HttpStatus::Success;
-        $this->view->setHttpStatus($httpStatus);
+        return $this->result->isValidationError ? HttpStatus::BadRequest : HttpStatus::Success;
     }
 
     /**
      * @return ValidationErrorMessageData[]
      */
-    private function validationErrorMessageList(): array
+    protected function validationErrorMessageList(): array
     {
         return $this->result->validationErrors;
     }

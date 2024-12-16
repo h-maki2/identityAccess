@@ -3,13 +3,21 @@
 namespace packages\adapter\view\userRegistration\blade;
 
 use Illuminate\Validation\Validator;
+use packages\adapter\presenter\userRegistration\blade\BladeUserRegistrationPresenter;
 use packages\adapter\presenter\userRegistration\UserRegistrationView;
 
-class BladeUserRegistrationView extends UserRegistrationView
+class BladeUserRegistrationView
 {
+    private BladeUserRegistrationPresenter $presenter;
+
+    public function __construct(BladeUserRegistrationPresenter $presenter)
+    {
+        $this->presenter = $presenter;
+    }
+
     public function response(): mixed
     {
-        if ($this->httpStatus->isSuccess()) {
+        if ($this->presenter->isSuccess()) {
             return $this->successResponse();
         }
 
@@ -31,6 +39,6 @@ class BladeUserRegistrationView extends UserRegistrationView
 
     private function getValidationError(): Validator
     {
-        return $this->responseData['validationErrors'];
+        return $this->presenter->validationError;
     }
 }

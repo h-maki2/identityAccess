@@ -13,27 +13,20 @@ use packages\application\userRegistration\UserRegistrationInputBoundary;
 
 class UserRegistrationController extends Controller
 {
-    private UserRegistrationInputBoundary $userRegistrationInputBoundary;
-    private UserRegistrationPresenter $userRegistrationPresenter;
-
-    public function __construct(
+    public function userRegister(
         UserRegistrationInputBoundary $userRegistrationInputBoundary,
-        UserRegistrationPresenter $userRegistrationPresenter
-    )
+        JsonUserRegistrationPresenter $userRegistrationPresenter,
+        Request $request
+    ): mixed
     {
-        $this->userRegistrationInputBoundary = $userRegistrationInputBoundary;
-        $this->userRegistrationPresenter = $userRegistrationPresenter;
-    }
-
-    public function userRegister(Request $request): mixed
-    {
-        $output = $this->userRegistrationInputBoundary->userRegister(
+        $output = $userRegistrationInputBoundary->userRegister(
             $request->input('email', ''),
             $request->input('password', ''),
             $request->input('passwordConfirmation', '')
         );
 
-        $this->userRegistrationPresenter->setResult($output);
-        return $this->userRegistrationPresenter->responseView();
+        $jsonPresenter = new JsonUserRegistrationPresenter($output);
+        $jsonResponseData = $jsonPresenter->jsonResponseData();
+        return response()->json($jsonResponseData->value, $jsonResponseData->httpStatusCode());
     }
 }
