@@ -40,13 +40,12 @@ class VerifiedUpdateApplicationService implements VerifiedUpdateInputBoundary
      */
     public function verifiedUpdate(string $oneTimeTokenValueString, string $oneTimePasswordString): VerifiedUpdateResult
     {
-        if ($this->authConfirmationValidation->validate($oneTimePasswordString, $oneTimeTokenValueString)) {
+        if (!$this->authConfirmationValidation->validate($oneTimePasswordString, $oneTimeTokenValueString)) {
             return VerifiedUpdateResult::createWhenValidationError('ワンタイムトークンかワンタイムパスワードが無効です。');
         }
 
         $oneTimeTokenValue = OneTimeTokenValue::reconstruct($oneTimeTokenValueString);
-        $authConfirmation = $this->authConfirmationRepository->findByTokenValue($oneTimeTokenValue);
-        $this->verifiedUpdate->handle($authConfirmation);
+        $this->verifiedUpdate->handle($oneTimeTokenValue);
 
         return VerifiedUpdateResult::createWhenSuccess();
     }
