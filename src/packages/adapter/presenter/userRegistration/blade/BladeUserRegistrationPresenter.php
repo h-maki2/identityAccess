@@ -7,22 +7,18 @@ use packages\adapter\presenter\userRegistration\UserRegistrationPresenter;
 
 class BladeUserRegistrationPresenter extends UserRegistrationPresenter
 {
-    public function responseView(): mixed
-    {
-        return $this->view->response();
-    }
-
-    private function setResponseDataToView(): void
+    protected function setResponseDataToView(): void
     {
         if (!$this->result->isValidationError) {
             $this->view->setResponseData([]);
             return;
         }
 
-        $this->view->setResponseData($this->result->validationErrors);
+
+        $this->view->setResponseData(['validationErrors' => $this->result->validationErrors]);
     }
 
-    private function setHttpStatusToView(): void
+    protected function setHttpStatusToView(): void
     {
         $httpStatus = $this->result->isValidationError ? HttpStatus::BadRequest : HttpStatus::Success;
         $this->view->setHttpStatus($httpStatus);

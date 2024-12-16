@@ -1,11 +1,13 @@
 <?php
 
+namespace packages\adapter\presenter\userRegistration;
+
 use packages\adapter\presenter\common\json\HttpStatus;
 
 abstract class UserRegistrationView
 {
     protected HttpStatus $httpStatus;
-    protected mixed $responseData;
+    protected array $responseData;
 
     abstract public function response(): mixed;
 
@@ -14,7 +16,7 @@ abstract class UserRegistrationView
         $this->httpStatus = $httpStatus;
     }
 
-    public function setResponseData(mixed $responseData): void
+    public function setResponseData(array $responseData): void
     {
         $this->responseData = $responseData;
     }

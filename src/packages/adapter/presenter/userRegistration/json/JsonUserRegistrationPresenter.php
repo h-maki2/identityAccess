@@ -12,14 +12,7 @@ use UserRegistrationView;
 
 class JsonUserRegistrationPresenter extends UserRegistrationPresenter
 {
-    public function responseView(): JsonResponseData
-    {
-        $this->setHttpStatusToView();
-        $this->setResponseDataToView();
-        return $this->jsonResponse();
-    }
-
-    private function setResponseDataToView(): void
+    protected function setResponseDataToView(): void
     {
         if (!$this->result->isValidationError) {
             $this->view->setResponseData([]);
@@ -33,7 +26,7 @@ class JsonUserRegistrationPresenter extends UserRegistrationPresenter
         $this->view->setResponseData($responseData);
     }
 
-    private function setHttpStatusToView(): void
+    protected function setHttpStatusToView(): void
     {
         $httpStatus = $this->result->isValidationError ? HttpStatus::BadRequest : HttpStatus::Success;
         $this->view->setHttpStatus($httpStatus);
@@ -45,10 +38,5 @@ class JsonUserRegistrationPresenter extends UserRegistrationPresenter
     private function validationErrorMessageList(): array
     {
         return $this->result->validationErrors;
-    }
-
-    private function jsonResponse(): JsonResponseData
-    {
-        return $this->view->response();
     }
 }
