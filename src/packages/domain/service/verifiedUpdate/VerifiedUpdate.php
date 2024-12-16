@@ -34,12 +34,8 @@ class VerifiedUpdate
      * 認証情報を認証済みに更新する
      * 更新に成功した場合はtrue、失敗した場合はfalseを返す
      */
-    public function handle(AuthConfirmation $authConfirmation, OneTimePassword $password): bool
+    public function handle(AuthConfirmation $authConfirmation): void
     {
-        if (!$authConfirmation->oneTimePassword()->equals($password)) {
-            return false;
-        }
-
         $authInformation = $this->authenticationInformationRepository->findById($authConfirmation->userId);
         
         $authInformation->updateVerified();
@@ -52,7 +48,5 @@ class VerifiedUpdate
         } catch (\Exception $e) {
             throw new TransactionException($e->getMessage());
         }
-
-        return true;
     }
 }

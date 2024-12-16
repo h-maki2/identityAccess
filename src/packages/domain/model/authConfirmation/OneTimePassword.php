@@ -3,17 +3,16 @@
 namespace packages\domain\model\authConfirmation;
 
 use InvalidArgumentException;
+use packages\domain\model\authConfirmation\validation\OneTimePasswordValidation;
 
 class OneTimePassword
 {
     readonly string $value;
 
-    private const LENGTH = 6;
-
     private function __construct(string $value)
     {
-        if (strlen($value) !== self::LENGTH) {
-            throw new InvalidArgumentException('無効なワンタイムパスワードです。');
+        if (!OneTimePasswordValidation::validate($value)) {
+            throw new InvalidArgumentException('Invalid password value');
         }
 
         $this->value = $value;

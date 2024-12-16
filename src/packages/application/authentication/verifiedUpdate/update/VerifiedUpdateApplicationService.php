@@ -18,6 +18,7 @@ class VerifiedUpdateApplicationService implements VerifiedUpdateInputBoundary
 {
     private IAuthConfirmationRepository $authConfirmationRepository;
     private VerifiedUpdate $verifiedUpdate;
+    private AuthConfirmationValidation $authConfirmationValidation;
 
     public function __construct(
         IAuthenticationInformationRepository $authenticationInformationRepository,
@@ -31,6 +32,7 @@ class VerifiedUpdateApplicationService implements VerifiedUpdateInputBoundary
             $this->authConfirmationRepository,
             $unitOfWork
         );
+        $this->authConfirmationValidation = new AuthConfirmationValidation($this->authConfirmationRepository);
     }
 
     /**
@@ -38,18 +40,13 @@ class VerifiedUpdateApplicationService implements VerifiedUpdateInputBoundary
      */
     public function verifiedUpdate(string $oneTimeTokenValueString, string $oneTimePasswordString): VerifiedUpdateResult
     {
-        $oneTimeTokenValue = OneTimeTokenValue::reconstruct($oneTimeTokenValueString);
-        $authConfirmation = $this->authConfirmationRepository->findByTokenValue($oneTimeTokenValue);
-        if (!AuthConfirmationValidation::validate($authConfirmation, new DateTimeImmutable())) {
-            return VerifiedUpdateResult::createWhenValidationError('ワンタイムトークンが無効です。');
-        }
-
-        $oneTimePassword = OneTimePassword::reconstruct($oneTimePasswordString);
-        $verifiedUpdateResult = $this->verifiedUpdate->handle($authConfirmation, $oneTimePassword);
-
-        if (!$verifiedUpdateResult) {
+        if ($this->authConfirmationValidation->validate($oneTimePasswordString, $oneTimeTokenValueString)) {
             return VerifiedUpdateResult::createWhenValidationError('ワンタイムトークンかワンタイムパスワードが無効です。');
         }
+
+        $oneTimeTokenValue = OneTimeTokenValue::reconstruct($oneTimeTokenValueString);
+        $authConfirmation = $this->authConfirmationRepository->findByTokenValue($oneTimeTokenValue);
+        $this->verifiedUpdate->handle($authConfirmation);
 
         return VerifiedUpdateResult::createWhenSuccess();
     }

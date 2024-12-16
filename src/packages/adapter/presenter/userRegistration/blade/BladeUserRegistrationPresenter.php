@@ -2,7 +2,6 @@
 
 namespace packages\adapter\presenter\userRegistration\blade;
 
-use packages\adapter\presenter\userRegistration\UserRegistrationPresenter;
 use packages\application\userRegistration\UserRegistrationResult;
 
 class BladeUserRegistrationPresenter

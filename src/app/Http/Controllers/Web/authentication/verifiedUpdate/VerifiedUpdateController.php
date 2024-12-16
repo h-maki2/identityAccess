@@ -1,31 +1,35 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\authentication\verifiedUpdate;
+namespace App\Http\Controllers\Web\authentication\verifiedUpdate;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use packages\adapter\presenter\authentication\verifiedUpdate\blade\BladeVerifiedUpdatePresenter;
 use packages\adapter\presenter\authentication\verifiedUpdate\json\JsonVerifiedUpdatePresenter;
+use packages\adapter\view\authentication\verifiedUpdate\blade\BladeVerifiedUpdateView;
 use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateInputBoundary;
 
 class VerifiedUpdateController extends Controller
 {
-    private VerifiedUpdateInputBoundary $verifiedUpdateInputBoundary;
-
-    public function __construct(VerifiedUpdateInputBoundary $verifiedUpdateInputBoundary)
+    public function verifiedUpdateForm(Request $request)
     {
-        $this->verifiedUpdateInputBoundary = $verifiedUpdateInputBoundary;
+        return view('authentication.verifiedUpdate.verifiedUpdateForm', [
+            'oneTimeToken' => $request->query('token', ''),
+        ]);
     }
 
-    public function verifiedUpdate(Request $request): JsonResponse
+    public function verifiedUpdate(
+        Request $request,
+        VerifiedUpdateInputBoundary $verifiedUpdateInputBoundary
+    )
     {
-        $output = $this->verifiedUpdateInputBoundary->verifiedUpdate(
-            $request->input('oneTimeToken', ''),
-            $request->input('oneTimePassword', '')
+        $output = $verifiedUpdateInputBoundary->verifiedUpdate(
+            $request->input('oneTimeToken') ?? '',
+            $request->input('oneTimePassword') ?? ''
         );
 
-        $presenter = new JsonVerifiedUpdatePresenter($output);
-        $jsonResponseData = $presenter->jsonResponseData();
-        return response()->json($jsonResponseData->value, $jsonResponseData->httpStatusCode());
+        $presenter = new BladeVerifiedUpdatePresenter($output);
+        $view = new BladeVerifiedUpdateView($presenter);
+        return $view->response();
     }
 }

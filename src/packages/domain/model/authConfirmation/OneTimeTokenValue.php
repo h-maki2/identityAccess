@@ -2,16 +2,17 @@
 
 namespace packages\domain\model\authConfirmation;
 
+use InvalidArgumentException;
+use packages\domain\model\authConfirmation\validation\OneTimeTokenValueValidation;
+
 class OneTimeTokenValue
 {
     readonly string $value;
 
-    private const TOKEN_LENGTH = 26;
-
     private function __construct(string $value)
     {
-        if (strlen($value) !== self::TOKEN_LENGTH) {
-            throw new \InvalidArgumentException('無効なトークンです');
+        if (!OneTimeTokenValueValidation::validate($value)) {
+            throw new InvalidArgumentException('Invalid token value');
         }
 
         $this->value = $value;
@@ -19,7 +20,7 @@ class OneTimeTokenValue
 
     public static function create(): self
     {
-        return new self(bin2hex(random_bytes(self::TOKEN_LENGTH / 2)));
+        return new self(bin2hex(random_bytes(OneTimeTokenValueValidation::tokenValueLength() / 2)));
     }
 
     public static function reconstruct(string $value): self

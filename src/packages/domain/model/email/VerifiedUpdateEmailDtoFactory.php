@@ -12,7 +12,7 @@ use packages\domain\model\email\SendEmailDto;
  */
 class VerifiedUpdateEmailDtoFactory
 {
-    private const verifiedUpdateBaseUrl = 'http://localhost:3000/verifiedUpdate';
+    private const verifiedUpdateBaseUrl = 'http://localhost:8080/verifiedUpdate';
         
     public static function create(
         UserEmail $toAddress,

@@ -71,10 +71,10 @@ class AuthConfirmation
     }
 
     /**
-     * 有効期限切れかどうかを判定
+     * 有効な認証確認かどうかを判定する
      */
-    public function isExpired(DateTimeImmutable $currentDateTime): bool
+    public function isValid(OneTimePassword $otherOneTimePassword, DateTimeImmutable $currentDateTime): bool
     {
-        return $this->oneTimeToken->isExpired($currentDateTime);
+        return $this->oneTimePassword->equals($otherOneTimePassword) && !$this->oneTimeToken->isExpired($currentDateTime);
     }
 }

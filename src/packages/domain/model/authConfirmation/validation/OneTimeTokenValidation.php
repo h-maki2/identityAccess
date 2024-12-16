@@ -14,13 +14,13 @@ class OneTimeTokenValidation extends Validator
 
     public function __construct(IAuthConfirmationRepository $authConfirmationRepository, OneTimeToken $oneTimeToken)
     {
-        $this->OneTimeTokenExistsService = new OneTimeTokenExistsService($authConfirmationRepository);
+        $this->oneTimeTokenExistsService = new OneTimeTokenExistsService($authConfirmationRepository);
         $this->oneTimeToken = $oneTimeToken;
     }
 
     public function validate(): bool
     {
-        if ($this->OneTimeTokenExistsService->isExists($this->oneTimeToken->tokenValue())) {
+        if ($this->oneTimeTokenExistsService->isExists($this->oneTimeToken->tokenValue())) {
             $this->setErrorMessage('一時的なエラーが発生しました。もう一度お試しください。');
             return false;
         }
