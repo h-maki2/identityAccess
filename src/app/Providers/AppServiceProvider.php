@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Services\ApiVersionResolver;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 use packages\adapter\email\LaravelEmailSender;
@@ -14,13 +13,9 @@ use packages\adapter\oauth\scope\LaravelPassportScopeAuthorizationChecker;
 use packages\adapter\persistence\eloquent\EloquentAuthConfirmationRepository;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationInformationRepository;
 use packages\adapter\persistence\eloquent\EloquentUserProfileRepository;
-use packages\adapter\presenter\userRegistration\blade\BladeUserRegistrationPresenter;
-use packages\adapter\presenter\userRegistration\UserRegistrationPresenter;
-use packages\adapter\presenter\userRegistration\UserRegistrationView;
 use packages\adapter\service\laravel\LaravelAuthenticationService;
 use packages\adapter\service\laravel\LaravelSessionAuthentication;
 use packages\adapter\unitOfWork\EloquentUnitOfWork;
-use packages\adapter\view\userRegistration\blade\BladeUserRegistrationView;
 use packages\application\authentication\login\LoginApplicationService;
 use packages\application\authentication\login\LoginInputBoundary;
 use packages\application\authentication\login\LoginOutputBoundary;
@@ -84,12 +79,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(UserRegistrationInputBoundary::class, UserRegistrationApplicationService::class);
         $this->app->bind(RegisterUserProfileInputBoundary::class, RegisterUserProfileApplicationService::class);
         $this->app->bind(FetchUserProfileInputBoundary::class, FetchUserProfileApplicationService::class);
-
-        // プレゼンター (blade)
-        $this->app->bind(UserRegistrationPresenter::class, BladeUserRegistrationPresenter::class);
-
-        // view (blade)
-        $this->app->bind(UserRegistrationView::class, BladeUserRegistrationView::class);
 
         // その他　フレームワークに関する設定
         $this->app->bind(ApiVersionResolver::class, ApiVersionResolver::class);

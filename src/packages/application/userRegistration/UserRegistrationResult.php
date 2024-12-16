@@ -6,25 +6,31 @@ use packages\application\common\validation\ValidationErrorMessageData;
 
 class UserRegistrationResult
 {
-    readonly bool $isValidationError;
-    readonly mixed $validationErrors;
+    readonly bool $validationError;
+    readonly array $validationErrorMessageList; // ValidationErrorMessageData[]
 
+    /**
+     * @param ValidationErrorMessageData[] $validationErrorMessageList
+     */
     private function __construct(
-        bool $isValidationError,
-        mixed $validationErrors
+        bool $validationError,
+        array $validationErrorMessageList
     )
     {
-        $this->isValidationError= $isValidationError;
-        $this->validationErrors = $validationErrors;
+        $this->validationError = $validationError;
+        $this->validationErrorMessageList = $validationErrorMessageList;
     }
 
+    /**
+     * @param ValidationErrorMessageData[] $validationErrorMessageList
+     */
     public static function createWhenValidationError(
-        mixed $validationErrors
+        array $validationErrorMessageList
     ): self
     {
         return new self(
             true,
-            $validationErrors
+            $validationErrorMessageList
         );
     }
 
@@ -32,7 +38,7 @@ class UserRegistrationResult
     {
         return new self(
             false,
-            ''
+            []
         );
     }
 }

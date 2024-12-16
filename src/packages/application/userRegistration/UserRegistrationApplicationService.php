@@ -62,7 +62,7 @@ class UserRegistrationApplicationService implements UserRegistrationInputBoundar
         $validationHandler->addValidator(new OneTimeTokenValidation($this->authConfirmationRepository, $oneTimeToken));
         
         if (!$validationHandler->validate()) {
-            return UserRegistrationResult::createWhenValidationError($validationHandler->getValidationError());
+            return UserRegistrationResult::createWhenValidationError($validationHandler->errorMessages());
         }
 
         $userEmail = new UserEmail($inputedEmail);
