@@ -5,11 +5,13 @@ namespace packages\adapter\presenter\userRegistration\blade;
 use packages\adapter\presenter\userRegistration\UserRegistrationPresenter;
 use packages\application\userRegistration\UserRegistrationResult;
 
-class BladeUserRegistrationPresenter extends UserRegistrationPresenter
+class BladeUserRegistrationPresenter
 {
+    private UserRegistrationResult $result;
+
     public function __construct(UserRegistrationResult $result)
     {
-        parent::__construct($result);
+        $this->result = $result;
     }
 
     public function viewResponse(): BladeUserRegistrationViewModel
@@ -18,5 +20,18 @@ class BladeUserRegistrationPresenter extends UserRegistrationPresenter
             $this->responseData(), 
             $this->result->validationError
         );
+    }
+
+    private function responseData(): array
+    {
+        if (!$this->result->validationError) {
+            return [];
+        }
+
+        $responseData = [];
+        foreach ($this->result->validationErrorMessageList as $validationError) {
+            $responseData[$validationError->fieldName] = $validationError->errorMessageList;
+        }
+        return $responseData;
     }
 }
