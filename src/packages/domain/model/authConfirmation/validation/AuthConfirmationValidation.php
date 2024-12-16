@@ -31,20 +31,20 @@ class AuthConfirmationValidation
         }
 
         $authConfirmation = $this->fetchAuthConfirmation($oneTimeToken);
-        if (!$authConfirmation) {
+        if ($authConfirmation === null) {
             return false;
         }
 
         $oneTimePassword = OneTimePassword::reconstruct($oneTimePasswordString);
         
-        if ($authConfirmation->isValid($oneTimePassword, new DateTimeImmutable())) {
+        if ($authConfirmation->canUpdateVerifiedAuthInfo($oneTimePassword, new DateTimeImmutable())) {
             return true;
         }
 
         return false;
     }
 
-    private function fetchAuthConfirmation(string $oneTimeToken): AuthConfirmation
+    private function fetchAuthConfirmation(string $oneTimeToken): ?AuthConfirmation
     {
         $oneTimeTokenValue = OneTimeTokenValue::reconstruct($oneTimeToken);
         return $this->authConfirmationRepository->findByTokenValue($oneTimeTokenValue);

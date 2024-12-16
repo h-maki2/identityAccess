@@ -45,7 +45,8 @@ class VerifiedUpdateApplicationService implements VerifiedUpdateInputBoundary
         }
 
         $oneTimeTokenValue = OneTimeTokenValue::reconstruct($oneTimeTokenValueString);
-        $this->verifiedUpdate->handle($oneTimeTokenValue);
+        $oneTimePassword = OneTimePassword::reconstruct($oneTimePasswordString);
+        $this->verifiedUpdate->handle($oneTimeTokenValue, $oneTimePassword);
 
         return VerifiedUpdateResult::createWhenSuccess();
     }

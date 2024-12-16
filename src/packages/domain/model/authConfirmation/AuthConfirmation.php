@@ -71,9 +71,9 @@ class AuthConfirmation
     }
 
     /**
-     * 有効な認証確認かどうかを判定する
+     * 認証情報を認証済みに更新できるかどうかを判定する
      */
-    public function isValid(OneTimePassword $otherOneTimePassword, DateTimeImmutable $currentDateTime): bool
+    public function canUpdateVerifiedAuthInfo(OneTimePassword $otherOneTimePassword, DateTimeImmutable $currentDateTime): bool
     {
         return $this->oneTimePassword->equals($otherOneTimePassword) && !$this->oneTimeToken->isExpired($currentDateTime);
     }
