@@ -19,7 +19,7 @@ class UserRegistrationController extends Controller
     public function userRegister(
         Request $request,
         UserRegistrationInputBoundary $userRegistrationInputBoundary
-    ): View
+    )
     {
         $output = $userRegistrationInputBoundary->userRegister(
             $request->input('email') ?? '',

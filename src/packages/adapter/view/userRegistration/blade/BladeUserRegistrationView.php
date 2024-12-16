@@ -14,7 +14,7 @@ class BladeUserRegistrationView
         $this->viewModel = $viewModel;
     }
 
-    public function response(): View
+    public function response()
     {
         if ($this->viewModel->isValidationError) {
             return $this->faildResponse();
@@ -28,8 +28,11 @@ class BladeUserRegistrationView
         return view('userRegistration.userRegistrationComplete');
     }
 
-    private function faildResponse(): View
+    private function faildResponse()
     {
-        return view('userRegistration.userRegistrationForm', ['viewModel' => $this->viewModel]); 
+        return redirect()
+                ->back()
+                ->withErrors($this->viewModel->validationErrorList)
+                ->withInput();
     }
 }

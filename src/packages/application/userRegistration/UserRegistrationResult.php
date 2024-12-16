@@ -8,44 +8,29 @@ class UserRegistrationResult
 {
     readonly bool $validationError;
     readonly array $validationErrorMessageList; // ValidationErrorMessageData[]
-    readonly string $email;
-    readonly string $password;
-    readonly string $passwordConfirmation;
 
     /**
      * @param ValidationErrorMessageData[] $validationErrorMessageList
      */
     private function __construct(
         bool $validationError,
-        array $validationErrorMessageList,
-        string $email,
-        string $password,
-        string $passwordConfirmation
+        array $validationErrorMessageList
     )
     {
         $this->validationError = $validationError;
         $this->validationErrorMessageList = $validationErrorMessageList;
-        $this->email = $email;
-        $this->password = $password;
-        $this->passwordConfirmation = $passwordConfirmation;
     }
 
     /**
      * @param ValidationErrorMessageData[] $validationErrorMessageList
      */
     public static function createWhenValidationError(
-        array $validationErrorMessageList,
-        string $email,
-        string $password,
-        string $passwordConfirmation
+        array $validationErrorMessageList
     ): self
     {
         return new self(
             true,
-            $validationErrorMessageList,
-            $email,
-            $password,
-            $passwordConfirmation
+            $validationErrorMessageList
         );
     }
 
@@ -53,10 +38,7 @@ class UserRegistrationResult
     {
         return new self(
             false,
-            [],
-            '',
-            '',
-            ''
+            []
         );
     }
 }

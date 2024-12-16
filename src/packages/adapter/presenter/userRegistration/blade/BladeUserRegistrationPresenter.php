@@ -16,10 +16,7 @@ class BladeUserRegistrationPresenter extends UserRegistrationPresenter
     {
         return new BladeUserRegistrationViewModel(
             $this->responseData(), 
-            $this->result->validationError,
-            $this->result->email,
-            $this->result->password,
-            $this->result->passwordConfirmation
+            $this->result->validationError
         );
     }
 }
