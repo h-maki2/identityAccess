@@ -20,9 +20,9 @@ class AuthConfirmationValidation
     /**
      * ワンタイムパスワードとワンタイムトークンが有効かどうかを検証する
      */
-    public function validate(string $oneTimePasswordString, string $oneTimeToken): bool
+    public function validate(string $oneTimePasswordString, string $oneTimeTokenString): bool
     {
-        if (!OneTimeTokenValueValidation::validate($oneTimeToken)) {
+        if (!OneTimeTokenValueValidation::validate($oneTimeTokenString)) {
             return false;
         }
 
@@ -30,7 +30,7 @@ class AuthConfirmationValidation
             return false;
         }
 
-        $authConfirmation = $this->fetchAuthConfirmation($oneTimeToken);
+        $authConfirmation = $this->fetchAuthConfirmation($oneTimeTokenString);
         if ($authConfirmation === null) {
             return false;
         }
@@ -44,9 +44,9 @@ class AuthConfirmationValidation
         return false;
     }
 
-    private function fetchAuthConfirmation(string $oneTimeToken): ?AuthConfirmation
+    private function fetchAuthConfirmation(string $oneTimeTokenString): ?AuthConfirmation
     {
-        $oneTimeTokenValue = OneTimeTokenValue::reconstruct($oneTimeToken);
+        $oneTimeTokenValue = OneTimeTokenValue::reconstruct($oneTimeTokenString);
         return $this->authConfirmationRepository->findByTokenValue($oneTimeTokenValue);
     }
 }
