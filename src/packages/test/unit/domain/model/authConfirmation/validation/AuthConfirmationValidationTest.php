@@ -1,5 +1,6 @@
 <?php
 
+use packages\adapter\persistence\inMemory\InMemoryAuthConfirmationRepository;
 use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
 use packages\domain\model\authConfirmation\validation\AuthConfirmationValidation;
 use packages\test\helpers\authConfirmation\TestAuthConfirmationFactory;
@@ -19,6 +20,6 @@ class AuthConfirmationValidationTest extends TestCase
 
     public function test_無効なワンタイムパスワードの場合はfalseを返す()
     {
-        
+
     }
 }
