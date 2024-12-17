@@ -65,7 +65,7 @@ class UserRegistrationTest extends TestCase
         $this->assertEquals($oneTimeToken->tokenValue(), $actualAuthConfirmation->oneTimeToken()->tokenValue());
         $this->assertEquals($oneTimeToken->expirationDate(), $actualAuthConfirmation->oneTimeToken()->expirationDate());
 
-        // メールが送信されていることを確認
+        // メール送信する内容が正しいことを確認する
         $this->assertEquals($userEmail->value, $this->capturedSendEmailDto->toAddress);
         $this->assertEquals($actualAuthConfirmation->oneTimePassword()->value, $this->capturedSendEmailDto->templateVariables['oneTimePassword']);
         $this->assertStringContainsString($actualAuthConfirmation->oneTimeToken()->tokenValue()->value, $this->capturedSendEmailDto->templateVariables['verifiedUpdateUrl']);
