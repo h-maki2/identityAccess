@@ -23,7 +23,7 @@ class OneTimePassword
         return new self((string)random_int(100000, 999999));
     }
 
-    public static function reconstruct(int $value): self
+    public static function reconstruct(string $value): self
     {
         return new self($value);
     }
