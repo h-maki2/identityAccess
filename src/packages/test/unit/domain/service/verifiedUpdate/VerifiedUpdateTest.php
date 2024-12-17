@@ -3,6 +3,7 @@
 use packages\adapter\persistence\inMemory\InMemoryAuthConfirmationRepository;
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
 use packages\domain\model\authConfirmation\OneTimePassword;
+use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationInformation\VerificationStatus;
 use packages\domain\service\verifiedUpdate\VerifiedUpdate;
@@ -39,10 +40,8 @@ class VerifiedUpdateTest extends TestCase
             verificationStatus: VerificationStatus::Unverified
         );
         // 認証確認情報を保存しておく
-        $oneTimePassword = OneTimePassword::reconstruct('123456');
         $authConfirmation = $this->authConfirmationTestDataCreator->create(
-            userId: $userId,
-            oneTimePassword: $oneTimePassword
+            userId: $userId
         );
 
         $verifiedUpdate = new VerifiedUpdate(
@@ -52,27 +51,27 @@ class VerifiedUpdateTest extends TestCase
         );
 
         // when
-        $result = $verifiedUpdate->handle($authConfirmation, $oneTimePassword);
+        $verifiedUpdate->handle(
+            $authConfirmation->oneTimeToken()->tokenValue(), 
+            $authConfirmation->oneTimePassword()
+        );
 
         // then
-        // 更新が成功していることを確認
-        $this->assertTrue($result);
-
         // 認証情報が認証済みになっていることを確認
         $updatedAuthenticationInformation = $this->authenticationInformationRepository->findById($userId);
         $this->assertEquals(VerificationStatus::Verified, $updatedAuthenticationInformation->verificationStatus());
 
         // 認証確認情報が削除されていることを確認
-        $deletedAuthConfirmation = $this->authConfirmationRepository->findByTokenValue(OneTimeTokenValue::reconstruct($authConfirmation->oneTimeToken()->value()));
+        $deletedAuthConfirmation = $this->authConfirmationRepository->findByTokenValue($authConfirmation->oneTimeToken()->tokenValue());
         $this->assertNull($deletedAuthConfirmation);
     }
 
-    public function test_ワンタイムパスワードが正しくない場合、認証情報を認証済みに更新しない()
+    public function test_正しくないワンタイムパスワードが入力された場合に例外が発生する()
     {
         // given
         // 認証済みではない認証情報を保存しておく
         $userId = $this->authenticationInformationRepository->nextUserId();
-        $authenticationInformation = $this->authenticationInformationTestDataCreator->create(
+        $this->authenticationInformationTestDataCreator->create(
             id: $userId,
             verificationStatus: VerificationStatus::Unverified
         );
@@ -89,23 +88,45 @@ class VerifiedUpdateTest extends TestCase
             $this->transactionManage
         );
 
-        // when
+        // when・then
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('認証情報を認証済みに更新できませんでした。');
         $invalidOneTimePassword = OneTimePassword::reconstruct('654321');
-        $result = $verifiedUpdate->handle($authConfirmation, $invalidOneTimePassword);
+        $verifiedUpdate->handle(
+            $authConfirmation->oneTimeToken()->tokenValue(), 
+            $invalidOneTimePassword
+        );
+    }
 
-        // then
-        // 更新が失敗していることを確認
-        $this->assertFalse($result);
+    public function test_ワンタイムトークンの有効期限が切れている場合に例外が発生する()
+    {
+        // given
+        // 認証済みではない認証情報を保存しておく
+        $userId = $this->authenticationInformationRepository->nextUserId();
+        $this->authenticationInformationTestDataCreator->create(
+            id: $userId,
+            verificationStatus: VerificationStatus::Unverified
+        );
 
-        // 認証情報が認証済みになっていないことを確認
-        $updatedAuthenticationInformation = $this->authenticationInformationRepository->findById($userId);
-        $this->assertEquals(VerificationStatus::Unverified, $updatedAuthenticationInformation->verificationStatus());
+        // 有効期限が切れているワンタイムトークンを生成
+        $oneTimeTokenExpiration = OneTimeTokenExpiration::reconstruct(new DateTimeImmutable('-1 day'));
+        $authConfirmation = $this->authConfirmationTestDataCreator->create(
+            userId: $userId,
+            oneTimeTokenExpiration: $oneTimeTokenExpiration
+        );
 
-        // 認証確認情報が削除されていないことを確認
-        $actualAuthConfirmation = $this->authConfirmationRepository->findByTokenValue(OneTimeTokenValue::reconstruct($authConfirmation->oneTimeToken()->value()));
-        $this->assertEquals($authConfirmation->userId, $actualAuthConfirmation->userId);
-        $this->assertEquals($authConfirmation->oneTimeToken()->value(), $actualAuthConfirmation->oneTimeToken()->value());
-        $this->assertEquals($authConfirmation->oneTimeToken()->expirationDate(), $actualAuthConfirmation->oneTimeToken()->expirationDate());
-        $this->assertEquals($authConfirmation->oneTimePassword(), $actualAuthConfirmation->oneTimePassword());
+        $verifiedUpdate = new VerifiedUpdate(
+            $this->authenticationInformationRepository,
+            $this->authConfirmationRepository,
+            $this->transactionManage
+        );
+
+        // when・then
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('認証情報を認証済みに更新できませんでした。');
+        $verifiedUpdate->handle(
+            $authConfirmation->oneTimeToken()->tokenValue(), 
+            $authConfirmation->oneTimePassword()
+        );
     }
 }
