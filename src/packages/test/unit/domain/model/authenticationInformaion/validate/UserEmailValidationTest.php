@@ -3,18 +3,19 @@
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
 use packages\domain\model\authenticationInformation\UserEmail;
 use packages\domain\model\authenticationInformation\validation\UserEmailValidation;
-use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataFactory;
+use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataCreator;
+use packages\test\helpers\authenticationInformation\TestAuthenticationInformationFactory;
 use PHPUnit\Framework\TestCase;
 
 class UserEmailValidationTest extends TestCase
 {
-    private AuthenticationInformationTestDataFactory $authenticationInformationTestDataFactory;
+    private AuthenticationInformationTestDataCreator $authenticationInformationTestDataCreator;
     private InMemoryAuthenticationInformationRepository $authenticationInformationRepository;
 
     public function setUp(): void
     {
         $this->authenticationInformationRepository = new InMemoryAuthenticationInformationRepository();
-        $this->authenticationInformationTestDataFactory = new AuthenticationInformationTestDataFactory($this->authenticationInformationRepository);
+        $this->authenticationInformationTestDataCreator = new AuthenticationInformationTestDataCreator($this->authenticationInformationRepository);
     }
 
     public function test_メールアドレスの形式が不正な場合はバリデーションエラーが発生する()
@@ -55,7 +56,7 @@ class UserEmailValidationTest extends TestCase
         // test@example.comのメールアドレスが既に登録されている
         $emailString = 'test@example.com';
         $userEmail = new UserEmail($emailString);
-        $this->authenticationInformationTestDataFactory->create($userEmail);
+        $this->authenticationInformationTestDataCreator->create($userEmail);
 
         $userEmailValidation = new UserEmailValidation($emailString, $this->authenticationInformationRepository);
 
