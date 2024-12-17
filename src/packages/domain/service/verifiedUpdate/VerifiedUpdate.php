@@ -11,7 +11,7 @@ use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
-use packages\domain\model\common\unitOfWork\UnitOfWork;
+use packages\domain\model\common\transactionManage\TransactionManage;
 use RuntimeException;
 
 /**
@@ -21,16 +21,16 @@ class VerifiedUpdate
 {
     private IAuthenticationInformationRepository $authenticationInformationRepository;
     private IAuthConfirmationRepository $authConfirmationRepository;
-    private UnitOfWork $unitOfWork;
+    private TransactionManage $transactionManage;
 
     public function __construct(
         IAuthenticationInformationRepository $authenticationInformationRepository,
         IAuthConfirmationRepository $authConfirmationRepository,
-        UnitOfWork $unitOfWork
+        TransactionManage $transactionManage
     ) {
         $this->authenticationInformationRepository = $authenticationInformationRepository;
         $this->authConfirmationRepository = $authConfirmationRepository;
-        $this->unitOfWork = $unitOfWork;
+        $this->transactionManage = $transactionManage;
     }
 
     /**
@@ -49,7 +49,7 @@ class VerifiedUpdate
         $authInformation->updateVerified();
 
         try {
-            $this->unitOfWork->performTransaction(function () use ($authInformation) {
+            $this->transactionManage->performTransaction(function () use ($authInformation) {
                 $this->authenticationInformationRepository->save($authInformation);
                 $this->authConfirmationRepository->delete($authInformation->id());
             });

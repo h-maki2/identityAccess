@@ -12,7 +12,7 @@ use packages\domain\model\authenticationInformation\AuthenticationInformation;
 use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
 use packages\domain\model\authenticationInformation\UserEmail;
 use packages\domain\model\authenticationInformation\UserPassword;
-use packages\domain\model\common\unitOfWork\UnitOfWork;
+use packages\domain\model\common\transactionManage\TransactionManage;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\model\email\VerifiedUpdateEmailDtoFactory;
 use packages\domain\service\authConfirmation\OneTimeTokenExistsService;
@@ -22,19 +22,19 @@ class UserRegistration
 {
     private IAuthenticationInformationRepository $authenticationInformationRepository;
     private IAuthConfirmationRepository $authConfirmationRepository;
-    private UnitOfWork $unitOfWork;
+    private TransactionManage $transactionManage;
     private AuthenticationInformationService $authenticationInformationService;
     private IEmailSender $emailSender;
 
     public function __construct(
         IAuthenticationInformationRepository $authenticationInformationRepository,
         IAuthConfirmationRepository $authConfirmationRepository,
-        UnitOfWork $unitOfWork,
+        TransactionManage $transactionManage,
         IEmailSender $emailSender
     ) {
         $this->authenticationInformationRepository = $authenticationInformationRepository;
         $this->authConfirmationRepository = $authConfirmationRepository;
-        $this->unitOfWork = $unitOfWork;
+        $this->transactionManage = $transactionManage;
         $this->authenticationInformationService = new AuthenticationInformationService($authenticationInformationRepository);
         $this->emailSender = $emailSender;
     }
@@ -58,7 +58,7 @@ class UserRegistration
             new OneTimeTokenExistsService($this->authConfirmationRepository)
         );
 
-        $this->unitOfWork->performTransaction(function () use ($authInformation, $authConfirmation) {
+        $this->transactionManage->performTransaction(function () use ($authInformation, $authConfirmation) {
             $this->authenticationInformationRepository->save($authInformation);
             $this->authConfirmationRepository->save($authConfirmation);
         });

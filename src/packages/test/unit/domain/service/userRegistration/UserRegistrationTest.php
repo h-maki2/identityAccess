@@ -9,14 +9,14 @@ use packages\domain\model\authenticationInformation\UserPassword;
 use packages\domain\model\authenticationInformation\VerificationStatus;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\service\userRegistration\UserRegistration;
-use packages\test\helpers\unitOfWork\TestUnitOfWork;
+use packages\test\helpers\transactionManage\TestTransactionManage;
 use PHPUnit\Framework\TestCase;
 
 class UserRegistrationTest extends TestCase
 {
     private InMemoryAuthConfirmationRepository $authConfirmationRepository;
     private InMemoryAuthenticationInformationRepository $authenticationInformationRepository;
-    private TestUnitOfWork $unitOfWork;
+    private TestTransactionManage $transactionManage;
     private SendEmailDto $capturedSendEmailDto;
     private UserRegistration $userRegistration;
     private IEmailSender $emailSender;
@@ -25,7 +25,7 @@ class UserRegistrationTest extends TestCase
     {
         $this->authConfirmationRepository = new InMemoryAuthConfirmationRepository();
         $this->authenticationInformationRepository = new InMemoryAuthenticationInformationRepository();
-        $this->unitOfWork = new TestUnitOfWork();
+        $this->transactionManage = new TestTransactionManage();
         
         $emailSender = $this->createMock(IEmailSender::class);
         $emailSender
@@ -39,7 +39,7 @@ class UserRegistrationTest extends TestCase
         $this->userRegistration = new UserRegistration(
             $this->authenticationInformationRepository,
             $this->authConfirmationRepository,
-            $this->unitOfWork,
+            $this->transactionManage,
             $this->emailSender
         );
     }

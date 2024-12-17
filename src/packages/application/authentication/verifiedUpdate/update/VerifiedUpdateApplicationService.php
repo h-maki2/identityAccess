@@ -8,7 +8,7 @@ use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
 use packages\domain\model\authConfirmation\validation\AuthConfirmationValidation;
 use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
-use packages\domain\model\common\unitOfWork\UnitOfWork;
+use packages\domain\model\common\transactionManage\TransactionManage;
 use packages\domain\service\verifiedUpdate\VerifiedUpdate;
 
 /**
@@ -23,14 +23,14 @@ class VerifiedUpdateApplicationService implements VerifiedUpdateInputBoundary
     public function __construct(
         IAuthenticationInformationRepository $authenticationInformationRepository,
         IAuthConfirmationRepository $authConfirmationRepository,
-        UnitOfWork $unitOfWork
+        TransactionManage $transactionManage
     )
     {
         $this->authConfirmationRepository = $authConfirmationRepository;
         $this->verifiedUpdate = new VerifiedUpdate(
             $authenticationInformationRepository,
             $this->authConfirmationRepository,
-            $unitOfWork
+            $transactionManage
         );
         $this->authConfirmationValidation = new AuthConfirmationValidation($this->authConfirmationRepository);
     }

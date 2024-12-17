@@ -15,7 +15,7 @@ use packages\adapter\persistence\eloquent\EloquentAuthenticationInformationRepos
 use packages\adapter\persistence\eloquent\EloquentUserProfileRepository;
 use packages\adapter\service\laravel\LaravelAuthenticationService;
 use packages\adapter\service\laravel\LaravelSessionAuthentication;
-use packages\adapter\unitOfWork\EloquentUnitOfWork;
+use packages\adapter\transactionManage\EloquentTransactionManage;
 use packages\application\authentication\login\LoginApplicationService;
 use packages\application\authentication\login\LoginInputBoundary;
 use packages\application\authentication\login\LoginOutputBoundary;
@@ -40,7 +40,7 @@ use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authenticationInformation\AuthenticationService;
 use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
 use packages\domain\model\authenticationInformation\SessionAuthentication;
-use packages\domain\model\common\unitOfWork\UnitOfWork;
+use packages\domain\model\common\transactionManage\TransactionManage;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\model\oauth\authToken\IAccessTokenDeactivationService;
 use packages\domain\model\oauth\authToken\IRefreshTokenDeactivationService;
@@ -67,7 +67,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(IScopeAuthorizationChecker::class, LaravelPassportScopeAuthorizationChecker::class);
 
         // ユニットオブワーク
-        $this->app->bind(UnitOfWork::class, EloquentUnitOfWork::class);
+        $this->app->bind(TransactionManage::class, EloquentTransactionManage::class);
 
         // サービス
         $this->app->bind(AuthenticationService::class, LaravelAuthenticationService::class);

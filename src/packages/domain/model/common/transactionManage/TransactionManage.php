@@ -1,8 +1,8 @@
 <?php
 
-namespace packages\domain\model\common\unitOfWork;
+namespace packages\domain\model\common\transactionManage;
 
-abstract class UnitOfWork
+abstract class TransactionManage
 {
     abstract protected function beginTransaction(): void;
     abstract protected function commit(): void;

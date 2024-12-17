@@ -1,11 +1,11 @@
 <?php
 
-namespace packages\adapter\unitOfWork;
+namespace packages\adapter\transactionManage;
 
 use Illuminate\Support\Facades\DB;
-use packages\domain\model\common\unitOfWork\UnitOfWork;
+use packages\domain\model\common\transactionManage\TransactionManage;
 
-class EloquentUnitOfWork extends UnitOfWork
+class EloquentTransactionManage extends TransactionManage
 {
     protected function beginTransaction(): void
     {

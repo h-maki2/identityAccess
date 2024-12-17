@@ -9,14 +9,14 @@ use packages\domain\service\verifiedUpdate\VerifiedUpdate;
 use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
 use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataCreator;
 use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataFactory;
-use packages\test\helpers\unitOfWork\TestUnitOfWork;
+use packages\test\helpers\transactionManage\TestTransactionManage;
 use PHPUnit\Framework\TestCase;
 
 class VerifiedUpdateTest extends TestCase
 {
     private InMemoryAuthConfirmationRepository $authConfirmationRepository;
     private InMemoryAuthenticationInformationRepository $authenticationInformationRepository;
-    private TestUnitOfWork $unitOfWork;
+    private TestTransactionManage $transactionManage;
     private AuthenticationInformationTestDataCreator $authenticationInformationTestDataCreator;
     private AuthConfirmationTestDataCreator $authConfirmationTestDataCreator;
 
@@ -24,7 +24,7 @@ class VerifiedUpdateTest extends TestCase
     {
         $this->authConfirmationRepository = new InMemoryAuthConfirmationRepository();
         $this->authenticationInformationRepository = new InMemoryAuthenticationInformationRepository();
-        $this->unitOfWork = new TestUnitOfWork();
+        $this->transactionManage = new TestTransactionManage();
         $this->authenticationInformationTestDataCreator = new AuthenticationInformationTestDataCreator($this->authenticationInformationRepository);
         $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator($this->authConfirmationRepository, $this->authenticationInformationRepository);
     }
@@ -48,7 +48,7 @@ class VerifiedUpdateTest extends TestCase
         $verifiedUpdate = new VerifiedUpdate(
             $this->authenticationInformationRepository,
             $this->authConfirmationRepository,
-            $this->unitOfWork
+            $this->transactionManage
         );
 
         // when
@@ -86,7 +86,7 @@ class VerifiedUpdateTest extends TestCase
         $verifiedUpdate = new VerifiedUpdate(
             $this->authenticationInformationRepository,
             $this->authConfirmationRepository,
-            $this->unitOfWork
+            $this->transactionManage
         );
 
         // when

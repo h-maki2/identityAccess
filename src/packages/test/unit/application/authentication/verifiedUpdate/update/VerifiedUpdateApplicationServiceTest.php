@@ -11,7 +11,7 @@ use packages\domain\model\authenticationInformation\VerificationStatus;
 use packages\domain\service\verifiedUpdate\VerifiedUpdate;
 use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
 use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataCreator;
-use packages\test\helpers\unitOfWork\TestUnitOfWork;
+use packages\test\helpers\transactionManage\TestTransactionManage;
 use PHPUnit\Framework\TestCase;
 
 class VerifiedUpdateApplicationServiceTest extends TestCase
@@ -19,7 +19,7 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
     private InMemoryAuthConfirmationRepository $authConfirmationRepository;
     private InMemoryAuthenticationInformationRepository $authenticationInformationRepository;
     private VerifiedUpdate $verifiedUpdate;
-    private TestUnitOfWork $unitOfWork;
+    private TestTransactionManage $transactionManage;
     private AuthConfirmationTestDataCreator $authConfirmationTestDataCreator;
     private AuthenticationInformationTestDataCreator $authenticationInformationTestDataCreator;
     private VerifiedUpdateApplicationService $verifiedUpdateApplicationService;
@@ -29,11 +29,11 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
     {
         $this->authConfirmationRepository = new InMemoryAuthConfirmationRepository();
         $this->authenticationInformationRepository = new InMemoryAuthenticationInformationRepository();
-        $this->unitOfWork = new TestUnitOfWork();
+        $this->transactionManage = new TestTransactionManage();
         $this->verifiedUpdate = new VerifiedUpdate(
             $this->authenticationInformationRepository,
             $this->authConfirmationRepository,
-            $this->unitOfWork
+            $this->transactionManage
         );
         $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator($this->authConfirmationRepository, $this->authenticationInformationRepository);
         $this->authenticationInformationTestDataCreator = new AuthenticationInformationTestDataCreator($this->authenticationInformationRepository);
@@ -41,7 +41,7 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
         $this->verifiedUpdateApplicationService = new VerifiedUpdateApplicationService(
             $this->authenticationInformationRepository,
             $this->authConfirmationRepository,
-            $this->unitOfWork
+            $this->transactionManage
         );
     }
 

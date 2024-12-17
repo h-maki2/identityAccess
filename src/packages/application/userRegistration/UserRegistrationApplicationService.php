@@ -13,7 +13,7 @@ use packages\domain\model\authenticationInformation\UserPassword;
 use packages\domain\model\authenticationInformation\validation\UserEmailValidation;
 use packages\domain\model\authenticationInformation\validation\UserPasswordConfirmationValidation;
 use packages\domain\model\authenticationInformation\validation\UserPasswordValidation;
-use packages\domain\model\common\unitOfWork\UnitOfWork;
+use packages\domain\model\common\transactionManage\TransactionManage;
 use packages\domain\model\common\validator\ValidationHandler;
 use packages\domain\service\userRegistration\UserRegistration;
 use packages\domain\model\email\IEmailSender;
@@ -30,7 +30,7 @@ class UserRegistrationApplicationService implements UserRegistrationInputBoundar
     public function __construct(
         IAuthConfirmationRepository $authConfirmationRepository,
         IAuthenticationInformationRepository $authenticationInformationRepository,
-        UnitOfWork $unitOfWork,
+        TransactionManage $transactionManage,
         IEmailSender $emailSender
     )
     {
@@ -39,7 +39,7 @@ class UserRegistrationApplicationService implements UserRegistrationInputBoundar
         $this->userRegistration = new UserRegistration(
             $authenticationInformationRepository,
             $authConfirmationRepository,
-            $unitOfWork,
+            $transactionManage,
             $emailSender
         );
     }
@@ -63,10 +63,7 @@ class UserRegistrationApplicationService implements UserRegistrationInputBoundar
         
         if (!$validationHandler->validate()) {
             return UserRegistrationResult::createWhenValidationError(
-                $validationHandler->errorMessages(),
-                $inputedEmail,
-                $inputedPassword,
-                $inputedPasswordConfirmation
+                $validationHandler->errorMessages()
             );
         }
 

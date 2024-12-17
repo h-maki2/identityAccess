@@ -6,14 +6,14 @@ use packages\domain\model\email\SendEmailDto;
 use packages\application\common\validation\ValidationErrorMessageData;
 use packages\application\userRegistration\UserRegistrationApplicationService;
 use packages\domain\model\email\IEmailSender;
-use packages\test\helpers\unitOfWork\TestUnitOfWork;
+use packages\test\helpers\transactionManage\TestTransactionManage;
 use PHPUnit\Framework\TestCase;
 
 class UserRegistrationApplicationServiceTest extends TestCase
 {
     private InMemoryAuthConfirmationRepository $authConfirmationRepository;
     private InMemoryAuthenticationInformationRepository $authenticationInformationRepository;
-    private TestUnitOfWork $unitOfWork;
+    private TestTransactionManage $transactionManage;
     private SendEmailDto $capturedSendEmailDto;
     private UserRegistrationApplicationService $userRegistrationApplicationService;
     private IEmailSender $emailSender;
@@ -22,7 +22,7 @@ class UserRegistrationApplicationServiceTest extends TestCase
     {
         $this->authConfirmationRepository = new InMemoryAuthConfirmationRepository();
         $this->authenticationInformationRepository = new InMemoryAuthenticationInformationRepository();
-        $this->unitOfWork = new TestUnitOfWork();
+        $this->transactionManage = new TestTransactionManage();
 
         $emailSender = $this->createMock(IEmailSender::class);
         $emailSender
@@ -36,7 +36,7 @@ class UserRegistrationApplicationServiceTest extends TestCase
         $this->userRegistrationApplicationService = new UserRegistrationApplicationService(
             $this->authConfirmationRepository,
             $this->authenticationInformationRepository,
-            $this->unitOfWork,
+            $this->transactionManage,
             $this->emailSender
         );
     }

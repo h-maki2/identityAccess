@@ -1,10 +1,10 @@
 <?php
 
-namespace packages\test\helpers\unitOfWork;
+namespace packages\test\helpers\transactionManage;
 
-use packages\domain\model\common\unitOfWork\UnitOfWork;
+use packages\domain\model\common\transactionManage\TransactionManage;
 
-class TestUnitOfWork extends UnitOfWork
+class TestTransactionManage extends TransactionManage
 {
     protected function beginTransaction(): void
     {
