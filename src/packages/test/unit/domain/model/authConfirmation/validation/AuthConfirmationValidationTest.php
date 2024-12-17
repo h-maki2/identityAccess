@@ -8,4 +8,17 @@ use PHPUnit\Framework\TestCase;
 
 class AuthConfirmationValidationTest extends TestCase
 {
+    private AuthConfirmationValidation $authConfirmationValidation;
+
+    public function setUp(): void
+    {
+        $this->authConfirmationValidation = new AuthConfirmationValidation(
+            new InMemoryAuthConfirmationRepository()
+        );
+    }
+
+    public function test_無効なワンタイムパスワードの場合はfalseを返す()
+    {
+        
+    }
 }
