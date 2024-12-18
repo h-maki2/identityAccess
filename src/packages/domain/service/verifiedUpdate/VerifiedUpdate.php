@@ -16,7 +16,7 @@ use packages\domain\model\common\transactionManage\TransactionManage;
 use RuntimeException;
 
 /**
- * 認証アカウントを確認済みに更新するサービス
+ * 認証アカウントを本登録済みに更新するサービス
  */
 class DefinitiveRegistrationCompleted
 {
@@ -35,7 +35,7 @@ class DefinitiveRegistrationCompleted
     }
 
     /**
-     * 認証アカウントを確認済みに更新する
+     * 認証アカウントを本登録済みに更新する
      * 更新に成功した場合はtrue、失敗した場合はfalseを返す
      */
     public function handle(OneTimeTokenValue $oneTimeTokenValue, OneTimePassword $oneTimePassword): void
@@ -43,7 +43,7 @@ class DefinitiveRegistrationCompleted
         $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationRepository->findByTokenValue($oneTimeTokenValue);
 
         if (!$definitiveRegistrationConfirmation->canUpdateVerifiedAuthInfo($oneTimePassword, new DateTimeImmutable())) {
-            throw new DomainException('認証アカウントを確認済みに更新できませんでした。');
+            throw new DomainException('認証アカウントを本登録済みに更新できませんでした。');
         } 
 
         $authAccount = $this->authenticationAccountRepository->findById($definitiveRegistrationConfirmation->userId, UnsubscribeStatus::Subscribed);

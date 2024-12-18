@@ -10,13 +10,13 @@ enum VerificationStatus: string
     public function displayValue(): string
     {
         return match($this) {
-            self::Verified => '確認済み',
+            self::Verified => '本登録済み',
             self::Unverified => '未確認'
         };
     }
 
     /**
-     * 確認済みかどうかを判定
+     * 本登録済みかどうかを判定
      */
     public function isVerified(): bool
     {

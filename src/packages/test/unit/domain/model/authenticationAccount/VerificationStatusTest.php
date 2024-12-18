@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 
 class VerificationStatusTest extends TestCase
 {
-    public function test_ステータスが確認済みの場合に正しくインスタンスを生成できる()
+    public function test_ステータスが本登録済みの場合に正しくインスタンスを生成できる()
     {
         // given
 
@@ -14,7 +14,7 @@ class VerificationStatusTest extends TestCase
 
         // then
         $this->assertEquals('1', $verificationStatus->value);
-        $this->assertEquals('確認済み', $verificationStatus->displayValue());
+        $this->assertEquals('本登録済み', $verificationStatus->displayValue());
     }
 
     public function test_ステータスが未認証の場合に正しくインスタンスを生成できる()
@@ -29,7 +29,7 @@ class VerificationStatusTest extends TestCase
         $this->assertEquals('未認証', $verificationStatus->displayValue());
     }
 
-    public function test_ステータスが確認済みの場合は、isVerifiedメソッドの戻り値がtrueを返す()
+    public function test_ステータスが本登録済みの場合は、isVerifiedメソッドの戻り値がtrueを返す()
     {
         // given
         $verificationStatus = VerificationStatus::Verified;

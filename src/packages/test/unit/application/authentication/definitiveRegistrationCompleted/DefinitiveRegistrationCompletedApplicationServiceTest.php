@@ -46,10 +46,10 @@ class DefinitiveRegistrationCompletedApplicationServiceTest extends TestCase
         );
     }
 
-    public function test_ワンタイムトークンとワンタイムパスワードが正しい場合に、認証アカウントを確認済みに更新できる()
+    public function test_ワンタイムトークンとワンタイムパスワードが正しい場合に、認証アカウントを本登録済みに更新できる()
     {
         // given
-        // 確認済みではない認証アカウントを保存しておく
+        // 本登録済みではない認証アカウントを保存しておく
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
@@ -73,7 +73,7 @@ class DefinitiveRegistrationCompletedApplicationServiceTest extends TestCase
         $this->assertFalse($result->validationError);
         $this->assertEmpty($result->validationErrorMessage);
 
-        // 認証アカウントが確認済みになっていることを確認
+        // 認証アカウントが本登録済みになっていることを確認
         $updatedAuthenticationAccount = $this->authenticationAccountRepository->findById($userId, UnsubscribeStatus::Subscribed);
         $this->assertEquals(VerificationStatus::Verified, $updatedAuthenticationAccount->verificationStatus());
 
@@ -82,10 +82,10 @@ class DefinitiveRegistrationCompletedApplicationServiceTest extends TestCase
         $this->assertNull($deletedDefinitiveRegistrationConfirmation);
     }
 
-    public function test_ワンタイムトークンが有効ではない場合、認証アカウントを確認済みに更新できない()
+    public function test_ワンタイムトークンが有効ではない場合、認証アカウントを本登録済みに更新できない()
     {
         // given
-        // 確認済みではない認証アカウントを保存しておく
+        // 本登録済みではない認証アカウントを保存しておく
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
@@ -111,10 +111,10 @@ class DefinitiveRegistrationCompletedApplicationServiceTest extends TestCase
         $this->assertEquals('ワンタイムトークンかワンタイムパスワードが無効です。', $result->validationErrorMessage);
     }
 
-    public function test_ワンタイムパスワードが正しくない場合、認証アカウントを確認済みに更新できない()
+    public function test_ワンタイムパスワードが正しくない場合、認証アカウントを本登録済みに更新できない()
     {
         // given
-        // 確認済みではない認証アカウントを保存しておく
+        // 本登録済みではない認証アカウントを保存しておく
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,

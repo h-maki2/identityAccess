@@ -7,7 +7,7 @@ package "認証アカウント集約(Aggregation)" {
         userId: UserId
         email: Email
         password: Password
-        verificationStatus 確認済みステータス: VerificationStatus
+        verificationStatus 本登録済みステータス: VerificationStatus
         loginRestriction ログイン制限: LoginRestriction
         unsubscribeStatus: 退会済みステータス: UnsubscribeStatus
     }
@@ -24,8 +24,8 @@ package "認証アカウント集約(Aggregation)" {
         - value: string
     }
 
-    class "VerificationStatus\n確認済みステータス" as VerificationStatus {
-        + value: Enum { verified(確認済み), unverified(未確認)}
+    class "VerificationStatus\n本登録済みステータス" as VerificationStatus {
+        + value: Enum { verified(本登録済み), unverified(未確認)}
     }
 
     class "LoginRestriction\nログイン制限" as LoginRestriction {
@@ -51,7 +51,7 @@ package "認証アカウント集約(Aggregation)" {
     }
 
     note bottom of AuthenticationAccount
-        ・「確認済みの有無」が「確認済み」の場合のみ、ログインが行える
+        ・「本登録済みの有無」が「本登録済み」の場合のみ、ログインが行える
         ・退会の場合、ユーザーIDと退会済みステータス以外のデータが削除される
     end note
 
@@ -60,11 +60,11 @@ package "認証アカウント集約(Aggregation)" {
     end note
 
     note bottom of VerificationStatus
-        本登録確認メールでの確認が済んだら「確認済み」になる 
+        本登録確認メールでの確認が済んだら「本登録済み」になる 
     end note
 
     note bottom of Password
-        ・ステータスが「確認済み」の場合のみパスワードの変更が行える
+        ・ステータスが「本登録済み」の場合のみパスワードの変更が行える
         ・ログイン制限中はパスワードの変更が行えない
         ・nextTask: パスワードを変更したときにメールを送信する
     end note

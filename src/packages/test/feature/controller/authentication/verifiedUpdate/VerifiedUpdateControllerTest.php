@@ -43,7 +43,7 @@ class DefinitiveRegistrationCompletedControllerTest extends TestCase
         $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create(userId: $userId);
 
         // when
-        // 確認済み更新を行う
+        // 本登録済み更新を行う
         $response = $this->post('/DefinitiveRegistrationCompleted', [
             'oneTimeToken' => $definitiveRegistrationConfirmation->oneTimeToken()->tokenValue()->value,
             'oneTimePassword' => $definitiveRegistrationConfirmation->oneTimePassword()->value
@@ -76,7 +76,7 @@ class DefinitiveRegistrationCompletedControllerTest extends TestCase
         );
 
         // when
-        // 確認済み更新を行う
+        // 本登録済み更新を行う
         $invalidOneTimeTokenValue = str_repeat('b', 26);
         $invalidOneTimePassword = '654321';
         $response = $this->post('/DefinitiveRegistrationCompleted', [

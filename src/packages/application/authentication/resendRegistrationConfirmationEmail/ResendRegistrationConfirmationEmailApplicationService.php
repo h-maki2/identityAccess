@@ -48,7 +48,7 @@ class ResendRegistrationConfirmationEmailApplicationService implements ResendReg
         }
 
         if ($authInfo->isVerified()) {
-            return ResendRegistrationConfirmationEmailResult::createWhenValidationError('既にアカウントが確認済みです。');
+            return ResendRegistrationConfirmationEmailResult::createWhenValidationError('既にアカウントが本登録済みです。');
         }
 
         $this->oneTimeTokenAndPasswordRegeneration->handle($authInfo);

@@ -71,7 +71,7 @@ class DefinitiveRegistrationConfirmation
     }
 
     /**
-     * 認証アカウントを確認済みに更新できるかどうかを判定する
+     * 認証アカウントを本登録済みに更新できるかどうかを判定する
      */
     public function canUpdateVerifiedAuthInfo(OneTimePassword $otherOneTimePassword, DateTimeImmutable $currentDateTime): bool
     {

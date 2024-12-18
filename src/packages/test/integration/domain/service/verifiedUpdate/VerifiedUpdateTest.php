@@ -49,7 +49,7 @@ class DefinitiveRegistrationCompletedTest extends TestCase
         EloquentUser::query()->delete();
     }
 
-    public function test_正しいワンタイムトークンとワンタイムパスワードが入力された場合に、認証アカウントを確認済みに更新できる()
+    public function test_正しいワンタイムトークンとワンタイムパスワードが入力された場合に、認証アカウントを本登録済みに更新できる()
     {
         // given
         // 認証アカウントと認証確認情報を作成する
@@ -66,7 +66,7 @@ class DefinitiveRegistrationCompletedTest extends TestCase
         $this->definitiveRegistrationCompleted->handle($oneTimeTokenValue, $oneTimePassword);
 
         // then
-        // 認証アカウントが確認済みに更新されていることを確認
+        // 認証アカウントが本登録済みに更新されていることを確認
         $actualAuthInfo = $this->authenticationAccountRepository->findById($authInfo->id(), UnsubscribeStatus::Subscribed);
         $this->assertTrue($actualAuthInfo->isVerified());
 
@@ -74,7 +74,7 @@ class DefinitiveRegistrationCompletedTest extends TestCase
         $this->assertNull($this->definitiveRegistrationConfirmationRepository->findByTokenValue($oneTimeTokenValue));
     }
 
-    public function test_ワンタイムパスワードが正しくない場合に、認証アカウントを確認済みに更新できない()
+    public function test_ワンタイムパスワードが正しくない場合に、認証アカウントを本登録済みに更新できない()
     {
         // given
         // 認証アカウントと認証確認情報を作成する
@@ -94,11 +94,11 @@ class DefinitiveRegistrationCompletedTest extends TestCase
 
         // when・then
         $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('認証アカウントを確認済みに更新できませんでした。');
+        $this->expectExceptionMessage('認証アカウントを本登録済みに更新できませんでした。');
         $this->definitiveRegistrationCompleted->handle($oneTimeTokenValue, $oneTimePassword);
     }
 
-    public function test_ワンタイムトークンの有効期限が切れている場合に、認証アカウントを確認済みに更新できない()
+    public function test_ワンタイムトークンの有効期限が切れている場合に、認証アカウントを本登録済みに更新できない()
     {
         // given
         // 認証アカウントと認証確認情報を作成する
@@ -118,7 +118,7 @@ class DefinitiveRegistrationCompletedTest extends TestCase
 
         // when
         $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('認証アカウントを確認済みに更新できませんでした。');
+        $this->expectExceptionMessage('認証アカウントを本登録済みに更新できませんでした。');
         $this->definitiveRegistrationCompleted->handle($oneTimeTokenValue, $oneTimePassword);
     }
 }

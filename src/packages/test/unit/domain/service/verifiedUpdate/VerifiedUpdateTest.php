@@ -31,10 +31,10 @@ class DefinitiveRegistrationCompletedTest extends TestCase
         $this->definitiveRegistrationConfirmationTestDataCreator = new DefinitiveRegistrationConfirmationTestDataCreator($this->definitiveRegistrationConfirmationRepository, $this->authenticationAccountRepository);
     }
 
-    public function test_入力されたワンタイムパスワードが等しい場合、認証アカウントを確認済みに更新する()
+    public function test_入力されたワンタイムパスワードが等しい場合、認証アカウントを本登録済みに更新する()
     {
         // given
-        // 確認済みではない認証アカウントを保存しておく
+        // 本登録済みではない認証アカウントを保存しておく
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
@@ -58,7 +58,7 @@ class DefinitiveRegistrationCompletedTest extends TestCase
         );
 
         // then
-        // 認証アカウントが確認済みになっていることを確認
+        // 認証アカウントが本登録済みになっていることを確認
         $updatedAuthenticationAccount = $this->authenticationAccountRepository->findById($userId, UnsubscribeStatus::Subscribed);
         $this->assertEquals(VerificationStatus::Verified, $updatedAuthenticationAccount->verificationStatus());
 
@@ -70,7 +70,7 @@ class DefinitiveRegistrationCompletedTest extends TestCase
     public function test_正しくないワンタイムパスワードが入力された場合に例外が発生する()
     {
         // given
-        // 確認済みではない認証アカウントを保存しておく
+        // 本登録済みではない認証アカウントを保存しておく
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
@@ -91,7 +91,7 @@ class DefinitiveRegistrationCompletedTest extends TestCase
 
         // when・then
         $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('認証アカウントを確認済みに更新できませんでした。');
+        $this->expectExceptionMessage('認証アカウントを本登録済みに更新できませんでした。');
         $invalidOneTimePassword = OneTimePassword::reconstruct('654321');
         $definitiveRegistrationCompleted->handle(
             $definitiveRegistrationConfirmation->oneTimeToken()->tokenValue(), 
@@ -102,7 +102,7 @@ class DefinitiveRegistrationCompletedTest extends TestCase
     public function test_ワンタイムトークンの有効期限が切れている場合に例外が発生する()
     {
         // given
-        // 確認済みではない認証アカウントを保存しておく
+        // 本登録済みではない認証アカウントを保存しておく
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
@@ -124,7 +124,7 @@ class DefinitiveRegistrationCompletedTest extends TestCase
 
         // when・then
         $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('認証アカウントを確認済みに更新できませんでした。');
+        $this->expectExceptionMessage('認証アカウントを本登録済みに更新できませんでした。');
         $definitiveRegistrationCompleted->handle(
             $definitiveRegistrationConfirmation->oneTimeToken()->tokenValue(), 
             $definitiveRegistrationConfirmation->oneTimePassword()

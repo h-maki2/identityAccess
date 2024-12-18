@@ -8,7 +8,7 @@ use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\email\SendEmailDto;
 
 /**
- * 確認済み更新メールDTOのファクトリ
+ * 本登録済み更新メールDTOのファクトリ
  */
 class DefinitiveRegistrationCompletedEmailDtoFactory
 {
@@ -28,7 +28,7 @@ class DefinitiveRegistrationCompletedEmailDtoFactory
             'test@example.com',
             $toAddress->value,
             'システムテスト',
-            '確認済みメール',
+            '本登録済みメール',
             'email.DefinitiveRegistrationCompleted.DefinitiveRegistrationCompletedMail',
             $templateValiables
         );

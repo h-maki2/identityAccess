@@ -12,7 +12,7 @@ use packages\domain\model\common\transactionManage\TransactionManage;
 use packages\domain\service\definitiveRegistrationCompleted\definitiveRegistrationCompleted;
 
 /**
- * 確認済み更新を行うアプリケーションサービス
+ * 本登録済み更新を行うアプリケーションサービス
  */
 class DefinitiveRegistrationCompletedApplicationService implements DefinitiveRegistrationCompletedInputBoundary
 {
@@ -36,7 +36,7 @@ class DefinitiveRegistrationCompletedApplicationService implements DefinitiveReg
     }
 
     /**
-     * 確認済み更新を行う
+     * 本登録済み更新を行う
      */
     public function DefinitiveRegistrationCompleted(string $oneTimeTokenValueString, string $oneTimePasswordString): DefinitiveRegistrationCompletedResult
     {

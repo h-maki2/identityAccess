@@ -121,7 +121,7 @@ class AuthenticationAccount
     public function changePassword(UserPassword $password, DateTimeImmutable $currentDateTime): void
     {
         if (!$this->isVerified()) {
-            throw new DomainException('確認済みのユーザーではありません。');
+            throw new DomainException('本登録済みのユーザーではありません。');
         }
 
         if (!$this->canLoggedIn($currentDateTime)) {
@@ -137,7 +137,7 @@ class AuthenticationAccount
     public function addFailedLoginCount(): void
     {
         if (!$this->isVerified()) {
-            throw new DomainException('確認済みのユーザーではありません。');
+            throw new DomainException('本登録済みのユーザーではありません。');
         }
 
         $this->loginRestriction = $this->loginRestriction->addFailedLoginCount();
@@ -149,7 +149,7 @@ class AuthenticationAccount
     public function locking(DateTimeImmutable $currentDateTime): void
     {
         if (!$this->isVerified()) {
-            throw new DomainException('確認済みのユーザーではありません。');
+            throw new DomainException('本登録済みのユーザーではありません。');
         }
 
         $this->loginRestriction = $this->loginRestriction->enable($currentDateTime);
@@ -161,7 +161,7 @@ class AuthenticationAccount
     public function unlocking(DateTimeImmutable $currentDateTime): void
     {
         if (!$this->isVerified()) {
-            throw new DomainException('確認済みのユーザーではありません。');
+            throw new DomainException('本登録済みのユーザーではありません。');
         }
 
         $this->loginRestriction = $this->loginRestriction->disable($currentDateTime);
@@ -196,7 +196,7 @@ class AuthenticationAccount
     }
 
     /**
-     * 確認済みかどうかを判定
+     * 本登録済みかどうかを判定
      */
     public function isVerified(): bool
     {
