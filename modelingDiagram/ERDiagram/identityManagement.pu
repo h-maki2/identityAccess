@@ -1,6 +1,6 @@
 @startuml identityManagement
 
-entity "認証情報\nauthentication_informaion" as authentication_informaion {
+entity "認証アカウント\nauthentication_informaion" as authentication_informaion {
     user_id: CHAR(26)
     --
     email: VARCHAR(M)
@@ -11,7 +11,7 @@ entity "認証情報\nauthentication_informaion" as authentication_informaion {
     next_login_allowed_at: DATETIME
 }
 
-entity "認証情報\nauth_confirmations" as auth_confirmations {
+entity "認証アカウント\nauth_confirmations" as auth_confirmations {
     user_id(FK): CHAR(26)
     --
     one_time_token_value: CHAR(26)

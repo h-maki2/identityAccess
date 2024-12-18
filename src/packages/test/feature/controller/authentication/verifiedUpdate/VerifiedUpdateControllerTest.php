@@ -30,7 +30,7 @@ class VerifiedUpdateControllerTest extends TestCase
     public function test_正しいワンタイムトークンとワンタイムパスワードを入力して、確認済み更新を行う()
     {
         // given
-        // 認証情報を作成して保存する
+        // 認証アカウントを作成して保存する
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,

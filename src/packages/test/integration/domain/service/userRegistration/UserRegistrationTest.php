@@ -74,7 +74,7 @@ class UserRegistrationTest extends TestCase
         $this->userRegistration->handle($userEmail, $userPassword, $oneTimeToken);
 
         // then
-        // 未認証状態の認証情報が登録されていることを確認する
+        // 未認証状態の認証アカウントが登録されていることを確認する
         $actualAuthenticationAccount = $this->authenticationAccountRepository->findByEmail($userEmail);
         $this->assertEquals(VerificationStatus::Unverified, $actualAuthenticationAccount->verificationStatus());
 

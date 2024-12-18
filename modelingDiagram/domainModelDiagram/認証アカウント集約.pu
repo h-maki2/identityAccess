@@ -1,4 +1,4 @@
-@startuml 認証情報関連
+@startuml 認証アカウント関連
 
 title 認証アカウント集約
 

@@ -24,7 +24,7 @@ authSystem -> authSystem : ワンタイムトークンが存在するかどう�
 User <- authSystem : ワンタイムトークン入力画面
 User -> authSystem : ワンタイムトークンを入力
 authSystem -> authSystem : 正しいワンタイムトークンかどうか・正しいワンタイムパスワードかどうか・トークンの有効期限を判定
-authSystem -> DB : ユーザーの認証情報を「確認済み」に更新
+authSystem -> DB : ユーザーの認証アカウントを「確認済み」に更新
 authSystem <- DB
 authSystem -> DB : ワンタイムトークン情報を削除
 deactivate authSystem

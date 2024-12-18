@@ -30,7 +30,7 @@ class UserProfileTest extends TestCase
     public function test_ユーサー名が既に登録されていない場合にユーザープロフィールを作成できる()
     {
         // given
-        // 認証情報を作成して保存しておく
+        // 認証アカウントを作成して保存しておく
         $authInfo = $this->authenticationAccountTestDataCreator->create();
 
         // when
@@ -57,7 +57,7 @@ class UserProfileTest extends TestCase
     public function test_既に登録されているユーザー名でユーザープロフィールを作成すると例外が発生する()
     {
         // given
-        // 認証情報を作成して保存しておく
+        // 認証アカウントを作成して保存しておく
         $authInfo = $this->authenticationAccountTestDataCreator->create();
 
         // ユーザープロフィールを作成して保存する
@@ -81,7 +81,7 @@ class UserProfileTest extends TestCase
     public function test_自己紹介文を変更できる()
     {
         // given
-        // 認証情報を作成して保存しておく
+        // 認証アカウントを作成して保存しておく
         $authInfo = $this->authenticationAccountTestDataCreator->create();
 
         // ユーザープロフィールを作成して保存する
@@ -101,7 +101,7 @@ class UserProfileTest extends TestCase
     public function test_既に存在するユーザー名ではない場合に、ユーザー名を変更できる()
     {
         // given
-        // 認証情報を作成して保存しておく
+        // 認証アカウントを作成して保存しておく
         $authInfo = $this->authenticationAccountTestDataCreator->create();
 
         // ユーザープロフィールを作成して保存する
@@ -122,7 +122,7 @@ class UserProfileTest extends TestCase
     public function test_既に存在するユーザー名に変更しようとすると例外が発生する()
     {
         // given
-        // 認証情報を作成して保存しておく
+        // 認証アカウントを作成して保存しておく
         $authInfo = $this->authenticationAccountTestDataCreator->create();
 
         // ユーザープロフィールを作成して保存する

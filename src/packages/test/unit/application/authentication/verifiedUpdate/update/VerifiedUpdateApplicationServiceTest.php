@@ -45,10 +45,10 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
         );
     }
 
-    public function test_ワンタイムトークンとワンタイムパスワードが正しい場合に、認証情報を確認済みに更新できる()
+    public function test_ワンタイムトークンとワンタイムパスワードが正しい場合に、認証アカウントを確認済みに更新できる()
     {
         // given
-        // 確認済みではない認証情報を保存しておく
+        // 確認済みではない認証アカウントを保存しておく
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
@@ -72,7 +72,7 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
         $this->assertFalse($result->validationError);
         $this->assertEmpty($result->validationErrorMessage);
 
-        // 認証情報が確認済みになっていることを確認
+        // 認証アカウントが確認済みになっていることを確認
         $updatedAuthenticationAccount = $this->authenticationAccountRepository->findById($userId);
         $this->assertEquals(VerificationStatus::Verified, $updatedAuthenticationAccount->verificationStatus());
 
@@ -81,10 +81,10 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
         $this->assertNull($deletedAuthConfirmation);
     }
 
-    public function test_ワンタイムトークンが有効ではない場合、認証情報を確認済みに更新できない()
+    public function test_ワンタイムトークンが有効ではない場合、認証アカウントを確認済みに更新できない()
     {
         // given
-        // 確認済みではない認証情報を保存しておく
+        // 確認済みではない認証アカウントを保存しておく
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
@@ -110,10 +110,10 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
         $this->assertEquals('ワンタイムトークンかワンタイムパスワードが無効です。', $result->validationErrorMessage);
     }
 
-    public function test_ワンタイムパスワードが正しくない場合、認証情報を確認済みに更新できない()
+    public function test_ワンタイムパスワードが正しくない場合、認証アカウントを確認済みに更新できない()
     {
         // given
-        // 確認済みではない認証情報を保存しておく
+        // 確認済みではない認証アカウントを保存しておく
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,

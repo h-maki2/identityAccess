@@ -31,7 +31,7 @@ class OneTimeTokenAndPasswordRegeneration
     {
         $authConfirmation = $this->authConfirmationRepository->findById($authInfo->id());
         if ($authConfirmation === null) {
-            throw new RuntimeException('認証情報が存在しません。userId: ' . $authInfo->id()->value);
+            throw new RuntimeException('認証アカウントが存在しません。userId: ' . $authInfo->id()->value);
         }
 
         $authConfirmation->reObtain();

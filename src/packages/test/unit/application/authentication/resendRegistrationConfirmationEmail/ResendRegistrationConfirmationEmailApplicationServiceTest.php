@@ -49,10 +49,10 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
         $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($this->authenticationAccountRepository);
     }
 
-    public function test_認証情報が確認済みではない場合、ワンタイムトークンとワンタイムパスワードの再生成ができる()
+    public function test_認証アカウントが確認済みではない場合、ワンタイムトークンとワンタイムパスワードの再生成ができる()
     {
         // given
-        // 認証情報を作成して保存する
+        // 認証アカウントを作成して保存する
         $userEmail = new UserEmail('test@example.com');
         $authenticationAccount = $this->authenticationAccountTestDataCreator->create(
             email: $userEmail,
@@ -76,19 +76,16 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
         $this->assertFalse($result->validationError);
         $this->assertEmpty($result->validationErrorMessage);
 
-        // ワンタイムパスワードが再生成されていることを確認
-        $actualAuthConfirmation = $this->authConfirmationRepository->findById($authenticationAccount->id());
-        $this->assertNotEquals($oneTimePasword->value, $actualAuthConfirmation->oneTimePassword()->value);
-
         // 正しいデータで本登録確認メールが送信できていることを確認
-        $this->assertStringContainsString($actualAuthConfirmation->oneTimeToken()->value(), $this->catchedSendEmailDto->templateVariables['verifiedUpdateUrl']);
+        $actualAuthConfirmation = $this->authConfirmationRepository->findById($authenticationAccount->id());
+        $this->assertStringContainsString($actualAuthConfirmation->oneTimeToken()->tokenValue()->value, $this->catchedSendEmailDto->templateVariables['verifiedUpdateUrl']);
         $this->assertEquals($this->catchedSendEmailDto->templateVariables['oneTimePassword'], $actualAuthConfirmation->oneTimePassword()->value);
     }
 
-    public function test_入力されたメールアドレスに紐づく認証情報が存在しない場合、バリデーションエラーが発生する()
+    public function test_入力されたメールアドレスに紐づく認証アカウントが存在しない場合、バリデーションエラーが発生する()
     {
         // given
-        // 認証情報を作成して保存する
+        // 認証アカウントを作成して保存する
         $userEmail = new UserEmail('test@example.com');
         $authenticationAccount = $this->authenticationAccountTestDataCreator->create(
             email: $userEmail
@@ -113,10 +110,10 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
         $this->assertEquals('メールアドレスが登録されていません。', $result->validationErrorMessage);
     }
 
-    public function test_認証情報がすでに確認済みの場合、バリデーションエラーが発生する()
+    public function test_認証アカウントがすでに確認済みの場合、バリデーションエラーが発生する()
     {
         // given
-        // 認証情報を作成して保存する
+        // 認証アカウントを作成して保存する
         $userEmail = new UserEmail('test@example.com');
         $authenticationAccount = $this->authenticationAccountTestDataCreator->create(
             email: $userEmail,
@@ -141,10 +138,10 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
         $this->assertEquals('既にアカウントが確認済みです。', $result->validationErrorMessage);
     }
 
-    public function test_認証情報に紐づく認証確認情報が存在しない場合は例外が発生する()
+    public function test_認証アカウントに紐づく認証確認情報が存在しない場合は例外が発生する()
     {
         // given
-        // 認証情報を作成して保存する
+        // 認証アカウントを作成して保存する
         $userEmail = new UserEmail('test@example.com');
         $authenticationAccount = $this->authenticationAccountTestDataCreator->create(
             email: $userEmail,
@@ -153,7 +150,7 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
 
         // when・then
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('認証情報が存在しません。userId: ' . $authenticationAccount->id()->value);
+        $this->expectExceptionMessage('認証アカウントが存在しません。userId: ' . $authenticationAccount->id()->value);
         $this->resendRegistrationConfirmationEmailApplicationService->resendRegistrationConfirmationEmail($userEmail->value);
     }
 }

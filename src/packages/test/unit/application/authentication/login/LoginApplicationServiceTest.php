@@ -62,7 +62,7 @@ class LoginApplicationServiceTest extends TestCase
     public function test_メールアドレスとパスワードが正しい場合にログインができる()
     {
         // given
-        // 認証情報を作成する
+        // 認証アカウントを作成する
         $email = new UserEmail('test@example.com');
         $password = UserPassword::create('ABCabc123_');
         $userId = $this->authenticationAccountRepository->nextUserId();
@@ -118,7 +118,7 @@ class LoginApplicationServiceTest extends TestCase
     public function test_メールアドレスが正しくない場合にログインが失敗する()
     {
         // given
-        // 認証情報を作成する
+        // 認証アカウントを作成する
         $email = new UserEmail('test@example.com');
         $password = UserPassword::create('ABCabc123_');
         $this->authenticationAccountTestDataCreator->create(
@@ -161,7 +161,7 @@ class LoginApplicationServiceTest extends TestCase
     public function test_パスワードが正しくない場合にログインが失敗する()
     {
         // given
-        // 認証情報を作成する
+        // 認証アカウントを作成する
         $email = new UserEmail('test@example.com');
         $password = UserPassword::create('ABCabc123_');
         $this->authenticationAccountTestDataCreator->create(
@@ -256,7 +256,7 @@ class LoginApplicationServiceTest extends TestCase
     public function test_アカウントロックの有効期限外の場合、正しいメールアドレスとパスワードでログインできる()
     {
         // given
-        // 認証情報を作成する
+        // 認証アカウントを作成する
         $email = new UserEmail('test@example.com');
         $password = UserPassword::create('ABCabc123_');
         $userId = $this->authenticationAccountRepository->nextUserId();
@@ -319,7 +319,7 @@ class LoginApplicationServiceTest extends TestCase
     public function test_ログインに失敗した場合、ログイン失敗回数が更新される()
     {
         // given
-        // 認証情報を作成する
+        // 認証アカウントを作成する
         $email = new UserEmail('test@example.com');
         $password = UserPassword::create('ABCabc123_');
         $loginRestriction = LoginRestriction::reconstruct(
@@ -368,7 +368,7 @@ class LoginApplicationServiceTest extends TestCase
     public function test_ログインに失敗した場合、失敗回数が一定回数を超えた場合アカウントがロックされる()
     {
         // given
-        // 認証情報を作成する
+        // 認証アカウントを作成する
         $email = new UserEmail('test@example.com');
         $password = UserPassword::create('ABCabc123_');
         $loginRestriction = LoginRestriction::reconstruct(

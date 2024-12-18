@@ -23,7 +23,7 @@ class EloquentTransactionManageTest extends TestCase
     public function test_トランザクションをコミットできることを確認する()
     {
         // given
-        // 認証情報を生成する
+        // 認証アカウントを生成する
         $userId = $this->authenticationAccountRepository->nextUserId();
         $authInfo = TestAuthenticationAccountFactory::create(id: $userId);
 
@@ -34,7 +34,7 @@ class EloquentTransactionManageTest extends TestCase
         });
 
         // then
-        // 認証情報が登録されていることを確認する
+        // 認証アカウントが登録されていることを確認する
         $actualAuthInfo = $this->authenticationAccountRepository->findById($userId);
         $this->assertNotEmpty($actualAuthInfo);
     }
@@ -42,7 +42,7 @@ class EloquentTransactionManageTest extends TestCase
     public function test_トランザクションをロールバックできることを確認する()
     {
         // given
-        // 認証情報を生成する
+        // 認証アカウントを生成する
         $userId = $this->authenticationAccountRepository->nextUserId();
         $authInfo = TestAuthenticationAccountFactory::create(id: $userId);
 
@@ -57,7 +57,7 @@ class EloquentTransactionManageTest extends TestCase
         }
 
         // then
-        // 認証情報が登録されていないことを確認する
+        // 認証アカウントが登録されていないことを確認する
         $actualAuthInfo = $this->authenticationAccountRepository->findById($userId);
         $this->assertEmpty($actualAuthInfo);
     }

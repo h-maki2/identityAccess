@@ -35,7 +35,7 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
     public function test_認証確認情報を保存できる()
     {
         // given
-        // あらかじめ認証情報を保存しておく
+        // あらかじめ認証アカウントを保存しておく
         $userId =  $this->eloquentAuthenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId
@@ -61,7 +61,7 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
     public function test_ユーザーIDから認証確認情報を取得できる()
     {
         // given
-        // 認証情報を保存しておく
+        // 認証アカウントを保存しておく
         $検索対象のユーザーID =  $this->eloquentAuthenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $検索対象のユーザーID
@@ -72,7 +72,7 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
             userId: $検索対象のユーザーID
         );
 
-        // 検索対象ではない認証情報と認証確認情報を保存する
+        // 検索対象ではない認証アカウントと認証確認情報を保存する
         $検索対象ではないユーザーid1 = $this->eloquentAuthenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $検索対象ではないユーザーid1
@@ -114,7 +114,7 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
             oneTimeTokenValue: $検索対象のワンタイムトークン値
         );
 
-        // 検索対象ではない認証情報と認証確認情報を保存する
+        // 検索対象ではない認証アカウントと認証確認情報を保存する
         $検索対象ではないユーザーid = $this->eloquentAuthenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $検索対象ではないユーザーid

@@ -20,7 +20,7 @@ class AuthConfirmationTest extends TestCase
         $this->OneTimeTokenExistsService = new OneTimeTokenExistsService(new InMemoryAuthConfirmationRepository());
     }
 
-    public function test_認証情報を作成する()
+    public function test_認証アカウントを作成する()
     {
         // given
         $userId = TestUserIdFactory::createUserId();

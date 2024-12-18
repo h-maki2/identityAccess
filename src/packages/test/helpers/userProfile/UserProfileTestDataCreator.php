@@ -33,7 +33,7 @@ class UserProfileTestDataCreator
     {
         $authenticationAccount = $this->authenticationAccountRepository->findById($userId);
         if ($authenticationAccount === null) {
-            throw new \RuntimeException('認証情報テーブルに事前にデータを登録してください。');
+            throw new \RuntimeException('認証アカウントテーブルに事前にデータを登録してください。');
         }
 
         $userProfile = TestUserProfileFactory::create($userId, $profileId, $userName, $selfIntroductionText);

@@ -244,7 +244,7 @@ class AuthenticationAccountTest extends TestCase
     public function test_ログイン制限が有効可能の場合、ログイン制限を有効にする()
     {
         // given
-        // ログイン失敗回数が10回に達している認証情報を生成する
+        // ログイン失敗回数が10回に達している認証アカウントを生成する
         $verificationStatus = VerificationStatus::Verified;
         $LoginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
@@ -293,7 +293,7 @@ class AuthenticationAccountTest extends TestCase
     public function test_ログイン制限が有効で再ログイン可能である場合はログイン制限を解除できる()
     {
         // given
-        // ログイン制限は有効だが再ログインは可能である認証情報を生成する
+        // ログイン制限は有効だが再ログインは可能である認証アカウントを生成する
         $verificationStatus = VerificationStatus::Verified;
         $LoginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
@@ -319,7 +319,7 @@ class AuthenticationAccountTest extends TestCase
     public function test_ログイン制限が有効状態で再ログインが不可である場合、ログインができないことを判定できる()
     {
         // given
-        // ログイン制限が有効状態で再ログインが不可である認証情報を生成する
+        // ログイン制限が有効状態で再ログインが不可である認証アカウントを生成する
         $verificationStatus = VerificationStatus::Verified;
         $loginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
@@ -344,7 +344,7 @@ class AuthenticationAccountTest extends TestCase
     public function test_ログイン制限が有効状態で再ログインが可能である場合、ログインが可能であることを判定できる()
     {
         // given
-        // ログイン制限は有効だが再ログイン可能な認証情報を生成する
+        // ログイン制限は有効だが再ログイン可能な認証アカウントを生成する
         $verificationStatus = VerificationStatus::Verified;
         $loginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
@@ -369,7 +369,7 @@ class AuthenticationAccountTest extends TestCase
     public function test_ログイン制限が有効状態ではない場合、ログインが可能であることを判定できる()
     {
         // given
-        // ログイン制限が有効状態ではない認証情報を生成する
+        // ログイン制限が有効状態ではない認証アカウントを生成する
         $verificationStatus = VerificationStatus::Verified;
         $loginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(9),
@@ -394,7 +394,7 @@ class AuthenticationAccountTest extends TestCase
     public function test_認証ステータスが未認証の場合、ログイン不可であることを判定できる()
     {
         // given
-        // 認証ステータスが未認証の認証情報を生成する
+        // 認証ステータスが未認証の認証アカウントを生成する
         $verificationStatus = VerificationStatus::Unverified;
         $authenticationAccount = TestAuthenticationAccountFactory::create(
             null,
@@ -412,7 +412,7 @@ class AuthenticationAccountTest extends TestCase
     public function test_ログイン制限を有効にできるかどうかを判定できる()
     {
         // given
-        // ログイン失敗回数が10回に達していている認証情報を生成する
+        // ログイン失敗回数が10回に達していている認証アカウントを生成する
         $verificationStatus = VerificationStatus::Verified;
         $loginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
@@ -437,7 +437,7 @@ class AuthenticationAccountTest extends TestCase
     public function test_ログイン制限を有効にできないことを判定できる()
     {
         // given
-        // ログイン失敗回数が10回に達していない認証情報を生成する
+        // ログイン失敗回数が10回に達していない認証アカウントを生成する
         $verificationStatus = VerificationStatus::Verified;
         $loginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(9),

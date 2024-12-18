@@ -29,7 +29,7 @@ class DisplayVerifiedUpdatePageControllerTest extends TestCase
     public function test_確認済み更新ページを表示できる()
     {
         // given
-        // 未認証の認証情報を作成して保存する
+        // 未認証の認証アカウントを作成して保存する
         $userId = $this->eloquentAuthenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,

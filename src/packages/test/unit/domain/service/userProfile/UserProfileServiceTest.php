@@ -30,7 +30,7 @@ class UserProfileServiceTest extends TestCase
     public function test_ユーザー名が既に登録されている場合を判定できる()
     {
         // given
-        // あらかじめ認証情報を作成して保存しておく
+        // あらかじめ認証アカウントを作成して保存しておく
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(id: $userId);
 

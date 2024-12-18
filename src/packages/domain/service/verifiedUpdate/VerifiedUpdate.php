@@ -16,7 +16,7 @@ use packages\domain\model\common\transactionManage\TransactionManage;
 use RuntimeException;
 
 /**
- * 認証情報を確認済みに更新するサービス
+ * 認証アカウントを確認済みに更新するサービス
  */
 class VerifiedUpdate
 {
@@ -35,7 +35,7 @@ class VerifiedUpdate
     }
 
     /**
-     * 認証情報を確認済みに更新する
+     * 認証アカウントを確認済みに更新する
      * 更新に成功した場合はtrue、失敗した場合はfalseを返す
      */
     public function handle(OneTimeTokenValue $oneTimeTokenValue, OneTimePassword $oneTimePassword): void
@@ -43,7 +43,7 @@ class VerifiedUpdate
         $authConfirmation = $this->authConfirmationRepository->findByTokenValue($oneTimeTokenValue);
 
         if (!$authConfirmation->canUpdateVerifiedAuthInfo($oneTimePassword, new DateTimeImmutable())) {
-            throw new DomainException('認証情報を確認済みに更新できませんでした。');
+            throw new DomainException('認証アカウントを確認済みに更新できませんでした。');
         } 
 
         $authAccount = $this->authenticationAccountRepository->findById($authConfirmation->userId, UnsubscribeStatus::Subscribed);

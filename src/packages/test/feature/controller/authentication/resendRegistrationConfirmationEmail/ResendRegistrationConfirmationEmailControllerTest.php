@@ -30,7 +30,7 @@ class ResendRegistrationConfirmationEmailControllerTest extends TestCase
     public function test_登録済みのメールアドレスの場合に、本登録確認メールを再送信できる()
     {
         // given
-        // 未認証の認証情報を作成して保存する
+        // 未認証の認証アカウントを作成して保存する
         $userEmail = new UserEmail('hello@example.com');
         $userId = $this->eloquentAuthenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(

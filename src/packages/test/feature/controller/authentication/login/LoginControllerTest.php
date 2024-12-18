@@ -99,7 +99,7 @@ class LoginControllerTest extends TestCase
     public function test_メールアドレスとパスワードが正しい場合にログインが成功する()
     {
         // given
-        // 認証情報を登録する
+        // 認証アカウントを登録する
         $emailString = 'test@example.com';
         $passwordString = 'abcABC123!';
 
