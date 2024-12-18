@@ -1,9 +1,9 @@
 <?php
 
-namespace packages\domain\model\authConfirmation;
+namespace packages\domain\model\definitiveRegistrationConfirmation;
 
 use InvalidArgumentException;
-use packages\domain\model\authConfirmation\validation\OneTimeTokenValueValidation;
+use packages\domain\model\definitiveRegistrationConfirmation\validation\OneTimeTokenValueValidation;
 
 class OneTimeTokenValue
 {

@@ -1,32 +1,32 @@
 <?php
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use packages\adapter\persistence\eloquent\EloquentAuthConfirmationRepository;
+use packages\adapter\persistence\eloquent\EloquentDefinitiveRegistrationConfirmationRepository;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
-use packages\domain\model\authConfirmation\AuthConfirmation;
-use packages\domain\model\authConfirmation\OneTimePassword;
-use packages\domain\model\authConfirmation\OneTimeTokenValue;
+use packages\domain\model\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmation;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationAccount\VerificationStatus;
-use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
+use packages\test\helpers\definitiveRegistrationConfirmation\definitiveRegistrationConfirmationTestDataCreator;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use Tests\TestCase;
 
 class VerifiedUpdateControllerTest extends TestCase
 {
-    private EloquentAuthConfirmationRepository $authConfirmationRepository;
+    private EloquentDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private EloquentAuthenticationAccountRepository $authenticationAccountRepository;
     private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
-    private AuthConfirmationTestDataCreator $authConfirmationTestDataCreator;
+    private DefinitiveRegistrationConfirmationTestDataCreator $definitiveRegistrationConfirmationTestDataCreator;
 
     use DatabaseTransactions;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->authConfirmationRepository = new EloquentAuthConfirmationRepository();
+        $this->definitiveRegistrationConfirmationRepository = new EloquentDefinitiveRegistrationConfirmationRepository();
         $this->authenticationAccountRepository = new EloquentAuthenticationAccountRepository();
         $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($this->authenticationAccountRepository);
-        $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator($this->authConfirmationRepository, $this->authenticationAccountRepository);
+        $this->definitiveRegistrationConfirmationTestDataCreator = new DefinitiveRegistrationConfirmationTestDataCreator($this->definitiveRegistrationConfirmationRepository, $this->authenticationAccountRepository);
     }
 
     public function test_正しいワンタイムトークンとワンタイムパスワードを入力すると本登録が完了する()
@@ -40,13 +40,13 @@ class VerifiedUpdateControllerTest extends TestCase
         );
 
         // 認証確認を作成して保存する
-        $authConfirmation = $this->authConfirmationTestDataCreator->create(userId: $userId);
+        $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create(userId: $userId);
 
         // when
         // 確認済み更新を行う
         $response = $this->post('/verifiedUpdate', [
-            'oneTimeToken' => $authConfirmation->oneTimeToken()->tokenValue()->value,
-            'oneTimePassword' => $authConfirmation->oneTimePassword()->value
+            'oneTimeToken' => $definitiveRegistrationConfirmation->oneTimeToken()->tokenValue()->value,
+            'oneTimePassword' => $definitiveRegistrationConfirmation->oneTimePassword()->value
         ]);
 
         // then
@@ -69,7 +69,7 @@ class VerifiedUpdateControllerTest extends TestCase
         // 認証確認を作成して保存する
         $oneTimeTokenValue = OneTimeTokenValue::reconstruct(str_repeat('a', 26));
         $oneTimePassword = OneTimePassword::reconstruct('123456');
-        $this->authConfirmationTestDataCreator->create(
+        $this->definitiveRegistrationConfirmationTestDataCreator->create(
             userId: $userId,
             oneTimeTokenValue: $oneTimeTokenValue,
             oneTimePassword: $oneTimePassword

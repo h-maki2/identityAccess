@@ -33,8 +33,8 @@ class User extends Authenticatable
         return $this->hasOne(AuthenticationInformation::class, 'user_id', 'id');
     }
 
-    public function authConfirmation()
+    public function DefinitiveRegistrationConfirmation()
     {
-        return $this->hasOne(AuthConfirmation::class, 'user_id', 'id');
+        return $this->hasOne(DefinitiveRegistrationConfirmation::class, 'user_id', 'id');
     }
 }

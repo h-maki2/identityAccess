@@ -1,9 +1,9 @@
 <?php
 
-namespace packages\domain\model\authConfirmation;
+namespace packages\domain\model\definitiveRegistrationConfirmation;
 
 use InvalidArgumentException;
-use packages\domain\model\authConfirmation\validation\OneTimePasswordValidation;
+use packages\domain\model\definitiveRegistrationConfirmation\validation\OneTimePasswordValidation;
 
 class OneTimePassword
 {

@@ -1,22 +1,22 @@
 <?php
 
-namespace packages\test\helpers\authConfirmation;
+namespace packages\test\helpers\definitiveRegistrationConfirmation;
 
-use packages\domain\model\authConfirmation\AuthConfirmation;
-use packages\domain\model\authConfirmation\OneTimePassword;
-use packages\domain\model\authConfirmation\OneTimeToken;
+use packages\domain\model\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmation;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeToken;
 use packages\domain\model\authenticationAccount\UserId;
 use packages\test\helpers\authenticationAccount\TestUserIdFactory;
 
-class TestAuthConfirmationFactory
+class TestDefinitiveRegistrationConfirmationFactory
 {
-    public static function createAuthConfirmation(
+    public static function createDefinitiveRegistrationConfirmation(
         ?UserId $userId = null, 
         ?OneTimeToken $oneTimeToken = null, 
         ?OneTimePassword $oneTimePassword = null
-    ): AuthConfirmation
+    ): DefinitiveRegistrationConfirmation
     {
-        return AuthConfirmation::reconstruct(
+        return DefinitiveRegistrationConfirmation::reconstruct(
             $userId ?? TestUserIdFactory::createUserId(),
             $oneTimeToken ?? OneTimeToken::create(),
             $oneTimePassword ?? OneTimePassword::create()

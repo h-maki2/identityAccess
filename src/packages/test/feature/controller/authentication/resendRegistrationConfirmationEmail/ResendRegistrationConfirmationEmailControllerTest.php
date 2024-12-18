@@ -1,20 +1,20 @@
 <?php
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use packages\adapter\persistence\eloquent\EloquentAuthConfirmationRepository;
+use packages\adapter\persistence\eloquent\EloquentDefinitiveRegistrationConfirmationRepository;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
 use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\VerificationStatus;
-use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
+use packages\test\helpers\definitiveRegistrationConfirmation\definitiveRegistrationConfirmationTestDataCreator;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use Tests\TestCase;
 
 class ResendRegistrationConfirmationEmailControllerTest extends TestCase
 {
     private EloquentAuthenticationAccountRepository $eloquentAuthenticationAccountRepository;
-    private EloquentAuthConfirmationRepository $eloquentAuthConfirmationRepository;
+    private EloquentDefinitiveRegistrationConfirmationRepository $eloquentDefinitiveRegistrationConfirmationRepository;
     private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
-    private AuthConfirmationTestDataCreator $authConfirmationTestDataCreator;
+    private DefinitiveRegistrationConfirmationTestDataCreator $definitiveRegistrationConfirmationTestDataCreator;
 
     use DatabaseTransactions;
 
@@ -22,9 +22,9 @@ class ResendRegistrationConfirmationEmailControllerTest extends TestCase
     {
         parent::setUp();
         $this->eloquentAuthenticationAccountRepository = new EloquentAuthenticationAccountRepository();
-        $this->eloquentAuthConfirmationRepository = new EloquentAuthConfirmationRepository();
+        $this->eloquentDefinitiveRegistrationConfirmationRepository = new EloquentDefinitiveRegistrationConfirmationRepository();
         $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($this->eloquentAuthenticationAccountRepository);
-        $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator($this->eloquentAuthConfirmationRepository, $this->eloquentAuthenticationAccountRepository);
+        $this->definitiveRegistrationConfirmationTestDataCreator = new DefinitiveRegistrationConfirmationTestDataCreator($this->eloquentDefinitiveRegistrationConfirmationRepository, $this->eloquentAuthenticationAccountRepository);
     }
 
     public function test_登録済みのメールアドレスの場合に、本登録確認メールを再送信できる()
@@ -40,7 +40,7 @@ class ResendRegistrationConfirmationEmailControllerTest extends TestCase
         );
 
         // 認証確認を作成して保存する
-        $this->authConfirmationTestDataCreator->create(userId: $userId);
+        $this->definitiveRegistrationConfirmationTestDataCreator->create(userId: $userId);
 
         // when
         // 本登録確認メールを再送信する

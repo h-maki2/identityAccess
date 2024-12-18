@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\domain\model\authConfirmation\validation;
+namespace packages\domain\model\definitiveRegistrationConfirmation\validation;
 
 class OneTimeTokenValueValidation
 {

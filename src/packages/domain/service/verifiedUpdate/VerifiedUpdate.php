@@ -6,10 +6,10 @@ use Carbon\Unit;
 use DateTimeImmutable;
 use DomainException;
 use packages\application\common\exception\TransactionException;
-use packages\domain\model\authConfirmation\AuthConfirmation;
-use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
-use packages\domain\model\authConfirmation\OneTimePassword;
-use packages\domain\model\authConfirmation\OneTimeTokenValue;
+use packages\domain\model\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmation;
+use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\common\transactionManage\TransactionManage;
@@ -21,16 +21,16 @@ use RuntimeException;
 class VerifiedUpdate
 {
     private IAuthenticationAccountRepository $authenticationAccountRepository;
-    private IAuthConfirmationRepository $authConfirmationRepository;
+    private IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private TransactionManage $transactionManage;
 
     public function __construct(
         IAuthenticationAccountRepository $authenticationAccountRepository,
-        IAuthConfirmationRepository $authConfirmationRepository,
+        IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository,
         TransactionManage $transactionManage
     ) {
         $this->authenticationAccountRepository = $authenticationAccountRepository;
-        $this->authConfirmationRepository = $authConfirmationRepository;
+        $this->definitiveRegistrationConfirmationRepository = $definitiveRegistrationConfirmationRepository;
         $this->transactionManage = $transactionManage;
     }
 
@@ -40,19 +40,19 @@ class VerifiedUpdate
      */
     public function handle(OneTimeTokenValue $oneTimeTokenValue, OneTimePassword $oneTimePassword): void
     {
-        $authConfirmation = $this->authConfirmationRepository->findByTokenValue($oneTimeTokenValue);
+        $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationRepository->findByTokenValue($oneTimeTokenValue);
 
-        if (!$authConfirmation->canUpdateVerifiedAuthInfo($oneTimePassword, new DateTimeImmutable())) {
+        if (!$definitiveRegistrationConfirmation->canUpdateVerifiedAuthInfo($oneTimePassword, new DateTimeImmutable())) {
             throw new DomainException('認証アカウントを確認済みに更新できませんでした。');
         } 
 
-        $authAccount = $this->authenticationAccountRepository->findById($authConfirmation->userId, UnsubscribeStatus::Subscribed);
+        $authAccount = $this->authenticationAccountRepository->findById($definitiveRegistrationConfirmation->userId, UnsubscribeStatus::Subscribed);
         $authAccount->updateVerified();
 
         try {
             $this->transactionManage->performTransaction(function () use ($authAccount) {
                 $this->authenticationAccountRepository->save($authAccount);
-                $this->authConfirmationRepository->delete($authAccount->id());
+                $this->definitiveRegistrationConfirmationRepository->delete($authAccount->id());
             });
         } catch (\Exception $e) {
             throw new TransactionException($e->getMessage());

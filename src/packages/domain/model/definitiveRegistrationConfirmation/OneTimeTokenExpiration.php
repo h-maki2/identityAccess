@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\domain\model\authConfirmation;
+namespace packages\domain\model\definitiveRegistrationConfirmation;
 
 use DateTimeImmutable;
 

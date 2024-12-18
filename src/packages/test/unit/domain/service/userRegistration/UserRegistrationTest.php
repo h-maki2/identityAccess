@@ -1,8 +1,8 @@
 <?php
 
-use packages\adapter\persistence\inMemory\InMemoryAuthConfirmationRepository;
+use packages\adapter\persistence\inMemory\InMemoryDefinitiveRegistrationConfirmationRepository;
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationAccountRepository;
-use packages\domain\model\authConfirmation\OneTimeToken;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeToken;
 use packages\domain\model\email\SendEmailDto;
 use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\UserPassword;
@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 class UserRegistrationTest extends TestCase
 {
-    private InMemoryAuthConfirmationRepository $authConfirmationRepository;
+    private InMemoryDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
     private TestTransactionManage $transactionManage;
     private SendEmailDto $capturedSendEmailDto;
@@ -23,7 +23,7 @@ class UserRegistrationTest extends TestCase
 
     public function setUp(): void
     {
-        $this->authConfirmationRepository = new InMemoryAuthConfirmationRepository();
+        $this->definitiveRegistrationConfirmationRepository = new InMemoryDefinitiveRegistrationConfirmationRepository();
         $this->authenticationAccountRepository = new InMemoryAuthenticationAccountRepository();
         $this->transactionManage = new TestTransactionManage();
         
@@ -38,7 +38,7 @@ class UserRegistrationTest extends TestCase
 
         $this->userRegistration = new UserRegistration(
             $this->authenticationAccountRepository,
-            $this->authConfirmationRepository,
+            $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage,
             $this->emailSender
         );
@@ -61,12 +61,12 @@ class UserRegistrationTest extends TestCase
         $this->assertEquals($userPassword, $actualAuthInfo->password());
 
         // 認証確認情報が保存されていることを確認
-        $actualAuthConfirmation = $this->authConfirmationRepository->findByTokenValue($oneTimeToken->tokenValue());
-        $this->assertNotEmpty($actualAuthConfirmation);
+        $actualDefinitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationRepository->findByTokenValue($oneTimeToken->tokenValue());
+        $this->assertNotEmpty($actualDefinitiveRegistrationConfirmation);
 
         // メール送信する内容が正しいことを確認する
         $this->assertEquals($userEmail->value, $this->capturedSendEmailDto->toAddress);
-        $this->assertEquals($actualAuthConfirmation->oneTimePassword()->value, $this->capturedSendEmailDto->templateVariables['oneTimePassword']);
-        $this->assertStringContainsString($actualAuthConfirmation->oneTimeToken()->tokenValue()->value, $this->capturedSendEmailDto->templateVariables['verifiedUpdateUrl']);
+        $this->assertEquals($actualDefinitiveRegistrationConfirmation->oneTimePassword()->value, $this->capturedSendEmailDto->templateVariables['oneTimePassword']);
+        $this->assertStringContainsString($actualDefinitiveRegistrationConfirmation->oneTimeToken()->tokenValue()->value, $this->capturedSendEmailDto->templateVariables['verifiedUpdateUrl']);
     }
 }

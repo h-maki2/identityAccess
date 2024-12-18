@@ -1,33 +1,33 @@
 <?php
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use packages\adapter\persistence\eloquent\EloquentAuthConfirmationRepository;
+use packages\adapter\persistence\eloquent\EloquentDefinitiveRegistrationConfirmationRepository;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
-use packages\domain\model\authConfirmation\OneTimePassword;
-use packages\domain\model\authConfirmation\OneTimeToken;
-use packages\domain\model\authConfirmation\OneTimeTokenValue;
-use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
-use packages\test\helpers\authConfirmation\TestAuthConfirmationFactory;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeToken;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
+use packages\test\helpers\definitiveRegistrationConfirmation\definitiveRegistrationConfirmationTestDataCreator;
+use packages\test\helpers\definitiveRegistrationConfirmation\TestDefinitiveRegistrationConfirmationFactory;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use Tests\TestCase;
 
-class EloquentAuthConfirmationRepositoryTest extends TestCase
+class EloquentDefinitiveRegistrationConfirmationRepositoryTest extends TestCase
 {
-    private EloquentAuthConfirmationRepository $eloquentAuthConfirmationRepository;
+    private EloquentDefinitiveRegistrationConfirmationRepository $eloquentDefinitiveRegistrationConfirmationRepository;
     private EloquentAuthenticationAccountRepository $eloquentAuthenticationAccountRepository;
     private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
-    private AuthConfirmationTestDataCreator $authConfirmationTestDataCreator;
+    private DefinitiveRegistrationConfirmationTestDataCreator $definitiveRegistrationConfirmationTestDataCreator;
 
     use DatabaseTransactions;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->eloquentAuthConfirmationRepository = new EloquentAuthConfirmationRepository();
+        $this->eloquentDefinitiveRegistrationConfirmationRepository = new EloquentDefinitiveRegistrationConfirmationRepository();
         $this->eloquentAuthenticationAccountRepository = new EloquentAuthenticationAccountRepository();
         $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($this->eloquentAuthenticationAccountRepository);
-        $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator(
-            $this->eloquentAuthConfirmationRepository,
+        $this->definitiveRegistrationConfirmationTestDataCreator = new DefinitiveRegistrationConfirmationTestDataCreator(
+            $this->eloquentDefinitiveRegistrationConfirmationRepository,
             $this->eloquentAuthenticationAccountRepository
         );
     }
@@ -42,20 +42,20 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
         );
 
         // 認証確認情報を作成する
-        $authConfirmation = TestAuthConfirmationFactory::createAuthConfirmation(
+        $definitiveRegistrationConfirmation = TestDefinitiveRegistrationConfirmationFactory::createDefinitiveRegistrationConfirmation(
             userId: $userId
         );
 
         // when
         // 認証確認情報を保存する
-        $this->eloquentAuthConfirmationRepository->save($authConfirmation);
+        $this->eloquentDefinitiveRegistrationConfirmationRepository->save($definitiveRegistrationConfirmation);
 
         // then
         // 認証確認情報が保存されていることを確認する
-        $actualAuthConfirmation = $this->eloquentAuthConfirmationRepository->findById($userId);
-        $this->assertEquals($authConfirmation->oneTimePassword(), $actualAuthConfirmation->oneTimePassword());
-        $this->assertEquals($authConfirmation->oneTimeToken()->tokenValue(), $actualAuthConfirmation->oneTimeToken()->tokenValue());
-        $this->assertEquals($authConfirmation->oneTimeToken()->expirationdate(), $actualAuthConfirmation->oneTimeToken()->expirationdate());
+        $actualDefinitiveRegistrationConfirmation = $this->eloquentDefinitiveRegistrationConfirmationRepository->findById($userId);
+        $this->assertEquals($definitiveRegistrationConfirmation->oneTimePassword(), $actualDefinitiveRegistrationConfirmation->oneTimePassword());
+        $this->assertEquals($definitiveRegistrationConfirmation->oneTimeToken()->tokenValue(), $actualDefinitiveRegistrationConfirmation->oneTimeToken()->tokenValue());
+        $this->assertEquals($definitiveRegistrationConfirmation->oneTimeToken()->expirationdate(), $actualDefinitiveRegistrationConfirmation->oneTimeToken()->expirationdate());
     }
 
     public function test_ユーザーIDから認証確認情報を取得できる()
@@ -68,7 +68,7 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
         );
 
         // 認証確認情報を保存しておく
-        $検索対象の認証確認情報 = $this->authConfirmationTestDataCreator->create(
+        $検索対象の認証確認情報 = $this->definitiveRegistrationConfirmationTestDataCreator->create(
             userId: $検索対象のユーザーID
         );
 
@@ -77,7 +77,7 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             id: $検索対象ではないユーザーid1
         );
-        $this->authConfirmationTestDataCreator->create(
+        $this->definitiveRegistrationConfirmationTestDataCreator->create(
             userId: $検索対象ではないユーザーid1
         );
 
@@ -85,17 +85,17 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             id: $検索対象ではないユーザーid2
         );
-        $this->authConfirmationTestDataCreator->create(
+        $this->definitiveRegistrationConfirmationTestDataCreator->create(
             userId: $検索対象ではないユーザーid2
         );
 
         // when
-        $actualAuthConfirmation = $this->eloquentAuthConfirmationRepository->findById($検索対象のユーザーID);
+        $actualDefinitiveRegistrationConfirmation = $this->eloquentDefinitiveRegistrationConfirmationRepository->findById($検索対象のユーザーID);
 
         // then
-        $this->assertEquals($検索対象の認証確認情報->oneTimePassword(), $actualAuthConfirmation->oneTimePassword());
-        $this->assertEquals($検索対象の認証確認情報->oneTimeToken()->tokenValue(), $actualAuthConfirmation->oneTimeToken()->tokenValue());
-        $this->assertEquals($検索対象の認証確認情報->oneTimeToken()->expirationdate(), $actualAuthConfirmation->oneTimeToken()->expirationdate());
+        $this->assertEquals($検索対象の認証確認情報->oneTimePassword(), $actualDefinitiveRegistrationConfirmation->oneTimePassword());
+        $this->assertEquals($検索対象の認証確認情報->oneTimeToken()->tokenValue(), $actualDefinitiveRegistrationConfirmation->oneTimeToken()->tokenValue());
+        $this->assertEquals($検索対象の認証確認情報->oneTimeToken()->expirationdate(), $actualDefinitiveRegistrationConfirmation->oneTimeToken()->expirationdate());
     }
 
     public function test_ワンタイムトークンから認証確認情報を取得できる()
@@ -109,7 +109,7 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
 
         // 認証確認情報を保存しておく
         $検索対象のワンタイムトークン値 = OneTimeTokenValue::create();
-        $検索対象の認証確認情報 = $this->authConfirmationTestDataCreator->create(
+        $検索対象の認証確認情報 = $this->definitiveRegistrationConfirmationTestDataCreator->create(
             userId: $検索対象のユーザーID,
             oneTimeTokenValue: $検索対象のワンタイムトークン値
         );
@@ -119,18 +119,18 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             id: $検索対象ではないユーザーid
         );
-        $this->authConfirmationTestDataCreator->create(
+        $this->definitiveRegistrationConfirmationTestDataCreator->create(
             userId: $検索対象ではないユーザーid,
             oneTimeTokenValue: OneTimeTokenValue::create(),
         );
 
         // when
-        $actualAuthConfirmation = $this->eloquentAuthConfirmationRepository->findByTokenValue($検索対象のワンタイムトークン値);
+        $actualDefinitiveRegistrationConfirmation = $this->eloquentDefinitiveRegistrationConfirmationRepository->findByTokenValue($検索対象のワンタイムトークン値);
 
         // then
-        $this->assertEquals($検索対象の認証確認情報->oneTimePassword(), $actualAuthConfirmation->oneTimePassword());
-        $this->assertEquals($検索対象の認証確認情報->oneTimeToken()->tokenValue(), $actualAuthConfirmation->oneTimeToken()->tokenValue());
-        $this->assertEquals($検索対象の認証確認情報->oneTimeToken()->expirationdate(), $actualAuthConfirmation->oneTimeToken()->expirationdate());
+        $this->assertEquals($検索対象の認証確認情報->oneTimePassword(), $actualDefinitiveRegistrationConfirmation->oneTimePassword());
+        $this->assertEquals($検索対象の認証確認情報->oneTimeToken()->tokenValue(), $actualDefinitiveRegistrationConfirmation->oneTimeToken()->tokenValue());
+        $this->assertEquals($検索対象の認証確認情報->oneTimeToken()->expirationdate(), $actualDefinitiveRegistrationConfirmation->oneTimeToken()->expirationdate());
     }
 
     public function test_認証確認情報を削除できる()
@@ -142,7 +142,7 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
             id: $削除対象のユーザーID
         );
 
-        $this->authConfirmationTestDataCreator->create(
+        $this->definitiveRegistrationConfirmationTestDataCreator->create(
             userId: $削除対象のユーザーID
         );
 
@@ -150,15 +150,15 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             id: $削除対象ではないuserId
         );
-        $this->authConfirmationTestDataCreator->create(
+        $this->definitiveRegistrationConfirmationTestDataCreator->create(
             userId: $削除対象ではないuserId
         );
 
         // when
-        $this->eloquentAuthConfirmationRepository->delete($削除対象のユーザーID);
+        $this->eloquentDefinitiveRegistrationConfirmationRepository->delete($削除対象のユーザーID);
 
         // then
-        $actualAuthConfirmation = $this->eloquentAuthConfirmationRepository->findById($削除対象のユーザーID);
-        $this->assertNull($actualAuthConfirmation);
+        $actualDefinitiveRegistrationConfirmation = $this->eloquentDefinitiveRegistrationConfirmationRepository->findById($削除対象のユーザーID);
+        $this->assertNull($actualDefinitiveRegistrationConfirmation);
     }
 }

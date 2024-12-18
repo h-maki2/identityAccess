@@ -4,9 +4,9 @@ namespace packages\application\userRegistration;
 
 use Exception;
 use packages\application\common\exception\TransactionException;
-use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
-use packages\domain\model\authConfirmation\OneTimeToken;
-use packages\domain\model\authConfirmation\validation\OneTimeTokenValidation;
+use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeToken;
+use packages\domain\model\definitiveRegistrationConfirmation\validation\OneTimeTokenValidation;
 use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
 use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\UserPassword;
@@ -24,21 +24,21 @@ use packages\domain\model\email\IEmailSender;
 class UserRegistrationApplicationService implements UserRegistrationInputBoundary
 {
     private IAuthenticationAccountRepository $authenticationAccountRepository;
-    private IAuthConfirmationRepository $authConfirmationRepository;
+    private IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private UserRegistration $userRegistration;
 
     public function __construct(
-        IAuthConfirmationRepository $authConfirmationRepository,
+        IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository,
         IAuthenticationAccountRepository $authenticationAccountRepository,
         TransactionManage $transactionManage,
         IEmailSender $emailSender
     )
     {
         $this->authenticationAccountRepository = $authenticationAccountRepository;
-        $this->authConfirmationRepository = $authConfirmationRepository;
+        $this->definitiveRegistrationConfirmationRepository = $definitiveRegistrationConfirmationRepository;
         $this->userRegistration = new UserRegistration(
             $authenticationAccountRepository,
-            $authConfirmationRepository,
+            $definitiveRegistrationConfirmationRepository,
             $transactionManage,
             $emailSender
         );
@@ -59,7 +59,7 @@ class UserRegistrationApplicationService implements UserRegistrationInputBoundar
         $validationHandler->addValidator(new UserPasswordConfirmationValidation($inputedPassword, $inputedPasswordConfirmation));
 
         $oneTimeToken = OneTimeToken::create();
-        $validationHandler->addValidator(new OneTimeTokenValidation($this->authConfirmationRepository, $oneTimeToken));
+        $validationHandler->addValidator(new OneTimeTokenValidation($this->definitiveRegistrationConfirmationRepository, $oneTimeToken));
         
         if (!$validationHandler->validate()) {
             return UserRegistrationResult::createWhenValidationError(

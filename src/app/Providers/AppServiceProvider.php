@@ -10,7 +10,7 @@ use packages\adapter\oauth\authToken\LaravelPassportAccessTokenDeactivationServi
 use packages\adapter\oauth\authToken\LaravelPassportRefreshokenDeactivationService;
 use packages\adapter\oauth\client\LaravelPassportClientFetcher;
 use packages\adapter\oauth\scope\LaravelPassportScopeAuthorizationChecker;
-use packages\adapter\persistence\eloquent\EloquentAuthConfirmationRepository;
+use packages\adapter\persistence\eloquent\EloquentDefinitiveRegistrationConfirmationRepository;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
 use packages\adapter\persistence\eloquent\EloquentUserProfileRepository;
 use packages\adapter\service\laravel\LaravelAuthenticationService;
@@ -36,7 +36,7 @@ use packages\application\userProfile\register\RegisterUserProfileOutputBoundary;
 use packages\application\userRegistration\UserRegistrationApplicationService;
 use packages\application\userRegistration\UserRegistrationInputBoundary;
 use packages\application\userRegistration\UserRegistrationOutputBoundary;
-use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
+use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
 use packages\domain\model\authenticationAccount\AuthenticationService;
 use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
 use packages\domain\model\authenticationAccount\SessionAuthentication;
@@ -56,7 +56,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         // リポジトリ
-        $this->app->bind(IAuthConfirmationRepository::class, EloquentAuthConfirmationRepository::class);
+        $this->app->bind(IDefinitiveRegistrationConfirmationRepository::class, EloquentDefinitiveRegistrationConfirmationRepository::class);
         $this->app->bind(IAuthenticationAccountRepository::class, EloquentAuthenticationAccountRepository::class);
         $this->app->bind(IUserProfileRepository::class, EloquentUserProfileRepository::class);
 

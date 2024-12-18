@@ -1,21 +1,21 @@
 <?php
 
-namespace packages\domain\service\authConfirmation;
+namespace packages\domain\service\definitiveRegistrationConfirmation;
 
-use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
-use packages\domain\model\authConfirmation\OneTimeTokenValue;
+use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
 
 class OneTimeTokenExistsService
 {
-    private IAuthConfirmationRepository $authConfirmationRepository;
+    private IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
 
-    public function __construct(IAuthConfirmationRepository $authConfirmationRepository)
+    public function __construct(IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository)
     {
-        $this->authConfirmationRepository = $authConfirmationRepository;
+        $this->definitiveRegistrationConfirmationRepository = $definitiveRegistrationConfirmationRepository;
     }
 
     public function isExists(OneTimeTokenValue $oneTimeTokenValue): bool
     {
-        return $this->authConfirmationRepository->findByTokenValue($oneTimeTokenValue) !== null;
+        return $this->definitiveRegistrationConfirmationRepository->findByTokenValue($oneTimeTokenValue) !== null;
     }
 }

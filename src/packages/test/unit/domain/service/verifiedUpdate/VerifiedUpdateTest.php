@@ -1,14 +1,14 @@
 <?php
 
-use packages\adapter\persistence\inMemory\InMemoryAuthConfirmationRepository;
+use packages\adapter\persistence\inMemory\InMemoryDefinitiveRegistrationConfirmationRepository;
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationAccountRepository;
-use packages\domain\model\authConfirmation\OneTimePassword;
-use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
-use packages\domain\model\authConfirmation\OneTimeTokenValue;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenExpiration;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\authenticationAccount\VerificationStatus;
 use packages\domain\service\verifiedUpdate\VerifiedUpdate;
-use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
+use packages\test\helpers\definitiveRegistrationConfirmation\definitiveRegistrationConfirmationTestDataCreator;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\authenticationAccount\authenticationAccountTestDataFactory;
 use packages\test\helpers\transactionManage\TestTransactionManage;
@@ -16,19 +16,19 @@ use PHPUnit\Framework\TestCase;
 
 class VerifiedUpdateTest extends TestCase
 {
-    private InMemoryAuthConfirmationRepository $authConfirmationRepository;
+    private InMemoryDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
     private TestTransactionManage $transactionManage;
     private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
-    private AuthConfirmationTestDataCreator $authConfirmationTestDataCreator;
+    private DefinitiveRegistrationConfirmationTestDataCreator $definitiveRegistrationConfirmationTestDataCreator;
 
     public function setUp(): void
     {
-        $this->authConfirmationRepository = new InMemoryAuthConfirmationRepository();
+        $this->definitiveRegistrationConfirmationRepository = new InMemoryDefinitiveRegistrationConfirmationRepository();
         $this->authenticationAccountRepository = new InMemoryAuthenticationAccountRepository();
         $this->transactionManage = new TestTransactionManage();
         $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($this->authenticationAccountRepository);
-        $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator($this->authConfirmationRepository, $this->authenticationAccountRepository);
+        $this->definitiveRegistrationConfirmationTestDataCreator = new DefinitiveRegistrationConfirmationTestDataCreator($this->definitiveRegistrationConfirmationRepository, $this->authenticationAccountRepository);
     }
 
     public function test_入力されたワンタイムパスワードが等しい場合、認証アカウントを確認済みに更新する()
@@ -41,20 +41,20 @@ class VerifiedUpdateTest extends TestCase
             verificationStatus: VerificationStatus::Unverified
         );
         // 認証確認情報を保存しておく
-        $authConfirmation = $this->authConfirmationTestDataCreator->create(
+        $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create(
             userId: $userId
         );
 
         $verifiedUpdate = new VerifiedUpdate(
             $this->authenticationAccountRepository,
-            $this->authConfirmationRepository,
+            $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage
         );
 
         // when
         $verifiedUpdate->handle(
-            $authConfirmation->oneTimeToken()->tokenValue(), 
-            $authConfirmation->oneTimePassword()
+            $definitiveRegistrationConfirmation->oneTimeToken()->tokenValue(), 
+            $definitiveRegistrationConfirmation->oneTimePassword()
         );
 
         // then
@@ -63,8 +63,8 @@ class VerifiedUpdateTest extends TestCase
         $this->assertEquals(VerificationStatus::Verified, $updatedAuthenticationAccount->verificationStatus());
 
         // 認証確認情報が削除されていることを確認
-        $deletedAuthConfirmation = $this->authConfirmationRepository->findByTokenValue($authConfirmation->oneTimeToken()->tokenValue());
-        $this->assertNull($deletedAuthConfirmation);
+        $deletedDefinitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationRepository->findByTokenValue($definitiveRegistrationConfirmation->oneTimeToken()->tokenValue());
+        $this->assertNull($deletedDefinitiveRegistrationConfirmation);
     }
 
     public function test_正しくないワンタイムパスワードが入力された場合に例外が発生する()
@@ -78,14 +78,14 @@ class VerifiedUpdateTest extends TestCase
         );
         // 認証確認情報を保存しておく
         $oneTimePassword = OneTimePassword::reconstruct('123456');
-        $authConfirmation = $this->authConfirmationTestDataCreator->create(
+        $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create(
             userId: $userId,
             oneTimePassword: $oneTimePassword
         );
 
         $verifiedUpdate = new VerifiedUpdate(
             $this->authenticationAccountRepository,
-            $this->authConfirmationRepository,
+            $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage
         );
 
@@ -94,7 +94,7 @@ class VerifiedUpdateTest extends TestCase
         $this->expectExceptionMessage('認証アカウントを確認済みに更新できませんでした。');
         $invalidOneTimePassword = OneTimePassword::reconstruct('654321');
         $verifiedUpdate->handle(
-            $authConfirmation->oneTimeToken()->tokenValue(), 
+            $definitiveRegistrationConfirmation->oneTimeToken()->tokenValue(), 
             $invalidOneTimePassword
         );
     }
@@ -111,14 +111,14 @@ class VerifiedUpdateTest extends TestCase
 
         // 有効期限が切れているワンタイムトークンを生成
         $oneTimeTokenExpiration = OneTimeTokenExpiration::reconstruct(new DateTimeImmutable('-1 day'));
-        $authConfirmation = $this->authConfirmationTestDataCreator->create(
+        $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create(
             userId: $userId,
             oneTimeTokenExpiration: $oneTimeTokenExpiration
         );
 
         $verifiedUpdate = new VerifiedUpdate(
             $this->authenticationAccountRepository,
-            $this->authConfirmationRepository,
+            $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage
         );
 
@@ -126,8 +126,8 @@ class VerifiedUpdateTest extends TestCase
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('認証アカウントを確認済みに更新できませんでした。');
         $verifiedUpdate->handle(
-            $authConfirmation->oneTimeToken()->tokenValue(), 
-            $authConfirmation->oneTimePassword()
+            $definitiveRegistrationConfirmation->oneTimeToken()->tokenValue(), 
+            $definitiveRegistrationConfirmation->oneTimePassword()
         );
     }
 }

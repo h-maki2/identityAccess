@@ -2,9 +2,9 @@
 
 namespace packages\domain\service\oneTimeTokenAndPasswordRegeneration;
 
-use packages\domain\model\authConfirmation\AuthConfirmation;
-use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
-use packages\domain\model\authConfirmation\OneTimeToken;
+use packages\domain\model\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmation;
+use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeToken;
 use packages\domain\model\authenticationAccount\AuthenticationAccount;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\model\email\VerifiedUpdateEmailDtoFactory;
@@ -12,14 +12,14 @@ use RuntimeException;
 
 class OneTimeTokenAndPasswordRegeneration
 {
-    private IAuthConfirmationRepository $authConfirmationRepository;
+    private IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private IEmailSender $emailSender;
 
     public function __construct(
-        IAuthConfirmationRepository $authConfirmationRepository,
+        IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository,
         IEmailSender $emailSender
     ) {
-        $this->authConfirmationRepository = $authConfirmationRepository;
+        $this->definitiveRegistrationConfirmationRepository = $definitiveRegistrationConfirmationRepository;
         $this->emailSender = $emailSender;
     }
 
@@ -29,19 +29,19 @@ class OneTimeTokenAndPasswordRegeneration
      */
     public function handle(AuthenticationAccount $authInfo)
     {
-        $authConfirmation = $this->authConfirmationRepository->findById($authInfo->id());
-        if ($authConfirmation === null) {
+        $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationRepository->findById($authInfo->id());
+        if ($definitiveRegistrationConfirmation === null) {
             throw new RuntimeException('認証アカウントが存在しません。userId: ' . $authInfo->id()->value);
         }
 
-        $authConfirmation->reObtain();
-        $this->authConfirmationRepository->save($authConfirmation);
+        $definitiveRegistrationConfirmation->reObtain();
+        $this->definitiveRegistrationConfirmationRepository->save($definitiveRegistrationConfirmation);
 
         $this->emailSender->send(
             VerifiedUpdateEmailDtoFactory::create(
                 $authInfo->email(),
-                $authConfirmation->oneTimeToken(),
-                $authConfirmation->oneTimePassword()
+                $definitiveRegistrationConfirmation->oneTimeToken(),
+                $definitiveRegistrationConfirmation->oneTimePassword()
             )
         );
     }

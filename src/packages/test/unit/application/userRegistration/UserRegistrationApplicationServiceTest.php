@@ -1,6 +1,6 @@
 <?php
 
-use packages\adapter\persistence\inMemory\InMemoryAuthConfirmationRepository;
+use packages\adapter\persistence\inMemory\InMemoryDefinitiveRegistrationConfirmationRepository;
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationAccountRepository;
 use packages\domain\model\email\SendEmailDto;
 use packages\application\common\validation\ValidationErrorMessageData;
@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class UserRegistrationApplicationServiceTest extends TestCase
 {
-    private InMemoryAuthConfirmationRepository $authConfirmationRepository;
+    private InMemoryDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
     private TestTransactionManage $transactionManage;
     private SendEmailDto $capturedSendEmailDto;
@@ -20,7 +20,7 @@ class UserRegistrationApplicationServiceTest extends TestCase
 
     public function setUp(): void
     {
-        $this->authConfirmationRepository = new InMemoryAuthConfirmationRepository();
+        $this->definitiveRegistrationConfirmationRepository = new InMemoryDefinitiveRegistrationConfirmationRepository();
         $this->authenticationAccountRepository = new InMemoryAuthenticationAccountRepository();
         $this->transactionManage = new TestTransactionManage();
 
@@ -34,7 +34,7 @@ class UserRegistrationApplicationServiceTest extends TestCase
         $this->emailSender = $emailSender;
 
         $this->userRegistrationApplicationService = new UserRegistrationApplicationService(
-            $this->authConfirmationRepository,
+            $this->definitiveRegistrationConfirmationRepository,
             $this->authenticationAccountRepository,
             $this->transactionManage,
             $this->emailSender

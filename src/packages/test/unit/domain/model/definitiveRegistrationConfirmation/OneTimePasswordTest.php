@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use packages\domain\model\authConfirmation\OneTimePassword;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 

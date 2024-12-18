@@ -1,28 +1,28 @@
 <?php
 
-namespace packages\test\helpers\authConfirmation;
+namespace packages\test\helpers\definitiveRegistrationConfirmation;
 
-use packages\domain\model\authConfirmation\AuthConfirmation;
-use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
-use packages\domain\model\authConfirmation\OneTimePassword;
-use packages\domain\model\authConfirmation\OneTimeToken;
-use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
-use packages\domain\model\authConfirmation\OneTimeTokenValue;
+use packages\domain\model\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmation;
+use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeToken;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenExpiration;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\authenticationAccount\UserId;
 
-class AuthConfirmationTestDataCreator
+class DefinitiveRegistrationConfirmationTestDataCreator
 {
-    private IAuthConfirmationRepository $authConfirmationRepository;
+    private IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private IAuthenticationAccountRepository $authenticationAccountRepository;
 
     public function __construct(
-        IAuthConfirmationRepository $authConfirmationRepository,
+        IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository,
         IAuthenticationAccountRepository $authenticationAccountRepository
     )
     {
-        $this->authConfirmationRepository = $authConfirmationRepository;
+        $this->definitiveRegistrationConfirmationRepository = $definitiveRegistrationConfirmationRepository;
         $this->authenticationAccountRepository = $authenticationAccountRepository;
     }
 
@@ -31,15 +31,15 @@ class AuthConfirmationTestDataCreator
         ?OneTimeTokenValue $oneTimeTokenValue = null,
         ?OneTimeTokenExpiration $oneTimeTokenExpiration = null,
         ?OneTimePassword $oneTimePassword = null
-    ): AuthConfirmation
+    ): DefinitiveRegistrationConfirmation
     {
         $authenticationAccount = $this->authenticationAccountRepository->findById($userId, UnsubscribeStatus::Subscribed);
         if ($authenticationAccount === null) {
             throw new \RuntimeException('認証アカウントを事前に作成してください。');
         }
         $oneTimeToken = TestOneTimeTokenFactory::createOneTimeToken($oneTimeTokenValue, $oneTimeTokenExpiration);
-        $authConfirmation = TestAuthConfirmationFactory::createAuthConfirmation($userId, $oneTimeToken, $oneTimePassword);
-        $this->authConfirmationRepository->save($authConfirmation);
-        return $authConfirmation;
+        $definitiveRegistrationConfirmation = TestDefinitiveRegistrationConfirmationFactory::createDefinitiveRegistrationConfirmation($userId, $oneTimeToken, $oneTimePassword);
+        $this->definitiveRegistrationConfirmationRepository->save($definitiveRegistrationConfirmation);
+        return $definitiveRegistrationConfirmation;
     }
 }

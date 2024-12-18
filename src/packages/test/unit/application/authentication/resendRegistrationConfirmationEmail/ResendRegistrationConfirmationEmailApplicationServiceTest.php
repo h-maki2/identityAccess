@@ -1,26 +1,26 @@
 <?php
 
-use packages\adapter\persistence\inMemory\InMemoryAuthConfirmationRepository;
+use packages\adapter\persistence\inMemory\InMemoryDefinitiveRegistrationConfirmationRepository;
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationAccountRepository;
 use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailApplicationService;
 use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailOutputBoundary;
 use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailResult;
-use packages\domain\model\authConfirmation\OneTimePassword;
-use packages\domain\model\authConfirmation\OneTimeTokenValue;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\VerificationStatus;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\model\email\SendEmailDto;
-use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
+use packages\test\helpers\definitiveRegistrationConfirmation\definitiveRegistrationConfirmationTestDataCreator;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use PHPUnit\Framework\TestCase;
 
 class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
 {
-    private InMemoryAuthConfirmationRepository $authConfirmationRepository;
+    private InMemoryDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
     private ResendRegistrationConfirmationEmailApplicationService $resendRegistrationConfirmationEmailApplicationService;
-    private AuthConfirmationTestDataCreator $authConfirmationTestDataCreator;
+    private DefinitiveRegistrationConfirmationTestDataCreator $definitiveRegistrationConfirmationTestDataCreator;
     private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
     private ResendRegistrationConfirmationEmailResult $catchedResult;
     private IEmailSender $emailSender;
@@ -28,7 +28,7 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
 
     public function setUp(): void
     {
-        $this->authConfirmationRepository = new InMemoryAuthConfirmationRepository();
+        $this->definitiveRegistrationConfirmationRepository = new InMemoryDefinitiveRegistrationConfirmationRepository();
         $this->authenticationAccountRepository = new InMemoryAuthenticationAccountRepository();
 
         $emailSender = $this->createMock(IEmailSender::class);
@@ -41,11 +41,11 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
         $this->emailSender = $emailSender;
 
         $this->resendRegistrationConfirmationEmailApplicationService = new ResendRegistrationConfirmationEmailApplicationService(
-            $this->authConfirmationRepository,
+            $this->definitiveRegistrationConfirmationRepository,
             $this->authenticationAccountRepository,
             $this->emailSender
         );
-        $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator($this->authConfirmationRepository, $this->authenticationAccountRepository);
+        $this->definitiveRegistrationConfirmationTestDataCreator = new DefinitiveRegistrationConfirmationTestDataCreator($this->definitiveRegistrationConfirmationRepository, $this->authenticationAccountRepository);
         $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($this->authenticationAccountRepository);
     }
 
@@ -62,7 +62,7 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
         // 認証確認を作成して保存する
         $oneTimeTokenValue = OneTimeTokenValue::create();
         $oneTimePasword = OneTimePassword::create();
-        $this->authConfirmationTestDataCreator->create(
+        $this->definitiveRegistrationConfirmationTestDataCreator->create(
             userId: $authenticationAccount->id(),
             oneTimeTokenValue: $oneTimeTokenValue,
             oneTimePassword: $oneTimePasword
@@ -77,9 +77,9 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
         $this->assertEmpty($result->validationErrorMessage);
 
         // 正しいデータで本登録確認メールが送信できていることを確認
-        $actualAuthConfirmation = $this->authConfirmationRepository->findById($authenticationAccount->id());
-        $this->assertStringContainsString($actualAuthConfirmation->oneTimeToken()->tokenValue()->value, $this->catchedSendEmailDto->templateVariables['verifiedUpdateUrl']);
-        $this->assertEquals($this->catchedSendEmailDto->templateVariables['oneTimePassword'], $actualAuthConfirmation->oneTimePassword()->value);
+        $actualDefinitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationRepository->findById($authenticationAccount->id());
+        $this->assertStringContainsString($actualDefinitiveRegistrationConfirmation->oneTimeToken()->tokenValue()->value, $this->catchedSendEmailDto->templateVariables['verifiedUpdateUrl']);
+        $this->assertEquals($this->catchedSendEmailDto->templateVariables['oneTimePassword'], $actualDefinitiveRegistrationConfirmation->oneTimePassword()->value);
     }
 
     public function test_入力されたメールアドレスに紐づく認証アカウントが存在しない場合、バリデーションエラーが発生する()
@@ -94,7 +94,7 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
         // 認証確認を作成して保存する
         $oneTimeTokenValue = OneTimeTokenValue::create();
         $oneTimePasword = OneTimePassword::create();
-        $this->authConfirmationTestDataCreator->create(
+        $this->definitiveRegistrationConfirmationTestDataCreator->create(
             userId: $authenticationAccount->id(),
             oneTimeTokenValue: $oneTimeTokenValue,
             oneTimePassword: $oneTimePasword
@@ -123,7 +123,7 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
         // 認証確認を作成して保存する
         $oneTimeTokenValue = OneTimeTokenValue::create();
         $oneTimePasword = OneTimePassword::create();
-        $this->authConfirmationTestDataCreator->create(
+        $this->definitiveRegistrationConfirmationTestDataCreator->create(
             userId: $authenticationAccount->id(),
             oneTimeTokenValue: $oneTimeTokenValue,
             oneTimePassword: $oneTimePasword

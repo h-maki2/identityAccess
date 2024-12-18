@@ -1,19 +1,19 @@
 <?php
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use packages\adapter\persistence\eloquent\EloquentAuthConfirmationRepository;
+use packages\adapter\persistence\eloquent\EloquentDefinitiveRegistrationConfirmationRepository;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
-use packages\domain\model\authConfirmation\OneTimeToken;
-use packages\domain\model\authConfirmation\validation\OneTimeTokenValidation;
-use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeToken;
+use packages\domain\model\definitiveRegistrationConfirmation\validation\OneTimeTokenValidation;
+use packages\test\helpers\definitiveRegistrationConfirmation\definitiveRegistrationConfirmationTestDataCreator;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use Tests\TestCase;
 
 class OneTimeTokenValidationTest extends TestCase
 {
     private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
-    private AuthConfirmationTestDataCreator $authConfirmationTestDataCreator;
-    private EloquentAuthConfirmationRepository $authConfirmationRepository;
+    private DefinitiveRegistrationConfirmationTestDataCreator $definitiveRegistrationConfirmationTestDataCreator;
+    private EloquentDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
 
     use DatabaseTransactions;
 
@@ -24,9 +24,9 @@ class OneTimeTokenValidationTest extends TestCase
         $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator(
             $authenticationAccountRepository
         );
-        $this->authConfirmationRepository = new EloquentAuthConfirmationRepository();
-        $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator(
-            $this->authConfirmationRepository,
+        $this->definitiveRegistrationConfirmationRepository = new EloquentDefinitiveRegistrationConfirmationRepository();
+        $this->definitiveRegistrationConfirmationTestDataCreator = new DefinitiveRegistrationConfirmationTestDataCreator(
+            $this->definitiveRegistrationConfirmationRepository,
             $authenticationAccountRepository
         );
     }
@@ -36,10 +36,10 @@ class OneTimeTokenValidationTest extends TestCase
         // given
         // あらかじめ認証確認情報を保存しておく
         $authInfo = $this->authenticationAccountTestDataCreator->create();
-        $authConfirmation = $this->authConfirmationTestDataCreator->create($authInfo->id());
-        $既に存在するワンタイムトークン = $authConfirmation->oneTimeToken();
+        $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create($authInfo->id());
+        $既に存在するワンタイムトークン = $definitiveRegistrationConfirmation->oneTimeToken();
 
-        $oneTimeTokenValidation = new OneTimeTokenValidation($this->authConfirmationRepository, $既に存在するワンタイムトークン);
+        $oneTimeTokenValidation = new OneTimeTokenValidation($this->definitiveRegistrationConfirmationRepository, $既に存在するワンタイムトークン);
 
         // when
         $result = $oneTimeTokenValidation->validate();
@@ -56,7 +56,7 @@ class OneTimeTokenValidationTest extends TestCase
     {
         // given
         $oneTimeToken = OneTimeToken::create();
-        $oneTimeTokenValidation = new OneTimeTokenValidation($this->authConfirmationRepository, $oneTimeToken);
+        $oneTimeTokenValidation = new OneTimeTokenValidation($this->definitiveRegistrationConfirmationRepository, $oneTimeToken);
 
         // when
         $result = $oneTimeTokenValidation->validate();

@@ -1,20 +1,20 @@
 <?php
 
-namespace packages\domain\model\authConfirmation\validation;
+namespace packages\domain\model\definitiveRegistrationConfirmation\validation;
 
-use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
-use packages\domain\model\authConfirmation\OneTimeToken;
+use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeToken;
 use packages\domain\model\common\validator\Validator;
-use packages\domain\service\authConfirmation\OneTimeTokenExistsService;
+use packages\domain\service\definitiveRegistrationConfirmation\OneTimeTokenExistsService;
 
 class OneTimeTokenValidation extends Validator
 {
     private OneTimeTokenExistsService $oneTimeTokenExistsService;
     private OneTimeToken $oneTimeToken;
 
-    public function __construct(IAuthConfirmationRepository $authConfirmationRepository, OneTimeToken $oneTimeToken)
+    public function __construct(IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository, OneTimeToken $oneTimeToken)
     {
-        $this->oneTimeTokenExistsService = new OneTimeTokenExistsService($authConfirmationRepository);
+        $this->oneTimeTokenExistsService = new OneTimeTokenExistsService($definitiveRegistrationConfirmationRepository);
         $this->oneTimeToken = $oneTimeToken;
     }
 

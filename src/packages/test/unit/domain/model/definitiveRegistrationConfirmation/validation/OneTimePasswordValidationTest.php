@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace packages\domain\model\authConfirmation\validation;
+namespace packages\domain\model\definitiveRegistrationConfirmation\validation;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 

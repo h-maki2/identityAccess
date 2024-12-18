@@ -1,13 +1,13 @@
 <?php
 
-namespace packages\domain\model\authConfirmation;
+namespace packages\domain\model\definitiveRegistrationConfirmation;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
 use packages\domain\model\authenticationAccount\UserId;
-use packages\domain\service\authConfirmation\OneTimeTokenExistsService;
+use packages\domain\service\definitiveRegistrationConfirmation\OneTimeTokenExistsService;
 
-class AuthConfirmation
+class DefinitiveRegistrationConfirmation
 {
     readonly UserId $userId;
     private OneTimeToken $oneTimeToken;

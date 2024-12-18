@@ -1,6 +1,6 @@
 <?php
 
-use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenExpiration;
 use PHPUnit\Framework\TestCase;
 
 class OneTimeTokenExpirationTest extends TestCase

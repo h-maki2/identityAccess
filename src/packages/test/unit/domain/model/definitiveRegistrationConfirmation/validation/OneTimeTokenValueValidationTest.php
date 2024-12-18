@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use packages\domain\model\authConfirmation\validation\OneTimeTokenValueValidation;
+use packages\domain\model\definitiveRegistrationConfirmation\validation\OneTimeTokenValueValidation;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 

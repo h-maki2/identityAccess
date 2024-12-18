@@ -1,10 +1,10 @@
 <?php
 
-namespace packages\test\helpers\authConfirmation;
+namespace packages\test\helpers\definitiveRegistrationConfirmation;
 
-use packages\domain\model\authConfirmation\OneTimeToken;
-use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
-use packages\domain\model\authConfirmation\OneTimeTokenValue;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeToken;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenExpiration;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
 
 class TestOneTimeTokenFactory
 {

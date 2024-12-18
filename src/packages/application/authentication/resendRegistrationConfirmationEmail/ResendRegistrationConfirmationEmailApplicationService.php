@@ -3,8 +3,8 @@
 namespace packages\application\authentication\resendRegistrationConfirmationEmail;
 
 use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailResult;
-use packages\domain\model\authConfirmation\AuthConfirmation;
-use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
+use packages\domain\model\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmation;
+use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
 use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
 use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\email\IEmailSender;
@@ -16,20 +16,20 @@ use RuntimeException;
  */
 class ResendRegistrationConfirmationEmailApplicationService implements ResendRegistrationConfirmationEmailInputBoundary
 {
-    private IAuthConfirmationRepository $authConfirmationRepository;
+    private IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private IAuthenticationAccountRepository $authenticationAccountRepository;
     private OneTimeTokenAndPasswordRegeneration $oneTimeTokenAndPasswordRegeneration;
 
     public function __construct(
-        IAuthConfirmationRepository $authConfirmationRepository,
+        IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository,
         IAuthenticationAccountRepository $authenticationAccountRepository,
         IEmailSender $emailSender
     )
     {
-        $this->authConfirmationRepository = $authConfirmationRepository;
+        $this->definitiveRegistrationConfirmationRepository = $definitiveRegistrationConfirmationRepository;
         $this->authenticationAccountRepository = $authenticationAccountRepository;
         $this->oneTimeTokenAndPasswordRegeneration = new OneTimeTokenAndPasswordRegeneration(
-            $this->authConfirmationRepository,
+            $this->definitiveRegistrationConfirmationRepository,
             $emailSender
         );
     }

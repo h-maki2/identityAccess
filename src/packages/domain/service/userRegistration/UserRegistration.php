@@ -5,10 +5,10 @@ namespace packages\domain\service\userRegistration;
 use packages\application\common\exception\TransactionException;
 use packages\domain\model\email\SendEmailDto;
 use packages\domain\service\userRegistration\IUserRegistrationCompletionEmail;
-use packages\domain\model\authConfirmation\AuthConfirmation;
-use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
-use packages\domain\model\authConfirmation\OneTimeToken;
-use packages\domain\model\authConfirmation\OneTimeTokenValue;
+use packages\domain\model\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmation;
+use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeToken;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationAccount\AuthenticationAccount;
 use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
 use packages\domain\model\authenticationAccount\UserEmail;
@@ -16,25 +16,25 @@ use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\common\transactionManage\TransactionManage;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\model\email\VerifiedUpdateEmailDtoFactory;
-use packages\domain\service\authConfirmation\OneTimeTokenExistsService;
+use packages\domain\service\definitiveRegistrationConfirmation\OneTimeTokenExistsService;
 use packages\domain\service\authenticationAccount\AuthenticationAccountService;
 
 class UserRegistration
 {
     private IAuthenticationAccountRepository $authenticationAccountRepository;
-    private IAuthConfirmationRepository $authConfirmationRepository;
+    private IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private TransactionManage $transactionManage;
     private AuthenticationAccountService $authenticationAccountService;
     private IEmailSender $emailSender;
 
     public function __construct(
         IAuthenticationAccountRepository $authenticationAccountRepository,
-        IAuthConfirmationRepository $authConfirmationRepository,
+        IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository,
         TransactionManage $transactionManage,
         IEmailSender $emailSender
     ) {
         $this->authenticationAccountRepository = $authenticationAccountRepository;
-        $this->authConfirmationRepository = $authConfirmationRepository;
+        $this->definitiveRegistrationConfirmationRepository = $definitiveRegistrationConfirmationRepository;
         $this->transactionManage = $transactionManage;
         $this->authenticationAccountService = new AuthenticationAccountService($authenticationAccountRepository);
         $this->emailSender = $emailSender;
@@ -53,16 +53,16 @@ class UserRegistration
             $this->authenticationAccountService
         );
 
-        $authConfirmation = AuthConfirmation::create(
+        $definitiveRegistrationConfirmation = DefinitiveRegistrationConfirmation::create(
             $authAccount->id(), 
             $oneTimeToken, 
-            new OneTimeTokenExistsService($this->authConfirmationRepository)
+            new OneTimeTokenExistsService($this->definitiveRegistrationConfirmationRepository)
         );
 
         try {
-            $this->transactionManage->performTransaction(function () use ($authAccount, $authConfirmation) {
+            $this->transactionManage->performTransaction(function () use ($authAccount, $definitiveRegistrationConfirmation) {
                 $this->authenticationAccountRepository->save($authAccount);
-                $this->authConfirmationRepository->save($authConfirmation);
+                $this->definitiveRegistrationConfirmationRepository->save($definitiveRegistrationConfirmation);
             });
         } catch (\Exception $e) {
             throw new TransactionException($e->getMessage());
@@ -71,8 +71,8 @@ class UserRegistration
         $this->emailSender->send(
             VerifiedUpdateEmailDtoFactory::create(
                 $email,
-                $authConfirmation->oneTimeToken(),
-                $authConfirmation->oneTimePassword()
+                $definitiveRegistrationConfirmation->oneTimeToken(),
+                $definitiveRegistrationConfirmation->oneTimePassword()
             )
         );
     }

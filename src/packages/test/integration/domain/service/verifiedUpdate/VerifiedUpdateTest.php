@@ -4,26 +4,26 @@ namespace packages\domain\service\verifiedUpdate;
 
 use App\Models\AuthenticationInformation as EloquentAuthenticationInformation;
 use App\Models\User as EloquentUser;
-use App\Models\AuthConfirmation as EloquentAuthConfirmation;
+use App\Models\definitiveRegistrationConfirmation as EloquentDefinitiveRegistrationConfirmation;
 use DateTimeImmutable;
 use DomainException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use packages\adapter\persistence\eloquent\EloquentAuthConfirmationRepository;
+use packages\adapter\persistence\eloquent\EloquentDefinitiveRegistrationConfirmationRepository;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
 use packages\adapter\transactionManage\EloquentTransactionManage;
-use packages\domain\model\authConfirmation\OneTimePassword;
-use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenExpiration;
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\authenticationAccount\VerificationStatus;
-use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
+use packages\test\helpers\definitiveRegistrationConfirmation\definitiveRegistrationConfirmationTestDataCreator;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use Tests\TestCase;
 
 class VerifiedUpdateTest extends TestCase
 {
-    private EloquentAuthConfirmationRepository $authConfirmationRepository;
+    private EloquentDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private EloquentAuthenticationAccountRepository $authenticationAccountRepository;
-    private AuthConfirmationTestDataCreator $authConfirmationTestDataCreator;
+    private DefinitiveRegistrationConfirmationTestDataCreator $definitiveRegistrationConfirmationTestDataCreator;
     private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
     private VerifiedUpdate $verifiedUpdate;
 
@@ -32,20 +32,20 @@ class VerifiedUpdateTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->authConfirmationRepository = new EloquentAuthConfirmationRepository();
+        $this->definitiveRegistrationConfirmationRepository = new EloquentDefinitiveRegistrationConfirmationRepository();
         $this->authenticationAccountRepository = new EloquentAuthenticationAccountRepository();
         $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($this->authenticationAccountRepository);
-        $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator($this->authConfirmationRepository, $this->authenticationAccountRepository);
+        $this->definitiveRegistrationConfirmationTestDataCreator = new DefinitiveRegistrationConfirmationTestDataCreator($this->definitiveRegistrationConfirmationRepository, $this->authenticationAccountRepository);
         $transactionManage = new EloquentTransactionManage();
         $this->verifiedUpdate = new VerifiedUpdate(
             $this->authenticationAccountRepository,
-            $this->authConfirmationRepository,
+            $this->definitiveRegistrationConfirmationRepository,
             $transactionManage
         );
 
         // テスト前にデータを全削除する
         EloquentAuthenticationInformation::query()->delete();
-        EloquentAuthConfirmation::query()->delete();
+        EloquentDefinitiveRegistrationConfirmation::query()->delete();
         EloquentUser::query()->delete();
     }
 
@@ -56,11 +56,11 @@ class VerifiedUpdateTest extends TestCase
         $authInfo = $this->authenticationAccountTestDataCreator->create(
             verificationStatus: VerificationStatus::Unverified
         );
-        $authConfirmation = $this->authConfirmationTestDataCreator->create($authInfo->id());
+        $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create($authInfo->id());
 
-        $oneTimeToken = $authConfirmation->oneTimeToken();
+        $oneTimeToken = $definitiveRegistrationConfirmation->oneTimeToken();
         $oneTimeTokenValue = $oneTimeToken->TokenValue();
-        $oneTimePassword = $authConfirmation->oneTimePassword();
+        $oneTimePassword = $definitiveRegistrationConfirmation->oneTimePassword();
 
         // when
         $this->verifiedUpdate->handle($oneTimeTokenValue, $oneTimePassword);
@@ -71,7 +71,7 @@ class VerifiedUpdateTest extends TestCase
         $this->assertTrue($actualAuthInfo->isVerified());
 
         // 認証確認情報が削除されていることを確認
-        $this->assertNull($this->authConfirmationRepository->findByTokenValue($oneTimeTokenValue));
+        $this->assertNull($this->definitiveRegistrationConfirmationRepository->findByTokenValue($oneTimeTokenValue));
     }
 
     public function test_ワンタイムパスワードが正しくない場合に、認証アカウントを確認済みに更新できない()
@@ -82,12 +82,12 @@ class VerifiedUpdateTest extends TestCase
             verificationStatus: VerificationStatus::Unverified
         );
         $oneTimePassword = OneTimePassword::create('111111');
-        $authConfirmation = $this->authConfirmationTestDataCreator->create(
+        $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create(
             userId: $authInfo->id(),
             oneTimePassword: $oneTimePassword
         );
 
-        $oneTimeToken = $authConfirmation->oneTimeToken();
+        $oneTimeToken = $definitiveRegistrationConfirmation->oneTimeToken();
         $oneTimeTokenValue = $oneTimeToken->TokenValue();
         // 正しくないワンタイムパスワードを入力する
         $oneTimePassword = OneTimePassword::reconstruct('666666');
@@ -107,14 +107,14 @@ class VerifiedUpdateTest extends TestCase
         );
         // 有効期限が切れているワンタイムトークンを生成
         $oneTimeTokenExpiration = OneTimeTokenExpiration::reconstruct(new DateTimeImmutable('-1 day'));
-        $authConfirmation = $this->authConfirmationTestDataCreator->create(
+        $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create(
             userId: $authInfo->id(),
             oneTimeTokenExpiration: $oneTimeTokenExpiration
         );
 
-        $oneTimeToken = $authConfirmation->oneTimeToken();
+        $oneTimeToken = $definitiveRegistrationConfirmation->oneTimeToken();
         $oneTimeTokenValue = $oneTimeToken->tokenValue();
-        $oneTimePassword = $authConfirmation->oneTimePassword();
+        $oneTimePassword = $definitiveRegistrationConfirmation->oneTimePassword();
 
         // when
         $this->expectException(DomainException::class);

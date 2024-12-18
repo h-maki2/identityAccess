@@ -3,10 +3,10 @@
 namespace packages\application\authentication\verifiedUpdate\update;
 
 use DateTimeImmutable;
-use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
-use packages\domain\model\authConfirmation\OneTimePassword;
-use packages\domain\model\authConfirmation\OneTimeTokenValue;
-use packages\domain\model\authConfirmation\validation\AuthConfirmationValidation;
+use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
+use packages\domain\model\definitiveRegistrationConfirmation\validation\definitiveRegistrationConfirmationValidation;
 use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
 use packages\domain\model\common\transactionManage\TransactionManage;
 use packages\domain\service\verifiedUpdate\VerifiedUpdate;
@@ -16,23 +16,23 @@ use packages\domain\service\verifiedUpdate\VerifiedUpdate;
  */
 class VerifiedUpdateApplicationService implements VerifiedUpdateInputBoundary
 {
-    private IAuthConfirmationRepository $authConfirmationRepository;
+    private IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private VerifiedUpdate $verifiedUpdate;
-    private AuthConfirmationValidation $authConfirmationValidation;
+    private DefinitiveRegistrationConfirmationValidation $definitiveRegistrationConfirmationValidation;
 
     public function __construct(
         IAuthenticationAccountRepository $authenticationAccountRepository,
-        IAuthConfirmationRepository $authConfirmationRepository,
+        IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository,
         TransactionManage $transactionManage
     )
     {
-        $this->authConfirmationRepository = $authConfirmationRepository;
+        $this->definitiveRegistrationConfirmationRepository = $definitiveRegistrationConfirmationRepository;
         $this->verifiedUpdate = new VerifiedUpdate(
             $authenticationAccountRepository,
-            $this->authConfirmationRepository,
+            $this->definitiveRegistrationConfirmationRepository,
             $transactionManage
         );
-        $this->authConfirmationValidation = new AuthConfirmationValidation($this->authConfirmationRepository);
+        $this->definitiveRegistrationConfirmationValidation = new DefinitiveRegistrationConfirmationValidation($this->definitiveRegistrationConfirmationRepository);
     }
 
     /**
@@ -40,7 +40,7 @@ class VerifiedUpdateApplicationService implements VerifiedUpdateInputBoundary
      */
     public function verifiedUpdate(string $oneTimeTokenValueString, string $oneTimePasswordString): VerifiedUpdateResult
     {
-        if (!$this->authConfirmationValidation->validate($oneTimePasswordString, $oneTimeTokenValueString)) {
+        if (!$this->definitiveRegistrationConfirmationValidation->validate($oneTimePasswordString, $oneTimeTokenValueString)) {
             return VerifiedUpdateResult::createWhenValidationError('ワンタイムトークンかワンタイムパスワードが無効です。');
         }
 
