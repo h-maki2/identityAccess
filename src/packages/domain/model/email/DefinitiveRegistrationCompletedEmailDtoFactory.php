@@ -12,7 +12,7 @@ use packages\domain\model\email\SendEmailDto;
  */
 class DefinitiveRegistrationCompletedEmailDtoFactory
 {
-    private const DefinitiveRegistrationCompletedUpdateBaseUrl = 'http://localhost:8080/DefinitiveRegistrationCompletedUpdate';
+    private const DefinitiveRegistrationCompleteBaseUrl = 'http://localhost:8080/definitiveRegistrationComplete';
         
     public static function create(
         UserEmail $toAddress,
@@ -21,7 +21,7 @@ class DefinitiveRegistrationCompletedEmailDtoFactory
     ): SendEmailDto
     {
         $templateValiables = [
-            'DefinitiveRegistrationCompletedUpdateUrl' => self::DefinitiveRegistrationCompletedUpdateBaseUrl . '?token=' . $oneTimeToken->tokenValue()->value,
+            'DefinitiveRegistrationCompletedUpdateUrl' => self::DefinitiveRegistrationCompleteBaseUrl . '?token=' . $oneTimeToken->tokenValue()->value,
             'oneTimePassword' => $oneTimePassword->value
         ];
         return new SendEmailDto(

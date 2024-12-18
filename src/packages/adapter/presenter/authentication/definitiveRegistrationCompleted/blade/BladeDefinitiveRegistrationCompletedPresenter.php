@@ -4,7 +4,7 @@ namespace packages\adapter\presenter\authentication\definitiveRegistrationComple
 
 use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompleteResult;
 
-class BladeDefinitiveRegistrationCompletedUpdatePresenter
+class BladeDefinitiveRegistrationCompletedPresenter
 {
     private DefinitiveRegistrationCompleteResult $DefinitiveRegistrationCompleteResult;
 

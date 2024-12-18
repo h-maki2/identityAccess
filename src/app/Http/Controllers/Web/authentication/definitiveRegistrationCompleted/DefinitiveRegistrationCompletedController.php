@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Web\authentication\definitiveRegistrationComplete
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use packages\adapter\presenter\authentication\definitiveRegistrationCompleted\blade\BladeDefinitiveRegistrationCompletedUpdatePresenter;
-use packages\adapter\view\authentication\definitiveRegistrationCompleted\blade\BladeDefinitiveRegistrationCompletedUpdateView;
+use packages\adapter\presenter\authentication\definitiveRegistrationCompleted\blade\BladeDefinitiveRegistrationCompletedPresenter;
+use packages\adapter\view\authentication\definitiveRegistrationCompleted\blade\BladeDefinitiveRegistrationCompletedView;
 use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompleteInputBoundary;
 
 class DefinitiveRegistrationCompletedController extends Controller
@@ -27,8 +27,8 @@ class DefinitiveRegistrationCompletedController extends Controller
             $request->input('oneTimePassword') ?? ''
         );
 
-        $presenter = new BladeDefinitiveRegistrationCompletedUpdatePresenter($output);
-        $view = new BladeDefinitiveRegistrationCompletedUpdateView($presenter);
+        $presenter = new BladeDefinitiveRegistrationCompletedPresenter($output);
+        $view = new BladeDefinitiveRegistrationCompletedView($presenter);
         return $view->response();
     }
 }
