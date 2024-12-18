@@ -110,10 +110,10 @@ class AuthenticationAccountTest extends TestCase
         $this->assertEquals($LoginRestriction, $authenticationAccount->LoginRestriction());
     }
 
-    public function 認証ステータスを認証済みに更新できる()
+    public function 認証ステータスを確認済みに更新できる()
     {
         // given
-        // 認証済みステータスが未認証のユーザープロフィールを作成
+        // 確認済みステータスが未認証のユーザープロフィールを作成
         $verificationStatus = VerificationStatus::Unverified;
         $authenticationAccount = TestAuthenticationAccountFactory::create(
             null,
@@ -128,10 +128,10 @@ class AuthenticationAccountTest extends TestCase
         $this->assertEquals(VerificationStatus::Verified, $authenticationAccount->verificationStatus());
     }
 
-    public function test_認証ステータスが認証済みの場合、パスワードの変更が行える()
+    public function test_認証ステータスが確認済みの場合、パスワードの変更が行える()
     {
         // given
-        // 認証済みステータスが認証済みのユーザープロフィールを作成
+        // 確認済みステータスが確認済みのユーザープロフィールを作成
         $verificationStatus = VerificationStatus::Verified;
         $password = UserPassword::create('124abcABC!');
         $authenticationAccount = TestAuthenticationAccountFactory::create(
@@ -161,7 +161,7 @@ class AuthenticationAccountTest extends TestCase
 
         // when・then
         $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('認証済みのユーザーではありません。');
+        $this->expectExceptionMessage('確認済みのユーザーではありません。');
         $passwordAfterChange = UserPassword::create('124abcABC!_afterChange');
         $authenticationAccount->changePassword($passwordAfterChange, new DateTimeImmutable());
     }
@@ -237,7 +237,7 @@ class AuthenticationAccountTest extends TestCase
 
         // when・then
         $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('認証済みのユーザーではありません。');
+        $this->expectExceptionMessage('確認済みのユーザーではありません。');
         $authenticationAccount->addFailedLoginCount();
     }
 
@@ -286,7 +286,7 @@ class AuthenticationAccountTest extends TestCase
 
         // when・then
         $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('認証済みのユーザーではありません。');
+        $this->expectExceptionMessage('確認済みのユーザーではありません。');
         $authenticationAccount->locking(new DateTimeImmutable());
     }
 

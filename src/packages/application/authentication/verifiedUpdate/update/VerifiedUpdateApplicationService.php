@@ -12,7 +12,7 @@ use packages\domain\model\common\transactionManage\TransactionManage;
 use packages\domain\service\verifiedUpdate\VerifiedUpdate;
 
 /**
- * 認証済み更新を行うアプリケーションサービス
+ * 確認済み更新を行うアプリケーションサービス
  */
 class VerifiedUpdateApplicationService implements VerifiedUpdateInputBoundary
 {
@@ -36,7 +36,7 @@ class VerifiedUpdateApplicationService implements VerifiedUpdateInputBoundary
     }
 
     /**
-     * 認証済み更新を行う
+     * 確認済み更新を行う
      */
     public function verifiedUpdate(string $oneTimeTokenValueString, string $oneTimePasswordString): VerifiedUpdateResult
     {

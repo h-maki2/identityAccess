@@ -71,7 +71,7 @@ class AuthConfirmation
     }
 
     /**
-     * 認証情報を認証済みに更新できるかどうかを判定する
+     * 認証情報を確認済みに更新できるかどうかを判定する
      */
     public function canUpdateVerifiedAuthInfo(OneTimePassword $otherOneTimePassword, DateTimeImmutable $currentDateTime): bool
     {

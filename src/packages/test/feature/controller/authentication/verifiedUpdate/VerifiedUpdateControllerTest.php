@@ -27,7 +27,7 @@ class VerifiedUpdateControllerTest extends TestCase
         $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator($this->authConfirmationRepository, $this->authenticationAccountRepository);
     }
 
-    public function test_正しいワンタイムトークンとワンタイムパスワードを入力して、認証済み更新を行う()
+    public function test_正しいワンタイムトークンとワンタイムパスワードを入力して、確認済み更新を行う()
     {
         // given
         // 認証情報を作成して保存する
@@ -41,7 +41,7 @@ class VerifiedUpdateControllerTest extends TestCase
         $authConfirmation = $this->authConfirmationTestDataCreator->create(userId: $userId);
 
         // when
-        // 認証済み更新を行う
+        // 確認済み更新を行う
         $response = $this->post('/api//verifiedUpdate', [
             'oneTimeTokenValue' => $authConfirmation->oneTimeToken()->value(),
             'oneTimePassword' => $authConfirmation->oneTimePassword()->value

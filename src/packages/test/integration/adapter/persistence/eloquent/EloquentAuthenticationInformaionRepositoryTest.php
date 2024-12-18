@@ -59,7 +59,7 @@ class EloquentAuthenticationInformaionRepositoryTest extends TestCase
     public function test_認証情報を更新できる()
     {
         // given
-        // 認証済みの認証情報を作成して保存しておく
+        // 確認済みの認証情報を作成して保存しておく
         $userId = $this->authenticationAccountRepository->nextUserId();
         $userPassword = UserPassword::create('abcABC123!');
         $this->authenticationAccountTestDataCreator->create(

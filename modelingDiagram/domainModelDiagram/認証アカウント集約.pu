@@ -51,7 +51,7 @@ package "認証アカウント集約(Aggregation)" {
     }
 
     note bottom of AuthenticationAccount
-        ・「認証済みの有無」が「認証済み」の場合のみ、ログインが行える
+        ・「確認済みの有無」が「確認済み」の場合のみ、ログインが行える
         ・退会の場合、ユーザーIDと退会済みステータス以外のデータが削除される
     end note
 
@@ -64,7 +64,7 @@ package "認証アカウント集約(Aggregation)" {
     end note
 
     note bottom of Password
-        ・ステータスが「認証済み」の場合のみパスワードの変更が行える
+        ・ステータスが「確認済み」の場合のみパスワードの変更が行える
         ・ログイン制限中はパスワードの変更が行えない
         ・nextTask: パスワードを変更したときにメールを送信する
     end note

@@ -46,7 +46,7 @@ class VerifiedUpdateTest extends TestCase
         EloquentAuthConfirmation::query()->delete();
     }
 
-    public function test_正しいワンタイムトークンとワンタイムパスワードが入力された場合に、認証情報を認証済みに更新できる()
+    public function test_正しいワンタイムトークンとワンタイムパスワードが入力された場合に、認証情報を確認済みに更新できる()
     {
         // given
         // 認証情報と認証確認情報を作成する
@@ -63,7 +63,7 @@ class VerifiedUpdateTest extends TestCase
         $this->verifiedUpdate->handle($oneTimeTokenValue, $oneTimePassword);
 
         // then
-        // 認証情報が認証済みに更新されていることを確認
+        // 認証情報が確認済みに更新されていることを確認
         $actualAuthInfo = $this->authenticationAccountRepository->findById($authInfo->id());
         $this->assertTrue($actualAuthInfo->isVerified());
 
@@ -71,7 +71,7 @@ class VerifiedUpdateTest extends TestCase
         $this->assertNull($this->authConfirmationRepository->findByTokenValue($oneTimeTokenValue));
     }
 
-    public function test_ワンタイムパスワードが正しくない場合に、認証情報を認証済みに更新できない()
+    public function test_ワンタイムパスワードが正しくない場合に、認証情報を確認済みに更新できない()
     {
         // given
         // 認証情報と認証確認情報を作成する
@@ -91,11 +91,11 @@ class VerifiedUpdateTest extends TestCase
 
         // when・then
         $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('認証情報を認証済みに更新できませんでした。');
+        $this->expectExceptionMessage('認証情報を確認済みに更新できませんでした。');
         $this->verifiedUpdate->handle($oneTimeTokenValue, $oneTimePassword);
     }
 
-    public function test_ワンタイムトークンの有効期限が切れている場合に、認証情報を認証済みに更新できない()
+    public function test_ワンタイムトークンの有効期限が切れている場合に、認証情報を確認済みに更新できない()
     {
         // given
         // 認証情報と認証確認情報を作成する
@@ -115,7 +115,7 @@ class VerifiedUpdateTest extends TestCase
 
         // when
         $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('認証情報を認証済みに更新できませんでした。');
+        $this->expectExceptionMessage('認証情報を確認済みに更新できませんでした。');
         $this->verifiedUpdate->handle($oneTimeTokenValue, $oneTimePassword);
     }
 }

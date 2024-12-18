@@ -8,7 +8,7 @@ use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\email\SendEmailDto;
 
 /**
- * 認証済み更新メールDTOのファクトリ
+ * 確認済み更新メールDTOのファクトリ
  */
 class VerifiedUpdateEmailDtoFactory
 {
@@ -28,7 +28,7 @@ class VerifiedUpdateEmailDtoFactory
             'test@example.com',
             $toAddress->value,
             'システムテスト',
-            '認証済みメール',
+            '確認済みメール',
             'email.verifiedUpdate.verifiedUpdateMail',
             $templateValiables
         );

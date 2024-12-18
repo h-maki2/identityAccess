@@ -106,7 +106,7 @@ class LoginControllerTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             email: new UserEmail($emailString),
             password: UserPassword::create($passwordString),
-            verificationStatus: VerificationStatus::Verified // 認証済み
+            verificationStatus: VerificationStatus::Verified // 確認済み
         );
 
         // クライアントを作成する

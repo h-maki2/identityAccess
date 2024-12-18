@@ -30,10 +30,10 @@ class VerifiedUpdateTest extends TestCase
         $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator($this->authConfirmationRepository, $this->authenticationAccountRepository);
     }
 
-    public function test_入力されたワンタイムパスワードが等しい場合、認証情報を認証済みに更新する()
+    public function test_入力されたワンタイムパスワードが等しい場合、認証情報を確認済みに更新する()
     {
         // given
-        // 認証済みではない認証情報を保存しておく
+        // 確認済みではない認証情報を保存しておく
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
@@ -57,7 +57,7 @@ class VerifiedUpdateTest extends TestCase
         );
 
         // then
-        // 認証情報が認証済みになっていることを確認
+        // 認証情報が確認済みになっていることを確認
         $updatedAuthenticationAccount = $this->authenticationAccountRepository->findById($userId);
         $this->assertEquals(VerificationStatus::Verified, $updatedAuthenticationAccount->verificationStatus());
 
@@ -69,7 +69,7 @@ class VerifiedUpdateTest extends TestCase
     public function test_正しくないワンタイムパスワードが入力された場合に例外が発生する()
     {
         // given
-        // 認証済みではない認証情報を保存しておく
+        // 確認済みではない認証情報を保存しておく
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
@@ -90,7 +90,7 @@ class VerifiedUpdateTest extends TestCase
 
         // when・then
         $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('認証情報を認証済みに更新できませんでした。');
+        $this->expectExceptionMessage('認証情報を確認済みに更新できませんでした。');
         $invalidOneTimePassword = OneTimePassword::reconstruct('654321');
         $verifiedUpdate->handle(
             $authConfirmation->oneTimeToken()->tokenValue(), 
@@ -101,7 +101,7 @@ class VerifiedUpdateTest extends TestCase
     public function test_ワンタイムトークンの有効期限が切れている場合に例外が発生する()
     {
         // given
-        // 認証済みではない認証情報を保存しておく
+        // 確認済みではない認証情報を保存しておく
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
@@ -123,7 +123,7 @@ class VerifiedUpdateTest extends TestCase
 
         // when・then
         $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('認証情報を認証済みに更新できませんでした。');
+        $this->expectExceptionMessage('認証情報を確認済みに更新できませんでした。');
         $verifiedUpdate->handle(
             $authConfirmation->oneTimeToken()->tokenValue(), 
             $authConfirmation->oneTimePassword()

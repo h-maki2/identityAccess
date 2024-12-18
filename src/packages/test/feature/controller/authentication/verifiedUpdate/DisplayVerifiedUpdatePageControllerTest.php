@@ -26,7 +26,7 @@ class DisplayVerifiedUpdatePageControllerTest extends TestCase
         $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator($this->eloquentAuthConfirmationRepository, $this->eloquentAuthenticationAccountRepository);
     }
 
-    public function test_認証済み更新ページを表示できる()
+    public function test_確認済み更新ページを表示できる()
     {
         // given
         // 未認証の認証情報を作成して保存する
@@ -40,7 +40,7 @@ class DisplayVerifiedUpdatePageControllerTest extends TestCase
         $expectedAuthConfirmation = $this->authConfirmationTestDataCreator->create(userId: $userId);
 
         // when
-        // 認証済み更新ページを表示する
+        // 確認済み更新ページを表示する
         $response = $this->get('/api//verifiedUpdate?oneTimeTokenValue=' . $expectedAuthConfirmation->oneTimeToken()->value());
 
         // then

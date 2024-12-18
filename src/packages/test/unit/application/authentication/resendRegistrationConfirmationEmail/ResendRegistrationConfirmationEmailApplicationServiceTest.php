@@ -49,14 +49,14 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
         $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($this->authenticationAccountRepository);
     }
 
-    public function test_認証情報が認証済みではない場合、ワンタイムトークンとワンタイムパスワードの再生成ができる()
+    public function test_認証情報が確認済みではない場合、ワンタイムトークンとワンタイムパスワードの再生成ができる()
     {
         // given
         // 認証情報を作成して保存する
         $userEmail = new UserEmail('test@example.com');
         $authenticationAccount = $this->authenticationAccountTestDataCreator->create(
             email: $userEmail,
-            verificationStatus: VerificationStatus::Unverified // 認証済みではない
+            verificationStatus: VerificationStatus::Unverified // 確認済みではない
         );
 
         // 認証確認を作成して保存する
@@ -113,14 +113,14 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
         $this->assertEquals('メールアドレスが登録されていません。', $result->validationErrorMessage);
     }
 
-    public function test_認証情報がすでに認証済みの場合、バリデーションエラーが発生する()
+    public function test_認証情報がすでに確認済みの場合、バリデーションエラーが発生する()
     {
         // given
         // 認証情報を作成して保存する
         $userEmail = new UserEmail('test@example.com');
         $authenticationAccount = $this->authenticationAccountTestDataCreator->create(
             email: $userEmail,
-            verificationStatus: VerificationStatus::Verified // 認証済み
+            verificationStatus: VerificationStatus::Verified // 確認済み
         );
 
         // 認証確認を作成して保存する
@@ -138,7 +138,7 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
         // then
         // バリデーションエラーが発生していることを確認
         $this->assertTrue($result->validationError);
-        $this->assertEquals('既にアカウントが認証済みです。', $result->validationErrorMessage);
+        $this->assertEquals('既にアカウントが確認済みです。', $result->validationErrorMessage);
     }
 
     public function test_認証情報に紐づく認証確認情報が存在しない場合は例外が発生する()
@@ -148,7 +148,7 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
         $userEmail = new UserEmail('test@example.com');
         $authenticationAccount = $this->authenticationAccountTestDataCreator->create(
             email: $userEmail,
-            verificationStatus: VerificationStatus::Unverified // 認証済みではない
+            verificationStatus: VerificationStatus::Unverified // 確認済みではない
         );
 
         // when・then
