@@ -8,7 +8,7 @@ use packages\application\authentication\definitiveRegistrationCompleted\Definiti
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
-use packages\domain\model\authenticationAccount\VerificationStatus;
+use packages\domain\model\authenticationAccount\DefinitiveRegistrationConfirmationStatus;
 use packages\domain\service\definitiveRegistrationCompleted\definitiveRegistrationCompleted;
 use packages\test\helpers\definitiveRegistrationConfirmation\definitiveRegistrationConfirmationTestDataCreator;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
@@ -53,7 +53,7 @@ class DefinitiveRegistrationCompletedApplicationServiceTest extends TestCase
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
-            verificationStatus: VerificationStatus::Unverified
+            definitiveRegistrationConfirmationStatus: definitiveRegistrationConfirmationStatus::Unverified
         );
         // 認証確認情報を保存しておく
         $oneTimePassword = OneTimePassword::create();
@@ -75,7 +75,7 @@ class DefinitiveRegistrationCompletedApplicationServiceTest extends TestCase
 
         // 認証アカウントが本登録済みになっていることを確認
         $updatedAuthenticationAccount = $this->authenticationAccountRepository->findById($userId, UnsubscribeStatus::Subscribed);
-        $this->assertEquals(VerificationStatus::Verified, $updatedAuthenticationAccount->verificationStatus());
+        $this->assertEquals(definitiveRegistrationConfirmationStatus::Verified, $updatedAuthenticationAccount->DefinitiveRegistrationConfirmationStatus());
 
         // 認証確認情報が削除されていることを確認
         $deletedDefinitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationRepository->findByTokenValue($oneTimeTokenValue);
@@ -89,7 +89,7 @@ class DefinitiveRegistrationCompletedApplicationServiceTest extends TestCase
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
-            verificationStatus: VerificationStatus::Unverified
+            definitiveRegistrationConfirmationStatus: definitiveRegistrationConfirmationStatus::Unverified
         );
         // 認証確認情報を保存しておく
         $oneTimePassword = OneTimePassword::reconstruct('123456');
@@ -118,7 +118,7 @@ class DefinitiveRegistrationCompletedApplicationServiceTest extends TestCase
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
-            verificationStatus: VerificationStatus::Unverified
+            definitiveRegistrationConfirmationStatus: definitiveRegistrationConfirmationStatus::Unverified
         );
         // 認証確認情報を保存しておく
         $oneTimePassword = OneTimePassword::reconstruct('123456');

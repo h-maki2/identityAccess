@@ -12,7 +12,7 @@ class AuthenticationAccount
     private UserId $userId;
     private UserEmail $userEmail;
     private UserPassword $userPassword;
-    private VerificationStatus $verificationStatus;
+    private DefinitiveRegistrationConfirmationStatus $definitiveRegistrationConfirmationStatus;
     private LoginRestriction $loginRestriction;
     private UnsubscribeStatus $unsubscribeStatus;
 
@@ -20,7 +20,7 @@ class AuthenticationAccount
         UserId $userId,
         UserEmail $userEmail,
         UserPassword $userPassword,
-        VerificationStatus $verificationStatus,
+        DefinitiveRegistrationConfirmationStatus $definitiveRegistrationConfirmationStatus,
         LoginRestriction $loginRestriction,
         UnsubscribeStatus $unsubscribeStatus
     )
@@ -32,7 +32,7 @@ class AuthenticationAccount
         $this->userId = $userId;
         $this->userEmail = $userEmail;
         $this->userPassword = $userPassword;
-        $this->verificationStatus = $verificationStatus;
+        $this->definitiveRegistrationConfirmationStatus = $definitiveRegistrationConfirmationStatus;
         $this->loginRestriction = $loginRestriction;
         $this->unsubscribeStatus = $unsubscribeStatus;
     }
@@ -53,7 +53,7 @@ class AuthenticationAccount
             $userId,
             $userEmail,
             $userPassword,
-            VerificationStatus::Unverified,
+            definitiveRegistrationConfirmationStatus::Unverified,
             LoginRestriction::initialization(),
             UnsubscribeStatus::Subscribed
         );
@@ -63,7 +63,7 @@ class AuthenticationAccount
         UserId $userId,
         UserEmail $userEmail,
         UserPassword $userPassword,
-        VerificationStatus $verificationStatus,
+        DefinitiveRegistrationConfirmationStatus $definitiveRegistrationConfirmationStatus,
         LoginRestriction $LoginRestriction,
         UnsubscribeStatus $unsubscribeStatus
     ): self
@@ -72,7 +72,7 @@ class AuthenticationAccount
             $userId,
             $userEmail,
             $userPassword,
-            $verificationStatus,
+            $definitiveRegistrationConfirmationStatus,
             $LoginRestriction,
             $unsubscribeStatus
         );
@@ -93,9 +93,9 @@ class AuthenticationAccount
         return $this->userPassword;
     }
 
-    public function verificationStatus(): VerificationStatus
+    public function DefinitiveRegistrationConfirmationStatus(): DefinitiveRegistrationConfirmationStatus
     {
-        return $this->verificationStatus;
+        return $this->definitiveRegistrationConfirmationStatus;
     }
 
     public function LoginRestriction(): LoginRestriction
@@ -110,7 +110,7 @@ class AuthenticationAccount
 
     public function updateVerified(): void
     {
-        $this->verificationStatus = VerificationStatus::Verified;
+        $this->definitiveRegistrationConfirmationStatus = definitiveRegistrationConfirmationStatus::Verified;
     }
 
     public function updateUnsubscribed(): void
@@ -200,7 +200,7 @@ class AuthenticationAccount
      */
     public function isVerified(): bool
     {
-        return $this->verificationStatus->isVerified();
+        return $this->definitiveRegistrationConfirmationStatus->isVerified();
     }
 
     /**

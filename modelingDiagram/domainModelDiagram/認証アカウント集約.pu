@@ -7,7 +7,7 @@ package "認証アカウント集約(Aggregation)" {
         userId: UserId
         email: Email
         password: Password
-        verificationStatus 本登録済みステータス: VerificationStatus
+        DefinitiveRegistrationConfirmationStatus 本登録済みステータス: DefinitiveRegistrationConfirmationStatus
         loginRestriction ログイン制限: LoginRestriction
         unsubscribeStatus: 退会済みステータス: UnsubscribeStatus
     }
@@ -24,7 +24,7 @@ package "認証アカウント集約(Aggregation)" {
         - value: string
     }
 
-    class "VerificationStatus\n本登録済みステータス" as VerificationStatus {
+    class "DefinitiveRegistrationConfirmationStatus\n本登録済みステータス" as DefinitiveRegistrationConfirmationStatus {
         + value: Enum { verified(本登録済み), unverified(未確認)}
     }
 
@@ -59,7 +59,7 @@ package "認証アカウント集約(Aggregation)" {
         userIdはULIDやUUIDv7などの時系列ソート可能なIDを用いる
     end note
 
-    note bottom of VerificationStatus
+    note bottom of DefinitiveRegistrationConfirmationStatus
         本登録確認メールでの確認が済んだら「本登録済み」になる 
     end note
 
@@ -99,7 +99,7 @@ package "認証アカウント集約(Aggregation)" {
     AuthenticationAccount *-down- UserName
     AuthenticationAccount *-down- UserEmail
     AuthenticationAccount *-down- UserPassword
-    AuthenticationAccount *-down- VerificationStatus
+    AuthenticationAccount *-down- DefinitiveRegistrationConfirmationStatus
 }
 
 package "認証確認(AuthenticationConfirmation)" {

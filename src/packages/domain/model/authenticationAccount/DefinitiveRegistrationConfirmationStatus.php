@@ -2,7 +2,7 @@
 
 namespace packages\domain\model\authenticationAccount;
 
-enum VerificationStatus: string
+enum definitiveRegistrationConfirmationStatus: string
 {
     case Verified = '1';
     case Unverified = '0';
@@ -10,7 +10,7 @@ enum VerificationStatus: string
     public function displayValue(): string
     {
         return match($this) {
-            self::Verified => '本登録済み',
+            self::Verified => '確認済み',
             self::Unverified => '未確認'
         };
     }

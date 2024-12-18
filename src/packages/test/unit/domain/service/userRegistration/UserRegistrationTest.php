@@ -6,7 +6,7 @@ use packages\domain\model\definitiveRegistrationConfirmation\OneTimeToken;
 use packages\domain\model\email\SendEmailDto;
 use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\UserPassword;
-use packages\domain\model\authenticationAccount\VerificationStatus;
+use packages\domain\model\authenticationAccount\DefinitiveRegistrationConfirmationStatus;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\service\userRegistration\UserRegistration;
 use packages\test\helpers\transactionManage\TestTransactionManage;
@@ -57,7 +57,7 @@ class UserRegistrationTest extends TestCase
         // then
         // ユーザーが未認証状態で登録されていることを確認
         $actualAuthInfo = $this->authenticationAccountRepository->findByEmail($userEmail);
-        $this->assertEquals(VerificationStatus::Unverified, $actualAuthInfo->verificationStatus());
+        $this->assertEquals(definitiveRegistrationConfirmationStatus::Unverified, $actualAuthInfo->DefinitiveRegistrationConfirmationStatus());
         $this->assertEquals($userPassword, $actualAuthInfo->password());
 
         // 認証確認情報が保存されていることを確認

@@ -6,7 +6,7 @@ use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepositor
 use packages\adapter\presenter\common\json\JsonResponseStatus;
 use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\UserPassword;
-use packages\domain\model\authenticationAccount\VerificationStatus;
+use packages\domain\model\authenticationAccount\DefinitiveRegistrationConfirmationStatus;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\authenticationAccount\TestAccessTokenCreator;
 use packages\test\helpers\client\ClientTestDataCreator;
@@ -106,7 +106,7 @@ class LoginControllerTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             email: new UserEmail($emailString),
             password: UserPassword::create($passwordString),
-            verificationStatus: VerificationStatus::Verified // 本登録済み
+            definitiveRegistrationConfirmationStatus: definitiveRegistrationConfirmationStatus::Verified // 本登録済み
         );
 
         // クライアントを作成する

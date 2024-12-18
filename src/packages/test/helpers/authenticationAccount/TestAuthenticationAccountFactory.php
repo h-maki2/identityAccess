@@ -9,14 +9,14 @@ use packages\domain\model\authenticationAccount\UserId;
 use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\authenticationAccount\AuthenticationAccount;
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
-use packages\domain\model\authenticationAccount\VerificationStatus;
+use packages\domain\model\authenticationAccount\DefinitiveRegistrationConfirmationStatus;
 
 class TestAuthenticationAccountFactory
 {
     public static function create(
         ?UserEmail $email = null,
         ?UserPassword $password = null,
-        ?VerificationStatus $verificationStatus = null,
+        ?DefinitiveRegistrationConfirmationStatus $definitiveRegistrationConfirmationStatus = null,
         ?UserId $id = null,
         ?LoginRestriction $loginRestriction = null,
         ?UnsubscribeStatus $unsubscribeStatus = null
@@ -27,7 +27,7 @@ class TestAuthenticationAccountFactory
             $id ?? $authInfoRepository->nextUserId(),
             $email ?? TestUserEmailFactory::create(),
             $password ?? UserPassword::create('ABCabc123_'),
-            $verificationStatus ?? VerificationStatus::Verified,
+            $definitiveRegistrationConfirmationStatus ?? definitiveRegistrationConfirmationStatus::Verified,
             $loginRestriction ?? LoginRestriction::initialization(),
             $unsubscribeStatus ?? UnsubscribeStatus::Subscribed
         );

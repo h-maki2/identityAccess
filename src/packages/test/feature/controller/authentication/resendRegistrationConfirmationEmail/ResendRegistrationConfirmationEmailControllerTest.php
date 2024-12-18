@@ -4,7 +4,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use packages\adapter\persistence\eloquent\EloquentDefinitiveRegistrationConfirmationRepository;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
 use packages\domain\model\authenticationAccount\UserEmail;
-use packages\domain\model\authenticationAccount\VerificationStatus;
+use packages\domain\model\authenticationAccount\DefinitiveRegistrationConfirmationStatus;
 use packages\test\helpers\definitiveRegistrationConfirmation\definitiveRegistrationConfirmationTestDataCreator;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use Tests\TestCase;
@@ -36,7 +36,7 @@ class ResendRegistrationConfirmationEmailControllerTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             email: $userEmail, 
             id: $userId,
-            verificationStatus: VerificationStatus::Unverified
+            definitiveRegistrationConfirmationStatus: definitiveRegistrationConfirmationStatus::Unverified
         );
 
         // 認証確認を作成して保存する

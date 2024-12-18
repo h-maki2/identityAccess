@@ -12,7 +12,7 @@ use packages\domain\model\authenticationAccount\SessionAuthentication;
 use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\UserId;
 use packages\domain\model\authenticationAccount\UserPassword;
-use packages\domain\model\authenticationAccount\VerificationStatus;
+use packages\domain\model\authenticationAccount\DefinitiveRegistrationConfirmationStatus;
 use packages\domain\model\oauth\client\IClientFetcher;
 use packages\domain\model\oauth\client\RedirectUrl;
 use packages\domain\model\oauth\scope\Scope;
@@ -69,7 +69,7 @@ class LoginApplicationServiceTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             $email,
             $password,
-            VerificationStatus::Verified,
+            definitiveRegistrationConfirmationStatus::Verified,
             $userId
         );
         
@@ -124,7 +124,7 @@ class LoginApplicationServiceTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             $email,
             $password,
-            VerificationStatus::Verified
+            definitiveRegistrationConfirmationStatus::Verified
         );
 
         // when
@@ -167,7 +167,7 @@ class LoginApplicationServiceTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             $email,
             $password,
-            VerificationStatus::Verified
+            definitiveRegistrationConfirmationStatus::Verified
         );
 
         // when
@@ -216,7 +216,7 @@ class LoginApplicationServiceTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             $email,
             $password,
-            VerificationStatus::Verified,
+            definitiveRegistrationConfirmationStatus::Verified,
             $userId,
             $loginRestriction
         );
@@ -269,7 +269,7 @@ class LoginApplicationServiceTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             $email,
             $password,
-            VerificationStatus::Verified,
+            definitiveRegistrationConfirmationStatus::Verified,
             $userId,
             $loginRestriction
         );
@@ -330,7 +330,7 @@ class LoginApplicationServiceTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             $email,
             $password,
-            VerificationStatus::Verified,
+            definitiveRegistrationConfirmationStatus::Verified,
             null,
             $loginRestriction
         );
@@ -379,7 +379,7 @@ class LoginApplicationServiceTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             $email,
             $password,
-            VerificationStatus::Verified,
+            definitiveRegistrationConfirmationStatus::Verified,
             null,
             $loginRestriction
         );

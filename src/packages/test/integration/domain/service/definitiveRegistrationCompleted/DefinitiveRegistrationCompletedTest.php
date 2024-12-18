@@ -14,7 +14,7 @@ use packages\adapter\transactionManage\EloquentTransactionManage;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenExpiration;
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
-use packages\domain\model\authenticationAccount\VerificationStatus;
+use packages\domain\model\authenticationAccount\DefinitiveRegistrationConfirmationStatus;
 use packages\test\helpers\definitiveRegistrationConfirmation\definitiveRegistrationConfirmationTestDataCreator;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use Tests\TestCase;
@@ -54,7 +54,7 @@ class DefinitiveRegistrationCompletedTest extends TestCase
         // given
         // 認証アカウントと認証確認情報を作成する
         $authInfo = $this->authenticationAccountTestDataCreator->create(
-            verificationStatus: VerificationStatus::Unverified
+            definitiveRegistrationConfirmationStatus: definitiveRegistrationConfirmationStatus::Unverified
         );
         $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create($authInfo->id());
 
@@ -79,7 +79,7 @@ class DefinitiveRegistrationCompletedTest extends TestCase
         // given
         // 認証アカウントと認証確認情報を作成する
         $authInfo = $this->authenticationAccountTestDataCreator->create(
-            verificationStatus: VerificationStatus::Unverified
+            definitiveRegistrationConfirmationStatus: definitiveRegistrationConfirmationStatus::Unverified
         );
         $oneTimePassword = OneTimePassword::create('111111');
         $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create(
@@ -103,7 +103,7 @@ class DefinitiveRegistrationCompletedTest extends TestCase
         // given
         // 認証アカウントと認証確認情報を作成する
         $authInfo = $this->authenticationAccountTestDataCreator->create(
-            verificationStatus: VerificationStatus::Unverified
+            definitiveRegistrationConfirmationStatus: definitiveRegistrationConfirmationStatus::Unverified
         );
         // 有効期限が切れているワンタイムトークンを生成
         $oneTimeTokenExpiration = OneTimeTokenExpiration::reconstruct(new DateTimeImmutable('-1 day'));

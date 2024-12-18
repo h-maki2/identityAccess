@@ -10,7 +10,7 @@ use packages\domain\model\authenticationAccount\UserName;
 use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\authenticationAccount\AuthenticationAccount;
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
-use packages\domain\model\authenticationAccount\VerificationStatus;
+use packages\domain\model\authenticationAccount\DefinitiveRegistrationConfirmationStatus;
 
 class AuthenticationAccountTestDataCreator
 {
@@ -24,7 +24,7 @@ class AuthenticationAccountTestDataCreator
     public function create(
         ?UserEmail $email = null,
         ?UserPassword $password = null,
-        ?VerificationStatus $verificationStatus = null,
+        ?DefinitiveRegistrationConfirmationStatus $definitiveRegistrationConfirmationStatus = null,
         ?UserId $id = null,
         ?LoginRestriction $LoginRestriction = null,
         ?UnsubscribeStatus $unsubscribeStatus = null
@@ -33,7 +33,7 @@ class AuthenticationAccountTestDataCreator
         $authenticationAccount = TestAuthenticationAccountFactory::create(
             $email,
             $password,
-            $verificationStatus,
+            $definitiveRegistrationConfirmationStatus,
             $id,
             $LoginRestriction,
             $unsubscribeStatus

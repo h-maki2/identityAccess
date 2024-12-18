@@ -6,7 +6,7 @@ use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepositor
 use packages\domain\model\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmation;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
-use packages\domain\model\authenticationAccount\VerificationStatus;
+use packages\domain\model\authenticationAccount\DefinitiveRegistrationConfirmationStatus;
 use packages\test\helpers\definitiveRegistrationConfirmation\definitiveRegistrationConfirmationTestDataCreator;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use Tests\TestCase;
@@ -36,7 +36,7 @@ class DefinitiveRegistrationCompletedControllerTest extends TestCase
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
-            verificationStatus: VerificationStatus::Unverified
+            definitiveRegistrationConfirmationStatus: definitiveRegistrationConfirmationStatus::Unverified
         );
 
         // 認証確認を作成して保存する
@@ -63,7 +63,7 @@ class DefinitiveRegistrationCompletedControllerTest extends TestCase
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
-            verificationStatus: VerificationStatus::Unverified
+            definitiveRegistrationConfirmationStatus: definitiveRegistrationConfirmationStatus::Unverified
         );
 
         // 認証確認を作成して保存する
