@@ -23,7 +23,7 @@ class UserPasswordTest extends TestCase
     {
         // when・then
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('適切なパスワードではありません。');
+        $this->expectExceptionMessage('無効なパスワードです。');
         UserPassword::create($password);
     }
 

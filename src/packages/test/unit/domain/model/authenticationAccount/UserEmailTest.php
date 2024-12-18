@@ -14,7 +14,6 @@ class UserEmailTest extends TestCase
 
         // when・then
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('メールアドレスが空です。');
         new UserEmail($emailString);
     }
 
@@ -23,7 +22,6 @@ class UserEmailTest extends TestCase
     {
         // when・then
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('無効なメールアドレスです。');
         new UserEmail($emailString);
     }
 

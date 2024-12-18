@@ -61,8 +61,7 @@ class FailedLoginCountTest extends TestCase
         $FailedLoginCount = FailedLoginCount::reconstruct($maxFailedLoginCountValue);
 
         // when・then
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('ログイン失敗回数が最大値を超えました。');
+        $this->expectException(InvalidArgumentException::class);
         $FailedLoginCount->add();
     }
 

@@ -12,7 +12,7 @@ class NextLoginAllowedAtTest extends TestCase
         // given
         $currentDateTime = new DateTimeImmutable();
         $expectedDateTime = $currentDateTime->add(new DateInterval('PT10M'));
-        $expectedDateTimeString = $expectedDateTime->format('Y-m-d HH:MM');
+        $expectedDateTimeString = $expectedDateTime->format('Y-m-d H:i');
 
         // when
         $nextLoginAllowedAt = NextLoginAllowedAt::create();
