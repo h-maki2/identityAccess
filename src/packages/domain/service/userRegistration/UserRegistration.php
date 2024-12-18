@@ -17,7 +17,7 @@ use packages\domain\model\common\transactionManage\TransactionManage;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\model\email\VerifiedUpdateEmailDtoFactory;
 use packages\domain\service\authConfirmation\OneTimeTokenExistsService;
-use packages\domain\service\authenticationAccount\authenticationAccountService;
+use packages\domain\service\authenticationAccount\AuthenticationAccountService;
 
 class UserRegistration
 {

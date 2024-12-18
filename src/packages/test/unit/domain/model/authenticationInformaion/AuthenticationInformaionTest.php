@@ -12,7 +12,7 @@ use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\authenticationAccount\AuthenticationAccount;
 use packages\domain\model\authenticationAccount\LoginRestrictionStatus;
 use packages\domain\model\authenticationAccount\VerificationStatus;
-use packages\domain\service\authenticationAccount\authenticationAccountService;
+use packages\domain\service\authenticationAccount\AuthenticationAccountService;
 use packages\test\helpers\authenticationAccount\TestAuthenticationAccountFactory;
 use packages\test\helpers\authenticationAccount\authenticationAccountTestDataFactory;
 use PHPUnit\Framework\TestCase;

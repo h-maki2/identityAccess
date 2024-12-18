@@ -5,7 +5,7 @@ namespace packages\domain\model\authenticationAccount;
 use DateTimeImmutable;
 use DomainException;
 use Laravel\Passport\Exceptions\InvalidAuthTokenException;
-use packages\domain\service\authenticationAccount\authenticationAccountService;
+use packages\domain\service\authenticationAccount\AuthenticationAccountService;
 
 class AuthenticationAccount
 {

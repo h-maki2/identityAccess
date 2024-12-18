@@ -1,6 +1,7 @@
 <?php
 
-use App\Models\authenticationAccount as EloquentAuthenticationAccount;
+use App\Models\AuthenticationInformation as EloquentAuthenticationInformation;
+use App\Models\User as EloquentUser;
 use App\Models\AuthConfirmation as EloquentAuthConfirmation;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use packages\adapter\email\LaravelEmailSender;
@@ -58,8 +59,9 @@ class UserRegistrationTest extends TestCase
         );
 
         // テスト前にデータを全削除する
-        EloquentAuthenticationAccount::query()->delete();
+        EloquentAuthenticationInformation::query()->delete();
         EloquentAuthConfirmation::query()->delete();
+        EloquentUser::query()->delete();
     }
 
     public function test_ユーザー登録が成功する()

@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
 use packages\adapter\transactionManage\EloquentTransactionManage;
+use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\test\helpers\authenticationAccount\TestAuthenticationAccountFactory;
 use Tests\TestCase;
 
@@ -35,7 +36,7 @@ class EloquentTransactionManageTest extends TestCase
 
         // then
         // 認証アカウントが登録されていることを確認する
-        $actualAuthInfo = $this->authenticationAccountRepository->findById($userId);
+        $actualAuthInfo = $this->authenticationAccountRepository->findById($userId, UnsubscribeStatus::Subscribed);
         $this->assertNotEmpty($actualAuthInfo);
     }
 
@@ -58,7 +59,7 @@ class EloquentTransactionManageTest extends TestCase
 
         // then
         // 認証アカウントが登録されていないことを確認する
-        $actualAuthInfo = $this->authenticationAccountRepository->findById($userId);
+        $actualAuthInfo = $this->authenticationAccountRepository->findById($userId, UnsubscribeStatus::Subscribed);
         $this->assertEmpty($actualAuthInfo);
     }
 }

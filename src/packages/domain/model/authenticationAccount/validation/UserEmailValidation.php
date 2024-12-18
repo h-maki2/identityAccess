@@ -5,7 +5,7 @@ namespace packages\domain\model\authenticationAccount\validation;
 use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
 use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\common\validator\Validator;
-use packages\domain\service\authenticationAccount\authenticationAccountService;
+use packages\domain\service\authenticationAccount\AuthenticationAccountService;
 use PharIo\Manifest\Email;
 
 class UserEmailValidation extends Validator
