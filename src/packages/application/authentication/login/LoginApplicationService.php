@@ -3,13 +3,13 @@
 namespace packages\application\authentication\login;
 
 use DateTimeImmutable;
-use packages\domain\model\authenticationAccount\AuthenticationService;
 use packages\domain\model\oauth\client\IClientFetcher;
 use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
 use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\oauth\client\ClientId;
 use packages\domain\model\oauth\client\RedirectUrl;
 use packages\domain\model\oauth\scope\ScopeList;
+use packages\domain\service\authenticationAccount\AuthenticationService;
 use UnexpectedValueException;
 
 class LoginApplicationService implements LoginInputBoundary

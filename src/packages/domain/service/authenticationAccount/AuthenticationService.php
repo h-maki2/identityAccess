@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\domain\model\authenticationAccount;
+namespace packages\domain\service\authenticationAccount;
 
 use packages\domain\model\authenticationAccount\UserId;
 
