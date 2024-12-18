@@ -49,6 +49,11 @@ class EloquentAuthenticationAccountRepository implements IAuthenticationAccountR
 
     public function save(AuthenticationAccount $authenticationAccount): void
     {
+        EloquentUser::updateOrCreate(
+            ['user_id' => $authenticationAccount->id()->value],
+            ['unsubscribe' => $authenticationAccount->unsubscribeStatus()->value]
+        );
+
         EloquentAuthenticationInformation::updateOrCreate(
             ['user_id' => $authenticationAccount->id()->value],
             [
