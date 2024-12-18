@@ -4,6 +4,7 @@ namespace packages\domain\model\authenticationAccount;
 
 use DateTimeImmutable;
 use DomainException;
+use Laravel\Passport\Exceptions\InvalidAuthTokenException;
 use packages\domain\service\authenticationAccount\authenticationAccountService;
 
 class AuthenticationAccount
@@ -13,20 +14,27 @@ class AuthenticationAccount
     private UserPassword $userPassword;
     private VerificationStatus $verificationStatus;
     private LoginRestriction $loginRestriction;
+    private UnsubscribeStatus $unsubscribeStatus;
 
     private function __construct(
         UserId $userId,
         UserEmail $userEmail,
         UserPassword $userPassword,
         VerificationStatus $verificationStatus,
-        LoginRestriction $loginRestriction
+        LoginRestriction $loginRestriction,
+        UnsubscribeStatus $unsubscribeStatus
     )
     {
+        if ($unsubscribeStatus->isUnsubscribed()) {
+            throw new InvalidAuthTokenException('退会済みのユーザーです。');
+        }
+
         $this->userId = $userId;
         $this->userEmail = $userEmail;
         $this->userPassword = $userPassword;
         $this->verificationStatus = $verificationStatus;
         $this->loginRestriction = $loginRestriction;
+        $this->unsubscribeStatus = $unsubscribeStatus;
     }
 
     public static function create(
@@ -46,7 +54,8 @@ class AuthenticationAccount
             $userEmail,
             $userPassword,
             VerificationStatus::Unverified,
-            LoginRestriction::initialization()
+            LoginRestriction::initialization(),
+            UnsubscribeStatus::Subscribed
         );
     }
 
@@ -55,7 +64,8 @@ class AuthenticationAccount
         UserEmail $userEmail,
         UserPassword $userPassword,
         VerificationStatus $verificationStatus,
-        LoginRestriction $LoginRestriction
+        LoginRestriction $LoginRestriction,
+        UnsubscribeStatus $unsubscribeStatus
     ): self
     {
         return new self(
@@ -63,7 +73,8 @@ class AuthenticationAccount
             $userEmail,
             $userPassword,
             $verificationStatus,
-            $LoginRestriction
+            $LoginRestriction,
+            $unsubscribeStatus
         );
     }
 
@@ -92,9 +103,19 @@ class AuthenticationAccount
         return $this->loginRestriction;
     }
 
+    public function unsubscribeStatus(): UnsubscribeStatus
+    {
+        return $this->unsubscribeStatus;
+    }
+
     public function updateVerified(): void
     {
         $this->verificationStatus = VerificationStatus::Verified;
+    }
+
+    public function updateUnsubscribed(): void
+    {
+        $this->unsubscribeStatus = UnsubscribeStatus::Unsubscribed;
     }
 
     public function changePassword(UserPassword $password, DateTimeImmutable $currentDateTime): void

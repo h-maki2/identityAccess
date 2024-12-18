@@ -47,7 +47,7 @@ package "認証アカウント集約(Aggregation)" {
     }
 
     class "UnsubscribeStatus\n退会済みステータス" as UnsubscribeStatus {
-        + value: Enum { Unsubscribe(退会済み), NotUnsubscribe(未退会)}
+        + value: Enum { Unsubscribe(退会済み), Subscribed(未退会)}
     }
 
     note bottom of AuthenticationAccount
