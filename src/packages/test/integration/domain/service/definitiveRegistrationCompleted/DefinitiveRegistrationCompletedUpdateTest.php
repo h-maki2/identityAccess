@@ -67,8 +67,8 @@ class DefinitiveRegistrationCompletedUpdateTest extends TestCase
 
         // then
         // 認証アカウントが本登録済みに更新されていることを確認
-        $actualAuthInfo = $this->authenticationAccountRepository->findById($authInfo->id(), UnsubscribeStatus::Subscribed);
-        $this->assertTrue($actualAuthInfo->isCompleted());
+        $actualAuthAccount = $this->authenticationAccountRepository->findById($authInfo->id(), UnsubscribeStatus::Subscribed);
+        $this->assertTrue($actualAuthAccount->hasCompletedRegistration());
 
         // 本登録確認情報が削除されていることを確認
         $this->assertNull($this->definitiveRegistrationConfirmationRepository->findByTokenValue($oneTimeTokenValue));
