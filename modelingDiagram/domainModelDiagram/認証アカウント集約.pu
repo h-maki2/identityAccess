@@ -1,14 +1,15 @@
 @startuml 認証情報関連
 
-title 認証情報関連
+title 認証アカウント集約
 
-package "認証情報集約(Aggregation)" {
-    class "AuthenticationInformation\n認証情報" as AuthenticationInformation << (R,red) RootEntity >> {
+package "認証アカウント集約(Aggregation)" {
+    class "AuthenticationAccount\n認証アカウント" as AuthenticationAccount << (R,red) RootEntity >> {
         userId: UserId
         email: Email
         password: Password
         verificationStatus 確認済みステータス: VerificationStatus
         loginRestriction ログイン制限: LoginRestriction
+        unsubscribeStatus: 退会済みステータス: UnsubscribeStatus
     }
 
     class UserId {
@@ -45,8 +46,13 @@ package "認証情報集約(Aggregation)" {
         - value: DatetimeImutable
     }
 
-    note bottom of AuthenticationInformation
-        「認証済みの有無」が「認証済み」の場合のみ、ログインが行える
+    class "UnsubscribeStatus\n退会済みステータス" as UnsubscribeStatus {
+        + value: Enum { Unsubscribe(退会済み), NotUnsubscribe(未退会)}
+    }
+
+    note bottom of AuthenticationAccount
+        ・「認証済みの有無」が「認証済み」の場合のみ、ログインが行える
+        ・退会の場合、ユーザーIDと退会済みステータス以外のデータが削除される
     end note
 
     note bottom of UserId
@@ -54,12 +60,12 @@ package "認証情報集約(Aggregation)" {
     end note
 
     note bottom of VerificationStatus
-        認証確認メールでの認証が済んだら「認証済み」になる 
+        本登録確認メールでの確認が済んだら「確認済み」になる 
     end note
 
     note bottom of Password
-        ・パスワードはArgon2アルゴリズムを用いてハッシュ化する
         ・ステータスが「認証済み」の場合のみパスワードの変更が行える
+        ・ログイン制限中はパスワードの変更が行えない
         ・nextTask: パスワードを変更したときにメールを送信する
     end note
 
@@ -84,11 +90,16 @@ package "認証情報集約(Aggregation)" {
         ・ログイン制限が解除された場合、ログイン制限ステータスが「制限なし」になる
     end note
 
-    AuthenticationInformation *-down- UserId
-    AuthenticationInformation *-down- UserName
-    AuthenticationInformation *-down- UserEmail
-    AuthenticationInformation *-down- UserPassword
-    AuthenticationInformation *-down- VerificationStatus
+    end bottom of UnsubscribeStatus
+        ・ログイン制限中は退会済みに更新できない
+        ・確認ステータスが未確認の場合は、退会済みに更新できない
+    end note
+
+    AuthenticationAccount *-down- UserId
+    AuthenticationAccount *-down- UserName
+    AuthenticationAccount *-down- UserEmail
+    AuthenticationAccount *-down- UserPassword
+    AuthenticationAccount *-down- VerificationStatus
 }
 
 package "認証確認(AuthenticationConfirmation)" {
@@ -124,7 +135,7 @@ package "認証確認(AuthenticationConfirmation)" {
     end note
 
     AuthenticationConfirmation *-down- OneTimeToken
-    AuthenticationConfirmation -down-> AuthenticationInformation.UserId
+    AuthenticationConfirmation -down-> AuthenticationAccount.UserId
 }
 
 @enduml
