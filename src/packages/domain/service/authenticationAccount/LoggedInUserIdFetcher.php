@@ -2,7 +2,6 @@
 
 namespace packages\domain\service\authenticationAccount;
 
-use packages\domain\model\authenticationAccount\AuthenticationService;
 use packages\domain\model\authenticationAccount\UserId;
 use packages\domain\model\common\exception\AuthenticationException;
 use packages\domain\model\oauth\scope\IScopeAuthorizationChecker;
