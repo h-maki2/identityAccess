@@ -2,7 +2,7 @@
 
 use App\Models\AuthenticationInformation as EloquentAuthenticationInformation;
 use App\Models\User as EloquentUser;
-use App\Models\definitiveRegistrationConfirmation as EloquentDefinitiveRegistrationConfirmation;
+use App\Models\DefinitiveRegistrationConfirmation as EloquentDefinitiveRegistrationConfirmation;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use packages\adapter\email\LaravelEmailSender;
 use packages\adapter\persistence\eloquent\EloquentDefinitiveRegistrationConfirmationRepository;

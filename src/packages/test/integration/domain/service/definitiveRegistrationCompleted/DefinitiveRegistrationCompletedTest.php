@@ -4,7 +4,7 @@ namespace packages\domain\service\definitiveRegistrationCompleted;
 
 use App\Models\AuthenticationInformation as EloquentAuthenticationInformation;
 use App\Models\User as EloquentUser;
-use App\Models\definitiveRegistrationConfirmation as EloquentDefinitiveRegistrationConfirmation;
+use App\Models\DefinitiveRegistrationConfirmation as EloquentDefinitiveRegistrationConfirmation;
 use DateTimeImmutable;
 use DomainException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;

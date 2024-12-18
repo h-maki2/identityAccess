@@ -2,7 +2,7 @@
 
 namespace packages\adapter\persistence\eloquent;
 
-use App\Models\definitiveRegistrationConfirmation as EloquentDefinitiveRegistrationConfirmation;
+use App\Models\DefinitiveRegistrationConfirmation as EloquentDefinitiveRegistrationConfirmation;
 use DateTimeImmutable;
 use packages\domain\model\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmation;
 use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
