@@ -2,27 +2,27 @@
 
 namespace packages\domain\service\verifiedUpdate;
 
-use App\Models\AuthenticationInformation as EloquentAuthenticationInformation;
+use App\Models\authenticationAccount as EloquentAuthenticationAccount;
 use App\Models\AuthConfirmation as EloquentAuthConfirmation;
 use DateTimeImmutable;
 use DomainException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use packages\adapter\persistence\eloquent\EloquentAuthConfirmationRepository;
-use packages\adapter\persistence\eloquent\EloquentAuthenticationInformationRepository;
+use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
 use packages\adapter\transactionManage\EloquentTransactionManage;
 use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
-use packages\domain\model\authenticationInformation\VerificationStatus;
+use packages\domain\model\authenticationAccount\VerificationStatus;
 use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
-use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataCreator;
+use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
 use Tests\TestCase;
 
 class VerifiedUpdateTest extends TestCase
 {
     private EloquentAuthConfirmationRepository $authConfirmationRepository;
-    private EloquentAuthenticationInformationRepository $authenticationInformationRepository;
+    private EloquentAuthenticationAccountRepository $authenticationAccountRepository;
     private AuthConfirmationTestDataCreator $authConfirmationTestDataCreator;
-    private AuthenticationInformationTestDataCreator $authenticationInformationTestDataCreator;
+    private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
     private VerifiedUpdate $verifiedUpdate;
 
     use DatabaseTransactions;
@@ -31,18 +31,18 @@ class VerifiedUpdateTest extends TestCase
     {
         parent::setUp();
         $this->authConfirmationRepository = new EloquentAuthConfirmationRepository();
-        $this->authenticationInformationRepository = new EloquentAuthenticationInformationRepository();
-        $this->authenticationInformationTestDataCreator = new AuthenticationInformationTestDataCreator($this->authenticationInformationRepository);
-        $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator($this->authConfirmationRepository, $this->authenticationInformationRepository);
+        $this->authenticationAccountRepository = new EloquentAuthenticationAccountRepository();
+        $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($this->authenticationAccountRepository);
+        $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator($this->authConfirmationRepository, $this->authenticationAccountRepository);
         $transactionManage = new EloquentTransactionManage();
         $this->verifiedUpdate = new VerifiedUpdate(
-            $this->authenticationInformationRepository,
+            $this->authenticationAccountRepository,
             $this->authConfirmationRepository,
             $transactionManage
         );
 
         // テスト前にデータを全削除する
-        EloquentAuthenticationInformation::query()->delete();
+        EloquentAuthenticationAccount::query()->delete();
         EloquentAuthConfirmation::query()->delete();
     }
 
@@ -50,7 +50,7 @@ class VerifiedUpdateTest extends TestCase
     {
         // given
         // 認証情報と認証確認情報を作成する
-        $authInfo = $this->authenticationInformationTestDataCreator->create(
+        $authInfo = $this->authenticationAccountTestDataCreator->create(
             verificationStatus: VerificationStatus::Unverified
         );
         $authConfirmation = $this->authConfirmationTestDataCreator->create($authInfo->id());
@@ -64,7 +64,7 @@ class VerifiedUpdateTest extends TestCase
 
         // then
         // 認証情報が認証済みに更新されていることを確認
-        $actualAuthInfo = $this->authenticationInformationRepository->findById($authInfo->id());
+        $actualAuthInfo = $this->authenticationAccountRepository->findById($authInfo->id());
         $this->assertTrue($actualAuthInfo->isVerified());
 
         // 認証確認情報が削除されていることを確認
@@ -75,7 +75,7 @@ class VerifiedUpdateTest extends TestCase
     {
         // given
         // 認証情報と認証確認情報を作成する
-        $authInfo = $this->authenticationInformationTestDataCreator->create(
+        $authInfo = $this->authenticationAccountTestDataCreator->create(
             verificationStatus: VerificationStatus::Unverified
         );
         $oneTimePassword = OneTimePassword::create('111111');
@@ -99,7 +99,7 @@ class VerifiedUpdateTest extends TestCase
     {
         // given
         // 認証情報と認証確認情報を作成する
-        $authInfo = $this->authenticationInformationTestDataCreator->create(
+        $authInfo = $this->authenticationAccountTestDataCreator->create(
             verificationStatus: VerificationStatus::Unverified
         );
         // 有効期限が切れているワンタイムトークンを生成

@@ -5,7 +5,7 @@ namespace packages\domain\service\oneTimeTokenAndPasswordRegeneration;
 use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authConfirmation\OneTimeToken;
-use packages\domain\model\authenticationInformation\AuthenticationInformation;
+use packages\domain\model\authenticationAccount\authenticationAccount;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\model\email\VerifiedUpdateEmailDtoFactory;
 use RuntimeException;
@@ -27,7 +27,7 @@ class OneTimeTokenAndPasswordRegeneration
      * ワンタイムトークンとワンタイムパスワードの再生成を行う
      * 再生成後に本登録確認メールメールを再送する
      */
-    public function handle(AuthenticationInformation $authInfo)
+    public function handle(AuthenticationAccount $authInfo)
     {
         $authConfirmation = $this->authConfirmationRepository->findById($authInfo->id());
         if ($authConfirmation === null) {

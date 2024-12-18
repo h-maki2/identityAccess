@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Laravel\Passport\Client;
 use App\Http\Controllers\Controller;
-use App\Models\AuthenticationInformation;
+use App\Models\authenticationAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -14,8 +14,8 @@ class LoginController extends Controller
     public function index(Request $request)
     {
         // 認証が成功した場合、セッションにユーザーを保存
-        $a = AuthenticationInformation::where('username', 'example_user')->first();
-        $b = AuthenticationInformation::where('user_id', '11111')->first();
+        $a = AuthenticationAccount::where('username', 'example_user')->first();
+        $b = AuthenticationAccount::where('user_id', '11111')->first();
         // print_r($b->user_id);
         Auth::guard('web')->loginUsingId($b->user_id);
         // print Auth::id();

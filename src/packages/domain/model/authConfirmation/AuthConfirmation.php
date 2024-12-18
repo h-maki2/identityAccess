@@ -4,7 +4,7 @@ namespace packages\domain\model\authConfirmation;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
-use packages\domain\model\authenticationInformation\UserId;
+use packages\domain\model\authenticationAccount\UserId;
 use packages\domain\service\authConfirmation\OneTimeTokenExistsService;
 
 class AuthConfirmation

@@ -8,7 +8,7 @@ use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
 use packages\domain\service\authConfirmation\OneTimeTokenExistsService;
 use packages\test\helpers\authConfirmation\TestAuthConfirmationFactory;
 use packages\test\helpers\authConfirmation\TestOneTimeTokenFactory;
-use packages\test\helpers\authenticationInformation\TestUserIdFactory;
+use packages\test\helpers\authenticationAccount\TestUserIdFactory;
 use PHPUnit\Framework\TestCase;
 
 class AuthConfirmationTest extends TestCase

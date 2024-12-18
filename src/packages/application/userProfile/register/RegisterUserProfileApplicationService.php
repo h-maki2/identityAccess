@@ -2,7 +2,7 @@
 
 namespace packages\application\userProfile\register;
 
-use packages\domain\model\authenticationInformation\AuthenticationService;
+use packages\domain\model\authenticationAccount\AuthenticationService;
 use packages\domain\model\common\exception\AuthenticationException;
 use packages\domain\model\common\validator\ValidationHandler;
 use packages\domain\model\oauth\scope\IScopeAuthorizationChecker;
@@ -13,7 +13,7 @@ use packages\domain\model\userProfile\UserName;
 use packages\domain\model\userProfile\UserProfile;
 use packages\domain\model\userProfile\validation\SelfIntroductionTextValidation;
 use packages\domain\model\userProfile\validation\UserNameValidation;
-use packages\domain\service\authenticationInformation\LoggedInUserIdFetcher;
+use packages\domain\service\authenticationAccount\LoggedInUserIdFetcher;
 use packages\domain\service\userProfile\UserProfileService;
 use RuntimeException;
 

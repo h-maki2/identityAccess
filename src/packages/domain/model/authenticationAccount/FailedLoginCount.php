@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\domain\model\authenticationInformation;
+namespace packages\domain\model\authenticationAccount;
 
 use InvalidArgumentException;
 

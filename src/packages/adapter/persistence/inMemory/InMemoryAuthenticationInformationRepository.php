@@ -4,55 +4,55 @@ namespace packages\adapter\persistence\inMemory;
 
 use DateTimeImmutable;
 use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
-use packages\domain\model\authenticationInformation\LoginRestriction;
-use packages\domain\model\authenticationInformation\FailedLoginCount;
-use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
-use packages\domain\model\authenticationInformation\NextLoginAllowedAt;
-use packages\domain\model\authenticationInformation\UserEmail;
-use packages\domain\model\authenticationInformation\UserId;
-use packages\domain\model\authenticationInformation\UserPassword;
-use packages\domain\model\authenticationInformation\AuthenticationInformation;
-use packages\domain\model\authenticationInformation\LoginRestrictionStatus;
-use packages\domain\model\authenticationInformation\VerificationStatus;
+use packages\domain\model\authenticationAccount\LoginRestriction;
+use packages\domain\model\authenticationAccount\FailedLoginCount;
+use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
+use packages\domain\model\authenticationAccount\NextLoginAllowedAt;
+use packages\domain\model\authenticationAccount\UserEmail;
+use packages\domain\model\authenticationAccount\UserId;
+use packages\domain\model\authenticationAccount\UserPassword;
+use packages\domain\model\authenticationAccount\authenticationAccount;
+use packages\domain\model\authenticationAccount\LoginRestrictionStatus;
+use packages\domain\model\authenticationAccount\VerificationStatus;
 use Ramsey\Uuid\Uuid;
 
-class InMemoryAuthenticationInformationRepository implements IAuthenticationInformationRepository
+class InMemoryAuthenticationAccountRepository implements IAuthenticationAccountRepository
 {
-    private array $authenticationInformationList = [];
+    private array $authenticationAccountList = [];
 
-    public function findByEmail(UserEmail $email): ?AuthenticationInformation
+    public function findByEmail(UserEmail $email): ?AuthenticationAccount
     {
-        foreach ($this->authenticationInformationList as $authenticationInformationObj) {
-            if ($authenticationInformationObj->email === $email->value) {
-                return $this->toAuthenticationInformation($authenticationInformationObj);
+        foreach ($this->authenticationAccountList as $authenticationAccountObj) {
+            if ($authenticationAccountObj->email === $email->value) {
+                return $this->toAuthenticationAccount($authenticationAccountObj);
             }
         }
 
         return null;
     }
 
-    public function findById(UserId $id): ?AuthenticationInformation
+    public function findById(UserId $id): ?AuthenticationAccount
     {
-        $authenticationInformationObj = $this->authenticationInformationList[$id->value] ?? null;
-        if ($authenticationInformationObj === null) {
+        $authenticationAccountObj = $this->authenticationAccountList[$id->value] ?? null;
+        if ($authenticationAccountObj === null) {
             return null;
         }
 
-        return $this->toAuthenticationInformation($authenticationInformationObj);
+        return $this->toAuthenticationAccount($authenticationAccountObj);
     }
 
-    public function save(AuthenticationInformation $authenticationInformation): void
+    public function save(AuthenticationAccount $authenticationAccount): void
     {
-        $this->authenticationInformationList[$authenticationInformation->id()->value] = $this->toAuthenticationInformationModel($authenticationInformation);
+        $this->authenticationAccountList[$authenticationAccount->id()->value] = $this->toAuthenticationAccountModel($authenticationAccount);
     }
 
     public function delete(UserId $id): void
     {
-        if (!isset($this->authenticationInformationList[$id()->value])) {
+        if (!isset($this->authenticationAccountList[$id()->value])) {
             return;
         }
 
-        unset($this->authenticationInformationList[$id()->value]);
+        unset($this->authenticationAccountList[$id()->value]);
     }
 
     public function nextUserId(): UserId
@@ -60,31 +60,31 @@ class InMemoryAuthenticationInformationRepository implements IAuthenticationInfo
         return new UserId(Uuid::uuid7());
     }
 
-    private function toAuthenticationInformation(object $authenticationInformationObj): AuthenticationInformation
+    private function toAuthenticationAccount(object $authenticationAccountObj): AuthenticationAccount
     {
-        return AuthenticationInformation::reconstruct(
-            new UserId($authenticationInformationObj->user_id),
-            new UserEmail($authenticationInformationObj->email),
-            UserPassword::reconstruct($authenticationInformationObj->password),
-            VerificationStatus::from($authenticationInformationObj->verification_status),
+        return AuthenticationAccount::reconstruct(
+            new UserId($authenticationAccountObj->user_id),
+            new UserEmail($authenticationAccountObj->email),
+            UserPassword::reconstruct($authenticationAccountObj->password),
+            VerificationStatus::from($authenticationAccountObj->verification_status),
             LoginRestriction::reconstruct(
-                FailedLoginCount::reconstruct($authenticationInformationObj->failed_login_count),
-                LoginRestrictionStatus::from($authenticationInformationObj->login_restriction_status),
-                $authenticationInformationObj->next_login_allowed_at !== null ? NextLoginAllowedAt::reconstruct(new DateTimeImmutable($authenticationInformationObj->next_login_allowed_at)) : null
+                FailedLoginCount::reconstruct($authenticationAccountObj->failed_login_count),
+                LoginRestrictionStatus::from($authenticationAccountObj->login_restriction_status),
+                $authenticationAccountObj->next_login_allowed_at !== null ? NextLoginAllowedAt::reconstruct(new DateTimeImmutable($authenticationAccountObj->next_login_allowed_at)) : null
             )
         );
     }
 
-    private function toAuthenticationInformationModel(AuthenticationInformation $authenticationInformation): object
+    private function toAuthenticationAccountModel(AuthenticationAccount $authenticationAccount): object
     {
         return (object) [
-            'user_id' => $authenticationInformation->id()->value,
-            'email' => $authenticationInformation->email()->value,
-            'password' => $authenticationInformation->password()->hashedValue,
-            'verification_status' => $authenticationInformation->verificationStatus()->value,
-            'failed_login_count' => $authenticationInformation->LoginRestriction()->failedLoginCount(),
-            'next_login_allowed_at' => $authenticationInformation->LoginRestriction()->nextLoginAllowedAt(),
-            'login_restriction_status' => $authenticationInformation->LoginRestriction()->loginRestrictionStatus()
+            'user_id' => $authenticationAccount->id()->value,
+            'email' => $authenticationAccount->email()->value,
+            'password' => $authenticationAccount->password()->hashedValue,
+            'verification_status' => $authenticationAccount->verificationStatus()->value,
+            'failed_login_count' => $authenticationAccount->LoginRestriction()->failedLoginCount(),
+            'next_login_allowed_at' => $authenticationAccount->LoginRestriction()->nextLoginAllowedAt(),
+            'login_restriction_status' => $authenticationAccount->LoginRestriction()->loginRestrictionStatus()
         ];
     }
 }

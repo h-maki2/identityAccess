@@ -2,7 +2,7 @@
 
 namespace packages\test\helpers\userProfile;
 
-use packages\domain\model\authenticationInformation\UserId;
+use packages\domain\model\authenticationAccount\UserId;
 use packages\domain\model\userProfile\SelfIntroductionText;
 use packages\domain\model\userProfile\UserName;
 use packages\domain\model\userProfile\UserProfile;

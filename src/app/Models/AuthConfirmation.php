@@ -22,8 +22,8 @@ class AuthConfirmation extends Model
         'one_time_password',
     ];
 
-    public function authenticationInformation()
+    public function AuthenticationAccount()
     {
-        return $this->belongsTo(AuthenticationInformation::class, 'user_id', 'user_id');
+        return $this->belongsTo(AuthenticationAccount::class, 'user_id', 'user_id');
     }
 }

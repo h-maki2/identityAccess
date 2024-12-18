@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use packages\adapter\persistence\eloquent\EloquentAuthenticationInformationRepository;
+use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
 use packages\domain\model\oauth\scope\Scope;
 use packages\domain\model\oauth\scope\ScopeList;
-use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataCreator;
+use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
 use packages\test\helpers\client\AccessTokenTestDataCreator;
 use Tests\TestCase;
 
@@ -18,7 +18,7 @@ class RegisterUserProfileControllerTest extends TestCase
     {
         parent::setUp();
         $this->accessTokenTestDataCreator = new AccessTokenTestDataCreator(
-            new EloquentAuthenticationInformationRepository()
+            new EloquentAuthenticationAccountRepository()
         );
     }
 

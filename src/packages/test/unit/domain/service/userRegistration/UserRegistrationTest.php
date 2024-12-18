@@ -1,12 +1,12 @@
 <?php
 
 use packages\adapter\persistence\inMemory\InMemoryAuthConfirmationRepository;
-use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
+use packages\adapter\persistence\inMemory\InMemoryAuthenticationAccountRepository;
 use packages\domain\model\authConfirmation\OneTimeToken;
 use packages\domain\model\email\SendEmailDto;
-use packages\domain\model\authenticationInformation\UserEmail;
-use packages\domain\model\authenticationInformation\UserPassword;
-use packages\domain\model\authenticationInformation\VerificationStatus;
+use packages\domain\model\authenticationAccount\UserEmail;
+use packages\domain\model\authenticationAccount\UserPassword;
+use packages\domain\model\authenticationAccount\VerificationStatus;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\service\userRegistration\UserRegistration;
 use packages\test\helpers\transactionManage\TestTransactionManage;
@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 class UserRegistrationTest extends TestCase
 {
     private InMemoryAuthConfirmationRepository $authConfirmationRepository;
-    private InMemoryAuthenticationInformationRepository $authenticationInformationRepository;
+    private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
     private TestTransactionManage $transactionManage;
     private SendEmailDto $capturedSendEmailDto;
     private UserRegistration $userRegistration;
@@ -24,7 +24,7 @@ class UserRegistrationTest extends TestCase
     public function setUp(): void
     {
         $this->authConfirmationRepository = new InMemoryAuthConfirmationRepository();
-        $this->authenticationInformationRepository = new InMemoryAuthenticationInformationRepository();
+        $this->authenticationAccountRepository = new InMemoryAuthenticationAccountRepository();
         $this->transactionManage = new TestTransactionManage();
         
         $emailSender = $this->createMock(IEmailSender::class);
@@ -37,7 +37,7 @@ class UserRegistrationTest extends TestCase
         $this->emailSender = $emailSender;
 
         $this->userRegistration = new UserRegistration(
-            $this->authenticationInformationRepository,
+            $this->authenticationAccountRepository,
             $this->authConfirmationRepository,
             $this->transactionManage,
             $this->emailSender
@@ -56,7 +56,7 @@ class UserRegistrationTest extends TestCase
 
         // then
         // ユーザーが未認証状態で登録されていることを確認
-        $actualAuthInfo = $this->authenticationInformationRepository->findByEmail($userEmail);
+        $actualAuthInfo = $this->authenticationAccountRepository->findByEmail($userEmail);
         $this->assertEquals(VerificationStatus::Unverified, $actualAuthInfo->verificationStatus());
         $this->assertEquals($userPassword, $actualAuthInfo->password());
 

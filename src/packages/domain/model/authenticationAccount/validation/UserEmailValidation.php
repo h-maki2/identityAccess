@@ -1,25 +1,25 @@
 <?php
 
-namespace packages\domain\model\authenticationInformation\validation;
+namespace packages\domain\model\authenticationAccount\validation;
 
-use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
-use packages\domain\model\authenticationInformation\UserEmail;
+use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
+use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\common\validator\Validator;
-use packages\domain\service\AuthenticationInformation\AuthenticationInformationService;
+use packages\domain\service\authenticationAccount\authenticationAccountService;
 use PharIo\Manifest\Email;
 
 class UserEmailValidation extends Validator
 {
     private string $email;
-    private IAuthenticationInformationRepository $authenticationInformationRepository;
+    private IAuthenticationAccountRepository $authenticationAccountRepository;
 
     public function __construct(
         string $email, 
-        IAuthenticationInformationRepository $authenticationInformationRepository
+        IAuthenticationAccountRepository $authenticationAccountRepository
     )
     {
         $this->email = $email;
-        $this->authenticationInformationRepository = $authenticationInformationRepository;
+        $this->authenticationAccountRepository = $authenticationAccountRepository;
     }
 
     public function validate(): bool
@@ -30,8 +30,8 @@ class UserEmailValidation extends Validator
         }
 
         $userEmail = new UserEmail($this->email);
-        $authenticationInformationService = new AuthenticationInformationService($this->authenticationInformationRepository);
-        if ($authenticationInformationService->alreadyExistsEmail($userEmail)) {
+        $authenticationAccountService = new AuthenticationAccountService($this->authenticationAccountRepository);
+        if ($authenticationAccountService->alreadyExistsEmail($userEmail)) {
             $this->setErrorMessage('既に登録されているメールアドレスです。');
             return false;
         }

@@ -8,21 +8,21 @@ use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeToken;
 use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
-use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
-use packages\domain\model\authenticationInformation\UserId;
+use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
+use packages\domain\model\authenticationAccount\UserId;
 
 class AuthConfirmationTestDataCreator
 {
     private IAuthConfirmationRepository $authConfirmationRepository;
-    private IAuthenticationInformationRepository $authenticationInformationRepository;
+    private IAuthenticationAccountRepository $authenticationAccountRepository;
 
     public function __construct(
         IAuthConfirmationRepository $authConfirmationRepository,
-        IAuthenticationInformationRepository $authenticationInformationRepository
+        IAuthenticationAccountRepository $authenticationAccountRepository
     )
     {
         $this->authConfirmationRepository = $authConfirmationRepository;
-        $this->authenticationInformationRepository = $authenticationInformationRepository;
+        $this->authenticationAccountRepository = $authenticationAccountRepository;
     }
 
     public function create(
@@ -32,8 +32,8 @@ class AuthConfirmationTestDataCreator
         ?OneTimePassword $oneTimePassword = null
     ): AuthConfirmation
     {
-        $authenticationInformation = $this->authenticationInformationRepository->findById($userId);
-        if ($authenticationInformation === null) {
+        $authenticationAccount = $this->authenticationAccountRepository->findById($userId);
+        if ($authenticationAccount === null) {
             throw new \RuntimeException('認証情報テーブルに事前にデータを登録してください。');
         }
         $oneTimeToken = TestOneTimeTokenFactory::createOneTimeToken($oneTimeTokenValue, $oneTimeTokenExpiration);

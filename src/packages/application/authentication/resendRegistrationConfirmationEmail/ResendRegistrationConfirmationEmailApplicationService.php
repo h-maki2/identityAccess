@@ -5,8 +5,8 @@ namespace packages\application\authentication\resendRegistrationConfirmationEmai
 use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailResult;
 use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
-use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
-use packages\domain\model\authenticationInformation\UserEmail;
+use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
+use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\service\oneTimeTokenAndPasswordRegeneration\OneTimeTokenAndPasswordRegeneration;
 use RuntimeException;
@@ -17,17 +17,17 @@ use RuntimeException;
 class ResendRegistrationConfirmationEmailApplicationService implements ResendRegistrationConfirmationEmailInputBoundary
 {
     private IAuthConfirmationRepository $authConfirmationRepository;
-    private IAuthenticationInformationRepository $authenticationInformationRepository;
+    private IAuthenticationAccountRepository $authenticationAccountRepository;
     private OneTimeTokenAndPasswordRegeneration $oneTimeTokenAndPasswordRegeneration;
 
     public function __construct(
         IAuthConfirmationRepository $authConfirmationRepository,
-        IAuthenticationInformationRepository $authenticationInformationRepository,
+        IAuthenticationAccountRepository $authenticationAccountRepository,
         IEmailSender $emailSender
     )
     {
         $this->authConfirmationRepository = $authConfirmationRepository;
-        $this->authenticationInformationRepository = $authenticationInformationRepository;
+        $this->authenticationAccountRepository = $authenticationAccountRepository;
         $this->oneTimeTokenAndPasswordRegeneration = new OneTimeTokenAndPasswordRegeneration(
             $this->authConfirmationRepository,
             $emailSender
@@ -42,7 +42,7 @@ class ResendRegistrationConfirmationEmailApplicationService implements ResendReg
     ): ResendRegistrationConfirmationEmailResult
     {
         $userEmail = new UserEmail($userEmailString);
-        $authInfo = $this->authenticationInformationRepository->findByEmail($userEmail);
+        $authInfo = $this->authenticationAccountRepository->findByEmail($userEmail);
         if ($authInfo === null) {
             return ResendRegistrationConfirmationEmailResult::createWhenValidationError('メールアドレスが登録されていません。');
         }

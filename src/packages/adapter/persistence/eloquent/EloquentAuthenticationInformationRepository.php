@@ -2,70 +2,70 @@
 
 namespace packages\adapter\persistence\eloquent;
 
-use App\Models\AuthenticationInformation as EloquentAuthenticationInformation;
+use App\Models\authenticationAccount as EloquentAuthenticationAccount;
 use DateTimeImmutable;
 use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
-use packages\domain\model\authenticationInformation\LoginRestriction;
-use packages\domain\model\authenticationInformation\FailedLoginCount;
-use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
-use packages\domain\model\authenticationInformation\NextLoginAllowedAt;
-use packages\domain\model\authenticationInformation\UserEmail;
-use packages\domain\model\authenticationInformation\UserId;
-use packages\domain\model\authenticationInformation\UserPassword;
-use packages\domain\model\authenticationInformation\AuthenticationInformation;
-use packages\domain\model\authenticationInformation\LoginRestrictionStatus;
-use packages\domain\model\authenticationInformation\VerificationStatus;
+use packages\domain\model\authenticationAccount\LoginRestriction;
+use packages\domain\model\authenticationAccount\FailedLoginCount;
+use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
+use packages\domain\model\authenticationAccount\NextLoginAllowedAt;
+use packages\domain\model\authenticationAccount\UserEmail;
+use packages\domain\model\authenticationAccount\UserId;
+use packages\domain\model\authenticationAccount\UserPassword;
+use packages\domain\model\authenticationAccount\authenticationAccount;
+use packages\domain\model\authenticationAccount\LoginRestrictionStatus;
+use packages\domain\model\authenticationAccount\VerificationStatus;
 use Ramsey\Uuid\Uuid;
 use RuntimeException;
 
-class EloquentAuthenticationInformationRepository implements IAuthenticationInformationRepository
+class EloquentAuthenticationAccountRepository implements IAuthenticationAccountRepository
 {
-    public function findByEmail(UserEmail $email): ?AuthenticationInformation
+    public function findByEmail(UserEmail $email): ?AuthenticationAccount
     {
-        $result = EloquentAuthenticationInformation::where('email', $email->value)->first();
+        $result = EloquentAuthenticationAccount::where('email', $email->value)->first();
 
         if ($result === null) {
             return null;
         }
 
-        return $this->toAuthenticationInformation($result);
+        return $this->toAuthenticationAccount($result);
     }
 
-    public function findById(UserId $id): ?AuthenticationInformation
+    public function findById(UserId $id): ?AuthenticationAccount
     {
-        $result = EloquentAuthenticationInformation::find($id->value);
+        $result = EloquentAuthenticationAccount::find($id->value);
 
         if ($result === null) {
             return null;
         }
 
-        return $this->toAuthenticationInformation($result);
+        return $this->toAuthenticationAccount($result);
     }
 
-    public function save(AuthenticationInformation $authenticationInformation): void
+    public function save(AuthenticationAccount $authenticationAccount): void
     {
-        EloquentAuthenticationInformation::updateOrCreate(
-            ['user_id' => $authenticationInformation->id()->value],
+        EloquentAuthenticationAccount::updateOrCreate(
+            ['user_id' => $authenticationAccount->id()->value],
             [
-                'email' => $authenticationInformation->email()->value,
-                'password' => $authenticationInformation->password()->hashedValue,
-                'verification_status' => $authenticationInformation->verificationStatus()->value,
-                'failed_login_count' => $authenticationInformation->loginRestriction()->failedLoginCount(),
-                'login_restriction_status' => $authenticationInformation->loginRestriction()->loginRestrictionStatus(),
-                'next_login_allowed_at' => $authenticationInformation->loginRestriction()->nextLoginAllowedAt()
+                'email' => $authenticationAccount->email()->value,
+                'password' => $authenticationAccount->password()->hashedValue,
+                'verification_status' => $authenticationAccount->verificationStatus()->value,
+                'failed_login_count' => $authenticationAccount->loginRestriction()->failedLoginCount(),
+                'login_restriction_status' => $authenticationAccount->loginRestriction()->loginRestrictionStatus(),
+                'next_login_allowed_at' => $authenticationAccount->loginRestriction()->nextLoginAllowedAt()
             ]
         );
     }
 
     public function delete(UserId $id): void
     {
-        $eloquentAuthenticationInformation = EloquentAuthenticationInformation::find($id->value);
+        $eloquentAuthenticationAccount = EloquentAuthenticationAccount::find($id->value);
 
-        if ($eloquentAuthenticationInformation === null) {
+        if ($eloquentAuthenticationAccount === null) {
             throw new RuntimeException('認証情報が存在しません。user_id: ' . $id->value);
         }
 
-        $eloquentAuthenticationInformation->delete();
+        $eloquentAuthenticationAccount->delete();
     }
 
     public function nextUserId(): UserId
@@ -73,17 +73,17 @@ class EloquentAuthenticationInformationRepository implements IAuthenticationInfo
         return new UserId(Uuid::uuid7());
     }
 
-    private function toAuthenticationInformation(EloquentAuthenticationInformation $eloquentAuthenticationInformation): AuthenticationInformation
+    private function toAuthenticationAccount(EloquentAuthenticationAccount $eloquentAuthenticationAccount): AuthenticationAccount
     {
-        return AuthenticationInformation::reconstruct(
-            new UserId($eloquentAuthenticationInformation->user_id),
-            new UserEmail($eloquentAuthenticationInformation->email),
-            UserPassword::reconstruct($eloquentAuthenticationInformation->password),
-            VerificationStatus::from($eloquentAuthenticationInformation->verification_status),
+        return AuthenticationAccount::reconstruct(
+            new UserId($eloquentAuthenticationAccount->user_id),
+            new UserEmail($eloquentAuthenticationAccount->email),
+            UserPassword::reconstruct($eloquentAuthenticationAccount->password),
+            VerificationStatus::from($eloquentAuthenticationAccount->verification_status),
             LoginRestriction::reconstruct(
-                FailedLoginCount::reconstruct($eloquentAuthenticationInformation->failed_login_count),
-                LoginRestrictionStatus::from($eloquentAuthenticationInformation->login_restriction_status),
-                $eloquentAuthenticationInformation->next_login_allowed_at !== null ? NextLoginAllowedAt::reconstruct(new DateTimeImmutable($eloquentAuthenticationInformation->next_login_allowed_at)) : null
+                FailedLoginCount::reconstruct($eloquentAuthenticationAccount->failed_login_count),
+                LoginRestrictionStatus::from($eloquentAuthenticationAccount->login_restriction_status),
+                $eloquentAuthenticationAccount->next_login_allowed_at !== null ? NextLoginAllowedAt::reconstruct(new DateTimeImmutable($eloquentAuthenticationAccount->next_login_allowed_at)) : null
             )
         );
     }

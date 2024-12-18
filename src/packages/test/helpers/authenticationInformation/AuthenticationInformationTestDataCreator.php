@@ -1,23 +1,23 @@
 <?php
 
-namespace packages\test\helpers\authenticationInformation;
+namespace packages\test\helpers\authenticationAccount;
 
-use packages\domain\model\authenticationInformation\LoginRestriction;
-use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
-use packages\domain\model\authenticationInformation\UserEmail;
-use packages\domain\model\authenticationInformation\UserId;
-use packages\domain\model\authenticationInformation\UserName;
-use packages\domain\model\authenticationInformation\UserPassword;
-use packages\domain\model\authenticationInformation\AuthenticationInformation;
-use packages\domain\model\authenticationInformation\VerificationStatus;
+use packages\domain\model\authenticationAccount\LoginRestriction;
+use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
+use packages\domain\model\authenticationAccount\UserEmail;
+use packages\domain\model\authenticationAccount\UserId;
+use packages\domain\model\authenticationAccount\UserName;
+use packages\domain\model\authenticationAccount\UserPassword;
+use packages\domain\model\authenticationAccount\authenticationAccount;
+use packages\domain\model\authenticationAccount\VerificationStatus;
 
-class AuthenticationInformationTestDataCreator
+class AuthenticationAccountTestDataCreator
 {
-    private IAuthenticationInformationRepository $authenticationInformationRepository;
+    private IAuthenticationAccountRepository $authenticationAccountRepository;
 
-    public function __construct(IAuthenticationInformationRepository $authenticationInformationRepository)
+    public function __construct(IAuthenticationAccountRepository $authenticationAccountRepository)
     {
-        $this->authenticationInformationRepository = $authenticationInformationRepository;
+        $this->authenticationAccountRepository = $authenticationAccountRepository;
     }
 
     public function create(
@@ -26,9 +26,9 @@ class AuthenticationInformationTestDataCreator
         ?VerificationStatus $verificationStatus = null,
         ?UserId $id = null,
         ?LoginRestriction $LoginRestriction = null
-    ): AuthenticationInformation
+    ): AuthenticationAccount
     {
-        $authenticationInformation = TestAuthenticationInformationFactory::create(
+        $authenticationAccount = TestAuthenticationAccountFactory::create(
             $email,
             $password,
             $verificationStatus,
@@ -36,8 +36,8 @@ class AuthenticationInformationTestDataCreator
             $LoginRestriction
         );
 
-        $this->authenticationInformationRepository->save($authenticationInformation);
+        $this->authenticationAccountRepository->save($authenticationAccount);
 
-        return $authenticationInformation;
+        return $authenticationAccount;
     }
 }

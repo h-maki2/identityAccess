@@ -1,7 +1,7 @@
 <?php
 
 use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
-use packages\domain\model\authenticationInformation\UserId;
+use packages\domain\model\authenticationAccount\UserId;
 use PHPUnit\Framework\TestCase;
 
 class UserIdTest extends TestCase

@@ -1,21 +1,21 @@
 <?php
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use packages\adapter\persistence\eloquent\EloquentAuthenticationInformationRepository;
+use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
 use packages\adapter\transactionManage\EloquentTransactionManage;
-use packages\test\helpers\authenticationInformation\TestAuthenticationInformationFactory;
+use packages\test\helpers\authenticationAccount\TestAuthenticationAccountFactory;
 use Tests\TestCase;
 
 class EloquentTransactionManageTest extends TestCase
 {
     private EloquentTransactionManage $eloquentTransactionManage;
-    private EloquentAuthenticationInformationRepository $authenticationInformationRepository;
+    private EloquentAuthenticationAccountRepository $authenticationAccountRepository;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->eloquentTransactionManage = new EloquentTransactionManage();
-        $this->authenticationInformationRepository = new EloquentAuthenticationInformationRepository();
+        $this->authenticationAccountRepository = new EloquentAuthenticationAccountRepository();
     }
 
     use DatabaseTransactions;
@@ -24,18 +24,18 @@ class EloquentTransactionManageTest extends TestCase
     {
         // given
         // 認証情報を生成する
-        $userId = $this->authenticationInformationRepository->nextUserId();
-        $authInfo = TestAuthenticationInformationFactory::create(id: $userId);
+        $userId = $this->authenticationAccountRepository->nextUserId();
+        $authInfo = TestAuthenticationAccountFactory::create(id: $userId);
 
         // when
         // トランザクションをコミットする
         $this->eloquentTransactionManage->performTransaction(function () use ($authInfo) {
-            $this->authenticationInformationRepository->save($authInfo);
+            $this->authenticationAccountRepository->save($authInfo);
         });
 
         // then
         // 認証情報が登録されていることを確認する
-        $actualAuthInfo = $this->authenticationInformationRepository->findById($userId);
+        $actualAuthInfo = $this->authenticationAccountRepository->findById($userId);
         $this->assertNotEmpty($actualAuthInfo);
     }
 
@@ -43,14 +43,14 @@ class EloquentTransactionManageTest extends TestCase
     {
         // given
         // 認証情報を生成する
-        $userId = $this->authenticationInformationRepository->nextUserId();
-        $authInfo = TestAuthenticationInformationFactory::create(id: $userId);
+        $userId = $this->authenticationAccountRepository->nextUserId();
+        $authInfo = TestAuthenticationAccountFactory::create(id: $userId);
 
         // when
         // トランザクションをロールバックする
         try {
             $this->eloquentTransactionManage->performTransaction(function () use ($authInfo) {
-                $this->authenticationInformationRepository->save($authInfo);
+                $this->authenticationAccountRepository->save($authInfo);
                 throw new \Exception('ロールバックのテストです。');
             });
         } catch (\Exception $e) {
@@ -58,7 +58,7 @@ class EloquentTransactionManageTest extends TestCase
 
         // then
         // 認証情報が登録されていないことを確認する
-        $actualAuthInfo = $this->authenticationInformationRepository->findById($userId);
+        $actualAuthInfo = $this->authenticationAccountRepository->findById($userId);
         $this->assertEmpty($actualAuthInfo);
     }
 }

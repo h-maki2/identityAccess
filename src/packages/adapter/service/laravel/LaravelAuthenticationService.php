@@ -3,8 +3,8 @@
 namespace packages\adapter\service\laravel;
 
 use Illuminate\Support\Facades\Auth;
-use packages\domain\model\authenticationInformation\AuthenticationService;
-use packages\domain\model\authenticationInformation\UserId;
+use packages\domain\model\authenticationAccount\AuthenticationService;
+use packages\domain\model\authenticationAccount\UserId;
 
 class LaravelAuthenticationService implements AuthenticationService
 {

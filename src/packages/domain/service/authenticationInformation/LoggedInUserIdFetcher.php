@@ -1,9 +1,9 @@
 <?php
 
-namespace packages\domain\service\authenticationInformation;
+namespace packages\domain\service\authenticationAccount;
 
-use packages\domain\model\authenticationInformation\AuthenticationService;
-use packages\domain\model\authenticationInformation\UserId;
+use packages\domain\model\authenticationAccount\AuthenticationService;
+use packages\domain\model\authenticationAccount\UserId;
 use packages\domain\model\common\exception\AuthenticationException;
 use packages\domain\model\oauth\scope\IScopeAuthorizationChecker;
 use packages\domain\model\oauth\scope\Scope;

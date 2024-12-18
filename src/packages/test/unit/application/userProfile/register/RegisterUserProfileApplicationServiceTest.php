@@ -1,14 +1,14 @@
 <?php
 
-use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
+use packages\adapter\persistence\inMemory\InMemoryAuthenticationAccountRepository;
 use packages\adapter\persistence\inMemory\InMemoryUserProfileRepository;
 use packages\application\common\validation\ValidationErrorMessageData;
 use packages\application\userProfile\register\RegisterUserProfileApplicationService;
 use packages\application\userProfile\register\RegisterUserProfileOutputBoundary;
 use packages\application\userProfile\register\RegisterUserProfileResult;
-use packages\domain\model\authenticationInformation\AuthenticationService;
+use packages\domain\model\authenticationAccount\AuthenticationService;
 use packages\domain\model\userProfile\UserName;
-use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataCreator;
+use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
 use packages\test\helpers\userProfile\UserProfileTestDataCreator;
 use PHPUnit\Framework\TestCase;
 
@@ -20,9 +20,9 @@ class RegisterUserProfileApplicationServiceTest extends TestCase
 
     public function setUp(): void
     {
-        $inMemoryAuthenticationInformationRepository = new InMemoryAuthenticationInformationRepository();
-        $authenticationInformationTestDataCreator = new AuthenticationInformationTestDataCreator($inMemoryAuthenticationInformationRepository);
-        $authInfo = $authenticationInformationTestDataCreator->create();
+        $inMemoryAuthenticationAccountRepository = new InMemoryAuthenticationAccountRepository();
+        $authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($inMemoryAuthenticationAccountRepository);
+        $authInfo = $authenticationAccountTestDataCreator->create();
 
         // loggedInUserIdメソッドをモック化する
         $authenticationService = $this->createMock(AuthenticationService::class);

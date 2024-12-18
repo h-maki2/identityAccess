@@ -2,8 +2,8 @@
 
 namespace packages\test\helpers\userProfile;
 
-use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
-use packages\domain\model\authenticationInformation\UserId;
+use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
+use packages\domain\model\authenticationAccount\UserId;
 use packages\domain\model\userProfile\IUserProfileRepository;
 use packages\domain\model\userProfile\SelfIntroductionText;
 use packages\domain\model\userProfile\UserName;
@@ -13,15 +13,15 @@ use packages\domain\model\userProfile\UserProfileId;
 class UserProfileTestDataCreator
 {
     private IUserProfileRepository $userProfileRepository;
-    private IAuthenticationInformationRepository $authenticationInformationRepository;
+    private IAuthenticationAccountRepository $authenticationAccountRepository;
 
     public function __construct(
         IUserProfileRepository $userProfileRepository,
-        IAuthenticationInformationRepository $authenticationInformationRepository
+        IAuthenticationAccountRepository $authenticationAccountRepository
     )
     {
         $this->userProfileRepository = $userProfileRepository;
-        $this->authenticationInformationRepository = $authenticationInformationRepository;
+        $this->authenticationAccountRepository = $authenticationAccountRepository;
     }
 
     public function create(
@@ -31,8 +31,8 @@ class UserProfileTestDataCreator
         ?SelfIntroductionText $selfIntroductionText = null
     ): UserProfile 
     {
-        $authenticationInformation = $this->authenticationInformationRepository->findById($userId);
-        if ($authenticationInformation === null) {
+        $authenticationAccount = $this->authenticationAccountRepository->findById($userId);
+        if ($authenticationAccount === null) {
             throw new \RuntimeException('認証情報テーブルに事前にデータを登録してください。');
         }
 

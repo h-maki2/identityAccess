@@ -1,9 +1,9 @@
 <?php
 
-use packages\domain\model\authenticationInformation\LoginRestriction;
-use packages\domain\model\authenticationInformation\FailedLoginCount;
-use packages\domain\model\authenticationInformation\LoginRestrictionStatus;
-use packages\domain\model\authenticationInformation\NextLoginAllowedAt;
+use packages\domain\model\authenticationAccount\LoginRestriction;
+use packages\domain\model\authenticationAccount\FailedLoginCount;
+use packages\domain\model\authenticationAccount\LoginRestrictionStatus;
+use packages\domain\model\authenticationAccount\NextLoginAllowedAt;
 use PHPUnit\Framework\TestCase;
 
 class LoginRestrictionTest extends TestCase

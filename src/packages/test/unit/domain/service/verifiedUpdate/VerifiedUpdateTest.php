@@ -1,41 +1,41 @@
 <?php
 
 use packages\adapter\persistence\inMemory\InMemoryAuthConfirmationRepository;
-use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
+use packages\adapter\persistence\inMemory\InMemoryAuthenticationAccountRepository;
 use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
-use packages\domain\model\authenticationInformation\VerificationStatus;
+use packages\domain\model\authenticationAccount\VerificationStatus;
 use packages\domain\service\verifiedUpdate\VerifiedUpdate;
 use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
-use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataCreator;
-use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataFactory;
+use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
+use packages\test\helpers\authenticationAccount\authenticationAccountTestDataFactory;
 use packages\test\helpers\transactionManage\TestTransactionManage;
 use PHPUnit\Framework\TestCase;
 
 class VerifiedUpdateTest extends TestCase
 {
     private InMemoryAuthConfirmationRepository $authConfirmationRepository;
-    private InMemoryAuthenticationInformationRepository $authenticationInformationRepository;
+    private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
     private TestTransactionManage $transactionManage;
-    private AuthenticationInformationTestDataCreator $authenticationInformationTestDataCreator;
+    private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
     private AuthConfirmationTestDataCreator $authConfirmationTestDataCreator;
 
     public function setUp(): void
     {
         $this->authConfirmationRepository = new InMemoryAuthConfirmationRepository();
-        $this->authenticationInformationRepository = new InMemoryAuthenticationInformationRepository();
+        $this->authenticationAccountRepository = new InMemoryAuthenticationAccountRepository();
         $this->transactionManage = new TestTransactionManage();
-        $this->authenticationInformationTestDataCreator = new AuthenticationInformationTestDataCreator($this->authenticationInformationRepository);
-        $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator($this->authConfirmationRepository, $this->authenticationInformationRepository);
+        $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($this->authenticationAccountRepository);
+        $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator($this->authConfirmationRepository, $this->authenticationAccountRepository);
     }
 
     public function test_入力されたワンタイムパスワードが等しい場合、認証情報を認証済みに更新する()
     {
         // given
         // 認証済みではない認証情報を保存しておく
-        $userId = $this->authenticationInformationRepository->nextUserId();
-        $this->authenticationInformationTestDataCreator->create(
+        $userId = $this->authenticationAccountRepository->nextUserId();
+        $this->authenticationAccountTestDataCreator->create(
             id: $userId,
             verificationStatus: VerificationStatus::Unverified
         );
@@ -45,7 +45,7 @@ class VerifiedUpdateTest extends TestCase
         );
 
         $verifiedUpdate = new VerifiedUpdate(
-            $this->authenticationInformationRepository,
+            $this->authenticationAccountRepository,
             $this->authConfirmationRepository,
             $this->transactionManage
         );
@@ -58,8 +58,8 @@ class VerifiedUpdateTest extends TestCase
 
         // then
         // 認証情報が認証済みになっていることを確認
-        $updatedAuthenticationInformation = $this->authenticationInformationRepository->findById($userId);
-        $this->assertEquals(VerificationStatus::Verified, $updatedAuthenticationInformation->verificationStatus());
+        $updatedAuthenticationAccount = $this->authenticationAccountRepository->findById($userId);
+        $this->assertEquals(VerificationStatus::Verified, $updatedAuthenticationAccount->verificationStatus());
 
         // 認証確認情報が削除されていることを確認
         $deletedAuthConfirmation = $this->authConfirmationRepository->findByTokenValue($authConfirmation->oneTimeToken()->tokenValue());
@@ -70,8 +70,8 @@ class VerifiedUpdateTest extends TestCase
     {
         // given
         // 認証済みではない認証情報を保存しておく
-        $userId = $this->authenticationInformationRepository->nextUserId();
-        $this->authenticationInformationTestDataCreator->create(
+        $userId = $this->authenticationAccountRepository->nextUserId();
+        $this->authenticationAccountTestDataCreator->create(
             id: $userId,
             verificationStatus: VerificationStatus::Unverified
         );
@@ -83,7 +83,7 @@ class VerifiedUpdateTest extends TestCase
         );
 
         $verifiedUpdate = new VerifiedUpdate(
-            $this->authenticationInformationRepository,
+            $this->authenticationAccountRepository,
             $this->authConfirmationRepository,
             $this->transactionManage
         );
@@ -102,8 +102,8 @@ class VerifiedUpdateTest extends TestCase
     {
         // given
         // 認証済みではない認証情報を保存しておく
-        $userId = $this->authenticationInformationRepository->nextUserId();
-        $this->authenticationInformationTestDataCreator->create(
+        $userId = $this->authenticationAccountRepository->nextUserId();
+        $this->authenticationAccountTestDataCreator->create(
             id: $userId,
             verificationStatus: VerificationStatus::Unverified
         );
@@ -116,7 +116,7 @@ class VerifiedUpdateTest extends TestCase
         );
 
         $verifiedUpdate = new VerifiedUpdate(
-            $this->authenticationInformationRepository,
+            $this->authenticationAccountRepository,
             $this->authConfirmationRepository,
             $this->transactionManage
         );

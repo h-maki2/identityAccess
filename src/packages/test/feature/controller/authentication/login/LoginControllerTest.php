@@ -2,28 +2,28 @@
 
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use packages\adapter\persistence\eloquent\EloquentAuthenticationInformationRepository;
+use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
 use packages\adapter\presenter\common\json\JsonResponseStatus;
-use packages\domain\model\authenticationInformation\UserEmail;
-use packages\domain\model\authenticationInformation\UserPassword;
-use packages\domain\model\authenticationInformation\VerificationStatus;
-use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataCreator;
-use packages\test\helpers\authenticationInformation\TestAccessTokenCreator;
+use packages\domain\model\authenticationAccount\UserEmail;
+use packages\domain\model\authenticationAccount\UserPassword;
+use packages\domain\model\authenticationAccount\VerificationStatus;
+use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
+use packages\test\helpers\authenticationAccount\TestAccessTokenCreator;
 use packages\test\helpers\client\ClientTestDataCreator;
 use Tests\TestCase;
 
 class LoginControllerTest extends TestCase
 {
-    private EloquentAuthenticationInformationRepository $eloquentAuthenticationInformationRepository;
-    private AuthenticationInformationTestDataCreator $authenticationInformationTestDataCreator;
+    private EloquentAuthenticationAccountRepository $eloquentAuthenticationAccountRepository;
+    private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
 
     use DatabaseTransactions;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->eloquentAuthenticationInformationRepository = new EloquentAuthenticationInformationRepository();
-        $this->authenticationInformationTestDataCreator = new AuthenticationInformationTestDataCreator($this->eloquentAuthenticationInformationRepository);
+        $this->eloquentAuthenticationAccountRepository = new EloquentAuthenticationAccountRepository();
+        $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($this->eloquentAuthenticationAccountRepository);
     }
 
     public function test_メールアドレスとパスワードが異なる場合にログインに失敗する()
@@ -103,7 +103,7 @@ class LoginControllerTest extends TestCase
         $emailString = 'test@example.com';
         $passwordString = 'abcABC123!';
 
-        $this->authenticationInformationTestDataCreator->create(
+        $this->authenticationAccountTestDataCreator->create(
             email: new UserEmail($emailString),
             password: UserPassword::create($passwordString),
             verificationStatus: VerificationStatus::Verified // 認証済み

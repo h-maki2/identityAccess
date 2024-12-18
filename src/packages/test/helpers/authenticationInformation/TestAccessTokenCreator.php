@@ -1,14 +1,14 @@
 <?php
 
-namespace packages\test\helpers\authenticationInformation;
+namespace packages\test\helpers\authenticationAccount;
 
-use App\Models\AuthenticationInformation;
-use packages\domain\model\authenticationInformation\UserId;
+use App\Models\authenticationAccount;
+use packages\domain\model\authenticationAccount\UserId;
 
 class TestAccessTokenCreator
 {
     public static function create(UserId $id): string
     {
-        return AuthenticationInformation::find($id->value)->createToken('Test Token')->accessToken;
+        return AuthenticationAccount::find($id->value)->createToken('Test Token')->accessToken;
     }
 }

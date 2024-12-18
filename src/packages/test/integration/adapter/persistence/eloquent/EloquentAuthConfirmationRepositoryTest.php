@@ -2,20 +2,20 @@
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use packages\adapter\persistence\eloquent\EloquentAuthConfirmationRepository;
-use packages\adapter\persistence\eloquent\EloquentAuthenticationInformationRepository;
+use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
 use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeToken;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
 use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
 use packages\test\helpers\authConfirmation\TestAuthConfirmationFactory;
-use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataCreator;
+use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
 use Tests\TestCase;
 
 class EloquentAuthConfirmationRepositoryTest extends TestCase
 {
     private EloquentAuthConfirmationRepository $eloquentAuthConfirmationRepository;
-    private EloquentAuthenticationInformationRepository $eloquentAuthenticationInformationRepository;
-    private AuthenticationInformationTestDataCreator $authenticationInformationTestDataCreator;
+    private EloquentAuthenticationAccountRepository $eloquentAuthenticationAccountRepository;
+    private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
     private AuthConfirmationTestDataCreator $authConfirmationTestDataCreator;
 
     use DatabaseTransactions;
@@ -24,11 +24,11 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
     {
         parent::setUp();
         $this->eloquentAuthConfirmationRepository = new EloquentAuthConfirmationRepository();
-        $this->eloquentAuthenticationInformationRepository = new EloquentAuthenticationInformationRepository();
-        $this->authenticationInformationTestDataCreator = new AuthenticationInformationTestDataCreator($this->eloquentAuthenticationInformationRepository);
+        $this->eloquentAuthenticationAccountRepository = new EloquentAuthenticationAccountRepository();
+        $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($this->eloquentAuthenticationAccountRepository);
         $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator(
             $this->eloquentAuthConfirmationRepository,
-            $this->eloquentAuthenticationInformationRepository
+            $this->eloquentAuthenticationAccountRepository
         );
     }
 
@@ -36,8 +36,8 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
     {
         // given
         // あらかじめ認証情報を保存しておく
-        $userId =  $this->eloquentAuthenticationInformationRepository->nextUserId();
-        $this->authenticationInformationTestDataCreator->create(
+        $userId =  $this->eloquentAuthenticationAccountRepository->nextUserId();
+        $this->authenticationAccountTestDataCreator->create(
             id: $userId
         );
 
@@ -62,8 +62,8 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
     {
         // given
         // 認証情報を保存しておく
-        $userId =  $this->eloquentAuthenticationInformationRepository->nextUserId();
-        $this->authenticationInformationTestDataCreator->create(
+        $userId =  $this->eloquentAuthenticationAccountRepository->nextUserId();
+        $this->authenticationAccountTestDataCreator->create(
             id: $userId
         );
 
@@ -92,8 +92,8 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
     {
         // given
         // 認証情報を保存しておく
-        $検索対象のユーザーID =  $this->eloquentAuthenticationInformationRepository->nextUserId();
-        $this->authenticationInformationTestDataCreator->create(
+        $検索対象のユーザーID =  $this->eloquentAuthenticationAccountRepository->nextUserId();
+        $this->authenticationAccountTestDataCreator->create(
             id: $検索対象のユーザーID
         );
 
@@ -103,16 +103,16 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
         );
 
         // 検索対象ではない認証情報と認証確認情報を保存する
-        $検索対象ではないユーザーid1 = $this->eloquentAuthenticationInformationRepository->nextUserId();
-        $this->authenticationInformationTestDataCreator->create(
+        $検索対象ではないユーザーid1 = $this->eloquentAuthenticationAccountRepository->nextUserId();
+        $this->authenticationAccountTestDataCreator->create(
             id: $検索対象ではないユーザーid1
         );
         $this->authConfirmationTestDataCreator->create(
             userId: $検索対象ではないユーザーid1
         );
 
-        $検索対象ではないユーザーid2 = $this->eloquentAuthenticationInformationRepository->nextUserId();
-        $this->authenticationInformationTestDataCreator->create(
+        $検索対象ではないユーザーid2 = $this->eloquentAuthenticationAccountRepository->nextUserId();
+        $this->authenticationAccountTestDataCreator->create(
             id: $検索対象ではないユーザーid2
         );
         $this->authConfirmationTestDataCreator->create(
@@ -132,8 +132,8 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
     {
         // given
         // 認証情報を保存しておく
-        $検索対象のユーザーID =  $this->eloquentAuthenticationInformationRepository->nextUserId();
-        $this->authenticationInformationTestDataCreator->create(
+        $検索対象のユーザーID =  $this->eloquentAuthenticationAccountRepository->nextUserId();
+        $this->authenticationAccountTestDataCreator->create(
             id: $検索対象のユーザーID
         );
 
@@ -145,8 +145,8 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
         );
 
         // 検索対象ではない認証情報と認証確認情報を保存する
-        $検索対象ではないユーザーid = $this->eloquentAuthenticationInformationRepository->nextUserId();
-        $this->authenticationInformationTestDataCreator->create(
+        $検索対象ではないユーザーid = $this->eloquentAuthenticationAccountRepository->nextUserId();
+        $this->authenticationAccountTestDataCreator->create(
             id: $検索対象ではないユーザーid
         );
         $this->authConfirmationTestDataCreator->create(
@@ -167,8 +167,8 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
     {
         // given
         // 認証確認情報を作成して保存する
-        $削除対象のユーザーID =  $this->eloquentAuthenticationInformationRepository->nextUserId();
-        $this->authenticationInformationTestDataCreator->create(
+        $削除対象のユーザーID =  $this->eloquentAuthenticationAccountRepository->nextUserId();
+        $this->authenticationAccountTestDataCreator->create(
             id: $削除対象のユーザーID
         );
 
@@ -176,8 +176,8 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
             userId: $削除対象のユーザーID
         );
 
-        $削除対象ではないuserId = $this->eloquentAuthenticationInformationRepository->nextUserId();
-        $this->authenticationInformationTestDataCreator->create(
+        $削除対象ではないuserId = $this->eloquentAuthenticationAccountRepository->nextUserId();
+        $this->authenticationAccountTestDataCreator->create(
             id: $削除対象ではないuserId
         );
         $this->authConfirmationTestDataCreator->create(

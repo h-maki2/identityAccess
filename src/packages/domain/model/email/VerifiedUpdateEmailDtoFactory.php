@@ -4,7 +4,7 @@ namespace packages\domain\model\email;
 
 use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeToken;
-use packages\domain\model\authenticationInformation\UserEmail;
+use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\email\SendEmailDto;
 
 /**

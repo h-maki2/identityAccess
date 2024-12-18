@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use packages\domain\model\authenticationInformation\UserPassword;
+use packages\domain\model\authenticationAccount\UserPassword;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 

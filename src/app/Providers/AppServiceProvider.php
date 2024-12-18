@@ -11,7 +11,7 @@ use packages\adapter\oauth\authToken\LaravelPassportRefreshokenDeactivationServi
 use packages\adapter\oauth\client\LaravelPassportClientFetcher;
 use packages\adapter\oauth\scope\LaravelPassportScopeAuthorizationChecker;
 use packages\adapter\persistence\eloquent\EloquentAuthConfirmationRepository;
-use packages\adapter\persistence\eloquent\EloquentAuthenticationInformationRepository;
+use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
 use packages\adapter\persistence\eloquent\EloquentUserProfileRepository;
 use packages\adapter\service\laravel\LaravelAuthenticationService;
 use packages\adapter\service\laravel\LaravelSessionAuthentication;
@@ -37,9 +37,9 @@ use packages\application\userRegistration\UserRegistrationApplicationService;
 use packages\application\userRegistration\UserRegistrationInputBoundary;
 use packages\application\userRegistration\UserRegistrationOutputBoundary;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
-use packages\domain\model\authenticationInformation\AuthenticationService;
-use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
-use packages\domain\model\authenticationInformation\SessionAuthentication;
+use packages\domain\model\authenticationAccount\AuthenticationService;
+use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
+use packages\domain\model\authenticationAccount\SessionAuthentication;
 use packages\domain\model\common\transactionManage\TransactionManage;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\model\oauth\authToken\IAccessTokenDeactivationService;
@@ -57,7 +57,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // リポジトリ
         $this->app->bind(IAuthConfirmationRepository::class, EloquentAuthConfirmationRepository::class);
-        $this->app->bind(IAuthenticationInformationRepository::class, EloquentAuthenticationInformationRepository::class);
+        $this->app->bind(IAuthenticationAccountRepository::class, EloquentAuthenticationAccountRepository::class);
         $this->app->bind(IUserProfileRepository::class, EloquentUserProfileRepository::class);
 
         // Laravel Passport

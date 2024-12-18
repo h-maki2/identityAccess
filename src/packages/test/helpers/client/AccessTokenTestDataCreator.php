@@ -2,22 +2,22 @@
 
 namespace packages\test\helpers\client;
 
-use packages\adapter\persistence\eloquent\EloquentAuthenticationInformationRepository;
-use packages\domain\model\authenticationInformation\UserId;
+use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
+use packages\domain\model\authenticationAccount\UserId;
 use packages\domain\model\oauth\authToken\AccessToken;
-use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataCreator;
-use packages\test\helpers\authenticationInformation\TestAuthenticationInformationFactory;
-use App\Models\AuthenticationInformation as EloquentAuthenticationInformation;
+use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
+use packages\test\helpers\authenticationAccount\TestAuthenticationAccountFactory;
+use App\Models\authenticationAccount as EloquentAuthenticationAccount;
 use packages\adapter\oauth\authToken\LaravelPassportAccessToken;
 use packages\domain\model\oauth\scope\ScopeList;
 
 class AccessTokenTestDataCreator
 {
-    private AuthenticationInformationTestDataCreator $authenticationInformationTestDataCreator;
+    private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
 
-    public function __construct(EloquentAuthenticationInformationRepository $authenticationInformationRepository)
+    public function __construct(EloquentAuthenticationAccountRepository $authenticationAccountRepository)
     {
-        $this->authenticationInformationTestDataCreator = new AuthenticationInformationTestDataCreator($authenticationInformationRepository);
+        $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($authenticationAccountRepository);
     }
 
     /**
@@ -28,8 +28,8 @@ class AccessTokenTestDataCreator
     ): LaravelPassportAccessToken
     {
         $scopesString = $scopeList ? $scopeList->stringValue() : '';
-        $authInfo = $this->authenticationInformationTestDataCreator->create();
-        $eloquentAuthenticationInformation = EloquentAuthenticationInformation::find($authInfo->id()->value);
-        return new LaravelPassportAccessToken($eloquentAuthenticationInformation->createToken('Test Token', [$scopesString])->accessToken);
+        $authInfo = $this->authenticationAccountTestDataCreator->create();
+        $eloquentAuthenticationAccount = EloquentAuthenticationAccount::find($authInfo->id()->value);
+        return new LaravelPassportAccessToken($eloquentAuthenticationAccount->createToken('Test Token', [$scopesString])->accessToken);
     }
 }

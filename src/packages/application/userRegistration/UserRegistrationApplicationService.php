@@ -7,12 +7,12 @@ use packages\application\common\exception\TransactionException;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authConfirmation\OneTimeToken;
 use packages\domain\model\authConfirmation\validation\OneTimeTokenValidation;
-use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
-use packages\domain\model\authenticationInformation\UserEmail;
-use packages\domain\model\authenticationInformation\UserPassword;
-use packages\domain\model\authenticationInformation\validation\UserEmailValidation;
-use packages\domain\model\authenticationInformation\validation\UserPasswordConfirmationValidation;
-use packages\domain\model\authenticationInformation\validation\UserPasswordValidation;
+use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
+use packages\domain\model\authenticationAccount\UserEmail;
+use packages\domain\model\authenticationAccount\UserPassword;
+use packages\domain\model\authenticationAccount\validation\UserEmailValidation;
+use packages\domain\model\authenticationAccount\validation\UserPasswordConfirmationValidation;
+use packages\domain\model\authenticationAccount\validation\UserPasswordValidation;
 use packages\domain\model\common\transactionManage\TransactionManage;
 use packages\domain\model\common\validator\ValidationHandler;
 use packages\domain\service\userRegistration\UserRegistration;
@@ -23,21 +23,21 @@ use packages\domain\model\email\IEmailSender;
  */
 class UserRegistrationApplicationService implements UserRegistrationInputBoundary
 {
-    private IAuthenticationInformationRepository $authenticationInformationRepository;
+    private IAuthenticationAccountRepository $authenticationAccountRepository;
     private IAuthConfirmationRepository $authConfirmationRepository;
     private UserRegistration $userRegistration;
 
     public function __construct(
         IAuthConfirmationRepository $authConfirmationRepository,
-        IAuthenticationInformationRepository $authenticationInformationRepository,
+        IAuthenticationAccountRepository $authenticationAccountRepository,
         TransactionManage $transactionManage,
         IEmailSender $emailSender
     )
     {
-        $this->authenticationInformationRepository = $authenticationInformationRepository;
+        $this->authenticationAccountRepository = $authenticationAccountRepository;
         $this->authConfirmationRepository = $authConfirmationRepository;
         $this->userRegistration = new UserRegistration(
-            $authenticationInformationRepository,
+            $authenticationAccountRepository,
             $authConfirmationRepository,
             $transactionManage,
             $emailSender
@@ -54,7 +54,7 @@ class UserRegistrationApplicationService implements UserRegistrationInputBoundar
     ): UserRegistrationResult
     {
         $validationHandler = new ValidationHandler();
-        $validationHandler->addValidator(new UserEmailValidation($inputedEmail, $this->authenticationInformationRepository));
+        $validationHandler->addValidator(new UserEmailValidation($inputedEmail, $this->authenticationAccountRepository));
         $validationHandler->addValidator(new UserPasswordValidation($inputedPassword));
         $validationHandler->addValidator(new UserPasswordConfirmationValidation($inputedPassword, $inputedPasswordConfirmation));
 

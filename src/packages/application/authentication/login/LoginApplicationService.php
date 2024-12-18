@@ -3,10 +3,10 @@
 namespace packages\application\authentication\login;
 
 use DateTimeImmutable;
-use packages\domain\model\authenticationInformation\AuthenticationService;
+use packages\domain\model\authenticationAccount\AuthenticationService;
 use packages\domain\model\oauth\client\IClientFetcher;
-use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
-use packages\domain\model\authenticationInformation\UserEmail;
+use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
+use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\oauth\client\ClientId;
 use packages\domain\model\oauth\client\RedirectUrl;
 use packages\domain\model\oauth\scope\ScopeList;
@@ -14,17 +14,17 @@ use UnexpectedValueException;
 
 class LoginApplicationService implements LoginInputBoundary
 {
-    private IAuthenticationInformationRepository $authenticationInformationRepository;
+    private IAuthenticationAccountRepository $authenticationAccountRepository;
     private AuthenticationService $authService;
     private IClientFetcher $clientFetcher;
 
     public function __construct(
-        IAuthenticationInformationRepository $authenticationInformationRepository,
+        IAuthenticationAccountRepository $authenticationAccountRepository,
         AuthenticationService $authService,
         IClientFetcher $clientFetcher
     )
     {
-        $this->authenticationInformationRepository = $authenticationInformationRepository;
+        $this->authenticationAccountRepository = $authenticationAccountRepository;
         $this->authService = $authService;
         $this->clientFetcher = $clientFetcher;
     }
@@ -40,23 +40,23 @@ class LoginApplicationService implements LoginInputBoundary
     ): LoginResult
     {
         $email = new UserEmail($inputedEmail);
-        $authenticationInformation = $this->authenticationInformationRepository->findByEmail($email);
+        $authenticationAccount = $this->authenticationAccountRepository->findByEmail($email);
 
-        if ($authenticationInformation === null) {
+        if ($authenticationAccount === null) {
             return LoginResult::createWhenLoginFailed(false);
         }
 
         $currentDateTime = new DateTimeImmutable();
-        if (!$authenticationInformation->canLoggedIn($currentDateTime)) {
+        if (!$authenticationAccount->canLoggedIn($currentDateTime)) {
             return LoginResult::createWhenLoginFailed(true);
         }
 
-        if ($authenticationInformation->canDisableLoginRestriction($currentDateTime)) {
-            $authenticationInformation->disableLoginRestriction($currentDateTime);
+        if ($authenticationAccount->canDisableLoginRestriction($currentDateTime)) {
+            $authenticationAccount->disableLoginRestriction($currentDateTime);
         }
 
-        if ($authenticationInformation->password()->equals($inputedPassword)) {
-            $this->authService->markAsLoggedIn($authenticationInformation->id());
+        if ($authenticationAccount->password()->equals($inputedPassword)) {
+            $this->authService->markAsLoggedIn($authenticationAccount->id());
             $urlForObtainingAuthorizationCode = $this->urlForObtainingAuthorizationCode(
                 $clientId,
                 $redirectUrl,
@@ -65,17 +65,17 @@ class LoginApplicationService implements LoginInputBoundary
                 $scopes
             );
 
-            $this->authenticationInformationRepository->save($authenticationInformation);
+            $this->authenticationAccountRepository->save($authenticationAccount);
             return LoginResult::createWhenLoginSucceeded($urlForObtainingAuthorizationCode);
         }
 
-        $authenticationInformation->addFailedLoginCount($currentDateTime);
-        if ($authenticationInformation->canEnableLoginRestriction()) {
-            $authenticationInformation->enableLoginRestriction($currentDateTime);
+        $authenticationAccount->addFailedLoginCount($currentDateTime);
+        if ($authenticationAccount->canEnableLoginRestriction()) {
+            $authenticationAccount->enableLoginRestriction($currentDateTime);
         }
-        $this->authenticationInformationRepository->save($authenticationInformation);
+        $this->authenticationAccountRepository->save($authenticationAccount);
 
-        if (!$authenticationInformation->canLoggedIn($currentDateTime)) {
+        if (!$authenticationAccount->canLoggedIn($currentDateTime)) {
             return LoginResult::createWhenLoginFailed(true);
         }
 

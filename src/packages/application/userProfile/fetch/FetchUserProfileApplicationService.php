@@ -2,11 +2,11 @@
 
 namespace packages\application\userProfile\fetch;
 
-use packages\domain\model\authenticationInformation\AuthenticationService;
+use packages\domain\model\authenticationAccount\AuthenticationService;
 use packages\domain\model\oauth\scope\IScopeAuthorizationChecker;
 use packages\domain\model\oauth\scope\Scope;
 use packages\domain\model\userProfile\IUserProfileRepository;
-use packages\domain\service\authenticationInformation\LoggedInUserIdFetcher;
+use packages\domain\service\authenticationAccount\LoggedInUserIdFetcher;
 
 class FetchUserProfileApplicationService implements FetchUserProfileInputBoundary
 {

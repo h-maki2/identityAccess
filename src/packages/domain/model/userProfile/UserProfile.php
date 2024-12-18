@@ -3,7 +3,7 @@
 namespace packages\domain\model\userProfile;
 
 use DomainException;
-use packages\domain\model\authenticationInformation\UserId;
+use packages\domain\model\authenticationAccount\UserId;
 use packages\domain\service\userProfile\UserProfileService;
 
 class UserProfile

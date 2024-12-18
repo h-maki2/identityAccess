@@ -1,8 +1,8 @@
 <?php
 
-namespace packages\test\helpers\authenticationInformation;
+namespace packages\test\helpers\authenticationAccount;
 
-use packages\domain\model\authenticationInformation\UserId;
+use packages\domain\model\authenticationAccount\UserId;
 use packages\domain\model\common\identifier\IdentifierFromUUIDver7;
 
 class TestUserIdFactory

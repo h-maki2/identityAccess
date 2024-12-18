@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
 
-class AuthenticationInformation extends Authenticatable
+class AuthenticationAccount extends Authenticatable
 {
     use HasApiTokens, HasFactory;
     

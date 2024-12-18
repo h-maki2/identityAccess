@@ -1,7 +1,7 @@
 <?php
 
 use packages\adapter\persistence\inMemory\InMemoryAuthConfirmationRepository;
-use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
+use packages\adapter\persistence\inMemory\InMemoryAuthenticationAccountRepository;
 use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeToken;
 use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
@@ -9,28 +9,28 @@ use packages\domain\model\authConfirmation\validation\AuthConfirmationValidation
 use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
 use packages\test\helpers\authConfirmation\TestAuthConfirmationFactory;
 use packages\test\helpers\authConfirmation\TestOneTimeTokenFactory;
-use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataCreator;
+use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
 use PHPUnit\Framework\TestCase;
 
 class AuthConfirmationValidationTest extends TestCase
 {
     private AuthConfirmationValidation $authConfirmationValidation;
-    private AuthenticationInformationTestDataCreator $authenticationInformationTestDataCreator;
+    private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
     private AuthConfirmationTestDataCreator $authConfirmationTestDataCreator;
 
     public function setUp(): void
     {
         $authConfirmationRepository = new InMemoryAuthConfirmationRepository();
-        $authenticationInformationRespository = new InMemoryAuthenticationInformationRepository();
+        $authenticationAccountRespository = new InMemoryAuthenticationAccountRepository();
         $this->authConfirmationValidation = new AuthConfirmationValidation(
             $authConfirmationRepository
         );
-        $this->authenticationInformationTestDataCreator = new AuthenticationInformationTestDataCreator(
-            $authenticationInformationRespository
+        $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator(
+            $authenticationAccountRespository
         );
         $this->authConfirmationTestDataCreator = new AuthConfirmationTestDataCreator(
             $authConfirmationRepository,
-            $authenticationInformationRespository
+            $authenticationAccountRespository
         );
     }
 
@@ -38,7 +38,7 @@ class AuthConfirmationValidationTest extends TestCase
     {
         // given
         // あらかじめ認証確認情報を生成しておく
-        $authInfo = $this->authenticationInformationTestDataCreator->create();
+        $authInfo = $this->authenticationAccountTestDataCreator->create();
         $authConfirmation = $this->authConfirmationTestDataCreator->create($authInfo->id());
 
         $無効なワンタイムパスワード = '12345';
@@ -57,7 +57,7 @@ class AuthConfirmationValidationTest extends TestCase
     {
         // given
         // あらかじめ認証確認情報を生成しておく
-        $authInfo = $this->authenticationInformationTestDataCreator->create();
+        $authInfo = $this->authenticationAccountTestDataCreator->create();
         $authConfirmation = $this->authConfirmationTestDataCreator->create($authInfo->id());
 
         $無効なワンタイムトークン = 'abcdefghijklmnopqrstuvwxyz1234';
@@ -75,7 +75,7 @@ class AuthConfirmationValidationTest extends TestCase
     public function test_存在しないワンタイムトークンが入力された場合はfalseを返す()
     {
         // given
-        $authInfo = $this->authenticationInformationTestDataCreator->create();
+        $authInfo = $this->authenticationAccountTestDataCreator->create();
         $authConfirmation = $this->authConfirmationTestDataCreator->create($authInfo->id());
 
         // when
@@ -92,7 +92,7 @@ class AuthConfirmationValidationTest extends TestCase
     public function test_異なるワンタイムパスワードが入力された場合にfalseを返す()
     {
         // given
-        $authInfo = $this->authenticationInformationTestDataCreator->create();
+        $authInfo = $this->authenticationAccountTestDataCreator->create();
         $authConfirmation = $this->authConfirmationTestDataCreator->create($authInfo->id());
 
         $oneTimeToken = $authConfirmation->oneTimeToken();
@@ -110,7 +110,7 @@ class AuthConfirmationValidationTest extends TestCase
     public function test_ワンタイムトークンの有効期限が切れている場合にfalseを返す()
     {
         // given
-        $authInfo = $this->authenticationInformationTestDataCreator->create();
+        $authInfo = $this->authenticationAccountTestDataCreator->create();
 
         // ワンタイムトークンの有効期限が2日前の認証確認情報を生成する
         $oneTimeExpiration = OneTimeTokenExpiration::reconstruct(new DateTimeImmutable('-2 day'));
@@ -135,7 +135,7 @@ class AuthConfirmationValidationTest extends TestCase
     public function test_正しいワンタイムパスワードとワンタイムトークンの場合にtrueが返る()
     {
         // given
-        $authInfo = $this->authenticationInformationTestDataCreator->create();
+        $authInfo = $this->authenticationAccountTestDataCreator->create();
         $authConfirmation = $this->authConfirmationTestDataCreator->create($authInfo->id());
 
         $oneTimeToken = $authConfirmation->oneTimeToken();

@@ -1,8 +1,8 @@
 <?php
 
-namespace packages\domain\model\authenticationInformation;
+namespace packages\domain\model\authenticationAccount;
 
-use packages\domain\model\authenticationInformation\UserId;
+use packages\domain\model\authenticationAccount\UserId;
 
 interface AuthenticationService
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\domain\model\authenticationInformation\validation;
+namespace packages\domain\model\authenticationAccount\validation;
 
 use packages\domain\model\common\validator\Validator;
 

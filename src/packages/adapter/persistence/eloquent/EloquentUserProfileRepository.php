@@ -2,7 +2,7 @@
 
 namespace packages\adapter\persistence\eloquent;
 
-use packages\domain\model\authenticationInformation\UserId;
+use packages\domain\model\authenticationAccount\UserId;
 use packages\domain\model\userProfile\IUserProfileRepository;
 use packages\domain\model\userProfile\SelfIntroductionText;
 use packages\domain\model\userProfile\UserName;

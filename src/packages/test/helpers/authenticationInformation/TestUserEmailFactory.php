@@ -1,9 +1,9 @@
 <?php
 
-namespace packages\test\helpers\authenticationInformation;
+namespace packages\test\helpers\authenticationAccount;
 
 use Faker\Factory as FakerFactory;
-use packages\domain\model\authenticationInformation\UserEmail;
+use packages\domain\model\authenticationAccount\UserEmail;
 
 class TestUserEmailFactory
 {

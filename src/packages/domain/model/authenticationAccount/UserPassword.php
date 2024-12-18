@@ -1,9 +1,9 @@
 <?php
 
-namespace packages\domain\model\authenticationInformation;
+namespace packages\domain\model\authenticationAccount;
 
 use InvalidArgumentException;
-use packages\domain\model\authenticationInformation\validation\UserPasswordValidation;
+use packages\domain\model\authenticationAccount\validation\UserPasswordValidation;
 use packages\domain\service\common\hash\Argon2Hash;
 
 class UserPassword

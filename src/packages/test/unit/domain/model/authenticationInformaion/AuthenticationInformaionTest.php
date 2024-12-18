@@ -1,29 +1,29 @@
 <?php
 
 use Lcobucci\JWT\Signer\Key\InMemory;
-use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
-use packages\domain\model\authenticationInformation\LoginRestriction;
-use packages\domain\model\authenticationInformation\FailedLoginCount;
-use packages\domain\model\authenticationInformation\IAuthenticationInformationRepository;
-use packages\domain\model\authenticationInformation\NextLoginAllowedAt;
-use packages\domain\model\authenticationInformation\UserEmail;
-use packages\domain\model\authenticationInformation\UserName;
-use packages\domain\model\authenticationInformation\UserPassword;
-use packages\domain\model\authenticationInformation\AuthenticationInformation;
-use packages\domain\model\authenticationInformation\LoginRestrictionStatus;
-use packages\domain\model\authenticationInformation\VerificationStatus;
-use packages\domain\service\AuthenticationInformation\AuthenticationInformationService;
-use packages\test\helpers\authenticationInformation\TestAuthenticationInformationFactory;
-use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataFactory;
+use packages\adapter\persistence\inMemory\InMemoryAuthenticationAccountRepository;
+use packages\domain\model\authenticationAccount\LoginRestriction;
+use packages\domain\model\authenticationAccount\FailedLoginCount;
+use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
+use packages\domain\model\authenticationAccount\NextLoginAllowedAt;
+use packages\domain\model\authenticationAccount\UserEmail;
+use packages\domain\model\authenticationAccount\UserName;
+use packages\domain\model\authenticationAccount\UserPassword;
+use packages\domain\model\authenticationAccount\authenticationAccount;
+use packages\domain\model\authenticationAccount\LoginRestrictionStatus;
+use packages\domain\model\authenticationAccount\VerificationStatus;
+use packages\domain\service\authenticationAccount\authenticationAccountService;
+use packages\test\helpers\authenticationAccount\TestAuthenticationAccountFactory;
+use packages\test\helpers\authenticationAccount\authenticationAccountTestDataFactory;
 use PHPUnit\Framework\TestCase;
 
-class AuthenticationInformationTest extends TestCase
+class AuthenticationAccountTest extends TestCase
 {
-    private InMemoryAuthenticationInformationRepository $authenticationInformationRepository;
+    private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
 
     public function setUp(): void
     {
-        $this->authenticationInformationRepository = new InMemoryAuthenticationInformationRepository();
+        $this->authenticationAccountRepository = new InMemoryAuthenticationAccountRepository();
     }
 
     public function test_重複したメールアドレスを持つユーザーが存在しない場合、ユーザープロフィールを初期化できる()
@@ -31,32 +31,32 @@ class AuthenticationInformationTest extends TestCase
         // given
         // user@example.comのアドレスを持つユーザーをあらかじめ作成しておく
         $alreadyExistsUserEmail = new UserEmail('user@example.com');
-        $authenticationInformationTestDataFactory = new AuthenticationInformationTestDataFactory($this->authenticationInformationRepository);
-        $authenticationInformationTestDataFactory->create($alreadyExistsUserEmail);
+        $authenticationAccountTestDataFactory = new AuthenticationAccountTestDataFactory($this->authenticationAccountRepository);
+        $authenticationAccountTestDataFactory->create($alreadyExistsUserEmail);
 
         $email = new UserEmail('otheruser@example.com');
-        $userId = $this->authenticationInformationRepository->nextUserId();
+        $userId = $this->authenticationAccountRepository->nextUserId();
         $password = UserPassword::create('1234abcABC!');
-        $authenticationInformationService = new AuthenticationInformationService($this->authenticationInformationRepository);
+        $authenticationAccountService = new AuthenticationAccountService($this->authenticationAccountRepository);
 
         // when
-        $authenticationInformation = AuthenticationInformation::create(
+        $authenticationAccount = AuthenticationAccount::create(
             $userId,
             $email,
             $password,
-            $authenticationInformationService
+            $authenticationAccountService
         );
 
         // then
-        $this->assertEquals(VerificationStatus::Unverified, $authenticationInformation->verificationStatus());
-        $this->assertEquals(LoginRestrictionStatus::Unrestricted->value, $authenticationInformation->LoginRestriction()->loginRestrictionStatus());
-        $this->assertEquals(0, $authenticationInformation->LoginRestriction()->failedLoginCount());
-        $this->assertEquals(null, $authenticationInformation->LoginRestriction()->nextLoginAllowedAt());
+        $this->assertEquals(VerificationStatus::Unverified, $authenticationAccount->verificationStatus());
+        $this->assertEquals(LoginRestrictionStatus::Unrestricted->value, $authenticationAccount->LoginRestriction()->loginRestrictionStatus());
+        $this->assertEquals(0, $authenticationAccount->LoginRestriction()->failedLoginCount());
+        $this->assertEquals(null, $authenticationAccount->LoginRestriction()->nextLoginAllowedAt());
 
         // 以下の属性はそのまま設定される
-        $this->assertEquals($email, $authenticationInformation->email());
-        $this->assertEquals($userId, $authenticationInformation->id());
-        $this->assertEquals($password, $authenticationInformation->password());
+        $this->assertEquals($email, $authenticationAccount->email());
+        $this->assertEquals($userId, $authenticationAccount->id());
+        $this->assertEquals($password, $authenticationAccount->password());
     }
 
     public function test_重複したメールアドレスを持つユーザーが既に存在する場合、ユーザープロフィールを初期化できない()
@@ -64,23 +64,23 @@ class AuthenticationInformationTest extends TestCase
         // given
         // user@example.comのアドレスを持つユーザーをあらかじめ作成しておく
         $alreadyExistsUserEmail = new UserEmail('user@example.com');
-        $authenticationInformationTestDataFactory = new AuthenticationInformationTestDataFactory($this->authenticationInformationRepository);
-        $authenticationInformationTestDataFactory->create($alreadyExistsUserEmail);
+        $authenticationAccountTestDataFactory = new AuthenticationAccountTestDataFactory($this->authenticationAccountRepository);
+        $authenticationAccountTestDataFactory->create($alreadyExistsUserEmail);
 
         // メールアドレスが重複している
         $email = new UserEmail('user@example.com');
-        $userId = $this->authenticationInformationRepository->nextUserId();
+        $userId = $this->authenticationAccountRepository->nextUserId();
         $password = UserPassword::create('1234abcABC!');
-        $authenticationInformationService = new AuthenticationInformationService($this->authenticationInformationRepository);
+        $authenticationAccountService = new AuthenticationAccountService($this->authenticationAccountRepository);
 
         // when・then
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('すでに存在するメールアドレスです。');
-        AuthenticationInformation::create(
+        AuthenticationAccount::create(
             $userId,
             $email,
             $password,
-            $authenticationInformationService
+            $authenticationAccountService
         );
     }
 
@@ -88,13 +88,13 @@ class AuthenticationInformationTest extends TestCase
     {
         // given
         $email = new UserEmail('otheruser@example.com');
-        $userId = $this->authenticationInformationRepository->nextUserId();
+        $userId = $this->authenticationAccountRepository->nextUserId();
         $password = UserPassword::create('1234abcABC!');
         $verificationStatus = VerificationStatus::Verified;
         $LoginRestriction = LoginRestriction::initialization();
 
         // when
-        $authenticationInformation = AuthenticationInformation::reconstruct(
+        $authenticationAccount = AuthenticationAccount::reconstruct(
             $userId,
             $email,
             $password,
@@ -103,11 +103,11 @@ class AuthenticationInformationTest extends TestCase
         );
 
         // then
-        $this->assertEquals($email, $authenticationInformation->email());
-        $this->assertEquals($userId, $authenticationInformation->id());
-        $this->assertEquals($password, $authenticationInformation->password());
-        $this->assertEquals($verificationStatus, $authenticationInformation->verificationStatus());
-        $this->assertEquals($LoginRestriction, $authenticationInformation->LoginRestriction());
+        $this->assertEquals($email, $authenticationAccount->email());
+        $this->assertEquals($userId, $authenticationAccount->id());
+        $this->assertEquals($password, $authenticationAccount->password());
+        $this->assertEquals($verificationStatus, $authenticationAccount->verificationStatus());
+        $this->assertEquals($LoginRestriction, $authenticationAccount->LoginRestriction());
     }
 
     public function 認証ステータスを認証済みに更新できる()
@@ -115,17 +115,17 @@ class AuthenticationInformationTest extends TestCase
         // given
         // 認証済みステータスが未認証のユーザープロフィールを作成
         $verificationStatus = VerificationStatus::Unverified;
-        $authenticationInformation = TestAuthenticationInformationFactory::create(
+        $authenticationAccount = TestAuthenticationAccountFactory::create(
             null,
             null,
             $verificationStatus
         );
 
         // when
-        $authenticationInformation->updateVerified();
+        $authenticationAccount->updateVerified();
 
         // then
-        $this->assertEquals(VerificationStatus::Verified, $authenticationInformation->verificationStatus());
+        $this->assertEquals(VerificationStatus::Verified, $authenticationAccount->verificationStatus());
     }
 
     public function test_認証ステータスが認証済みの場合、パスワードの変更が行える()
@@ -134,7 +134,7 @@ class AuthenticationInformationTest extends TestCase
         // 認証済みステータスが認証済みのユーザープロフィールを作成
         $verificationStatus = VerificationStatus::Verified;
         $password = UserPassword::create('124abcABC!');
-        $authenticationInformation = TestAuthenticationInformationFactory::create(
+        $authenticationAccount = TestAuthenticationAccountFactory::create(
             null,
             $password,
             $verificationStatus
@@ -142,10 +142,10 @@ class AuthenticationInformationTest extends TestCase
 
         // when
         $passwordAfterChange = UserPassword::create('124abcABC!_afterChange');
-        $authenticationInformation->changePassword($passwordAfterChange, new DateTimeImmutable());
+        $authenticationAccount->changePassword($passwordAfterChange, new DateTimeImmutable());
 
         // then
-        $this->assertEquals($passwordAfterChange, $authenticationInformation->password());
+        $this->assertEquals($passwordAfterChange, $authenticationAccount->password());
     }
 
     public function test_認証ステータスが未認証の場合、パスワードの変更が行えない()
@@ -153,7 +153,7 @@ class AuthenticationInformationTest extends TestCase
         // given
         $verificationStatus = VerificationStatus::Unverified;
         $password = UserPassword::create('124abcABC!');
-        $authenticationInformation = TestAuthenticationInformationFactory::create(
+        $authenticationAccount = TestAuthenticationAccountFactory::create(
             null,
             $password,
             $verificationStatus
@@ -163,7 +163,7 @@ class AuthenticationInformationTest extends TestCase
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('認証済みのユーザーではありません。');
         $passwordAfterChange = UserPassword::create('124abcABC!_afterChange');
-        $authenticationInformation->changePassword($passwordAfterChange, new DateTimeImmutable());
+        $authenticationAccount->changePassword($passwordAfterChange, new DateTimeImmutable());
     }
 
     public function test_アカウントがロックされている場合、パスワードの変更が行えない()
@@ -177,7 +177,7 @@ class AuthenticationInformationTest extends TestCase
             LoginRestrictionStatus::Restricted,
             NextLoginAllowedAt::reconstruct(new DateTimeImmutable('+10 minutes'))
         );
-        $authenticationInformation = TestAuthenticationInformationFactory::create(
+        $authenticationAccount = TestAuthenticationAccountFactory::create(
             null,
             $password,
             $verificationStatus,
@@ -189,7 +189,7 @@ class AuthenticationInformationTest extends TestCase
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('アカウントがロックされています。');
         $passwordAfterChange = UserPassword::create('124abcABC!_afterChange');
-        $authenticationInformation->changePassword($passwordAfterChange, new DateTimeImmutable());
+        $authenticationAccount->changePassword($passwordAfterChange, new DateTimeImmutable());
     }
 
     public function test_ログイン失敗回数を更新する()
@@ -202,7 +202,7 @@ class AuthenticationInformationTest extends TestCase
             LoginRestrictionStatus::Unrestricted,
             null
         );
-        $authenticationInformation = TestAuthenticationInformationFactory::create(
+        $authenticationAccount = TestAuthenticationAccountFactory::create(
             null,
             null,
             $verificationStatus,
@@ -211,10 +211,10 @@ class AuthenticationInformationTest extends TestCase
         );
 
         // when
-        $authenticationInformation->addFailedLoginCount();
+        $authenticationAccount->addFailedLoginCount();
 
         // then
-        $this->assertEquals(1, $authenticationInformation->LoginRestriction()->failedLoginCount());
+        $this->assertEquals(1, $authenticationAccount->LoginRestriction()->failedLoginCount());
     }
 
     public function test_認証ステータスが未認証の場合、ログイン失敗回数を更新しない()
@@ -227,7 +227,7 @@ class AuthenticationInformationTest extends TestCase
             LoginRestrictionStatus::Unrestricted,
             null
         );
-        $authenticationInformation = TestAuthenticationInformationFactory::create(
+        $authenticationAccount = TestAuthenticationAccountFactory::create(
             null,
             null,
             $verificationStatus,
@@ -238,7 +238,7 @@ class AuthenticationInformationTest extends TestCase
         // when・then
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('認証済みのユーザーではありません。');
-        $authenticationInformation->addFailedLoginCount();
+        $authenticationAccount->addFailedLoginCount();
     }
 
     public function test_ログイン制限が有効可能の場合、ログイン制限を有効にする()
@@ -251,7 +251,7 @@ class AuthenticationInformationTest extends TestCase
             LoginRestrictionStatus::Unrestricted,
             null
         );
-        $authenticationInformation = TestAuthenticationInformationFactory::create(
+        $authenticationAccount = TestAuthenticationAccountFactory::create(
             null,
             null,
             $verificationStatus,
@@ -260,11 +260,11 @@ class AuthenticationInformationTest extends TestCase
         );
 
         // when
-        $authenticationInformation->enableLoginRestriction(new DateTimeImmutable());
+        $authenticationAccount->enableLoginRestriction(new DateTimeImmutable());
 
         // then
-        $this->assertEquals(LoginRestrictionStatus::Restricted->value, $authenticationInformation->LoginRestriction()->loginRestrictionStatus());
-        $this->assertNotNull($authenticationInformation->LoginRestriction()->nextLoginAllowedAt());
+        $this->assertEquals(LoginRestrictionStatus::Restricted->value, $authenticationAccount->LoginRestriction()->loginRestrictionStatus());
+        $this->assertNotNull($authenticationAccount->LoginRestriction()->nextLoginAllowedAt());
     }
 
     public function test_認証ステータスが未認証の場合、ログイン制限を有効にできない()
@@ -276,7 +276,7 @@ class AuthenticationInformationTest extends TestCase
             LoginRestrictionStatus::Unrestricted,
             null
         );
-        $authenticationInformation = TestAuthenticationInformationFactory::create(
+        $authenticationAccount = TestAuthenticationAccountFactory::create(
             null,
             null,
             $verificationStatus,
@@ -287,7 +287,7 @@ class AuthenticationInformationTest extends TestCase
         // when・then
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('認証済みのユーザーではありません。');
-        $authenticationInformation->enableLoginRestriction(new DateTimeImmutable());
+        $authenticationAccount->enableLoginRestriction(new DateTimeImmutable());
     }
 
     public function test_ログイン制限が有効で再ログイン可能である場合はログイン制限を解除できる()
@@ -300,7 +300,7 @@ class AuthenticationInformationTest extends TestCase
             LoginRestrictionStatus::Restricted,
             NextLoginAllowedAt::reconstruct(new DateTimeImmutable('-1 minutes'))
         );
-        $authenticationInformation = TestAuthenticationInformationFactory::create(
+        $authenticationAccount = TestAuthenticationAccountFactory::create(
             null,
             null,
             $verificationStatus,
@@ -309,11 +309,11 @@ class AuthenticationInformationTest extends TestCase
         );
 
         // when
-        $authenticationInformation->disableLoginRestriction(new DateTimeImmutable());
+        $authenticationAccount->disableLoginRestriction(new DateTimeImmutable());
 
         // then
-        $this->assertEquals(LoginRestrictionStatus::Unrestricted->value, $authenticationInformation->LoginRestriction()->loginRestrictionStatus());
-        $this->assertNull($authenticationInformation->LoginRestriction()->nextLoginAllowedAt());
+        $this->assertEquals(LoginRestrictionStatus::Unrestricted->value, $authenticationAccount->LoginRestriction()->loginRestrictionStatus());
+        $this->assertNull($authenticationAccount->LoginRestriction()->nextLoginAllowedAt());
     }
 
     public function test_ログイン制限が有効状態で再ログインが不可である場合、ログインができないことを判定できる()
@@ -326,7 +326,7 @@ class AuthenticationInformationTest extends TestCase
             LoginRestrictionStatus::Restricted,
             NextLoginAllowedAt::reconstruct(new DateTimeImmutable('+10 minutes'))
         );
-        $authenticationInformation = TestAuthenticationInformationFactory::create(
+        $authenticationAccount = TestAuthenticationAccountFactory::create(
             null,
             null,
             $verificationStatus,
@@ -335,7 +335,7 @@ class AuthenticationInformationTest extends TestCase
         );
 
         // when
-        $result = $authenticationInformation->canLoggedIn(new DateTimeImmutable());
+        $result = $authenticationAccount->canLoggedIn(new DateTimeImmutable());
 
         // then
         $this->assertFalse($result);
@@ -351,7 +351,7 @@ class AuthenticationInformationTest extends TestCase
             LoginRestrictionStatus::Restricted,
             NextLoginAllowedAt::reconstruct(new DateTimeImmutable('-1 minutes'))
         );
-        $authenticationInformation = TestAuthenticationInformationFactory::create(
+        $authenticationAccount = TestAuthenticationAccountFactory::create(
             null,
             null,
             $verificationStatus,
@@ -360,7 +360,7 @@ class AuthenticationInformationTest extends TestCase
         );
 
         // when
-        $result = $authenticationInformation->canLoggedIn(new DateTimeImmutable());
+        $result = $authenticationAccount->canLoggedIn(new DateTimeImmutable());
 
         // then
         $this->assertTrue($result);
@@ -376,7 +376,7 @@ class AuthenticationInformationTest extends TestCase
             LoginRestrictionStatus::Unrestricted,
             null
         );
-        $authenticationInformation = TestAuthenticationInformationFactory::create(
+        $authenticationAccount = TestAuthenticationAccountFactory::create(
             null,
             null,
             $verificationStatus,
@@ -385,7 +385,7 @@ class AuthenticationInformationTest extends TestCase
         );
 
         // when
-        $result = $authenticationInformation->canLoggedIn(new DateTimeImmutable());
+        $result = $authenticationAccount->canLoggedIn(new DateTimeImmutable());
 
         // then
         $this->assertTrue($result);
@@ -396,14 +396,14 @@ class AuthenticationInformationTest extends TestCase
         // given
         // 認証ステータスが未認証の認証情報を生成する
         $verificationStatus = VerificationStatus::Unverified;
-        $authenticationInformation = TestAuthenticationInformationFactory::create(
+        $authenticationAccount = TestAuthenticationAccountFactory::create(
             null,
             null,
             $verificationStatus
         );
 
         // when
-        $result = $authenticationInformation->canLoggedIn(new DateTimeImmutable());
+        $result = $authenticationAccount->canLoggedIn(new DateTimeImmutable());
 
         // then
         $this->assertFalse($result);
@@ -419,7 +419,7 @@ class AuthenticationInformationTest extends TestCase
             LoginRestrictionStatus::Unrestricted,
             null
         );
-        $authenticationInformation = TestAuthenticationInformationFactory::create(
+        $authenticationAccount = TestAuthenticationAccountFactory::create(
             null,
             null,
             $verificationStatus,
@@ -428,7 +428,7 @@ class AuthenticationInformationTest extends TestCase
         );
 
         // when
-        $result = $authenticationInformation->canEnableLoginRestriction(new DateTimeImmutable());
+        $result = $authenticationAccount->canEnableLoginRestriction(new DateTimeImmutable());
 
         // then
         $this->assertTrue($result);
@@ -444,7 +444,7 @@ class AuthenticationInformationTest extends TestCase
             LoginRestrictionStatus::Unrestricted,
             null
         );
-        $authenticationInformation = TestAuthenticationInformationFactory::create(
+        $authenticationAccount = TestAuthenticationAccountFactory::create(
             null,
             null,
             $verificationStatus,
@@ -453,7 +453,7 @@ class AuthenticationInformationTest extends TestCase
         );
 
         // when
-        $result = $authenticationInformation->canEnableLoginRestriction(new DateTimeImmutable());
+        $result = $authenticationAccount->canEnableLoginRestriction(new DateTimeImmutable());
 
         // then
         $this->assertFalse($result);

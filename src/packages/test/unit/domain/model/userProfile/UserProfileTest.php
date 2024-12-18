@@ -1,29 +1,29 @@
 <?php
 
-use packages\adapter\persistence\inMemory\InMemoryAuthenticationInformationRepository;
+use packages\adapter\persistence\inMemory\InMemoryAuthenticationAccountRepository;
 use packages\adapter\persistence\inMemory\InMemoryUserProfileRepository;
 use packages\domain\model\userProfile\SelfIntroductionText;
 use packages\domain\model\userProfile\UserName;
 use packages\domain\model\userProfile\UserProfile;
 use packages\domain\service\userProfile\UserProfileService;
-use packages\test\helpers\authenticationInformation\AuthenticationInformationTestDataCreator;
+use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
 use packages\test\helpers\userProfile\UserProfileTestDataCreator;
 use PHPUnit\Framework\TestCase;
 
 class UserProfileTest extends TestCase
 {
     private InMemoryUserProfileRepository $userProfileRepository;
-    private InMemoryAuthenticationInformationRepository $authenticationInformationRepository;
+    private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
     private UserProfileTestDataCreator $userProfileTestDataCreator;
-    private AuthenticationInformationTestDataCreator $authenticationInformationTestDataCreator;
+    private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
     private UserProfileService $userProfileService;
 
     public function setUp(): void
     {
         $this->userProfileRepository = new InMemoryUserProfileRepository();
-        $this->authenticationInformationRepository = new InMemoryAuthenticationInformationRepository();
-        $this->userProfileTestDataCreator = new UserProfileTestDataCreator($this->userProfileRepository, $this->authenticationInformationRepository);
-        $this->authenticationInformationTestDataCreator = new AuthenticationInformationTestDataCreator($this->authenticationInformationRepository);
+        $this->authenticationAccountRepository = new InMemoryAuthenticationAccountRepository();
+        $this->userProfileTestDataCreator = new UserProfileTestDataCreator($this->userProfileRepository, $this->authenticationAccountRepository);
+        $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($this->authenticationAccountRepository);
         $this->userProfileService = new UserProfileService($this->userProfileRepository);
     }
 
@@ -31,7 +31,7 @@ class UserProfileTest extends TestCase
     {
         // given
         // 認証情報を作成して保存しておく
-        $authInfo = $this->authenticationInformationTestDataCreator->create();
+        $authInfo = $this->authenticationAccountTestDataCreator->create();
 
         // when
         $profileId = $this->userProfileRepository->nextUserProfileId();
@@ -58,7 +58,7 @@ class UserProfileTest extends TestCase
     {
         // given
         // 認証情報を作成して保存しておく
-        $authInfo = $this->authenticationInformationTestDataCreator->create();
+        $authInfo = $this->authenticationAccountTestDataCreator->create();
 
         // ユーザープロフィールを作成して保存する
         $userName = new UserName('user_name');
@@ -82,7 +82,7 @@ class UserProfileTest extends TestCase
     {
         // given
         // 認証情報を作成して保存しておく
-        $authInfo = $this->authenticationInformationTestDataCreator->create();
+        $authInfo = $this->authenticationAccountTestDataCreator->create();
 
         // ユーザープロフィールを作成して保存する
         $selfIntroductionText = new SelfIntroductionText('自己紹介文');
@@ -102,7 +102,7 @@ class UserProfileTest extends TestCase
     {
         // given
         // 認証情報を作成して保存しておく
-        $authInfo = $this->authenticationInformationTestDataCreator->create();
+        $authInfo = $this->authenticationAccountTestDataCreator->create();
 
         // ユーザープロフィールを作成して保存する
         $userName = new UserName('user_name');
@@ -123,7 +123,7 @@ class UserProfileTest extends TestCase
     {
         // given
         // 認証情報を作成して保存しておく
-        $authInfo = $this->authenticationInformationTestDataCreator->create();
+        $authInfo = $this->authenticationAccountTestDataCreator->create();
 
         // ユーザープロフィールを作成して保存する
         $userName = new UserName('user_name');

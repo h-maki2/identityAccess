@@ -1,12 +1,12 @@
 <?php
 
-namespace packages\domain\model\authenticationInformation;
+namespace packages\domain\model\authenticationAccount;
 
 use DateTimeImmutable;
 use DomainException;
-use packages\domain\service\AuthenticationInformation\AuthenticationInformationService;
+use packages\domain\service\authenticationAccount\authenticationAccountService;
 
-class AuthenticationInformation
+class AuthenticationAccount
 {
     private UserId $userId;
     private UserEmail $userEmail;
@@ -33,10 +33,10 @@ class AuthenticationInformation
         UserId $userId,
         UserEmail $userEmail,
         UserPassword $userPassword,
-        AuthenticationInformationService $authenticationInformationService
+        AuthenticationAccountService $authenticationAccountService
     ): self
     {
-        $alreadyExistsEmail = $authenticationInformationService->alreadyExistsEmail($userEmail);
+        $alreadyExistsEmail = $authenticationAccountService->alreadyExistsEmail($userEmail);
         if ($alreadyExistsEmail) {
             throw new DomainException('すでに存在するメールアドレスです。');
         }
