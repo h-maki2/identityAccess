@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
 
-class AuthenticationAccount extends Authenticatable
+class AuthenticationInformation extends Model
 {
     use HasApiTokens, HasFactory;
     
@@ -27,18 +28,8 @@ class AuthenticationAccount extends Authenticatable
         'verification_status',
     ];
 
-    public function authConfirmation()
+    public function user()
     {
-        return $this->hasOne(AuthConfirmation::class, 'user_id', 'user_id');
-    }
-
-    public function userProfile()
-    {
-        return $this->hasOne(UserProfile::class, 'user_id', 'user_id');
-    }
-
-    public function getAuthIdentifierName()
-    {
-        return $this->primaryKey;
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }
