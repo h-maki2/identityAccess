@@ -50,7 +50,7 @@ class EloquentAuthConfirmationRepository implements IAuthConfirmationRepository
 
     public function delete(UserId $id): void
     {
-        $eloquentAuthConfirmation = $this->eloquentAuthConfirmationFrom($id);
+        $eloquentAuthConfirmation = EloquentAuthConfirmation::find($id->value);
         $eloquentAuthConfirmation->delete();
     }
 
@@ -64,10 +64,5 @@ class EloquentAuthConfirmationRepository implements IAuthConfirmationRepository
             ),
             OneTimePassword::reconstruct($eloquentAuthConfirmation->one_time_password)
         );
-    }
-
-    private function eloquentAuthConfirmationFrom(UserId $userId): ?EloquentAuthConfirmation
-    {
-        return EloquentAuthConfirmation::find($userId->value);
     }
 }
