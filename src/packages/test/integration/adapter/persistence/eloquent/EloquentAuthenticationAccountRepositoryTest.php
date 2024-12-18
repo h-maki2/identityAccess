@@ -14,7 +14,7 @@ use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCre
 use packages\test\helpers\authenticationAccount\TestAuthenticationAccountFactory;
 use Tests\TestCase;
 
-class EloquentAuthenticationInformaionRepositoryTest extends TestCase
+class EloquentAuthenticationAccountRepositoryTest extends TestCase
 {
     private EloquentAuthenticationAccountRepository $authenticationAccountRepository;
     private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
