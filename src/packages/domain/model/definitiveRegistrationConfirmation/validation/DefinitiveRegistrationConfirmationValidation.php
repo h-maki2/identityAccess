@@ -37,7 +37,7 @@ class DefinitiveRegistrationConfirmationValidation
 
         $oneTimePassword = OneTimePassword::reconstruct($oneTimePasswordString);
         
-        if ($definitiveRegistrationConfirmation->canUpdateVerifiedAuthInfo($oneTimePassword, new DateTimeImmutable())) {
+        if ($definitiveRegistrationConfirmation->canUpdatConfirmed($oneTimePassword, new DateTimeImmutable())) {
             return true;
         }
 

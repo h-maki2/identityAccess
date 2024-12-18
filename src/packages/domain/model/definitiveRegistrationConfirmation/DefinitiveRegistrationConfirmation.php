@@ -71,9 +71,9 @@ class DefinitiveRegistrationConfirmation
     }
 
     /**
-     * 認証アカウントを本登録済みに更新できるかどうかを判定する
+     * 本登録確認済みに更新できるかどうかを判定する
      */
-    public function canUpdateVerifiedAuthInfo(OneTimePassword $otherOneTimePassword, DateTimeImmutable $currentDateTime): bool
+    public function canUpdatConfirmed(OneTimePassword $otherOneTimePassword, DateTimeImmutable $currentDateTime): bool
     {
         return $this->oneTimePassword->equals($otherOneTimePassword) && !$this->oneTimeToken->isExpired($currentDateTime);
     }

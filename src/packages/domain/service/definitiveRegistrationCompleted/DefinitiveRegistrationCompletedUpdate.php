@@ -42,7 +42,7 @@ class DefinitiveRegistrationCompletedUpdate
     {
         $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationRepository->findByTokenValue($oneTimeTokenValue);
 
-        if (!$definitiveRegistrationConfirmation->canUpdateVerifiedAuthInfo($oneTimePassword, new DateTimeImmutable())) {
+        if (!$definitiveRegistrationConfirmation->canUpdatConfirmed($oneTimePassword, new DateTimeImmutable())) {
             throw new DomainException('認証アカウントを本登録済みに更新できませんでした。');
         } 
 
