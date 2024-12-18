@@ -45,9 +45,9 @@ class OneTimePasswordTest extends TestCase
     public static function invalidOneTimePasswordProvider(): array
     {
         return [
-            [12345],
-            [1234567],
-            [1]
+            ['12345'],
+            ['1234567'],
+            ['1']
         ];
     }
 }
