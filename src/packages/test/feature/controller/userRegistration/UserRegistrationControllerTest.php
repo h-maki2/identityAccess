@@ -23,7 +23,7 @@ class UserRegistrationControllerTest extends TestCase
 
         // then
         $response->assertStatus(200);
-        // ユーザー仮登録完了画面にリダイレクトされることを確認する
+        // ユーザー仮登録完了画面に遷移することを確認する
         $content = htmlspecialchars_decode($response->getContent());
         $this->assertStringContainsString('<title>ユーザー仮登録完了</title>', $content);
     }
