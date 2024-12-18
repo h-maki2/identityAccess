@@ -14,7 +14,7 @@ use packages\domain\service\definitiveRegistrationCompleted\DefinitiveRegistrati
 /**
  * 本登録済み更新を行うアプリケーションサービス
  */
-class DefinitiveRegistrationCompletedApplicationService implements DefinitiveRegistrationCompletedInputBoundary
+class DefinitiveRegistrationCompleteApplicationService implements DefinitiveRegistrationCompleteInputBoundary
 {
     private IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private DefinitiveRegistrationCompletedUpdate $DefinitiveRegistrationCompletedUpdate;
@@ -38,16 +38,16 @@ class DefinitiveRegistrationCompletedApplicationService implements DefinitiveReg
     /**
      * 本登録済み更新を行う
      */
-    public function handle(string $oneTimeTokenValueString, string $oneTimePasswordString): DefinitiveRegistrationCompletedUpdateResult
+    public function handle(string $oneTimeTokenValueString, string $oneTimePasswordString): DefinitiveRegistrationCompleteUpdateResult
     {
         if (!$this->definitiveRegistrationConfirmationValidation->validate($oneTimePasswordString, $oneTimeTokenValueString)) {
-            return DefinitiveRegistrationCompletedUpdateResult::createWhenValidationError('ワンタイムトークンかワンタイムパスワードが無効です。');
+            return DefinitiveRegistrationCompleteUpdateResult::createWhenValidationError('ワンタイムトークンかワンタイムパスワードが無効です。');
         }
 
         $oneTimeTokenValue = OneTimeTokenValue::reconstruct($oneTimeTokenValueString);
         $oneTimePassword = OneTimePassword::reconstruct($oneTimePasswordString);
         $this->DefinitiveRegistrationCompletedUpdate->handle($oneTimeTokenValue, $oneTimePassword);
 
-        return DefinitiveRegistrationCompletedUpdateResult::createWhenSuccess();
+        return DefinitiveRegistrationCompleteUpdateResult::createWhenSuccess();
     }
 }

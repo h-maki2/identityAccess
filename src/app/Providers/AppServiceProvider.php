@@ -25,8 +25,8 @@ use packages\application\authentication\resendRegistrationConfirmationEmail\Rese
 use packages\application\authentication\definitiveRegistrationCompleted\display\DisplayDefinitiveRegistrationCompletedUpdatePageApplicationService;
 use packages\application\authentication\definitiveRegistrationCompleted\display\DisplayDefinitiveRegistrationCompletedUpdatePageInputBoundary;
 use packages\application\authentication\definitiveRegistrationCompleted\display\DisplayDefinitiveRegistrationCompletedUpdatePageOutputBoundary;
-use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompletedApplicationService;
-use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompletedInputBoundary;
+use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompleteApplicationService;
+use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompleteInputBoundary;
 use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompletedUpdateOutputBoundary;
 use packages\application\userProfile\fetch\FetchUserProfileApplicationService;
 use packages\application\userProfile\fetch\FetchUserProfileInputBoundary;
@@ -75,7 +75,7 @@ class AppServiceProvider extends ServiceProvider
         // アプリケーションサービス
         $this->app->bind(LoginInputBoundary::class, LoginApplicationService::class);
         $this->app->bind(ResendRegistrationConfirmationEmailInputBoundary::class, ResendRegistrationConfirmationEmailApplicationService::class);
-        $this->app->bind(DefinitiveRegistrationCompletedInputBoundary::class, DefinitiveRegistrationCompletedApplicationService::class);
+        $this->app->bind(DefinitiveRegistrationCompleteInputBoundary::class, DefinitiveRegistrationCompleteApplicationService::class);
         $this->app->bind(UserRegistrationInputBoundary::class, UserRegistrationApplicationService::class);
         $this->app->bind(RegisterUserProfileInputBoundary::class, RegisterUserProfileApplicationService::class);
         $this->app->bind(FetchUserProfileInputBoundary::class, FetchUserProfileApplicationService::class);
