@@ -7,7 +7,7 @@ use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistra
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimeToken;
 use packages\domain\model\authenticationAccount\AuthenticationAccount;
 use packages\domain\model\email\IEmailSender;
-use packages\domain\model\email\definitiveRegistrationCompletedEmailDtoFactory;
+use packages\domain\model\email\DefinitiveRegistrationCompletedEmailDtoFactory;
 use RuntimeException;
 
 class OneTimeTokenAndPasswordRegeneration
@@ -38,7 +38,7 @@ class OneTimeTokenAndPasswordRegeneration
         $this->definitiveRegistrationConfirmationRepository->save($definitiveRegistrationConfirmation);
 
         $this->emailSender->send(
-            DefinitiveRegistrationCompletedUpdateEmailDtoFactory::create(
+            DefinitiveRegistrationCompletedEmailDtoFactory::create(
                 $authInfo->email(),
                 $definitiveRegistrationConfirmation->oneTimeToken(),
                 $definitiveRegistrationConfirmation->oneTimePassword()

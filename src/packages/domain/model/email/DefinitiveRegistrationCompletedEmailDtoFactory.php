@@ -10,7 +10,7 @@ use packages\domain\model\email\SendEmailDto;
 /**
  * 本登録済み更新メールDTOのファクトリ
  */
-class DefinitiveRegistrationCompletedUpdateEmailDtoFactory
+class DefinitiveRegistrationCompletedEmailDtoFactory
 {
     private const DefinitiveRegistrationCompletedUpdateBaseUrl = 'http://localhost:8080/DefinitiveRegistrationCompletedUpdate';
         

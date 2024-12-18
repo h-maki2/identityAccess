@@ -15,7 +15,7 @@ use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\common\transactionManage\TransactionManage;
 use packages\domain\model\email\IEmailSender;
-use packages\domain\model\email\definitiveRegistrationCompletedEmailDtoFactory;
+use packages\domain\model\email\DefinitiveRegistrationCompletedEmailDtoFactory;
 use packages\domain\service\definitiveRegistrationConfirmation\OneTimeTokenExistsService;
 use packages\domain\service\authenticationAccount\AuthenticationAccountService;
 
@@ -69,7 +69,7 @@ class UserRegistration
         }
 
         $this->emailSender->send(
-            DefinitiveRegistrationCompletedUpdateEmailDtoFactory::create(
+            DefinitiveRegistrationCompletedEmailDtoFactory::create(
                 $email,
                 $definitiveRegistrationConfirmation->oneTimeToken(),
                 $definitiveRegistrationConfirmation->oneTimePassword()
