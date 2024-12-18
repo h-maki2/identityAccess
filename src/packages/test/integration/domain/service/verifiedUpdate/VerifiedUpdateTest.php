@@ -2,7 +2,8 @@
 
 namespace packages\domain\service\verifiedUpdate;
 
-use App\Models\authenticationAccount as EloquentAuthenticationAccount;
+use App\Models\AuthenticationInformation as EloquentAuthenticationInformation;
+use App\Models\User as EloquentUser;
 use App\Models\AuthConfirmation as EloquentAuthConfirmation;
 use DateTimeImmutable;
 use DomainException;
@@ -12,6 +13,7 @@ use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepositor
 use packages\adapter\transactionManage\EloquentTransactionManage;
 use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
+use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\authenticationAccount\VerificationStatus;
 use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
@@ -42,8 +44,9 @@ class VerifiedUpdateTest extends TestCase
         );
 
         // テスト前にデータを全削除する
-        EloquentAuthenticationAccount::query()->delete();
+        EloquentAuthenticationInformation::query()->delete();
         EloquentAuthConfirmation::query()->delete();
+        EloquentUser::query()->delete();
     }
 
     public function test_正しいワンタイムトークンとワンタイムパスワードが入力された場合に、認証アカウントを確認済みに更新できる()
@@ -64,7 +67,7 @@ class VerifiedUpdateTest extends TestCase
 
         // then
         // 認証アカウントが確認済みに更新されていることを確認
-        $actualAuthInfo = $this->authenticationAccountRepository->findById($authInfo->id());
+        $actualAuthInfo = $this->authenticationAccountRepository->findById($authInfo->id(), UnsubscribeStatus::Subscribed);
         $this->assertTrue($actualAuthInfo->isVerified());
 
         // 認証確認情報が削除されていることを確認
