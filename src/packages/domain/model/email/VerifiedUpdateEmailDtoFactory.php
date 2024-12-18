@@ -10,9 +10,9 @@ use packages\domain\model\email\SendEmailDto;
 /**
  * 本登録済み更新メールDTOのファクトリ
  */
-class DefinitiveRegistrationCompletedEmailDtoFactory
+class DefinitiveRegistrationConfirmedUpdateEmailDtoFactory
 {
-    private const DefinitiveRegistrationCompletedBaseUrl = 'http://localhost:8080/DefinitiveRegistrationCompleted';
+    private const DefinitiveRegistrationConfirmedUpdateBaseUrl = 'http://localhost:8080/DefinitiveRegistrationConfirmedUpdate';
         
     public static function create(
         UserEmail $toAddress,
@@ -21,7 +21,7 @@ class DefinitiveRegistrationCompletedEmailDtoFactory
     ): SendEmailDto
     {
         $templateValiables = [
-            'DefinitiveRegistrationCompletedUrl' => self::DefinitiveRegistrationCompletedBaseUrl . '?token=' . $oneTimeToken->tokenValue()->value,
+            'DefinitiveRegistrationConfirmedUpdateUrl' => self::DefinitiveRegistrationConfirmedUpdateBaseUrl . '?token=' . $oneTimeToken->tokenValue()->value,
             'oneTimePassword' => $oneTimePassword->value
         ];
         return new SendEmailDto(
@@ -29,7 +29,7 @@ class DefinitiveRegistrationCompletedEmailDtoFactory
             $toAddress->value,
             'システムテスト',
             '本登録済みメール',
-            'email.DefinitiveRegistrationCompleted.DefinitiveRegistrationCompletedMail',
+            'email.DefinitiveRegistrationConfirmedUpdate.DefinitiveRegistrationConfirmedUpdateMail',
             $templateValiables
         );
     }

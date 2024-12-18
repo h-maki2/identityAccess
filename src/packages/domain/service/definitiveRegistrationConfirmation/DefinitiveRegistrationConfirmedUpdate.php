@@ -18,7 +18,7 @@ use RuntimeException;
 /**
  * 認証アカウントを本登録済みに更新するサービス
  */
-class DefinitiveRegistrationCompleted
+class DefinitiveRegistrationConfirmedUpdate
 {
     private IAuthenticationAccountRepository $authenticationAccountRepository;
     private IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;

@@ -78,7 +78,7 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
 
         // 正しいデータで本登録確認メールが送信できていることを確認
         $actualDefinitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationRepository->findById($authenticationAccount->id());
-        $this->assertStringContainsString($actualDefinitiveRegistrationConfirmation->oneTimeToken()->tokenValue()->value, $this->catchedSendEmailDto->templateVariables['DefinitiveRegistrationCompletedUrl']);
+        $this->assertStringContainsString($actualDefinitiveRegistrationConfirmation->oneTimeToken()->tokenValue()->value, $this->catchedSendEmailDto->templateVariables['DefinitiveRegistrationConfirmedUpdateUrl']);
         $this->assertEquals($this->catchedSendEmailDto->templateVariables['oneTimePassword'], $actualDefinitiveRegistrationConfirmation->oneTimePassword()->value);
     }
 

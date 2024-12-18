@@ -2,7 +2,7 @@
 
 namespace packages\application\authentication\definitiveRegistrationCompleted;
 
-class DefinitiveRegistrationCompletedResult
+class DefinitiveRegistrationConfirmedUpdateResult
 {
     readonly bool $validationError;
     readonly string $validationErrorMessage;
@@ -13,13 +13,13 @@ class DefinitiveRegistrationCompletedResult
         $this->validationErrorMessage = $validationErrorMessage;
     }
 
-    public static function createWhenValidationError(string $validationErrorMessage): DefinitiveRegistrationCompletedResult
+    public static function createWhenValidationError(string $validationErrorMessage): DefinitiveRegistrationConfirmedUpdateResult
     {
-        return new DefinitiveRegistrationCompletedResult(true, $validationErrorMessage);
+        return new DefinitiveRegistrationConfirmedUpdateResult(true, $validationErrorMessage);
     }
 
-    public static function createWhenSuccess(): DefinitiveRegistrationCompletedResult
+    public static function createWhenSuccess(): DefinitiveRegistrationConfirmedUpdateResult
     {
-        return new DefinitiveRegistrationCompletedResult(false, '');
+        return new DefinitiveRegistrationConfirmedUpdateResult(false, '');
     }
 }

@@ -38,7 +38,7 @@ class OneTimeTokenAndPasswordRegeneration
         $this->definitiveRegistrationConfirmationRepository->save($definitiveRegistrationConfirmation);
 
         $this->emailSender->send(
-            DefinitiveRegistrationCompletedEmailDtoFactory::create(
+            DefinitiveRegistrationConfirmedUpdateEmailDtoFactory::create(
                 $authInfo->email(),
                 $definitiveRegistrationConfirmation->oneTimeToken(),
                 $definitiveRegistrationConfirmation->oneTimePassword()
