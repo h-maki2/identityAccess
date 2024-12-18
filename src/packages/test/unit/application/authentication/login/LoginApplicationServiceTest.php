@@ -4,7 +4,6 @@ use packages\adapter\persistence\inMemory\InMemoryAuthenticationAccountRepositor
 use packages\application\authentication\login\LoginApplicationService;
 use packages\application\authentication\login\LoginOutputBoundary;
 use packages\application\authentication\login\LoginResult;
-use packages\domain\model\authenticationAccount\AuthenticationService;
 use packages\domain\model\authenticationAccount\FailedLoginCount;
 use packages\domain\model\authenticationAccount\LoginRestriction;
 use packages\domain\model\authenticationAccount\LoginRestrictionStatus;
@@ -16,6 +15,9 @@ use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\authenticationAccount\VerificationStatus;
 use packages\domain\model\oauth\client\IClientFetcher;
 use packages\domain\model\oauth\client\RedirectUrl;
+use packages\domain\model\oauth\scope\Scope;
+use packages\domain\model\oauth\scope\ScopeList;
+use packages\domain\service\authenticationAccount\AuthenticationService;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\client\ClientDataForTest;
 use packages\test\helpers\client\TestClientDataFactory;
@@ -78,6 +80,9 @@ class LoginApplicationServiceTest extends TestCase
         $responseType = 'code';
         $state = 'abcdefg';
 
+        $scopeString = Scope::ReadAccount->value . ' ' . Scope::EditAccount->value . ' ' . Scope::DeleteAccount->value;
+        $scopeList = ScopeList::createFromString($scopeString);
+
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationAccountRepository,
             $this->authenticationService,
@@ -89,7 +94,8 @@ class LoginApplicationServiceTest extends TestCase
             $clientId,
             self::REDIRECT_URL,
             $responseType,
-            $state
+            $state,
+            $scopeString
         );
 
         // then
@@ -99,7 +105,8 @@ class LoginApplicationServiceTest extends TestCase
         $expectedAuthorizationUrl = $this->expectedClientData->urlForObtainingAuthorizationCode(
             new RedirectUrl(self::REDIRECT_URL),
             $responseType,
-            $state
+            $state,
+            $scopeList
         );
         $this->assertEquals($expectedAuthorizationUrl, $result->authorizationUrl);
         // 正しいuserIdでログインされていることを確認する
@@ -128,6 +135,8 @@ class LoginApplicationServiceTest extends TestCase
         $responseType = 'code';
         $state = 'abcdefg';
 
+        $scopeString = Scope::ReadAccount->value . ' ' . Scope::EditAccount->value . ' ' . Scope::DeleteAccount->value;
+
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationAccountRepository,
             $this->authenticationService,
@@ -139,7 +148,8 @@ class LoginApplicationServiceTest extends TestCase
             $clientId,
             self::REDIRECT_URL,
             $responseType,
-            $state
+            $state,
+            $scopeString
         );
 
         // then
@@ -168,6 +178,8 @@ class LoginApplicationServiceTest extends TestCase
         $responseType = 'code';
         $state = 'abcdefg';
 
+        $scopeString = Scope::ReadAccount->value . ' ' . Scope::EditAccount->value . ' ' . Scope::DeleteAccount->value;
+
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationAccountRepository,
             $this->authenticationService,
@@ -179,7 +191,8 @@ class LoginApplicationServiceTest extends TestCase
             $clientId,
             self::REDIRECT_URL,
             $responseType,
-            $state
+            $state,
+            $scopeString
         );
 
         // then
@@ -215,6 +228,8 @@ class LoginApplicationServiceTest extends TestCase
         $responseType = 'code';
         $state = 'abcdefg';
 
+        $scopeString = Scope::ReadAccount->value . ' ' . Scope::EditAccount->value . ' ' . Scope::DeleteAccount->value;
+
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationAccountRepository,
             $this->authenticationService,
@@ -226,7 +241,8 @@ class LoginApplicationServiceTest extends TestCase
             $clientId,
             self::REDIRECT_URL,
             $responseType,
-            $state
+            $state,
+            $scopeString
         );
 
         // then
@@ -265,6 +281,9 @@ class LoginApplicationServiceTest extends TestCase
         $responseType = 'code';
         $state = 'abcdefg';
 
+        $scopeString = Scope::ReadAccount->value . ' ' . Scope::EditAccount->value . ' ' . Scope::DeleteAccount->value;
+        $scopeList = ScopeList::createFromString($scopeString);
+
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationAccountRepository,
             $this->authenticationService,
@@ -276,7 +295,8 @@ class LoginApplicationServiceTest extends TestCase
             $clientId,
             self::REDIRECT_URL,
             $responseType,
-            $state
+            $state,
+            $scopeString
         );
 
         // then
@@ -286,7 +306,8 @@ class LoginApplicationServiceTest extends TestCase
         $expectedAuthorizationUrl = $this->expectedClientData->urlForObtainingAuthorizationCode(
             new RedirectUrl(self::REDIRECT_URL),
             $responseType,
-            $state
+            $state,
+            $scopeList
         );
         $this->assertEquals($expectedAuthorizationUrl, $result->authorizationUrl);
         // 正しいuserIdでログインされていることを確認する
@@ -321,6 +342,8 @@ class LoginApplicationServiceTest extends TestCase
         $clientId = '1';
         $responseType = 'code';
         $state = 'abcdefg';
+        $scopeString = Scope::ReadAccount->value . ' ' . Scope::EditAccount->value . ' ' . Scope::DeleteAccount->value;
+
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationAccountRepository,
             $this->authenticationService,
@@ -332,7 +355,8 @@ class LoginApplicationServiceTest extends TestCase
             $clientId,
             self::REDIRECT_URL,
             $responseType,
-            $state
+            $state,
+            $scopeString
         );
 
         // then
@@ -367,6 +391,7 @@ class LoginApplicationServiceTest extends TestCase
         $clientId = '1';
         $responseType = 'code';
         $state = 'abcdefg';
+        $scopeString = Scope::ReadAccount->value . ' ' . Scope::EditAccount->value . ' ' . Scope::DeleteAccount->value;
 
         $loginApplicationService = new LoginApplicationService(
             $this->authenticationAccountRepository,
@@ -381,7 +406,8 @@ class LoginApplicationServiceTest extends TestCase
                 $clientId,
                 self::REDIRECT_URL,
                 $responseType,
-                $state
+                $state,
+                $scopeString
             );
         }
 
@@ -393,7 +419,8 @@ class LoginApplicationServiceTest extends TestCase
             $clientId,
             self::REDIRECT_URL,
             $responseType,
-            $state
+            $state,
+            $scopeString
         );
 
         // then
