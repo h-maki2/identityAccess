@@ -42,16 +42,16 @@ class ResendRegistrationConfirmationEmailApplicationService implements ResendReg
     ): ResendRegistrationConfirmationEmailResult
     {
         $userEmail = new UserEmail($userEmailString);
-        $authInfo = $this->authenticationAccountRepository->findByEmail($userEmail);
-        if ($authInfo === null) {
+        $authenticationAccount = $this->authenticationAccountRepository->findByEmail($userEmail);
+        if ($authenticationAccount === null) {
             return ResendRegistrationConfirmationEmailResult::createWhenValidationError('メールアドレスが登録されていません。');
         }
 
-        if ($authInfo->isVerified()) {
+        if ($authenticationAccount->hasCompletedRegistration()) {
             return ResendRegistrationConfirmationEmailResult::createWhenValidationError('既にアカウントが本登録済みです。');
         }
 
-        $this->oneTimeTokenAndPasswordRegeneration->handle($authInfo);
+        $this->oneTimeTokenAndPasswordRegeneration->handle($authenticationAccount);
 
         return ResendRegistrationConfirmationEmailResult::createWhenSuccess();
     }

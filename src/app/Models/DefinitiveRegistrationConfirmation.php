@@ -9,7 +9,7 @@ class DefinitiveRegistrationConfirmation extends Model
 {
     use HasFactory;
 
-    protected $table = 'auth_confirmations';
+    protected $table = 'definitive_registration_confirmations';
 
     protected $primaryKey = 'user_id';
     public $incrementing = false;

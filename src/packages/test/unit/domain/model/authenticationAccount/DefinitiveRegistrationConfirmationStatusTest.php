@@ -1,29 +1,29 @@
 <?php
 
-use packages\domain\model\authenticationAccount\DefinitiveRegistrationConfirmationStatus;
+use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedStatus;
 use PHPUnit\Framework\TestCase;
 
-class DefinitiveRegistrationConfirmationStatusTest extends TestCase
+class DefinitiveRegistrationCompletedStatusTest extends TestCase
 {
-    public function test_ステータスが本登録済みの場合は、isVerifiedメソッドの戻り値がtrueを返す()
+    public function test_ステータスが本登録済みの場合は、isCompletedメソッドの戻り値がtrueを返す()
     {
         // given
-        $definitiveRegistrationConfirmationStatus = definitiveRegistrationConfirmationStatus::Verified;
+        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Completed;
 
         // when
-        $result = $definitiveRegistrationConfirmationStatus->isVerified();
+        $result = $DefinitiveRegistrationCompletedStatus->isCompleted();
 
         // then
         $this->assertTrue($result);
     }
 
-    public function test_ステータスが未認証の場合に、isVerifiedメソッドの戻り値がfalseを返す()
+    public function test_ステータスが未認証の場合に、isCompletedメソッドの戻り値がfalseを返す()
     {
         // given
-        $definitiveRegistrationConfirmationStatus = definitiveRegistrationConfirmationStatus::Unverified;
+        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Incomplete;
 
         // when
-        $result = $definitiveRegistrationConfirmationStatus->isVerified();
+        $result = $DefinitiveRegistrationCompletedStatus->isCompleted();
 
         // then
         $this->assertFalse($result);

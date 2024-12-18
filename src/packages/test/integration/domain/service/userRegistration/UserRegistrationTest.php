@@ -13,7 +13,7 @@ use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
 use packages\domain\model\email\SendEmailDto;
 use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\UserPassword;
-use packages\domain\model\authenticationAccount\DefinitiveRegistrationConfirmationStatus;
+use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedStatus;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\service\userRegistration\UserRegistration;
 use packages\test\helpers\definitiveRegistrationConfirmation\definitiveRegistrationConfirmationTestDataCreator;
@@ -78,7 +78,7 @@ class UserRegistrationTest extends TestCase
         // then
         // 未認証状態の認証アカウントが登録されていることを確認する
         $actualAuthenticationAccount = $this->authenticationAccountRepository->findByEmail($userEmail);
-        $this->assertEquals(definitiveRegistrationConfirmationStatus::Unverified, $actualAuthenticationAccount->DefinitiveRegistrationConfirmationStatus());
+        $this->assertEquals(DefinitiveRegistrationCompletedStatus::Incomplete, $actualAuthenticationAccount->DefinitiveRegistrationCompletedStatus());
 
         // 認証確認情報が登録されていることを確認する
         $actualDefinitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationRepository->findByTokenValue($oneTimeToken->tokenValue());

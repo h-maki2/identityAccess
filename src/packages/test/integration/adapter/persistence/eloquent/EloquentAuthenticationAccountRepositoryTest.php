@@ -9,7 +9,7 @@ use packages\domain\model\authenticationAccount\LoginRestriction;
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\UserPassword;
-use packages\domain\model\authenticationAccount\DefinitiveRegistrationConfirmationStatus;
+use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedStatus;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\authenticationAccount\TestAuthenticationAccountFactory;
 use Tests\TestCase;
@@ -38,14 +38,14 @@ class EloquentAuthenticationAccountRepositoryTest extends TestCase
         // 認証アカウントを作成する
         $userEmail = new UserEmail('test@example.com');
         $userPassword = UserPassword::create('abcABC123!');
-        $definitiveRegistrationConfirmationStatus = definitiveRegistrationConfirmationStatus::Verified;
+        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Completed;
         $userId = $this->authenticationAccountRepository->nextUserId();
         $loginRestriction = LoginRestriction::initialization();
         $unsubscribeStatus = UnsubscribeStatus::Subscribed;
         $authenticationAccount = TestAuthenticationAccountFactory::create(
             $userEmail,
             $userPassword,
-            $definitiveRegistrationConfirmationStatus,
+            $DefinitiveRegistrationCompletedStatus,
             $userId,
             $loginRestriction,
             $unsubscribeStatus
@@ -70,7 +70,7 @@ class EloquentAuthenticationAccountRepositoryTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
             password: $userPassword,
-            definitiveRegistrationConfirmationStatus: definitiveRegistrationConfirmationStatus::Verified
+            DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Completed
         );
 
         // when

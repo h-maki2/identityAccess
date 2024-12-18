@@ -12,7 +12,7 @@ use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\authenticationAccount\AuthenticationAccount;
 use packages\domain\model\authenticationAccount\LoginRestrictionStatus;
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
-use packages\domain\model\authenticationAccount\DefinitiveRegistrationConfirmationStatus;
+use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedStatus;
 use packages\domain\service\authenticationAccount\AuthenticationAccountService;
 use packages\test\helpers\authenticationAccount\TestAuthenticationAccountFactory;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
@@ -49,7 +49,7 @@ class AuthenticationAccountTest extends TestCase
         );
 
         // then
-        $this->assertEquals(definitiveRegistrationConfirmationStatus::Unverified, $authenticationAccount->DefinitiveRegistrationConfirmationStatus());
+        $this->assertEquals(DefinitiveRegistrationCompletedStatus::Incomplete, $authenticationAccount->DefinitiveRegistrationCompletedStatus());
         $this->assertEquals(LoginRestrictionStatus::Unrestricted->value, $authenticationAccount->LoginRestriction()->loginRestrictionStatus());
         $this->assertEquals(0, $authenticationAccount->LoginRestriction()->failedLoginCount());
         $this->assertEquals(null, $authenticationAccount->LoginRestriction()->nextLoginAllowedAt());
@@ -91,7 +91,7 @@ class AuthenticationAccountTest extends TestCase
         $email = new UserEmail('otheruser@example.com');
         $userId = $this->authenticationAccountRepository->nextUserId();
         $password = UserPassword::create('1234abcABC!');
-        $definitiveRegistrationConfirmationStatus = definitiveRegistrationConfirmationStatus::Verified;
+        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Completed;
         $LoginRestriction = LoginRestriction::initialization();
 
         // when
@@ -99,7 +99,7 @@ class AuthenticationAccountTest extends TestCase
             $userId,
             $email,
             $password,
-            $definitiveRegistrationConfirmationStatus,
+            $DefinitiveRegistrationCompletedStatus,
             $LoginRestriction,
             UnsubscribeStatus::Subscribed
         );
@@ -108,7 +108,7 @@ class AuthenticationAccountTest extends TestCase
         $this->assertEquals($email, $authenticationAccount->email());
         $this->assertEquals($userId, $authenticationAccount->id());
         $this->assertEquals($password, $authenticationAccount->password());
-        $this->assertEquals($definitiveRegistrationConfirmationStatus, $authenticationAccount->DefinitiveRegistrationConfirmationStatus());
+        $this->assertEquals($DefinitiveRegistrationCompletedStatus, $authenticationAccount->DefinitiveRegistrationCompletedStatus());
         $this->assertEquals($LoginRestriction, $authenticationAccount->LoginRestriction());
     }
 
@@ -116,27 +116,27 @@ class AuthenticationAccountTest extends TestCase
     {
         // given
         // 本登録済みステータスが未認証のユーザープロフィールを作成
-        $definitiveRegistrationConfirmationStatus = definitiveRegistrationConfirmationStatus::Unverified;
+        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Incomplete;
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            definitiveRegistrationConfirmationStatus: $definitiveRegistrationConfirmationStatus
+            DefinitiveRegistrationCompletedStatus: $DefinitiveRegistrationCompletedStatus
         );
 
         // when
         $authenticationAccount->updateVerified();
 
         // then
-        $this->assertEquals(definitiveRegistrationConfirmationStatus::Verified, $authenticationAccount->DefinitiveRegistrationConfirmationStatus());
+        $this->assertEquals(DefinitiveRegistrationCompletedStatus::Completed, $authenticationAccount->DefinitiveRegistrationCompletedStatus());
     }
 
     public function test_認証ステータスが本登録済みの場合、パスワードの変更が行える()
     {
         // given
         // 本登録済みステータスが本登録済みのユーザープロフィールを作成
-        $definitiveRegistrationConfirmationStatus = definitiveRegistrationConfirmationStatus::Verified;
+        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Completed;
         $password = UserPassword::create('124abcABC!');
         $authenticationAccount = TestAuthenticationAccountFactory::create(
             password: $password,
-            definitiveRegistrationConfirmationStatus: $definitiveRegistrationConfirmationStatus
+            DefinitiveRegistrationCompletedStatus: $DefinitiveRegistrationCompletedStatus
         );
 
         // when
@@ -150,11 +150,11 @@ class AuthenticationAccountTest extends TestCase
     public function test_認証ステータスが未確認の場合、パスワードの変更が行えない()
     {
         // given
-        $definitiveRegistrationConfirmationStatus = definitiveRegistrationConfirmationStatus::Unverified;
+        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Incomplete;
         $password = UserPassword::create('124abcABC!');
         $authenticationAccount = TestAuthenticationAccountFactory::create(
             password: $password,
-            definitiveRegistrationConfirmationStatus: $definitiveRegistrationConfirmationStatus
+            DefinitiveRegistrationCompletedStatus: $DefinitiveRegistrationCompletedStatus
         );
 
         // when・then
@@ -168,7 +168,7 @@ class AuthenticationAccountTest extends TestCase
     {
         // given
         // アカウントがロックされているユーザープロフィールを作成
-        $definitiveRegistrationConfirmationStatus = definitiveRegistrationConfirmationStatus::Verified;
+        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Completed;
         $password = UserPassword::create('124abcABC!');
         $loginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
@@ -177,7 +177,7 @@ class AuthenticationAccountTest extends TestCase
         );
         $authenticationAccount = TestAuthenticationAccountFactory::create(
             password: $password,
-            definitiveRegistrationConfirmationStatus: $definitiveRegistrationConfirmationStatus,
+            DefinitiveRegistrationCompletedStatus: $DefinitiveRegistrationCompletedStatus,
             loginRestriction: $loginRestriction
         );
 
@@ -191,7 +191,7 @@ class AuthenticationAccountTest extends TestCase
     public function test_ログイン失敗回数を更新する()
     {
         // given
-        $definitiveRegistrationConfirmationStatus = definitiveRegistrationConfirmationStatus::Verified;
+        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Completed;
         // ログイン失敗回数は0回
         $LoginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(0),
@@ -199,7 +199,7 @@ class AuthenticationAccountTest extends TestCase
             null
         );
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            definitiveRegistrationConfirmationStatus: $definitiveRegistrationConfirmationStatus,
+            DefinitiveRegistrationCompletedStatus: $DefinitiveRegistrationCompletedStatus,
             loginRestriction: $LoginRestriction
         );
 
@@ -213,7 +213,7 @@ class AuthenticationAccountTest extends TestCase
     public function test_認証ステータスが未確認の場合、ログイン失敗回数を更新しない()
     {
         // given
-        $definitiveRegistrationConfirmationStatus = definitiveRegistrationConfirmationStatus::Unverified;
+        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Incomplete;
         // ログイン失敗回数は0回
         $LoginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(0),
@@ -221,7 +221,7 @@ class AuthenticationAccountTest extends TestCase
             null
         );
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            definitiveRegistrationConfirmationStatus: $definitiveRegistrationConfirmationStatus,
+            DefinitiveRegistrationCompletedStatus: $DefinitiveRegistrationCompletedStatus,
             loginRestriction: $LoginRestriction
         );
 
@@ -235,14 +235,14 @@ class AuthenticationAccountTest extends TestCase
     {
         // given
         // ログイン失敗回数が10回に達している認証アカウントを生成する
-        $definitiveRegistrationConfirmationStatus = definitiveRegistrationConfirmationStatus::Verified;
+        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Completed;
         $LoginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
             LoginRestrictionStatus::Unrestricted,
             null
         );
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            definitiveRegistrationConfirmationStatus: $definitiveRegistrationConfirmationStatus,
+            DefinitiveRegistrationCompletedStatus: $DefinitiveRegistrationCompletedStatus,
             loginRestriction: $LoginRestriction
         );
 
@@ -257,14 +257,14 @@ class AuthenticationAccountTest extends TestCase
     public function test_認証ステータスが未認証の場合、ログイン制限を有効にできない()
     {
         // given
-        $definitiveRegistrationConfirmationStatus = definitiveRegistrationConfirmationStatus::Unverified;
+        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Incomplete;
         $LoginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
             LoginRestrictionStatus::Unrestricted,
             null
         );
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            definitiveRegistrationConfirmationStatus: $definitiveRegistrationConfirmationStatus,
+            DefinitiveRegistrationCompletedStatus: $DefinitiveRegistrationCompletedStatus,
             loginRestriction: $LoginRestriction
         );
 
@@ -278,14 +278,14 @@ class AuthenticationAccountTest extends TestCase
     {
         // given
         // ログイン制限は有効だが再ログインは可能である認証アカウントを生成する
-        $definitiveRegistrationConfirmationStatus = definitiveRegistrationConfirmationStatus::Verified;
+        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Completed;
         $LoginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
             LoginRestrictionStatus::Restricted,
             NextLoginAllowedAt::reconstruct(new DateTimeImmutable('-1 minutes'))
         );
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            definitiveRegistrationConfirmationStatus: $definitiveRegistrationConfirmationStatus,
+            DefinitiveRegistrationCompletedStatus: $DefinitiveRegistrationCompletedStatus,
             loginRestriction: $LoginRestriction
         );
 
@@ -301,14 +301,14 @@ class AuthenticationAccountTest extends TestCase
     {
         // given
         // ログイン制限が有効状態で再ログインが不可である認証アカウントを生成する
-        $definitiveRegistrationConfirmationStatus = definitiveRegistrationConfirmationStatus::Verified;
+        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Completed;
         $loginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
             LoginRestrictionStatus::Restricted,
             NextLoginAllowedAt::reconstruct(new DateTimeImmutable('+10 minutes'))
         );
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            definitiveRegistrationConfirmationStatus: $definitiveRegistrationConfirmationStatus,
+            DefinitiveRegistrationCompletedStatus: $DefinitiveRegistrationCompletedStatus,
             loginRestriction: $loginRestriction
         );
 
@@ -323,14 +323,14 @@ class AuthenticationAccountTest extends TestCase
     {
         // given
         // ログイン制限は有効だが再ログイン可能な認証アカウントを生成する
-        $definitiveRegistrationConfirmationStatus = definitiveRegistrationConfirmationStatus::Verified;
+        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Completed;
         $loginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
             LoginRestrictionStatus::Restricted,
             NextLoginAllowedAt::reconstruct(new DateTimeImmutable('-1 minutes'))
         );
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            definitiveRegistrationConfirmationStatus: $definitiveRegistrationConfirmationStatus,
+            DefinitiveRegistrationCompletedStatus: $DefinitiveRegistrationCompletedStatus,
             loginRestriction: $loginRestriction
         );
 
@@ -345,14 +345,14 @@ class AuthenticationAccountTest extends TestCase
     {
         // given
         // ログイン制限が有効状態ではない認証アカウントを生成する
-        $definitiveRegistrationConfirmationStatus = definitiveRegistrationConfirmationStatus::Verified;
+        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Completed;
         $loginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(9),
             LoginRestrictionStatus::Unrestricted,
             null
         );
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            definitiveRegistrationConfirmationStatus: $definitiveRegistrationConfirmationStatus,
+            DefinitiveRegistrationCompletedStatus: $DefinitiveRegistrationCompletedStatus,
             loginRestriction: $loginRestriction
         );
 
@@ -367,9 +367,9 @@ class AuthenticationAccountTest extends TestCase
     {
         // given
         // 認証ステータスが未認証の認証アカウントを生成する
-        $definitiveRegistrationConfirmationStatus = definitiveRegistrationConfirmationStatus::Unverified;
+        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Incomplete;
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            definitiveRegistrationConfirmationStatus: $definitiveRegistrationConfirmationStatus
+            DefinitiveRegistrationCompletedStatus: $DefinitiveRegistrationCompletedStatus
         );
 
         // when
@@ -383,14 +383,14 @@ class AuthenticationAccountTest extends TestCase
     {
         // given
         // ログイン失敗回数が10回に達していている認証アカウントを生成する
-        $definitiveRegistrationConfirmationStatus = definitiveRegistrationConfirmationStatus::Verified;
+        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Completed;
         $loginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(10),
             LoginRestrictionStatus::Unrestricted,
             null
         );
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            definitiveRegistrationConfirmationStatus: $definitiveRegistrationConfirmationStatus,
+            DefinitiveRegistrationCompletedStatus: $DefinitiveRegistrationCompletedStatus,
             loginRestriction: $loginRestriction
         );
 
@@ -405,14 +405,14 @@ class AuthenticationAccountTest extends TestCase
     {
         // given
         // ログイン失敗回数が10回に達していない認証アカウントを生成する
-        $definitiveRegistrationConfirmationStatus = definitiveRegistrationConfirmationStatus::Verified;
+        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Completed;
         $loginRestriction = LoginRestriction::reconstruct(
             FailedLoginCount::reconstruct(9),
             LoginRestrictionStatus::Unrestricted,
             null
         );
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            definitiveRegistrationConfirmationStatus: $definitiveRegistrationConfirmationStatus,
+            DefinitiveRegistrationCompletedStatus: $DefinitiveRegistrationCompletedStatus,
             loginRestriction: $loginRestriction
         );
 

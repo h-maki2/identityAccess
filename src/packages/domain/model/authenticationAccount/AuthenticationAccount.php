@@ -12,7 +12,7 @@ class AuthenticationAccount
     private UserId $userId;
     private UserEmail $userEmail;
     private UserPassword $userPassword;
-    private DefinitiveRegistrationConfirmationStatus $definitiveRegistrationConfirmationStatus;
+    private DefinitiveRegistrationCompletedStatus $definitiveRegistrationCompletedStatus;
     private LoginRestriction $loginRestriction;
     private UnsubscribeStatus $unsubscribeStatus;
 
@@ -20,7 +20,7 @@ class AuthenticationAccount
         UserId $userId,
         UserEmail $userEmail,
         UserPassword $userPassword,
-        DefinitiveRegistrationConfirmationStatus $definitiveRegistrationConfirmationStatus,
+        DefinitiveRegistrationCompletedStatus $definitiveRegistrationCompletedStatus,
         LoginRestriction $loginRestriction,
         UnsubscribeStatus $unsubscribeStatus
     )
@@ -32,7 +32,7 @@ class AuthenticationAccount
         $this->userId = $userId;
         $this->userEmail = $userEmail;
         $this->userPassword = $userPassword;
-        $this->definitiveRegistrationConfirmationStatus = $definitiveRegistrationConfirmationStatus;
+        $this->definitiveRegistrationCompletedStatus = $definitiveRegistrationCompletedStatus;
         $this->loginRestriction = $loginRestriction;
         $this->unsubscribeStatus = $unsubscribeStatus;
     }
@@ -53,7 +53,7 @@ class AuthenticationAccount
             $userId,
             $userEmail,
             $userPassword,
-            definitiveRegistrationConfirmationStatus::Unverified,
+            DefinitiveRegistrationCompletedStatus::Incomplete,
             LoginRestriction::initialization(),
             UnsubscribeStatus::Subscribed
         );
@@ -63,7 +63,7 @@ class AuthenticationAccount
         UserId $userId,
         UserEmail $userEmail,
         UserPassword $userPassword,
-        DefinitiveRegistrationConfirmationStatus $definitiveRegistrationConfirmationStatus,
+        DefinitiveRegistrationCompletedStatus $DefinitiveRegistrationCompletedStatus,
         LoginRestriction $LoginRestriction,
         UnsubscribeStatus $unsubscribeStatus
     ): self
@@ -72,7 +72,7 @@ class AuthenticationAccount
             $userId,
             $userEmail,
             $userPassword,
-            $definitiveRegistrationConfirmationStatus,
+            $DefinitiveRegistrationCompletedStatus,
             $LoginRestriction,
             $unsubscribeStatus
         );
@@ -93,9 +93,9 @@ class AuthenticationAccount
         return $this->userPassword;
     }
 
-    public function DefinitiveRegistrationConfirmationStatus(): DefinitiveRegistrationConfirmationStatus
+    public function DefinitiveRegistrationCompletedStatus(): DefinitiveRegistrationCompletedStatus
     {
-        return $this->definitiveRegistrationConfirmationStatus;
+        return $this->definitiveRegistrationCompletedStatus;
     }
 
     public function LoginRestriction(): LoginRestriction
@@ -110,7 +110,7 @@ class AuthenticationAccount
 
     public function updateVerified(): void
     {
-        $this->definitiveRegistrationConfirmationStatus = definitiveRegistrationConfirmationStatus::Verified;
+        $this->definitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Completed;
     }
 
     public function updateUnsubscribed(): void
@@ -120,7 +120,7 @@ class AuthenticationAccount
 
     public function changePassword(UserPassword $password, DateTimeImmutable $currentDateTime): void
     {
-        if (!$this->isVerified()) {
+        if (!$this->hasCompletedRegistration()) {
             throw new DomainException('本登録済みのユーザーではありません。');
         }
 
@@ -136,7 +136,7 @@ class AuthenticationAccount
      */
     public function addFailedLoginCount(): void
     {
-        if (!$this->isVerified()) {
+        if (!$this->hasCompletedRegistration()) {
             throw new DomainException('本登録済みのユーザーではありません。');
         }
 
@@ -148,7 +148,7 @@ class AuthenticationAccount
      */
     public function locking(DateTimeImmutable $currentDateTime): void
     {
-        if (!$this->isVerified()) {
+        if (!$this->hasCompletedRegistration()) {
             throw new DomainException('本登録済みのユーザーではありません。');
         }
 
@@ -160,7 +160,7 @@ class AuthenticationAccount
      */
     public function unlocking(DateTimeImmutable $currentDateTime): void
     {
-        if (!$this->isVerified()) {
+        if (!$this->hasCompletedRegistration()) {
             throw new DomainException('本登録済みのユーザーではありません。');
         }
 
@@ -172,7 +172,7 @@ class AuthenticationAccount
      */
     public function canLoggedIn(DateTimeImmutable $currentDateTime): bool
     {
-        if (!$this->isVerified()) {
+        if (!$this->hasCompletedRegistration()) {
             return false;
         }
 
@@ -198,9 +198,9 @@ class AuthenticationAccount
     /**
      * 本登録済みかどうかを判定
      */
-    public function isVerified(): bool
+    public function hasCompletedRegistration(): bool
     {
-        return $this->definitiveRegistrationConfirmationStatus->isVerified();
+        return $this->definitiveRegistrationCompletedStatus->isCompleted();
     }
 
     /**

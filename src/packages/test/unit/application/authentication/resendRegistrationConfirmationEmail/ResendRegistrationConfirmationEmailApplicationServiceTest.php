@@ -8,7 +8,7 @@ use packages\application\authentication\resendRegistrationConfirmationEmail\Rese
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationAccount\UserEmail;
-use packages\domain\model\authenticationAccount\DefinitiveRegistrationConfirmationStatus;
+use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedStatus;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\model\email\SendEmailDto;
 use packages\test\helpers\definitiveRegistrationConfirmation\definitiveRegistrationConfirmationTestDataCreator;
@@ -56,7 +56,7 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
         $userEmail = new UserEmail('test@example.com');
         $authenticationAccount = $this->authenticationAccountTestDataCreator->create(
             email: $userEmail,
-            definitiveRegistrationConfirmationStatus: definitiveRegistrationConfirmationStatus::Unverified // 本登録済みではない
+            DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete // 本登録済みではない
         );
 
         // 認証確認を作成して保存する
@@ -117,7 +117,7 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
         $userEmail = new UserEmail('test@example.com');
         $authenticationAccount = $this->authenticationAccountTestDataCreator->create(
             email: $userEmail,
-            definitiveRegistrationConfirmationStatus: definitiveRegistrationConfirmationStatus::Verified // 本登録済み
+            DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Completed // 本登録済み
         );
 
         // 認証確認を作成して保存する
@@ -145,7 +145,7 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
         $userEmail = new UserEmail('test@example.com');
         $authenticationAccount = $this->authenticationAccountTestDataCreator->create(
             email: $userEmail,
-            definitiveRegistrationConfirmationStatus: definitiveRegistrationConfirmationStatus::Unverified // 本登録済みではない
+            DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete // 本登録済みではない
         );
 
         // when・then

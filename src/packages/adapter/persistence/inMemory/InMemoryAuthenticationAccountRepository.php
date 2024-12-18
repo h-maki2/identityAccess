@@ -14,7 +14,7 @@ use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\authenticationAccount\AuthenticationAccount;
 use packages\domain\model\authenticationAccount\LoginRestrictionStatus;
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
-use packages\domain\model\authenticationAccount\DefinitiveRegistrationConfirmationStatus;
+use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedStatus;
 use Ramsey\Uuid\Uuid;
 use UnexpectedValueException;
 
@@ -81,7 +81,7 @@ class InMemoryAuthenticationAccountRepository implements IAuthenticationAccountR
             new UserId($authenticationAccountObj->user_id),
             new UserEmail($authenticationAccountObj->email),
             UserPassword::reconstruct($authenticationAccountObj->password),
-            definitiveRegistrationConfirmationStatus::from($authenticationAccountObj->verification_status),
+            DefinitiveRegistrationCompletedStatus::from($authenticationAccountObj->verification_status),
             LoginRestriction::reconstruct(
                 FailedLoginCount::reconstruct($authenticationAccountObj->failed_login_count),
                 LoginRestrictionStatus::from($authenticationAccountObj->login_restriction_status),
@@ -97,7 +97,7 @@ class InMemoryAuthenticationAccountRepository implements IAuthenticationAccountR
             'user_id' => $authenticationAccount->id()->value,
             'email' => $authenticationAccount->email()->value,
             'password' => $authenticationAccount->password()->hashedValue,
-            'verification_status' => $authenticationAccount->DefinitiveRegistrationConfirmationStatus()->value,
+            'verification_status' => $authenticationAccount->DefinitiveRegistrationCompletedStatus()->value,
             'failed_login_count' => $authenticationAccount->LoginRestriction()->failedLoginCount(),
             'next_login_allowed_at' => $authenticationAccount->LoginRestriction()->nextLoginAllowedAt(),
             'login_restriction_status' => $authenticationAccount->LoginRestriction()->loginRestrictionStatus(),
