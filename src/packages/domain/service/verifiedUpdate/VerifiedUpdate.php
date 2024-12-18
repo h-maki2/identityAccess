@@ -11,6 +11,7 @@ use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
+use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\common\transactionManage\TransactionManage;
 use RuntimeException;
 
@@ -45,13 +46,13 @@ class VerifiedUpdate
             throw new DomainException('認証情報を確認済みに更新できませんでした。');
         } 
 
-        $authInformation = $this->authenticationAccountRepository->findById($authConfirmation->userId);
-        $authInformation->updateVerified();
+        $authAccount = $this->authenticationAccountRepository->findById($authConfirmation->userId, UnsubscribeStatus::Subscribed);
+        $authAccount->updateVerified();
 
         try {
-            $this->transactionManage->performTransaction(function () use ($authInformation) {
-                $this->authenticationAccountRepository->save($authInformation);
-                $this->authConfirmationRepository->delete($authInformation->id());
+            $this->transactionManage->performTransaction(function () use ($authAccount) {
+                $this->authenticationAccountRepository->save($authAccount);
+                $this->authConfirmationRepository->delete($authAccount->id());
             });
         } catch (\Exception $e) {
             throw new TransactionException($e->getMessage());

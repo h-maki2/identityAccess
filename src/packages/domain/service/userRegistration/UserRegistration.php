@@ -2,6 +2,7 @@
 
 namespace packages\domain\service\userRegistration;
 
+use packages\application\common\exception\TransactionException;
 use packages\domain\model\email\SendEmailDto;
 use packages\domain\service\userRegistration\IUserRegistrationCompletionEmail;
 use packages\domain\model\authConfirmation\AuthConfirmation;
@@ -45,7 +46,7 @@ class UserRegistration
      */
     public function handle(UserEmail $email, UserPassword $password, OneTimeToken $oneTimeToken)
     {
-        $authInformation = AuthenticationAccount::create(
+        $authAccount = AuthenticationAccount::create(
             $this->authenticationAccountRepository->nextUserId(),
             $email,
             $password,
@@ -53,15 +54,19 @@ class UserRegistration
         );
 
         $authConfirmation = AuthConfirmation::create(
-            $authInformation->id(), 
+            $authAccount->id(), 
             $oneTimeToken, 
             new OneTimeTokenExistsService($this->authConfirmationRepository)
         );
 
-        $this->transactionManage->performTransaction(function () use ($authInformation, $authConfirmation) {
-            $this->authenticationAccountRepository->save($authInformation);
-            $this->authConfirmationRepository->save($authConfirmation);
-        });
+        try {
+            $this->transactionManage->performTransaction(function () use ($authAccount, $authConfirmation) {
+                $this->authenticationAccountRepository->save($authAccount);
+                $this->authConfirmationRepository->save($authConfirmation);
+            });
+        } catch (\Exception $e) {
+            throw new TransactionException($e->getMessage());
+        }
 
         $this->emailSender->send(
             VerifiedUpdateEmailDtoFactory::create(

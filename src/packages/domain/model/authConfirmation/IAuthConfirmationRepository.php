@@ -10,7 +10,7 @@ interface IAuthConfirmationRepository
 
     public function findById(UserId $userId): ?AuthConfirmation;
 
-    public function save(AuthConfirmation $authInformation): void;
+    public function save(AuthConfirmation $authAccount): void;
 
     public function delete(UserId $id): void;
 }
