@@ -38,7 +38,7 @@ class DefinitiveRegistrationConfirmationValidationTest extends TestCase
     public function test_6文字ではないワンタイムパスワードが入力された場合はfalseを返す()
     {
         // given
-        // あらかじめ認証確認情報を生成しておく
+        // あらかじめ本登録確認情報を生成しておく
         $authInfo = $this->authenticationAccountTestDataCreator->create();
         $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create($authInfo->id());
 
@@ -57,7 +57,7 @@ class DefinitiveRegistrationConfirmationValidationTest extends TestCase
     public function test_26文字ではないワンタイムトークンが入力された場合はfalseを返す()
     {
         // given
-        // あらかじめ認証確認情報を生成しておく
+        // あらかじめ本登録確認情報を生成しておく
         $authInfo = $this->authenticationAccountTestDataCreator->create();
         $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create($authInfo->id());
 
@@ -121,7 +121,7 @@ class DefinitiveRegistrationConfirmationValidationTest extends TestCase
         // given
         $authInfo = $this->authenticationAccountTestDataCreator->create();
 
-        // ワンタイムトークンの有効期限が2日前の認証確認情報を生成する
+        // ワンタイムトークンの有効期限が2日前の本登録確認情報を生成する
         $oneTimeExpiration = OneTimeTokenExpiration::reconstruct(new DateTimeImmutable('-2 day'));
         $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create(
             userId: $authInfo->id(),

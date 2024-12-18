@@ -25,7 +25,7 @@ class DefinitiveRegistrationCompletedUpdateTest extends TestCase
     private EloquentAuthenticationAccountRepository $authenticationAccountRepository;
     private DefinitiveRegistrationConfirmationTestDataCreator $definitiveRegistrationConfirmationTestDataCreator;
     private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
-    private DefinitiveRegistrationCompletedUpdate $DefinitiveRegistrationCompletedUpdate;
+    private DefinitiveRegistrationCompletedUpdate $definitiveRegistrationCompletedUpdate;
 
     use DatabaseTransactions;
 
@@ -37,7 +37,7 @@ class DefinitiveRegistrationCompletedUpdateTest extends TestCase
         $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($this->authenticationAccountRepository);
         $this->definitiveRegistrationConfirmationTestDataCreator = new DefinitiveRegistrationConfirmationTestDataCreator($this->definitiveRegistrationConfirmationRepository, $this->authenticationAccountRepository);
         $transactionManage = new EloquentTransactionManage();
-        $this->DefinitiveRegistrationCompletedUpdate = new DefinitiveRegistrationCompletedUpdate(
+        $this->definitiveRegistrationCompletedUpdate = new DefinitiveRegistrationCompletedUpdate(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $transactionManage
@@ -52,7 +52,7 @@ class DefinitiveRegistrationCompletedUpdateTest extends TestCase
     public function test_正しいワンタイムトークンとワンタイムパスワードが入力された場合に、認証アカウントを本登録済みに更新できる()
     {
         // given
-        // 認証アカウントと認証確認情報を作成する
+        // 認証アカウントと本登録確認情報を作成する
         $authInfo = $this->authenticationAccountTestDataCreator->create(
             DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
         );
@@ -63,21 +63,21 @@ class DefinitiveRegistrationCompletedUpdateTest extends TestCase
         $oneTimePassword = $definitiveRegistrationConfirmation->oneTimePassword();
 
         // when
-        $this->DefinitiveRegistrationCompletedUpdate->handle($oneTimeTokenValue, $oneTimePassword);
+        $this->definitiveRegistrationCompletedUpdate->handle($oneTimeTokenValue, $oneTimePassword);
 
         // then
         // 認証アカウントが本登録済みに更新されていることを確認
         $actualAuthInfo = $this->authenticationAccountRepository->findById($authInfo->id(), UnsubscribeStatus::Subscribed);
         $this->assertTrue($actualAuthInfo->isCompleted());
 
-        // 認証確認情報が削除されていることを確認
+        // 本登録確認情報が削除されていることを確認
         $this->assertNull($this->definitiveRegistrationConfirmationRepository->findByTokenValue($oneTimeTokenValue));
     }
 
     public function test_ワンタイムパスワードが正しくない場合に、認証アカウントを本登録済みに更新できない()
     {
         // given
-        // 認証アカウントと認証確認情報を作成する
+        // 認証アカウントと本登録確認情報を作成する
         $authInfo = $this->authenticationAccountTestDataCreator->create(
             DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
         );
@@ -95,13 +95,13 @@ class DefinitiveRegistrationCompletedUpdateTest extends TestCase
         // when・then
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('認証アカウントを本登録済みに更新できませんでした。');
-        $this->DefinitiveRegistrationCompletedUpdate->handle($oneTimeTokenValue, $oneTimePassword);
+        $this->definitiveRegistrationCompletedUpdate->handle($oneTimeTokenValue, $oneTimePassword);
     }
 
     public function test_ワンタイムトークンの有効期限が切れている場合に、認証アカウントを本登録済みに更新できない()
     {
         // given
-        // 認証アカウントと認証確認情報を作成する
+        // 認証アカウントと本登録確認情報を作成する
         $authInfo = $this->authenticationAccountTestDataCreator->create(
             DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
         );
@@ -119,6 +119,6 @@ class DefinitiveRegistrationCompletedUpdateTest extends TestCase
         // when
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('認証アカウントを本登録済みに更新できませんでした。');
-        $this->DefinitiveRegistrationCompletedUpdate->handle($oneTimeTokenValue, $oneTimePassword);
+        $this->definitiveRegistrationCompletedUpdate->handle($oneTimeTokenValue, $oneTimePassword);
     }
 }

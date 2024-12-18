@@ -138,7 +138,7 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
         $this->assertEquals('既にアカウントが本登録済みです。', $result->validationErrorMessage);
     }
 
-    public function test_認証アカウントに紐づく認証確認情報が存在しない場合は例外が発生する()
+    public function test_認証アカウントに紐づく本登録確認情報が存在しない場合は例外が発生する()
     {
         // given
         // 認証アカウントを作成して保存する

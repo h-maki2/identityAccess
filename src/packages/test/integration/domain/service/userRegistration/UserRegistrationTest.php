@@ -80,7 +80,7 @@ class UserRegistrationTest extends TestCase
         $actualAuthenticationAccount = $this->authenticationAccountRepository->findByEmail($userEmail);
         $this->assertEquals(DefinitiveRegistrationCompletedStatus::Incomplete, $actualAuthenticationAccount->DefinitiveRegistrationCompletedStatus());
 
-        // 認証確認情報が登録されていることを確認する
+        // 本登録確認情報が登録されていることを確認する
         $actualDefinitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationRepository->findByTokenValue($oneTimeToken->tokenValue());
         $this->assertNotEmpty($actualDefinitiveRegistrationConfirmation);
 

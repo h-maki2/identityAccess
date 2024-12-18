@@ -7,7 +7,7 @@ use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenExpirat
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedStatus;
-use packages\domain\service\definitiveRegistrationCompleted\definitiveRegistrationCompleted;
+use packages\domain\service\definitiveRegistrationCompleted\DefinitiveRegistrationCompletedUpdate;
 use packages\test\helpers\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmationTestDataCreator;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\authenticationAccount\authenticationAccountTestDataFactory;
@@ -40,19 +40,19 @@ class DefinitiveRegistrationCompletedUpdateTest extends TestCase
             id: $userId,
             DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
         );
-        // 認証確認情報を保存しておく
+        // 本登録確認情報を保存しておく
         $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create(
             userId: $userId
         );
 
-        $DefinitiveRegistrationCompletedUpdate = new DefinitiveRegistrationCompletedUpdate(
+        $definitiveRegistrationCompletedUpdate = new DefinitiveRegistrationCompletedUpdate(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage
         );
 
         // when
-        $DefinitiveRegistrationCompletedUpdate->handle(
+        $definitiveRegistrationCompletedUpdate->handle(
             $definitiveRegistrationConfirmation->oneTimeToken()->tokenValue(), 
             $definitiveRegistrationConfirmation->oneTimePassword()
         );
@@ -62,7 +62,7 @@ class DefinitiveRegistrationCompletedUpdateTest extends TestCase
         $updatedAuthenticationAccount = $this->authenticationAccountRepository->findById($userId, UnsubscribeStatus::Subscribed);
         $this->assertEquals(DefinitiveRegistrationCompletedStatus::Completed, $updatedAuthenticationAccount->DefinitiveRegistrationCompletedStatus());
 
-        // 認証確認情報が削除されていることを確認
+        // 本登録確認情報が削除されていることを確認
         $deletedDefinitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationRepository->findByTokenValue($definitiveRegistrationConfirmation->oneTimeToken()->tokenValue());
         $this->assertNull($deletedDefinitiveRegistrationConfirmation);
     }
@@ -76,14 +76,14 @@ class DefinitiveRegistrationCompletedUpdateTest extends TestCase
             id: $userId,
             DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
         );
-        // 認証確認情報を保存しておく
+        // 本登録確認情報を保存しておく
         $oneTimePassword = OneTimePassword::reconstruct('123456');
         $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create(
             userId: $userId,
             oneTimePassword: $oneTimePassword
         );
 
-        $DefinitiveRegistrationCompletedUpdate = new DefinitiveRegistrationCompletedUpdate(
+        $definitiveRegistrationCompletedUpdate = new DefinitiveRegistrationCompletedUpdate(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage
@@ -93,7 +93,7 @@ class DefinitiveRegistrationCompletedUpdateTest extends TestCase
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('認証アカウントを本登録済みに更新できませんでした。');
         $invalidOneTimePassword = OneTimePassword::reconstruct('654321');
-        $DefinitiveRegistrationCompletedUpdate->handle(
+        $definitiveRegistrationCompletedUpdate->handle(
             $definitiveRegistrationConfirmation->oneTimeToken()->tokenValue(), 
             $invalidOneTimePassword
         );
@@ -116,7 +116,7 @@ class DefinitiveRegistrationCompletedUpdateTest extends TestCase
             oneTimeTokenExpiration: $oneTimeTokenExpiration
         );
 
-        $DefinitiveRegistrationCompletedUpdate = new DefinitiveRegistrationCompletedUpdate(
+        $definitiveRegistrationCompletedUpdate = new DefinitiveRegistrationCompletedUpdate(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage
@@ -125,7 +125,7 @@ class DefinitiveRegistrationCompletedUpdateTest extends TestCase
         // when・then
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('認証アカウントを本登録済みに更新できませんでした。');
-        $DefinitiveRegistrationCompletedUpdate->handle(
+        $definitiveRegistrationCompletedUpdate->handle(
             $definitiveRegistrationConfirmation->oneTimeToken()->tokenValue(), 
             $definitiveRegistrationConfirmation->oneTimePassword()
         );

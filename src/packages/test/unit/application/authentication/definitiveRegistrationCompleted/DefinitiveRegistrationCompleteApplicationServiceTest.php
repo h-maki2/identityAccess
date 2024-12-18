@@ -20,7 +20,7 @@ class DefinitiveRegistrationCompleteApplicationServiceTest extends TestCase
 {
     private InMemoryDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
-    private DefinitiveRegistrationCompletedUpdate $DefinitiveRegistrationCompletedUpdate;
+    private DefinitiveRegistrationCompletedUpdate $definitiveRegistrationCompletedUpdate;
     private TestTransactionManage $transactionManage;
     private DefinitiveRegistrationConfirmationTestDataCreator $definitiveRegistrationConfirmationTestDataCreator;
     private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
@@ -32,7 +32,7 @@ class DefinitiveRegistrationCompleteApplicationServiceTest extends TestCase
         $this->definitiveRegistrationConfirmationRepository = new InMemoryDefinitiveRegistrationConfirmationRepository();
         $this->authenticationAccountRepository = new InMemoryAuthenticationAccountRepository();
         $this->transactionManage = new TestTransactionManage();
-        $this->DefinitiveRegistrationCompletedUpdate = new DefinitiveRegistrationCompletedUpdate(
+        $this->definitiveRegistrationCompletedUpdate = new DefinitiveRegistrationCompletedUpdate(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage
@@ -56,7 +56,7 @@ class DefinitiveRegistrationCompleteApplicationServiceTest extends TestCase
             id: $userId,
             DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
         );
-        // 認証確認情報を保存しておく
+        // 本登録確認情報を保存しておく
         $oneTimePassword = OneTimePassword::create();
         $oneTimeTokenValue = OneTimeTokenValue::create();
         $this->definitiveRegistrationConfirmationTestDataCreator->create(
@@ -78,7 +78,7 @@ class DefinitiveRegistrationCompleteApplicationServiceTest extends TestCase
         $updatedAuthenticationAccount = $this->authenticationAccountRepository->findById($userId, UnsubscribeStatus::Subscribed);
         $this->assertEquals(DefinitiveRegistrationCompletedStatus::Completed, $updatedAuthenticationAccount->DefinitiveRegistrationCompletedStatus());
 
-        // 認証確認情報が削除されていることを確認
+        // 本登録確認情報が削除されていることを確認
         $deletedDefinitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationRepository->findByTokenValue($oneTimeTokenValue);
         $this->assertNull($deletedDefinitiveRegistrationConfirmation);
     }
@@ -92,7 +92,7 @@ class DefinitiveRegistrationCompleteApplicationServiceTest extends TestCase
             id: $userId,
             DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
         );
-        // 認証確認情報を保存しておく
+        // 本登録確認情報を保存しておく
         $oneTimePassword = OneTimePassword::reconstruct('123456');
         $oneTimeTokenValue = OneTimeTokenValue::reconstruct('abcdefghijklmnopqrstuvwxya');
         $this->definitiveRegistrationConfirmationTestDataCreator->create(
@@ -121,7 +121,7 @@ class DefinitiveRegistrationCompleteApplicationServiceTest extends TestCase
             id: $userId,
             DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
         );
-        // 認証確認情報を保存しておく
+        // 本登録確認情報を保存しておく
         $oneTimePassword = OneTimePassword::reconstruct('123456');
         $oneTimeTokenValue = OneTimeTokenValue::create();
         $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create(

@@ -42,7 +42,7 @@ class DefinitiveRegistrationConfirmationTest extends TestCase
         $this->assertEquals(6, strlen((string)$definitiveRegistrationConfirmation->oneTimePassword()->value));
     }
 
-    public function test_認証確認情報の再取得を行う()
+    public function test_本登録確認情報の再取得を行う()
     {
         // given
         $userId = TestUserIdFactory::createUserId();

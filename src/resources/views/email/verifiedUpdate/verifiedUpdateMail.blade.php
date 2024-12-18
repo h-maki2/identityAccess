@@ -5,7 +5,7 @@
 </head>
 <body>
     <p>下記のURLから本登録済みの更新を行い、本登録の完了をお願いします。</p>
-    <p><a href="{{$DefinitiveRegistrationCompletedUpdateUrl}}">{{ $DefinitiveRegistrationCompletedUpdateUrl }}</a><p>
+    <p><a href="{{$definitiveRegistrationCompletedUpdateUrl}}">{{ $definitiveRegistrationCompletedUpdateUrl }}</a><p>
     <p>ワンタイムパスワード: {{ $oneTimePassword }}</p>
 </body>
 </html>

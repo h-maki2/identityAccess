@@ -32,7 +32,7 @@ class EloquentDefinitiveRegistrationConfirmationRepositoryTest extends TestCase
         );
     }
 
-    public function test_認証確認情報を保存できる()
+    public function test_本登録確認情報を保存できる()
     {
         // given
         // あらかじめ認証アカウントを保存しておく
@@ -41,24 +41,24 @@ class EloquentDefinitiveRegistrationConfirmationRepositoryTest extends TestCase
             id: $userId
         );
 
-        // 認証確認情報を作成する
+        // 本登録確認情報を作成する
         $definitiveRegistrationConfirmation = TestDefinitiveRegistrationConfirmationFactory::createDefinitiveRegistrationConfirmation(
             userId: $userId
         );
 
         // when
-        // 認証確認情報を保存する
+        // 本登録確認情報を保存する
         $this->eloquentDefinitiveRegistrationConfirmationRepository->save($definitiveRegistrationConfirmation);
 
         // then
-        // 認証確認情報が保存されていることを確認する
+        // 本登録確認情報が保存されていることを確認する
         $actualDefinitiveRegistrationConfirmation = $this->eloquentDefinitiveRegistrationConfirmationRepository->findById($userId);
         $this->assertEquals($definitiveRegistrationConfirmation->oneTimePassword(), $actualDefinitiveRegistrationConfirmation->oneTimePassword());
         $this->assertEquals($definitiveRegistrationConfirmation->oneTimeToken()->tokenValue(), $actualDefinitiveRegistrationConfirmation->oneTimeToken()->tokenValue());
         $this->assertEquals($definitiveRegistrationConfirmation->oneTimeToken()->expirationdate(), $actualDefinitiveRegistrationConfirmation->oneTimeToken()->expirationdate());
     }
 
-    public function test_ユーザーIDから認証確認情報を取得できる()
+    public function test_ユーザーIDから本登録確認情報を取得できる()
     {
         // given
         // 認証アカウントを保存しておく
@@ -67,12 +67,12 @@ class EloquentDefinitiveRegistrationConfirmationRepositoryTest extends TestCase
             id: $検索対象のユーザーID
         );
 
-        // 認証確認情報を保存しておく
-        $検索対象の認証確認情報 = $this->definitiveRegistrationConfirmationTestDataCreator->create(
+        // 本登録確認情報を保存しておく
+        $検索対象の本登録確認情報 = $this->definitiveRegistrationConfirmationTestDataCreator->create(
             userId: $検索対象のユーザーID
         );
 
-        // 検索対象ではない認証アカウントと認証確認情報を保存する
+        // 検索対象ではない認証アカウントと本登録確認情報を保存する
         $検索対象ではないユーザーid1 = $this->eloquentAuthenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $検索対象ではないユーザーid1
@@ -93,12 +93,12 @@ class EloquentDefinitiveRegistrationConfirmationRepositoryTest extends TestCase
         $actualDefinitiveRegistrationConfirmation = $this->eloquentDefinitiveRegistrationConfirmationRepository->findById($検索対象のユーザーID);
 
         // then
-        $this->assertEquals($検索対象の認証確認情報->oneTimePassword(), $actualDefinitiveRegistrationConfirmation->oneTimePassword());
-        $this->assertEquals($検索対象の認証確認情報->oneTimeToken()->tokenValue(), $actualDefinitiveRegistrationConfirmation->oneTimeToken()->tokenValue());
-        $this->assertEquals($検索対象の認証確認情報->oneTimeToken()->expirationdate(), $actualDefinitiveRegistrationConfirmation->oneTimeToken()->expirationdate());
+        $this->assertEquals($検索対象の本登録確認情報->oneTimePassword(), $actualDefinitiveRegistrationConfirmation->oneTimePassword());
+        $this->assertEquals($検索対象の本登録確認情報->oneTimeToken()->tokenValue(), $actualDefinitiveRegistrationConfirmation->oneTimeToken()->tokenValue());
+        $this->assertEquals($検索対象の本登録確認情報->oneTimeToken()->expirationdate(), $actualDefinitiveRegistrationConfirmation->oneTimeToken()->expirationdate());
     }
 
-    public function test_ワンタイムトークンから認証確認情報を取得できる()
+    public function test_ワンタイムトークンから本登録確認情報を取得できる()
     {
         // given
         // 認証アカウントを作成しておく
@@ -107,14 +107,14 @@ class EloquentDefinitiveRegistrationConfirmationRepositoryTest extends TestCase
             id: $検索対象のユーザーID
         );
 
-        // 認証確認情報を保存しておく
+        // 本登録確認情報を保存しておく
         $検索対象のワンタイムトークン値 = OneTimeTokenValue::create();
-        $検索対象の認証確認情報 = $this->definitiveRegistrationConfirmationTestDataCreator->create(
+        $検索対象の本登録確認情報 = $this->definitiveRegistrationConfirmationTestDataCreator->create(
             userId: $検索対象のユーザーID,
             oneTimeTokenValue: $検索対象のワンタイムトークン値
         );
 
-        // 検索対象ではない認証アカウントと認証確認情報を保存する
+        // 検索対象ではない認証アカウントと本登録確認情報を保存する
         $検索対象ではないユーザーid = $this->eloquentAuthenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $検索対象ではないユーザーid
@@ -128,15 +128,15 @@ class EloquentDefinitiveRegistrationConfirmationRepositoryTest extends TestCase
         $actualDefinitiveRegistrationConfirmation = $this->eloquentDefinitiveRegistrationConfirmationRepository->findByTokenValue($検索対象のワンタイムトークン値);
 
         // then
-        $this->assertEquals($検索対象の認証確認情報->oneTimePassword(), $actualDefinitiveRegistrationConfirmation->oneTimePassword());
-        $this->assertEquals($検索対象の認証確認情報->oneTimeToken()->tokenValue(), $actualDefinitiveRegistrationConfirmation->oneTimeToken()->tokenValue());
-        $this->assertEquals($検索対象の認証確認情報->oneTimeToken()->expirationdate(), $actualDefinitiveRegistrationConfirmation->oneTimeToken()->expirationdate());
+        $this->assertEquals($検索対象の本登録確認情報->oneTimePassword(), $actualDefinitiveRegistrationConfirmation->oneTimePassword());
+        $this->assertEquals($検索対象の本登録確認情報->oneTimeToken()->tokenValue(), $actualDefinitiveRegistrationConfirmation->oneTimeToken()->tokenValue());
+        $this->assertEquals($検索対象の本登録確認情報->oneTimeToken()->expirationdate(), $actualDefinitiveRegistrationConfirmation->oneTimeToken()->expirationdate());
     }
 
-    public function test_認証確認情報を削除できる()
+    public function test_本登録確認情報を削除できる()
     {
         // given
-        // 認証確認情報を作成して保存する
+        // 本登録確認情報を作成して保存する
         $削除対象のユーザーID =  $this->eloquentAuthenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $削除対象のユーザーID

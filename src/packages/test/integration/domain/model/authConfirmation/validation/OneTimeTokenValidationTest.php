@@ -34,7 +34,7 @@ class OneTimeTokenValidationTest extends TestCase
     public function test_ワンタイムトークンが既に存在する場合はエラーメッセージを取得できる()
     {
         // given
-        // あらかじめ認証確認情報を保存しておく
+        // あらかじめ本登録確認情報を保存しておく
         $authInfo = $this->authenticationAccountTestDataCreator->create();
         $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create($authInfo->id());
         $既に存在するワンタイムトークン = $definitiveRegistrationConfirmation->oneTimeToken();
