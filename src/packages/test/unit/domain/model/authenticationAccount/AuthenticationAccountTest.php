@@ -11,10 +11,11 @@ use packages\domain\model\authenticationAccount\UserName;
 use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\authenticationAccount\AuthenticationAccount;
 use packages\domain\model\authenticationAccount\LoginRestrictionStatus;
+use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\authenticationAccount\VerificationStatus;
 use packages\domain\service\authenticationAccount\AuthenticationAccountService;
 use packages\test\helpers\authenticationAccount\TestAuthenticationAccountFactory;
-use packages\test\helpers\authenticationAccount\authenticationAccountTestDataFactory;
+use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use PHPUnit\Framework\TestCase;
 
 class AuthenticationAccountTest extends TestCase
@@ -31,7 +32,7 @@ class AuthenticationAccountTest extends TestCase
         // given
         // user@example.comのアドレスを持つユーザーをあらかじめ作成しておく
         $alreadyExistsUserEmail = new UserEmail('user@example.com');
-        $authenticationAccountTestDataFactory = new AuthenticationAccountTestDataFactory($this->authenticationAccountRepository);
+        $authenticationAccountTestDataFactory = new AuthenticationAccountTestDataCreator($this->authenticationAccountRepository);
         $authenticationAccountTestDataFactory->create($alreadyExistsUserEmail);
 
         $email = new UserEmail('otheruser@example.com');
@@ -64,7 +65,7 @@ class AuthenticationAccountTest extends TestCase
         // given
         // user@example.comのアドレスを持つユーザーをあらかじめ作成しておく
         $alreadyExistsUserEmail = new UserEmail('user@example.com');
-        $authenticationAccountTestDataFactory = new AuthenticationAccountTestDataFactory($this->authenticationAccountRepository);
+        $authenticationAccountTestDataFactory = new AuthenticationAccountTestDataCreator($this->authenticationAccountRepository);
         $authenticationAccountTestDataFactory->create($alreadyExistsUserEmail);
 
         // メールアドレスが重複している
@@ -99,7 +100,8 @@ class AuthenticationAccountTest extends TestCase
             $email,
             $password,
             $verificationStatus,
-            $LoginRestriction
+            $LoginRestriction,
+            UnsubscribeStatus::Subscribed
         );
 
         // then
@@ -116,9 +118,7 @@ class AuthenticationAccountTest extends TestCase
         // 確認済みステータスが未認証のユーザープロフィールを作成
         $verificationStatus = VerificationStatus::Unverified;
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            null,
-            null,
-            $verificationStatus
+            verificationStatus: $verificationStatus
         );
 
         // when
@@ -135,9 +135,8 @@ class AuthenticationAccountTest extends TestCase
         $verificationStatus = VerificationStatus::Verified;
         $password = UserPassword::create('124abcABC!');
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            null,
-            $password,
-            $verificationStatus
+            password: $password,
+            verificationStatus: $verificationStatus
         );
 
         // when
@@ -148,15 +147,14 @@ class AuthenticationAccountTest extends TestCase
         $this->assertEquals($passwordAfterChange, $authenticationAccount->password());
     }
 
-    public function test_認証ステータスが未認証の場合、パスワードの変更が行えない()
+    public function test_認証ステータスが未確認の場合、パスワードの変更が行えない()
     {
         // given
         $verificationStatus = VerificationStatus::Unverified;
         $password = UserPassword::create('124abcABC!');
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            null,
-            $password,
-            $verificationStatus
+            password: $password,
+            verificationStatus: $verificationStatus
         );
 
         // when・then
@@ -178,11 +176,9 @@ class AuthenticationAccountTest extends TestCase
             NextLoginAllowedAt::reconstruct(new DateTimeImmutable('+10 minutes'))
         );
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            null,
-            $password,
-            $verificationStatus,
-            null,
-            $loginRestriction
+            password: $password,
+            verificationStatus: $verificationStatus,
+            loginRestriction: $loginRestriction
         );
 
         // when・then
@@ -203,11 +199,8 @@ class AuthenticationAccountTest extends TestCase
             null
         );
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            null,
-            null,
-            $verificationStatus,
-            null,
-            $LoginRestriction
+            verificationStatus: $verificationStatus,
+            loginRestriction: $LoginRestriction
         );
 
         // when
@@ -217,7 +210,7 @@ class AuthenticationAccountTest extends TestCase
         $this->assertEquals(1, $authenticationAccount->LoginRestriction()->failedLoginCount());
     }
 
-    public function test_認証ステータスが未認証の場合、ログイン失敗回数を更新しない()
+    public function test_認証ステータスが未確認の場合、ログイン失敗回数を更新しない()
     {
         // given
         $verificationStatus = VerificationStatus::Unverified;
@@ -228,11 +221,8 @@ class AuthenticationAccountTest extends TestCase
             null
         );
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            null,
-            null,
-            $verificationStatus,
-            null,
-            $LoginRestriction
+            verificationStatus: $verificationStatus,
+            loginRestriction: $LoginRestriction
         );
 
         // when・then
@@ -252,11 +242,8 @@ class AuthenticationAccountTest extends TestCase
             null
         );
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            null,
-            null,
-            $verificationStatus,
-            null,
-            $LoginRestriction
+            verificationStatus: $verificationStatus,
+            loginRestriction: $LoginRestriction
         );
 
         // when
@@ -277,11 +264,8 @@ class AuthenticationAccountTest extends TestCase
             null
         );
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            null,
-            null,
-            $verificationStatus,
-            null,
-            $LoginRestriction
+            verificationStatus: $verificationStatus,
+            loginRestriction: $LoginRestriction
         );
 
         // when・then
@@ -301,11 +285,8 @@ class AuthenticationAccountTest extends TestCase
             NextLoginAllowedAt::reconstruct(new DateTimeImmutable('-1 minutes'))
         );
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            null,
-            null,
-            $verificationStatus,
-            null,
-            $LoginRestriction
+            verificationStatus: $verificationStatus,
+            loginRestriction: $LoginRestriction
         );
 
         // when
@@ -327,11 +308,8 @@ class AuthenticationAccountTest extends TestCase
             NextLoginAllowedAt::reconstruct(new DateTimeImmutable('+10 minutes'))
         );
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            null,
-            null,
-            $verificationStatus,
-            null,
-            $loginRestriction
+            verificationStatus: $verificationStatus,
+            loginRestriction: $loginRestriction
         );
 
         // when
@@ -352,11 +330,8 @@ class AuthenticationAccountTest extends TestCase
             NextLoginAllowedAt::reconstruct(new DateTimeImmutable('-1 minutes'))
         );
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            null,
-            null,
-            $verificationStatus,
-            null,
-            $loginRestriction
+            verificationStatus: $verificationStatus,
+            loginRestriction: $loginRestriction
         );
 
         // when
@@ -377,11 +352,8 @@ class AuthenticationAccountTest extends TestCase
             null
         );
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            null,
-            null,
-            $verificationStatus,
-            null,
-            $loginRestriction
+            verificationStatus: $verificationStatus,
+            loginRestriction: $loginRestriction
         );
 
         // when
@@ -397,9 +369,7 @@ class AuthenticationAccountTest extends TestCase
         // 認証ステータスが未認証の認証アカウントを生成する
         $verificationStatus = VerificationStatus::Unverified;
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            null,
-            null,
-            $verificationStatus
+            verificationStatus: $verificationStatus
         );
 
         // when
@@ -420,11 +390,8 @@ class AuthenticationAccountTest extends TestCase
             null
         );
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            null,
-            null,
-            $verificationStatus,
-            null,
-            $loginRestriction
+            verificationStatus: $verificationStatus,
+            loginRestriction: $loginRestriction
         );
 
         // when
@@ -445,11 +412,8 @@ class AuthenticationAccountTest extends TestCase
             null
         );
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            null,
-            null,
-            $verificationStatus,
-            null,
-            $loginRestriction
+            verificationStatus: $verificationStatus,
+            loginRestriction: $loginRestriction
         );
 
         // when

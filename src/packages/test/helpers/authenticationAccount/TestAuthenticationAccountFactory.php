@@ -18,7 +18,7 @@ class TestAuthenticationAccountFactory
         ?UserPassword $password = null,
         ?VerificationStatus $verificationStatus = null,
         ?UserId $id = null,
-        ?LoginRestriction $LoginRestriction = null,
+        ?LoginRestriction $loginRestriction = null,
         ?UnsubscribeStatus $unsubscribeStatus = null
     ): AuthenticationAccount
     {
@@ -28,7 +28,7 @@ class TestAuthenticationAccountFactory
             $email ?? TestUserEmailFactory::create(),
             $password ?? UserPassword::create('ABCabc123_'),
             $verificationStatus ?? VerificationStatus::Verified,
-            $LoginRestriction ?? LoginRestriction::initialization(),
+            $loginRestriction ?? LoginRestriction::initialization(),
             $unsubscribeStatus ?? UnsubscribeStatus::Subscribed
         );
     }

@@ -5,6 +5,7 @@ use packages\adapter\persistence\inMemory\InMemoryAuthenticationAccountRepositor
 use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeToken;
 use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
+use packages\domain\model\authConfirmation\OneTimeTokenValue;
 use packages\domain\model\authConfirmation\validation\AuthConfirmationValidation;
 use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
 use packages\test\helpers\authConfirmation\TestAuthConfirmationFactory;
@@ -34,7 +35,7 @@ class AuthConfirmationValidationTest extends TestCase
         );
     }
 
-    public function test_6文字ではないのワンタイムパスワードが入力された場合はfalseを返す()
+    public function test_6文字ではないワンタイムパスワードが入力された場合はfalseを返す()
     {
         // given
         // あらかじめ認証確認情報を生成しておく
@@ -76,7 +77,11 @@ class AuthConfirmationValidationTest extends TestCase
     {
         // given
         $authInfo = $this->authenticationAccountTestDataCreator->create();
-        $authConfirmation = $this->authConfirmationTestDataCreator->create($authInfo->id());
+        $oneTimeTokenValue = OneTimeTokenValue::reconstruct('abcdefghijklmnopqrstuvwxyz'); 
+        $authConfirmation = $this->authConfirmationTestDataCreator->create(
+            userId: $authInfo->id(),
+            oneTimeTokenValue: $oneTimeTokenValue
+        );
 
         // when
         $存在しないワンタイムトークン = 'aaaaaaaaaaaaaaaaaaaaaaaaaa';
@@ -93,7 +98,11 @@ class AuthConfirmationValidationTest extends TestCase
     {
         // given
         $authInfo = $this->authenticationAccountTestDataCreator->create();
-        $authConfirmation = $this->authConfirmationTestDataCreator->create($authInfo->id());
+        $oneTimePassword = OneTimePassword::reconstruct('111111');
+        $authConfirmation = $this->authConfirmationTestDataCreator->create(
+            userId: $authInfo->id(),
+            oneTimePassword: $oneTimePassword
+        );
 
         $oneTimeToken = $authConfirmation->oneTimeToken();
         $oneTimeTokenString = $oneTimeToken->tokenValue()->value;

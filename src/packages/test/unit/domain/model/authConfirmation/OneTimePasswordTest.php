@@ -31,9 +31,9 @@ class OneTimePasswordTest extends TestCase
     public function test_ワンタイムパスワードが等しいかどうかを判定できる()
     {
         // given
-        $oneTimePasswordInt = 123456;
-        $oneTimePassword = OneTimePassword::reconstruct($oneTimePasswordInt);
-        $otherOneTimePassword = OneTimePassword::reconstruct($oneTimePasswordInt);
+        $oneTimePasswordString = '123456';
+        $oneTimePassword = OneTimePassword::reconstruct($oneTimePasswordString);
+        $otherOneTimePassword = OneTimePassword::reconstruct($oneTimePasswordString);
 
         // when
         $result = $oneTimePassword->equals($otherOneTimePassword);
