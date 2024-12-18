@@ -38,11 +38,11 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'user_profiles',
+            'provider' => 'users',
         ],
         'api' => [
             'driver' => 'passport',
-            'provider' => 'user_profiles',
+            'provider' => 'users',
         ],
     ],
 
@@ -68,9 +68,9 @@ return [
         //     'driver' => 'eloquent',
         //     'model' => env('AUTH_MODEL', App\Models\User::class),
         // ],
-        'user_profiles' => [
+        'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\authenticationAccount::class),
+            'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
 
         // 'users' => [
