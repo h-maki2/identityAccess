@@ -14,7 +14,7 @@ use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
 use packages\domain\model\authenticationAccount\VerificationStatus;
 use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
-use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
+use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use Tests\TestCase;
 
 class VerifiedUpdateTest extends TestCase

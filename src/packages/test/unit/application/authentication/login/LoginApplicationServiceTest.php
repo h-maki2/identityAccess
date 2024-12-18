@@ -16,7 +16,7 @@ use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\authenticationAccount\VerificationStatus;
 use packages\domain\model\oauth\client\IClientFetcher;
 use packages\domain\model\oauth\client\RedirectUrl;
-use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
+use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\client\ClientDataForTest;
 use packages\test\helpers\client\TestClientDataFactory;
 use PHPUnit\Framework\TestCase;

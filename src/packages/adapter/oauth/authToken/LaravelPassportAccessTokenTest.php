@@ -2,7 +2,7 @@
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
-use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
+use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\client\AccessTokenTestDataCreator;
 use packages\test\helpers\client\ClientTestDataCreator;
 use Tests\TestCase;

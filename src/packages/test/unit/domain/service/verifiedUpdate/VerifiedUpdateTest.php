@@ -8,7 +8,7 @@ use packages\domain\model\authConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationAccount\VerificationStatus;
 use packages\domain\service\verifiedUpdate\VerifiedUpdate;
 use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
-use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
+use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\authenticationAccount\authenticationAccountTestDataFactory;
 use packages\test\helpers\transactionManage\TestTransactionManage;
 use PHPUnit\Framework\TestCase;

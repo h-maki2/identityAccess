@@ -8,7 +8,7 @@ use packages\application\userProfile\register\RegisterUserProfileOutputBoundary;
 use packages\application\userProfile\register\RegisterUserProfileResult;
 use packages\domain\model\authenticationAccount\AuthenticationService;
 use packages\domain\model\userProfile\UserName;
-use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
+use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\userProfile\UserProfileTestDataCreator;
 use PHPUnit\Framework\TestCase;
 

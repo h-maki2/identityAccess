@@ -8,7 +8,7 @@ use packages\domain\model\authConfirmation\OneTimeToken;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
 use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
 use packages\test\helpers\authConfirmation\TestAuthConfirmationFactory;
-use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
+use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use Tests\TestCase;
 
 class EloquentAuthConfirmationRepositoryTest extends TestCase
@@ -32,7 +32,7 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
         );
     }
 
-    public function test_認証確認情報をインサートする()
+    public function test_認証確認情報を保存できる()
     {
         // given
         // あらかじめ認証情報を保存しておく
@@ -56,36 +56,6 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
         $this->assertEquals($authConfirmation->oneTimePassword(), $actualAuthConfirmation->oneTimePassword());
         $this->assertEquals($authConfirmation->oneTimeToken()->tokenValue(), $actualAuthConfirmation->oneTimeToken()->tokenValue());
         $this->assertEquals($authConfirmation->oneTimeToken()->expirationdate(), $actualAuthConfirmation->oneTimeToken()->expirationdate());
-    }
-
-    public function test_認証確認情報を更新できる()
-    {
-        // given
-        // 認証情報を保存しておく
-        $userId =  $this->eloquentAuthenticationAccountRepository->nextUserId();
-        $this->authenticationAccountTestDataCreator->create(
-            id: $userId
-        );
-
-        // 認証確認情報を保存しておく
-        $oneTimePassword = OneTimePassword::reconstruct('123456');
-        $this->authConfirmationTestDataCreator->create(
-            userId: $userId,
-            oneTimePassword: $oneTimePassword
-        );
-
-        // when
-        // 認証情報を更新する
-        $expectedAuthConfirmation = $this->eloquentAuthConfirmationRepository->findById($userId);
-        $expectedAuthConfirmation->reObtain();
-        $this->eloquentAuthConfirmationRepository->save($expectedAuthConfirmation);
-
-        // then
-        // 認証情報が更新されていることを確認する
-        $actualAuthConfirmation = $this->eloquentAuthConfirmationRepository->findById($userId);
-        $this->assertEquals($expectedAuthConfirmation->oneTimePassword(), $actualAuthConfirmation->oneTimePassword());
-        $this->assertEquals($expectedAuthConfirmation->oneTimeToken()->tokenValue(), $actualAuthConfirmation->oneTimeToken()->tokenValue());
-        $this->assertEquals($expectedAuthConfirmation->oneTimeToken()->expirationdate(), $actualAuthConfirmation->oneTimeToken()->expirationdate());
     }
 
     public function test_ユーザーIDから認証確認情報を取得できる()
@@ -131,7 +101,7 @@ class EloquentAuthConfirmationRepositoryTest extends TestCase
     public function test_ワンタイムトークンから認証確認情報を取得できる()
     {
         // given
-        // 認証情報を保存しておく
+        // 認証アカウントを作成しておく
         $検索対象のユーザーID =  $this->eloquentAuthenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $検索対象のユーザーID

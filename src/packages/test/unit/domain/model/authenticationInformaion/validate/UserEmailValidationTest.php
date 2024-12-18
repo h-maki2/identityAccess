@@ -3,7 +3,7 @@
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationAccountRepository;
 use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\validation\UserEmailValidation;
-use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
+use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\authenticationAccount\TestAuthenticationAccountFactory;
 use PHPUnit\Framework\TestCase;
 

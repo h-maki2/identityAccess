@@ -6,7 +6,7 @@ use packages\domain\model\userProfile\SelfIntroductionText;
 use packages\domain\model\userProfile\UserName;
 use packages\domain\model\userProfile\UserProfile;
 use packages\domain\service\userProfile\UserProfileService;
-use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
+use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\userProfile\UserProfileTestDataCreator;
 use PHPUnit\Framework\TestCase;
 

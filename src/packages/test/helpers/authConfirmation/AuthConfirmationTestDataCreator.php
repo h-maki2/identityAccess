@@ -9,6 +9,7 @@ use packages\domain\model\authConfirmation\OneTimeToken;
 use packages\domain\model\authConfirmation\OneTimeTokenExpiration;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
+use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\authenticationAccount\UserId;
 
 class AuthConfirmationTestDataCreator
@@ -32,9 +33,9 @@ class AuthConfirmationTestDataCreator
         ?OneTimePassword $oneTimePassword = null
     ): AuthConfirmation
     {
-        $authenticationAccount = $this->authenticationAccountRepository->findById($userId);
+        $authenticationAccount = $this->authenticationAccountRepository->findById($userId, UnsubscribeStatus::Subscribed);
         if ($authenticationAccount === null) {
-            throw new \RuntimeException('認証情報テーブルに事前にデータを登録してください。');
+            throw new \RuntimeException('認証アカウントを事前に作成してください。');
         }
         $oneTimeToken = TestOneTimeTokenFactory::createOneTimeToken($oneTimeTokenValue, $oneTimeTokenExpiration);
         $authConfirmation = TestAuthConfirmationFactory::createAuthConfirmation($userId, $oneTimeToken, $oneTimePassword);

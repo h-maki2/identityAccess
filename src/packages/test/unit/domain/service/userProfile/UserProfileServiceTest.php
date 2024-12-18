@@ -6,7 +6,7 @@ use packages\adapter\persistence\inMemory\InMemoryUserProfileRepository;
 use packages\domain\model\authenticationAccount\UserId;
 use packages\domain\model\userProfile\UserName;
 use packages\domain\service\userProfile\UserProfileService;
-use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
+use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\userProfile\UserProfileTestDataCreator;
 use PHPUnit\Framework\TestCase;
 

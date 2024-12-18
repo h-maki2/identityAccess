@@ -9,7 +9,7 @@ use packages\domain\model\authConfirmation\validation\AuthConfirmationValidation
 use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
 use packages\test\helpers\authConfirmation\TestAuthConfirmationFactory;
 use packages\test\helpers\authConfirmation\TestOneTimeTokenFactory;
-use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
+use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use PHPUnit\Framework\TestCase;
 
 class AuthConfirmationValidationTest extends TestCase

@@ -5,7 +5,7 @@ namespace packages\test\helpers\client;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
 use packages\domain\model\authenticationAccount\UserId;
 use packages\domain\model\oauth\authToken\AccessToken;
-use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
+use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\authenticationAccount\TestAuthenticationAccountFactory;
 use App\Models\authenticationAccount as EloquentAuthenticationAccount;
 use packages\adapter\oauth\authToken\LaravelPassportAccessToken;

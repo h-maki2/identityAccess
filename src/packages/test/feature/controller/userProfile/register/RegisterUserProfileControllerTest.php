@@ -4,7 +4,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
 use packages\domain\model\oauth\scope\Scope;
 use packages\domain\model\oauth\scope\ScopeList;
-use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
+use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\client\AccessTokenTestDataCreator;
 use Tests\TestCase;
 

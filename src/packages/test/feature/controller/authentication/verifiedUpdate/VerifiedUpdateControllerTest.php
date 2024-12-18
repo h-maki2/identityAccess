@@ -6,7 +6,7 @@ use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepositor
 use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authenticationAccount\VerificationStatus;
 use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
-use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
+use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use Tests\TestCase;
 
 class VerifiedUpdateControllerTest extends TestCase

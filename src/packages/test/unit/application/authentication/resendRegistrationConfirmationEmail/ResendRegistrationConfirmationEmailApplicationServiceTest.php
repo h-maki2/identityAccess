@@ -12,7 +12,7 @@ use packages\domain\model\authenticationAccount\VerificationStatus;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\model\email\SendEmailDto;
 use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
-use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
+use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use PHPUnit\Framework\TestCase;
 
 class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase

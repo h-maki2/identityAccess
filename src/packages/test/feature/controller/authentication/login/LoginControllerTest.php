@@ -7,7 +7,7 @@ use packages\adapter\presenter\common\json\JsonResponseStatus;
 use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\authenticationAccount\VerificationStatus;
-use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
+use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\authenticationAccount\TestAccessTokenCreator;
 use packages\test\helpers\client\ClientTestDataCreator;
 use Tests\TestCase;
