@@ -38,16 +38,16 @@ class DefinitiveRegistrationCompleteApplicationService implements DefinitiveRegi
     /**
      * 本登録済み更新を行う
      */
-    public function handle(string $oneTimeTokenValueString, string $oneTimePasswordString): DefinitiveRegistrationCompleteUpdateResult
+    public function handle(string $oneTimeTokenValueString, string $oneTimePasswordString): DefinitiveRegistrationCompleteResult
     {
         if (!$this->definitiveRegistrationConfirmationValidation->validate($oneTimePasswordString, $oneTimeTokenValueString)) {
-            return DefinitiveRegistrationCompleteUpdateResult::createWhenValidationError('ワンタイムトークンかワンタイムパスワードが無効です。');
+            return DefinitiveRegistrationCompleteResult::createWhenValidationError('ワンタイムトークンかワンタイムパスワードが無効です。');
         }
 
         $oneTimeTokenValue = OneTimeTokenValue::reconstruct($oneTimeTokenValueString);
         $oneTimePassword = OneTimePassword::reconstruct($oneTimePasswordString);
         $this->definitiveRegistrationCompletedUpdate->handle($oneTimeTokenValue, $oneTimePassword);
 
-        return DefinitiveRegistrationCompleteUpdateResult::createWhenSuccess();
+        return DefinitiveRegistrationCompleteResult::createWhenSuccess();
     }
 }

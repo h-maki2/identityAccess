@@ -4,7 +4,7 @@ use packages\adapter\persistence\inMemory\InMemoryDefinitiveRegistrationConfirma
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationAccountRepository;
 use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompleteApplicationService;
 use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompletedUpdateOutputBoundary;
-use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompleteUpdateResult;
+use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompleteResult;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
@@ -25,7 +25,7 @@ class DefinitiveRegistrationCompleteApplicationServiceTest extends TestCase
     private DefinitiveRegistrationConfirmationTestDataCreator $definitiveRegistrationConfirmationTestDataCreator;
     private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
     private DefinitiveRegistrationCompleteApplicationService $DefinitiveRegistrationCompleteApplicationService;
-    private DefinitiveRegistrationCompleteUpdateResult $capturedResult;
+    private DefinitiveRegistrationCompleteResult $capturedResult;
 
     public function setUp(): void
     {
