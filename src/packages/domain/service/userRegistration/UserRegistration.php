@@ -69,7 +69,7 @@ class UserRegistration
         }
 
         $this->emailSender->send(
-            DefinitiveRegistrationConfirmedUpdateEmailDtoFactory::create(
+            DefinitiveRegistrationCompletedUpdateEmailDtoFactory::create(
                 $email,
                 $definitiveRegistrationConfirmation->oneTimeToken(),
                 $definitiveRegistrationConfirmation->oneTimePassword()

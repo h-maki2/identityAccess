@@ -2,13 +2,13 @@
 
 namespace packages\adapter\view\authentication\definitiveRegistrationCompleted\blade;
 
-use packages\adapter\presenter\authentication\definitiveRegistrationCompleted\blade\BladeDefinitiveRegistrationConfirmedUpdatePresenter;
+use packages\adapter\presenter\authentication\definitiveRegistrationCompleted\blade\BladeDefinitiveRegistrationCompletedUpdatePresenter;
 
-class BladeDefinitiveRegistrationConfirmedUpdateView
+class BladeDefinitiveRegistrationCompletedUpdateView
 {
-    private BladeDefinitiveRegistrationConfirmedUpdatePresenter $presenter;
+    private BladeDefinitiveRegistrationCompletedUpdatePresenter $presenter;
 
-    public function __construct(BladeDefinitiveRegistrationConfirmedUpdatePresenter $presenter)
+    public function __construct(BladeDefinitiveRegistrationCompletedUpdatePresenter $presenter)
     {
         $this->presenter = $presenter;
     }
@@ -24,7 +24,7 @@ class BladeDefinitiveRegistrationConfirmedUpdateView
 
     public function successResponse()
     {
-        return view('authentication.DefinitiveRegistrationConfirmedUpdate.DefinitiveRegistrationConfirmedUpdateComplete');
+        return view('authentication.DefinitiveRegistrationCompletedUpdate.DefinitiveRegistrationCompletedUpdateComplete');
     }
 
     public function faildResponse()

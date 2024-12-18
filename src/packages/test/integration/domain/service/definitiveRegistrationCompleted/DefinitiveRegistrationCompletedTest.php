@@ -19,13 +19,13 @@ use packages\test\helpers\definitiveRegistrationConfirmation\definitiveRegistrat
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use Tests\TestCase;
 
-class DefinitiveRegistrationConfirmedUpdateTest extends TestCase
+class DefinitiveRegistrationCompletedUpdateTest extends TestCase
 {
     private EloquentDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private EloquentAuthenticationAccountRepository $authenticationAccountRepository;
     private DefinitiveRegistrationConfirmationTestDataCreator $definitiveRegistrationConfirmationTestDataCreator;
     private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
-    private DefinitiveRegistrationConfirmedUpdate $definitiveRegistrationConfirmedUpdate;
+    private DefinitiveRegistrationCompletedUpdate $DefinitiveRegistrationCompletedUpdate;
 
     use DatabaseTransactions;
 
@@ -37,7 +37,7 @@ class DefinitiveRegistrationConfirmedUpdateTest extends TestCase
         $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($this->authenticationAccountRepository);
         $this->definitiveRegistrationConfirmationTestDataCreator = new DefinitiveRegistrationConfirmationTestDataCreator($this->definitiveRegistrationConfirmationRepository, $this->authenticationAccountRepository);
         $transactionManage = new EloquentTransactionManage();
-        $this->definitiveRegistrationConfirmedUpdate = new DefinitiveRegistrationConfirmedUpdate(
+        $this->handle = new DefinitiveRegistrationCompletedUpdate(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $transactionManage
@@ -63,7 +63,7 @@ class DefinitiveRegistrationConfirmedUpdateTest extends TestCase
         $oneTimePassword = $definitiveRegistrationConfirmation->oneTimePassword();
 
         // when
-        $this->definitiveRegistrationConfirmedUpdate->handle($oneTimeTokenValue, $oneTimePassword);
+        $this->handle->handle($oneTimeTokenValue, $oneTimePassword);
 
         // then
         // 認証アカウントが本登録済みに更新されていることを確認
@@ -95,7 +95,7 @@ class DefinitiveRegistrationConfirmedUpdateTest extends TestCase
         // when・then
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('認証アカウントを本登録済みに更新できませんでした。');
-        $this->definitiveRegistrationConfirmedUpdate->handle($oneTimeTokenValue, $oneTimePassword);
+        $this->handle->handle($oneTimeTokenValue, $oneTimePassword);
     }
 
     public function test_ワンタイムトークンの有効期限が切れている場合に、認証アカウントを本登録済みに更新できない()
@@ -119,6 +119,6 @@ class DefinitiveRegistrationConfirmedUpdateTest extends TestCase
         // when
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('認証アカウントを本登録済みに更新できませんでした。');
-        $this->definitiveRegistrationConfirmedUpdate->handle($oneTimeTokenValue, $oneTimePassword);
+        $this->handle->handle($oneTimeTokenValue, $oneTimePassword);
     }
 }

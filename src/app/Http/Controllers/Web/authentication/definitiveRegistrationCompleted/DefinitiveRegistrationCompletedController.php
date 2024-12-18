@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Web\authentication\definitiveRegistrationComplete
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use packages\adapter\presenter\authentication\definitiveRegistrationCompleted\blade\BladeDefinitiveRegistrationConfirmedUpdatePresenter;
-use packages\adapter\view\authentication\definitiveRegistrationCompleted\blade\BladeDefinitiveRegistrationConfirmedUpdateView;
-use packages\application\authentication\definitiveRegistrationCompleted\definitiveRegistrationConfirmedUpdateInputBoundary;
+use packages\adapter\presenter\authentication\definitiveRegistrationCompleted\blade\BladeDefinitiveRegistrationCompletedUpdatePresenter;
+use packages\adapter\view\authentication\definitiveRegistrationCompleted\blade\BladeDefinitiveRegistrationCompletedUpdateView;
+use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompletedInputBoundary;
 
 class DefinitiveRegistrationCompletedController extends Controller
 {
@@ -19,16 +19,16 @@ class DefinitiveRegistrationCompletedController extends Controller
 
     public function definitiveRegistrationCompleted(
         Request $request,
-        DefinitiveRegistrationConfirmedUpdateInputBoundary $definitiveRegistrationConfirmedUpdateInputBoundary
+        DefinitiveRegistrationCompletedInputBoundary $definitiveRegistrationCompletedInputBoundary
     )
     {
-        $output = $definitiveRegistrationConfirmedUpdateInputBoundary->DefinitiveRegistrationConfirmedUpdate(
+        $output = $definitiveRegistrationCompletedInputBoundary->handle(
             $request->input('oneTimeToken') ?? '',
             $request->input('oneTimePassword') ?? ''
         );
 
-        $presenter = new BladeDefinitiveRegistrationConfirmedUpdatePresenter($output);
-        $view = new BladeDefinitiveRegistrationConfirmedUpdateView($presenter);
+        $presenter = new BladeDefinitiveRegistrationCompletedUpdatePresenter($output);
+        $view = new BladeDefinitiveRegistrationCompletedUpdateView($presenter);
         return $view->response();
     }
 }

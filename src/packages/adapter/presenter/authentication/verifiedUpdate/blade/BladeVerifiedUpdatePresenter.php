@@ -2,22 +2,22 @@
 
 namespace packages\adapter\presenter\authentication\definitiveRegistrationCompleted\blade;
 
-use packages\application\authentication\definitiveRegistrationCompleted\definitiveRegistrationConfirmedUpdateResult;
+use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompletedUpdateResult;
 
-class BladeDefinitiveRegistrationConfirmedUpdatePresenter
+class BladeDefinitiveRegistrationCompletedUpdatePresenter
 {
-    private DefinitiveRegistrationConfirmedUpdateResult $definitiveRegistrationConfirmedUpdateResult;
+    private DefinitiveRegistrationCompletedUpdateResult $DefinitiveRegistrationCompletedUpdateResult;
 
-    public function __construct(DefinitiveRegistrationConfirmedUpdateResult $definitiveRegistrationConfirmedUpdateResult)
+    public function __construct(DefinitiveRegistrationCompletedUpdateResult $DefinitiveRegistrationCompletedUpdateResult)
     {
-        $this->definitiveRegistrationConfirmedUpdateResult = $definitiveRegistrationConfirmedUpdateResult;
+        $this->handleResult = $DefinitiveRegistrationCompletedUpdateResult;
     }
 
     public function responseDate(): array
     {
-        if ($this->definitiveRegistrationConfirmedUpdateResult->validationError) {
+        if ($this->handleResult->validationError) {
             return [
-                'validationErrorMessage' => $this->definitiveRegistrationConfirmedUpdateResult->validationErrorMessage
+                'validationErrorMessage' => $this->handleResult->validationErrorMessage
             ];
         }
 
@@ -26,6 +26,6 @@ class BladeDefinitiveRegistrationConfirmedUpdatePresenter
 
     public function isValidationError(): bool
     {
-        return $this->definitiveRegistrationConfirmedUpdateResult->validationError;
+        return $this->handleResult->validationError;
     }
 }

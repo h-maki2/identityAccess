@@ -2,10 +2,10 @@
 
 namespace packages\application\authentication\definitiveRegistrationCompleted;
 
-interface DefinitiveRegistrationConfirmedUpdateInputBoundary
+interface DefinitiveRegistrationCompletedInputBoundary
 {
-    public function DefinitiveRegistrationConfirmedUpdate(
+    public function handle(
         string $oneTimeTokenValueString,
         string $oneTimePasswordString
-    ): DefinitiveRegistrationConfirmedUpdateResult;
+    ): DefinitiveRegistrationCompletedUpdateResult;
 }

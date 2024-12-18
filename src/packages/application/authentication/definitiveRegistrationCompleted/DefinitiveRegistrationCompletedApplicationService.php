@@ -9,15 +9,15 @@ use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
 use packages\domain\model\definitiveRegistrationConfirmation\validation\definitiveRegistrationConfirmationValidation;
 use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
 use packages\domain\model\common\transactionManage\TransactionManage;
-use packages\domain\service\definitiveRegistrationCompleted\DefinitiveRegistrationConfirmedUpdate;
+use packages\domain\service\definitiveRegistrationCompleted\DefinitiveRegistrationCompletedUpdate;
 
 /**
  * 本登録済み更新を行うアプリケーションサービス
  */
-class DefinitiveRegistrationCompletedApplicationServicee implements DefinitiveRegistrationConfirmedUpdateInputBoundary
+class DefinitiveRegistrationCompletedApplicationService implements DefinitiveRegistrationCompletedInputBoundary
 {
     private IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
-    private DefinitiveRegistrationConfirmedUpdate $definitiveRegistrationConfirmedUpdate;
+    private DefinitiveRegistrationCompletedUpdate $DefinitiveRegistrationCompletedUpdate;
     private DefinitiveRegistrationConfirmationValidation $definitiveRegistrationConfirmationValidation;
 
     public function __construct(
@@ -27,7 +27,7 @@ class DefinitiveRegistrationCompletedApplicationServicee implements DefinitiveRe
     )
     {
         $this->definitiveRegistrationConfirmationRepository = $definitiveRegistrationConfirmationRepository;
-        $this->definitiveRegistrationConfirmedUpdate = new DefinitiveRegistrationConfirmedUpdate(
+        $this->DefinitiveRegistrationCompletedUpdate = new DefinitiveRegistrationCompletedUpdate(
             $authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $transactionManage
@@ -38,16 +38,16 @@ class DefinitiveRegistrationCompletedApplicationServicee implements DefinitiveRe
     /**
      * 本登録済み更新を行う
      */
-    public function DefinitiveRegistrationConfirmedUpdate(string $oneTimeTokenValueString, string $oneTimePasswordString): DefinitiveRegistrationConfirmedUpdateResult
+    public function handle(string $oneTimeTokenValueString, string $oneTimePasswordString): DefinitiveRegistrationCompletedUpdateResult
     {
         if (!$this->definitiveRegistrationConfirmationValidation->validate($oneTimePasswordString, $oneTimeTokenValueString)) {
-            return DefinitiveRegistrationConfirmedUpdateResult::createWhenValidationError('ワンタイムトークンかワンタイムパスワードが無効です。');
+            return DefinitiveRegistrationCompletedUpdateResult::createWhenValidationError('ワンタイムトークンかワンタイムパスワードが無効です。');
         }
 
         $oneTimeTokenValue = OneTimeTokenValue::reconstruct($oneTimeTokenValueString);
         $oneTimePassword = OneTimePassword::reconstruct($oneTimePasswordString);
-        $this->definitiveRegistrationConfirmedUpdate->handle($oneTimeTokenValue, $oneTimePassword);
+        $this->DefinitiveRegistrationCompletedUpdate->handle($oneTimeTokenValue, $oneTimePassword);
 
-        return DefinitiveRegistrationConfirmedUpdateResult::createWhenSuccess();
+        return DefinitiveRegistrationCompletedUpdateResult::createWhenSuccess();
     }
 }
