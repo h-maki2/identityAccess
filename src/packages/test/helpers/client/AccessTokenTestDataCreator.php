@@ -7,7 +7,7 @@ use packages\domain\model\authenticationAccount\UserId;
 use packages\domain\model\oauth\authToken\AccessToken;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\authenticationAccount\TestAuthenticationAccountFactory;
-use App\Models\authenticationAccount as EloquentAuthenticationAccount;
+use App\Models\User as EloquentUser;
 use packages\adapter\oauth\authToken\LaravelPassportAccessToken;
 use packages\domain\model\oauth\scope\ScopeList;
 
@@ -28,8 +28,8 @@ class AccessTokenTestDataCreator
     ): LaravelPassportAccessToken
     {
         $scopesString = $scopeList ? $scopeList->stringValue() : '';
-        $authInfo = $this->authenticationAccountTestDataCreator->create();
-        $eloquentAuthenticationAccount = EloquentAuthenticationAccount::find($authInfo->id()->value);
-        return new LaravelPassportAccessToken($eloquentAuthenticationAccount->createToken('Test Token', [$scopesString])->accessToken);
+        $authAccount = $this->authenticationAccountTestDataCreator->create();
+        $eloquentUser = EloquentUser::find($authAccount->id()->value);
+        return new LaravelPassportAccessToken($eloquentUser->createToken('Test Token', [$scopesString])->accessToken);
     }
 }

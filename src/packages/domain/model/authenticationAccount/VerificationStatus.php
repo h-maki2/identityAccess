@@ -11,7 +11,7 @@ enum VerificationStatus: string
     {
         return match($this) {
             self::Verified => '確認済み',
-            self::Unverified => '未認証'
+            self::Unverified => '未確認'
         };
     }
 

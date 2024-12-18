@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ユーザー登録完了</title>
+    <title>本登録完了</title>
 </head>
 <body>
-    <h1>ユーザー登録が完了しました。</h1>
+    <h1>本登録完了が完了しました。</h1>
 </body>
 </html> 

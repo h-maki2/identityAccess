@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ユーザー登録</title>
+    <title>本登録確認</title>
 </head>
 <body>
-    <h1>ユーザー登録</h1>
+    <h1>本登録確認</h1>
     <form action="/verifiedUpdate" method="post">
         @csrf
         <div><input type="text" name="oneTimePassword" placeholder="ワンタイムパスワード" value="{{ old('oneTimePassword', '') }}"></div>

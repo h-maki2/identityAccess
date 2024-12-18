@@ -15,20 +15,17 @@ class UserRegistrationControllerTest extends TestCase
         $userPasswordConfirmation = 'abcABC123!';
 
         // when
-        $response = $this->withHeaders([
-            'Accept' => 'application/vnd.example.v1+json'
-        ])->post('/api//userRegistration', [
+        $response = $this->post('/userRegistration', [
             'email' => $userEmail,
             'password' => $userPassword,
-            'password_confirmation' => $userPasswordConfirmation
+            'passwordConfirmation' => $userPasswordConfirmation
         ]);
 
         // then
         $response->assertStatus(200);
-        $response->assertJson([
-            'success' => true,
-            'data' => []
-        ]);
+        // ユーザー仮登録完了画面にリダイレクトされることを確認する
+        $content = htmlspecialchars_decode($response->getContent());
+        $this->assertStringContainsString('<title>ユーザー仮登録完了</title>', $content);
     }
 
     public function test_メールアドレスの形式とパスワードの形式が不正な場合にユーザー登録に失敗する()
@@ -39,25 +36,14 @@ class UserRegistrationControllerTest extends TestCase
         $userPasswordConfirmation = 'abcABC123';
 
         // when
-        $response = $this->withHeaders([
-            'Accept' => 'application/vnd.example.v1+json'
-        ])->post('/api//userRegistration', [
+        $response = $this->post('/userRegistration', [
             'email' => $userEmail,
             'password' => $userPassword,
-            'password_confirmation' => $userPasswordConfirmation
+            'passwordConfirmation' => $userPasswordConfirmation
         ]);
 
         // then
-        $response->assertStatus(400);
-        $response->assertJson([
-            'success' => false,
-            'error' => [
-                'code' => 'Bad Request',
-                'details' => [
-                    'email' => ['不正なメールアドレスです。'],
-                    'password' => ['パスワードは大文字、小文字、数字、記号をそれぞれ1文字以上含めてください']
-                ]
-            ]
-        ]);
+        // ユーザー登録画面にリダイレクトされることを確認
+        $response->assertStatus(302);
     }
 }
