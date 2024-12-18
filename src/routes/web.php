@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/userRegistration', [UserRegistrationController::class, 'userRegisterForm']);
 Route::post('/userRegistration', [UserRegistrationController::class, 'userRegister']);
 
-Route::get('/DefinitiveRegistrationCompleted', [DefinitiveRegistrationCompletedController::class, 'DefinitiveRegistrationCompletedForm']);
-Route::post('/DefinitiveRegistrationCompleted', [DefinitiveRegistrationCompletedController::class, 'DefinitiveRegistrationCompleted']);
+Route::get('/definitiveRegistrationCompleted', [DefinitiveRegistrationCompletedController::class, 'definitiveRegistrationCompletedForm']);
+Route::post('/definitiveRegistrationCompleted', [DefinitiveRegistrationCompletedController::class, 'definitiveRegistrationCompleted']);
 
 Route::middleware(['api.version', 'auth:api'])->group(function () {
     // 認証が必要なAPIのルーティング

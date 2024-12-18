@@ -19,11 +19,11 @@ class DefinitiveRegistrationCompletedApplicationServiceTest extends TestCase
 {
     private InMemoryDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
-    private DefinitiveRegistrationCompleted $DefinitiveRegistrationCompleted;
+    private DefinitiveRegistrationCompleted $definitiveRegistrationCompleted;
     private TestTransactionManage $transactionManage;
     private DefinitiveRegistrationConfirmationTestDataCreator $definitiveRegistrationConfirmationTestDataCreator;
     private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
-    private DefinitiveRegistrationCompletedApplicationService $DefinitiveRegistrationCompletedApplicationService;
+    private DefinitiveRegistrationCompletedApplicationService $definitiveRegistrationCompletedApplicationService;
     private DefinitiveRegistrationCompletedResult $capturedResult;
 
     public function setUp(): void
@@ -31,7 +31,7 @@ class DefinitiveRegistrationCompletedApplicationServiceTest extends TestCase
         $this->definitiveRegistrationConfirmationRepository = new InMemoryDefinitiveRegistrationConfirmationRepository();
         $this->authenticationAccountRepository = new InMemoryAuthenticationAccountRepository();
         $this->transactionManage = new TestTransactionManage();
-        $this->DefinitiveRegistrationCompleted = new DefinitiveRegistrationCompleted(
+        $this->definitiveRegistrationCompleted = new DefinitiveRegistrationCompleted(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage
@@ -39,7 +39,7 @@ class DefinitiveRegistrationCompletedApplicationServiceTest extends TestCase
         $this->definitiveRegistrationConfirmationTestDataCreator = new DefinitiveRegistrationConfirmationTestDataCreator($this->definitiveRegistrationConfirmationRepository, $this->authenticationAccountRepository);
         $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($this->authenticationAccountRepository);
 
-        $this->DefinitiveRegistrationCompletedApplicationService = new DefinitiveRegistrationCompletedApplicationService(
+        $this->definitiveRegistrationCompletedApplicationService = new DefinitiveRegistrationCompletedApplicationService(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage
@@ -66,7 +66,7 @@ class DefinitiveRegistrationCompletedApplicationServiceTest extends TestCase
 
         // when
         // 正しいワンタイムトークンとワンタイムパスワードを入力する
-        $result = $this->DefinitiveRegistrationCompletedApplicationService->DefinitiveRegistrationCompleted($oneTimeTokenValue->value, $oneTimePassword->value);
+        $result = $this->definitiveRegistrationCompletedApplicationService->DefinitiveRegistrationCompleted($oneTimeTokenValue->value, $oneTimePassword->value);
 
         // then
         // バリデーションエラーが発生していないことを確認
@@ -103,7 +103,7 @@ class DefinitiveRegistrationCompletedApplicationServiceTest extends TestCase
         // when
         // 存在しないワンタイムトークンを生成
         $invalidOneTimeTokenValue = OneTimeTokenValue::reconstruct('aaaaaaaaaaaaaaaaaaaaaaaaaa');
-        $result = $this->DefinitiveRegistrationCompletedApplicationService->DefinitiveRegistrationCompleted($invalidOneTimeTokenValue->value, $oneTimePassword->value);
+        $result = $this->definitiveRegistrationCompletedApplicationService->DefinitiveRegistrationCompleted($invalidOneTimeTokenValue->value, $oneTimePassword->value);
 
         // then
         // バリデーションエラーが発生していることを確認
@@ -132,7 +132,7 @@ class DefinitiveRegistrationCompletedApplicationServiceTest extends TestCase
         // when
         // 正しくないワンタイムパスワードを入力する
         $invalidOneTimePassword = OneTimePassword::reconstruct('654321');
-        $result = $this->DefinitiveRegistrationCompletedApplicationService->DefinitiveRegistrationCompleted($oneTimeTokenValue->value, $invalidOneTimePassword->value);
+        $result = $this->definitiveRegistrationCompletedApplicationService->DefinitiveRegistrationCompleted($oneTimeTokenValue->value, $invalidOneTimePassword->value);
 
         // then
         // バリデーションエラーが発生していることを確認

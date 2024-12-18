@@ -5,25 +5,24 @@ namespace App\Http\Controllers\Web\authentication\definitiveRegistrationComplete
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use packages\adapter\presenter\authentication\definitiveRegistrationCompleted\blade\BladeDefinitiveRegistrationCompletedPresenter;
-use packages\adapter\presenter\authentication\definitiveRegistrationCompleted\json\JsonDefinitiveRegistrationCompletedPresenter;
 use packages\adapter\view\authentication\definitiveRegistrationCompleted\blade\BladeDefinitiveRegistrationCompletedView;
 use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompletedInputBoundary;
 
 class DefinitiveRegistrationCompletedController extends Controller
 {
-    public function DefinitiveRegistrationCompletedForm(Request $request)
+    public function definitiveRegistrationCompletedForm(Request $request)
     {
-        return view('authentication.DefinitiveRegistrationCompleted.DefinitiveRegistrationCompletedForm', [
+        return view('authentication.definitiveRegistrationCompleted.definitiveRegistrationCompletedForm', [
             'oneTimeToken' => $request->query('token', ''),
         ]);
     }
 
-    public function DefinitiveRegistrationCompleted(
+    public function definitiveRegistrationCompleted(
         Request $request,
-        DefinitiveRegistrationCompletedInputBoundary $DefinitiveRegistrationCompletedInputBoundary
+        DefinitiveRegistrationCompletedInputBoundary $definitiveRegistrationCompletedInputBoundary
     )
     {
-        $output = $DefinitiveRegistrationCompletedInputBoundary->DefinitiveRegistrationCompleted(
+        $output = $definitiveRegistrationCompletedInputBoundary->DefinitiveRegistrationCompleted(
             $request->input('oneTimeToken') ?? '',
             $request->input('oneTimePassword') ?? ''
         );

@@ -17,7 +17,7 @@ use packages\domain\service\definitiveRegistrationCompleted\definitiveRegistrati
 class DefinitiveRegistrationCompletedApplicationService implements DefinitiveRegistrationCompletedInputBoundary
 {
     private IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
-    private DefinitiveRegistrationCompleted $DefinitiveRegistrationCompleted;
+    private DefinitiveRegistrationCompleted $definitiveRegistrationCompleted;
     private DefinitiveRegistrationConfirmationValidation $definitiveRegistrationConfirmationValidation;
 
     public function __construct(
@@ -27,7 +27,7 @@ class DefinitiveRegistrationCompletedApplicationService implements DefinitiveReg
     )
     {
         $this->definitiveRegistrationConfirmationRepository = $definitiveRegistrationConfirmationRepository;
-        $this->DefinitiveRegistrationCompleted = new DefinitiveRegistrationCompleted(
+        $this->definitiveRegistrationCompleted = new DefinitiveRegistrationCompleted(
             $authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $transactionManage
@@ -46,7 +46,7 @@ class DefinitiveRegistrationCompletedApplicationService implements DefinitiveReg
 
         $oneTimeTokenValue = OneTimeTokenValue::reconstruct($oneTimeTokenValueString);
         $oneTimePassword = OneTimePassword::reconstruct($oneTimePasswordString);
-        $this->DefinitiveRegistrationCompleted->handle($oneTimeTokenValue, $oneTimePassword);
+        $this->definitiveRegistrationCompleted->handle($oneTimeTokenValue, $oneTimePassword);
 
         return DefinitiveRegistrationCompletedResult::createWhenSuccess();
     }

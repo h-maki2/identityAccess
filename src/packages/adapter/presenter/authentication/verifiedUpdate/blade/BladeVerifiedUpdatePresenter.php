@@ -6,18 +6,18 @@ use packages\application\authentication\definitiveRegistrationCompleted\Definiti
 
 class BladeDefinitiveRegistrationCompletedPresenter
 {
-    private DefinitiveRegistrationCompletedResult $DefinitiveRegistrationCompletedResult;
+    private DefinitiveRegistrationCompletedResult $definitiveRegistrationCompletedResult;
 
-    public function __construct(DefinitiveRegistrationCompletedResult $DefinitiveRegistrationCompletedResult)
+    public function __construct(DefinitiveRegistrationCompletedResult $definitiveRegistrationCompletedResult)
     {
-        $this->DefinitiveRegistrationCompletedResult = $DefinitiveRegistrationCompletedResult;
+        $this->definitiveRegistrationCompletedResult = $definitiveRegistrationCompletedResult;
     }
 
     public function responseDate(): array
     {
-        if ($this->DefinitiveRegistrationCompletedResult->validationError) {
+        if ($this->definitiveRegistrationCompletedResult->validationError) {
             return [
-                'validationErrorMessage' => $this->DefinitiveRegistrationCompletedResult->validationErrorMessage
+                'validationErrorMessage' => $this->definitiveRegistrationCompletedResult->validationErrorMessage
             ];
         }
 
@@ -26,6 +26,6 @@ class BladeDefinitiveRegistrationCompletedPresenter
 
     public function isValidationError(): bool
     {
-        return $this->DefinitiveRegistrationCompletedResult->validationError;
+        return $this->definitiveRegistrationCompletedResult->validationError;
     }
 }
