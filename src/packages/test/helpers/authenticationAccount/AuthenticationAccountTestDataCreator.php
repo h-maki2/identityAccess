@@ -8,7 +8,8 @@ use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\UserId;
 use packages\domain\model\authenticationAccount\UserName;
 use packages\domain\model\authenticationAccount\UserPassword;
-use packages\domain\model\authenticationAccount\authenticationAccount;
+use packages\domain\model\authenticationAccount\AuthenticationAccount;
+use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\authenticationAccount\VerificationStatus;
 
 class AuthenticationAccountTestDataCreator
@@ -25,7 +26,8 @@ class AuthenticationAccountTestDataCreator
         ?UserPassword $password = null,
         ?VerificationStatus $verificationStatus = null,
         ?UserId $id = null,
-        ?LoginRestriction $LoginRestriction = null
+        ?LoginRestriction $LoginRestriction = null,
+        ?UnsubscribeStatus $unsubscribeStatus = null
     ): AuthenticationAccount
     {
         $authenticationAccount = TestAuthenticationAccountFactory::create(
@@ -33,7 +35,8 @@ class AuthenticationAccountTestDataCreator
             $password,
             $verificationStatus,
             $id,
-            $LoginRestriction
+            $LoginRestriction,
+            $unsubscribeStatus
         );
 
         $this->authenticationAccountRepository->save($authenticationAccount);

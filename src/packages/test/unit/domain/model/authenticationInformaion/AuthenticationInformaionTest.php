@@ -9,7 +9,7 @@ use packages\domain\model\authenticationAccount\NextLoginAllowedAt;
 use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\UserName;
 use packages\domain\model\authenticationAccount\UserPassword;
-use packages\domain\model\authenticationAccount\authenticationAccount;
+use packages\domain\model\authenticationAccount\AuthenticationAccount;
 use packages\domain\model\authenticationAccount\LoginRestrictionStatus;
 use packages\domain\model\authenticationAccount\VerificationStatus;
 use packages\domain\service\authenticationAccount\authenticationAccountService;

@@ -12,11 +12,16 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory;
     
-    protected $table = 'authentication_informations';
+    protected $table = 'users';
 
     protected $primaryKey = 'id';
     public $incrementing = false;
     protected $keyType = 'string';
+
+    protected $fillable = [
+        'id',
+        'unsubscribe'
+    ];
 
     public function getAuthIdentifierName()
     {

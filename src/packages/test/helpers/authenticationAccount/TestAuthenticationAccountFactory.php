@@ -7,7 +7,8 @@ use packages\domain\model\authenticationAccount\LoginRestriction;
 use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\UserId;
 use packages\domain\model\authenticationAccount\UserPassword;
-use packages\domain\model\authenticationAccount\authenticationAccount;
+use packages\domain\model\authenticationAccount\AuthenticationAccount;
+use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\authenticationAccount\VerificationStatus;
 
 class TestAuthenticationAccountFactory
@@ -17,7 +18,8 @@ class TestAuthenticationAccountFactory
         ?UserPassword $password = null,
         ?VerificationStatus $verificationStatus = null,
         ?UserId $id = null,
-        ?LoginRestriction $LoginRestriction = null
+        ?LoginRestriction $LoginRestriction = null,
+        ?UnsubscribeStatus $unsubscribeStatus = null
     ): AuthenticationAccount
     {
         $authInfoRepository = new InMemoryAuthenticationAccountRepository();
@@ -26,7 +28,8 @@ class TestAuthenticationAccountFactory
             $email ?? TestUserEmailFactory::create(),
             $password ?? UserPassword::create('ABCabc123_'),
             $verificationStatus ?? VerificationStatus::Verified,
-            $LoginRestriction ?? LoginRestriction::initialization()
+            $LoginRestriction ?? LoginRestriction::initialization(),
+            $unsubscribeStatus ?? UnsubscribeStatus::Subscribed
         );
     }
 }

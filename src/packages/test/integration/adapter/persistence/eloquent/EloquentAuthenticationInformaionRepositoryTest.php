@@ -1,14 +1,16 @@
 <?php
 
-use App\Models\authenticationAccount as EloquentAuthenticationAccount;
+use App\Models\AuthenticationInformation as EloquentAuthenticationInformation;
+use App\Models\User as EloquentUser;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
 use packages\domain\model\authenticationAccount\LoginRestriction;
+use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\authenticationAccount\VerificationStatus;
-use packages\test\helpers\authenticationAccount\authenticationAccountTestDataCreator;
+use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\authenticationAccount\TestAuthenticationAccountFactory;
 use Tests\TestCase;
 
@@ -26,10 +28,11 @@ class EloquentAuthenticationInformaionRepositoryTest extends TestCase
         $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($this->authenticationAccountRepository);
 
         // テスト前にデータを全削除する
-        EloquentAuthenticationAccount::query()->delete();
+        EloquentUser::query()->delete();
+        EloquentAuthenticationInformation::query()->delete();
     }
 
-    public function test_認証情報をインサートできる()
+    public function test_認証アカウントをインサートできる()
     {
         // given
         // 認証情報を作成する
@@ -38,12 +41,14 @@ class EloquentAuthenticationInformaionRepositoryTest extends TestCase
         $verificationStatus = VerificationStatus::Verified;
         $userId = $this->authenticationAccountRepository->nextUserId();
         $loginRestriction = LoginRestriction::initialization();
+        $unsubscribeStatus = UnsubscribeStatus::Subscribed;
         $authenticationAccount = TestAuthenticationAccountFactory::create(
             $userEmail,
             $userPassword,
             $verificationStatus,
             $userId,
-            $loginRestriction
+            $loginRestriction,
+            $unsubscribeStatus
         );
 
         // when
@@ -52,14 +57,14 @@ class EloquentAuthenticationInformaionRepositoryTest extends TestCase
 
         // then
         // 保存したデータを取得できることを確認する
-        $actualAuthenticationAccount = $this->authenticationAccountRepository->findById($userId);
+        $actualAuthenticationAccount = $this->authenticationAccountRepository->findById($userId, UnsubscribeStatus::Subscribed);
         $this->assertEquals($authenticationAccount, $actualAuthenticationAccount);
     }
 
     public function test_認証情報を更新できる()
     {
         // given
-        // 確認済みの認証情報を作成して保存しておく
+        // 確認済みの認証アカウントを作成して保存しておく
         $userId = $this->authenticationAccountRepository->nextUserId();
         $userPassword = UserPassword::create('abcABC123!');
         $this->authenticationAccountTestDataCreator->create(
@@ -70,14 +75,14 @@ class EloquentAuthenticationInformaionRepositoryTest extends TestCase
 
         // when
         // パスワードを変更して保存する
-        $authenticationAccount = $this->authenticationAccountRepository->findById($userId);
+        $authenticationAccount = $this->authenticationAccountRepository->findById($userId, UnsubscribeStatus::Subscribed);
         $newPassword = UserPassword::create('newPassword123!');
         $authenticationAccount->changePassword($newPassword, new DateTimeImmutable());
         $this->authenticationAccountRepository->save($authenticationAccount);
 
         // then
         // 変更した認証情報を取得できることを確認する
-        $actualAuthenticationAccount = $this->authenticationAccountRepository->findById($userId);
+        $actualAuthenticationAccount = $this->authenticationAccountRepository->findById($userId, UnsubscribeStatus::Subscribed);
         $this->assertEquals($newPassword, $actualAuthenticationAccount->password());
     }
 
@@ -121,7 +126,7 @@ class EloquentAuthenticationInformaionRepositoryTest extends TestCase
         );
 
         // when
-        $actualAuthenticationAccount = $this->authenticationAccountRepository->findById($検索対象のユーザーID);
+        $actualAuthenticationAccount = $this->authenticationAccountRepository->findById($検索対象のユーザーID, UnsubscribeStatus::Subscribed);
 
         // then
         $this->assertEquals($検索対象の認証情報, $actualAuthenticationAccount);
@@ -141,15 +146,18 @@ class EloquentAuthenticationInformaionRepositoryTest extends TestCase
             id: $削除対象ではないユーザーID
         );
 
+
+
         // when
-        $this->authenticationAccountRepository->delete($削除対象のユーザーID);
+        $削除対象の認証情報->updateUnsubscribed();
+        $this->authenticationAccountRepository->delete($削除対象の認証情報);
 
         // then
         // 削除した認証情報を取得できないことを確認する
-        $this->assertNull($this->authenticationAccountRepository->findById($削除対象のユーザーID));
+        $this->assertNull($this->authenticationAccountRepository->findById($削除対象のユーザーID, UnsubscribeStatus::Subscribed));
 
         // 削除対象ではない認証情報は取得できることを確認する
-        $actualAuthenticationAccount = $this->authenticationAccountRepository->findById($削除対象ではないユーザーID);
+        $actualAuthenticationAccount = $this->authenticationAccountRepository->findById($削除対象ではないユーザーID, UnsubscribeStatus::Subscribed);
         $this->assertEquals($削除対象ではない認証情報, $actualAuthenticationAccount);
     }
 }

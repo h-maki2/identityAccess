@@ -5,7 +5,7 @@ namespace packages\domain\service\oneTimeTokenAndPasswordRegeneration;
 use packages\domain\model\authConfirmation\AuthConfirmation;
 use packages\domain\model\authConfirmation\IAuthConfirmationRepository;
 use packages\domain\model\authConfirmation\OneTimeToken;
-use packages\domain\model\authenticationAccount\authenticationAccount;
+use packages\domain\model\authenticationAccount\AuthenticationAccount;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\model\email\VerifiedUpdateEmailDtoFactory;
 use RuntimeException;

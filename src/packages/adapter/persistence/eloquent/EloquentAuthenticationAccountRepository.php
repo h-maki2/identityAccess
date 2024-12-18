@@ -13,7 +13,7 @@ use packages\domain\model\authenticationAccount\NextLoginAllowedAt;
 use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\UserId;
 use packages\domain\model\authenticationAccount\UserPassword;
-use packages\domain\model\authenticationAccount\authenticationAccount;
+use packages\domain\model\authenticationAccount\AuthenticationAccount;
 use packages\domain\model\authenticationAccount\LoginRestrictionStatus;
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\authenticationAccount\VerificationStatus;
@@ -36,7 +36,7 @@ class EloquentAuthenticationAccountRepository implements IAuthenticationAccountR
 
     public function findById(UserId $id, UnsubscribeStatus $unsubscribeStatus): ?AuthenticationAccount
     {
-        $userModel = EloquentUser::where('user_id', $id->value)
+        $userModel = EloquentUser::where('id', $id->value)
                                ->where('unsubscribe', $unsubscribeStatus->value)
                                ->first();
 
@@ -50,7 +50,7 @@ class EloquentAuthenticationAccountRepository implements IAuthenticationAccountR
     public function save(AuthenticationAccount $authenticationAccount): void
     {
         EloquentUser::updateOrCreate(
-            ['user_id' => $authenticationAccount->id()->value],
+            ['id' => $authenticationAccount->id()->value],
             ['unsubscribe' => $authenticationAccount->unsubscribeStatus()->value]
         );
 
