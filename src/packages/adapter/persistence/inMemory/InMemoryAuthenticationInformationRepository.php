@@ -13,8 +13,10 @@ use packages\domain\model\authenticationAccount\UserId;
 use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\authenticationAccount\authenticationAccount;
 use packages\domain\model\authenticationAccount\LoginRestrictionStatus;
+use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\authenticationAccount\VerificationStatus;
 use Ramsey\Uuid\Uuid;
+use UnexpectedValueException;
 
 class InMemoryAuthenticationAccountRepository implements IAuthenticationAccountRepository
 {
@@ -31,10 +33,14 @@ class InMemoryAuthenticationAccountRepository implements IAuthenticationAccountR
         return null;
     }
 
-    public function findById(UserId $id): ?AuthenticationAccount
+    public function findById(UserId $id, UnsubscribeStatus $unsubscribeStatus): ?AuthenticationAccount
     {
         $authenticationAccountObj = $this->authenticationAccountList[$id->value] ?? null;
         if ($authenticationAccountObj === null) {
+            return null;
+        }
+
+        if ($authenticationAccountObj->unsubscribe !== $unsubscribeStatus->value) {
             return null;
         }
 
@@ -46,13 +52,22 @@ class InMemoryAuthenticationAccountRepository implements IAuthenticationAccountR
         $this->authenticationAccountList[$authenticationAccount->id()->value] = $this->toAuthenticationAccountModel($authenticationAccount);
     }
 
-    public function delete(UserId $id): void
+    public function delete(AuthenticationAccount $authenticationAccount): void
     {
-        if (!isset($this->authenticationAccountList[$id()->value])) {
-            return;
+        $authenticationAccountObj = $this->authenticationAccountList[$authenticationAccount->id()->value] ?? null;
+        if ($authenticationAccountObj === null) {
+            throw new UnexpectedValueException('指定されたIDのユーザーは存在しません。');
         }
 
-        unset($this->authenticationAccountList[$id()->value]);
+        $authenticationAccountObj->unsubscribe = $authenticationAccount->unsubscribeStatus()->value;
+
+        // 疑似的に削除したことにする
+        $authenticationAccountObj->email = null;
+        $authenticationAccountObj->password = null;
+        $authenticationAccountObj->verification_status = null;
+        $authenticationAccountObj->failed_login_count = null;
+        $authenticationAccountObj->next_login_allowed_at = null;
+        $authenticationAccountObj->login_restriction_status = null;
     }
 
     public function nextUserId(): UserId
@@ -71,7 +86,8 @@ class InMemoryAuthenticationAccountRepository implements IAuthenticationAccountR
                 FailedLoginCount::reconstruct($authenticationAccountObj->failed_login_count),
                 LoginRestrictionStatus::from($authenticationAccountObj->login_restriction_status),
                 $authenticationAccountObj->next_login_allowed_at !== null ? NextLoginAllowedAt::reconstruct(new DateTimeImmutable($authenticationAccountObj->next_login_allowed_at)) : null
-            )
+            ),
+            UnsubscribeStatus::from($authenticationAccountObj->unsubscribe)
         );
     }
 
@@ -84,7 +100,8 @@ class InMemoryAuthenticationAccountRepository implements IAuthenticationAccountR
             'verification_status' => $authenticationAccount->verificationStatus()->value,
             'failed_login_count' => $authenticationAccount->LoginRestriction()->failedLoginCount(),
             'next_login_allowed_at' => $authenticationAccount->LoginRestriction()->nextLoginAllowedAt(),
-            'login_restriction_status' => $authenticationAccount->LoginRestriction()->loginRestrictionStatus()
+            'login_restriction_status' => $authenticationAccount->LoginRestriction()->loginRestrictionStatus(),
+            'unsubscribe' => $authenticationAccount->unsubscribeStatus()->value,
         ];
     }
 }
