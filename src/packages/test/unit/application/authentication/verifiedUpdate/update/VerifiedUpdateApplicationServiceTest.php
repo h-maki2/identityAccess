@@ -7,6 +7,7 @@ use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateOutp
 use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateResult;
 use packages\domain\model\authConfirmation\OneTimePassword;
 use packages\domain\model\authConfirmation\OneTimeTokenValue;
+use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\authenticationAccount\VerificationStatus;
 use packages\domain\service\verifiedUpdate\VerifiedUpdate;
 use packages\test\helpers\authConfirmation\AuthConfirmationTestDataCreator;
@@ -73,7 +74,7 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
         $this->assertEmpty($result->validationErrorMessage);
 
         // 認証アカウントが確認済みになっていることを確認
-        $updatedAuthenticationAccount = $this->authenticationAccountRepository->findById($userId);
+        $updatedAuthenticationAccount = $this->authenticationAccountRepository->findById($userId, UnsubscribeStatus::Subscribed);
         $this->assertEquals(VerificationStatus::Verified, $updatedAuthenticationAccount->verificationStatus());
 
         // 認証確認情報が削除されていることを確認
