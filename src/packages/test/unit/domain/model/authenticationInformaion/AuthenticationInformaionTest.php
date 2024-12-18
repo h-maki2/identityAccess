@@ -260,7 +260,7 @@ class AuthenticationAccountTest extends TestCase
         );
 
         // when
-        $authenticationAccount->enableLoginRestriction(new DateTimeImmutable());
+        $authenticationAccount->locking(new DateTimeImmutable());
 
         // then
         $this->assertEquals(LoginRestrictionStatus::Restricted->value, $authenticationAccount->LoginRestriction()->loginRestrictionStatus());
@@ -287,7 +287,7 @@ class AuthenticationAccountTest extends TestCase
         // when・then
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('認証済みのユーザーではありません。');
-        $authenticationAccount->enableLoginRestriction(new DateTimeImmutable());
+        $authenticationAccount->locking(new DateTimeImmutable());
     }
 
     public function test_ログイン制限が有効で再ログイン可能である場合はログイン制限を解除できる()
@@ -309,7 +309,7 @@ class AuthenticationAccountTest extends TestCase
         );
 
         // when
-        $authenticationAccount->disableLoginRestriction(new DateTimeImmutable());
+        $authenticationAccount->unlocking(new DateTimeImmutable());
 
         // then
         $this->assertEquals(LoginRestrictionStatus::Unrestricted->value, $authenticationAccount->LoginRestriction()->loginRestrictionStatus());
@@ -428,7 +428,7 @@ class AuthenticationAccountTest extends TestCase
         );
 
         // when
-        $result = $authenticationAccount->canEnableLoginRestriction(new DateTimeImmutable());
+        $result = $authenticationAccount->canLocking(new DateTimeImmutable());
 
         // then
         $this->assertTrue($result);
@@ -453,7 +453,7 @@ class AuthenticationAccountTest extends TestCase
         );
 
         // when
-        $result = $authenticationAccount->canEnableLoginRestriction(new DateTimeImmutable());
+        $result = $authenticationAccount->canLocking(new DateTimeImmutable());
 
         // then
         $this->assertFalse($result);

@@ -125,7 +125,7 @@ class AuthenticationAccount
     /**
      * ログイン制限を有効にする
      */
-    public function enableLoginRestriction(DateTimeImmutable $currentDateTime): void
+    public function locking(DateTimeImmutable $currentDateTime): void
     {
         if (!$this->isVerified()) {
             throw new DomainException('認証済みのユーザーではありません。');
@@ -137,7 +137,7 @@ class AuthenticationAccount
     /**
      * ログイン制限を無効にする
      */
-    public function disableLoginRestriction(DateTimeImmutable $currentDateTime): void
+    public function unlocking(DateTimeImmutable $currentDateTime): void
     {
         if (!$this->isVerified()) {
             throw new DomainException('認証済みのユーザーではありません。');
@@ -159,7 +159,7 @@ class AuthenticationAccount
             return true;
         }
 
-        if ($this->canDisableLoginRestriction($currentDateTime)) {
+        if ($this->canUnlocking($currentDateTime)) {
             return true;
         }
 
@@ -169,7 +169,7 @@ class AuthenticationAccount
     /**
      * ログイン制限を無効にできるかどうかを判定
      */
-    public function canDisableLoginRestriction(DateTimeImmutable $currentDateTime): bool
+    public function canUnlocking(DateTimeImmutable $currentDateTime): bool
     {
         return $this->loginRestriction->canDisable($currentDateTime);
     }
@@ -185,7 +185,7 @@ class AuthenticationAccount
     /**
      * ログイン制限を有効にできるかどうかを判定する
      */
-    public function canEnableLoginRestriction(): bool
+    public function canLocking(): bool
     {
         return $this->loginRestriction->canApply();
     }

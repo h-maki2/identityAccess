@@ -51,8 +51,8 @@ class LoginApplicationService implements LoginInputBoundary
             return LoginResult::createWhenLoginFailed(true);
         }
 
-        if ($authenticationAccount->canDisableLoginRestriction($currentDateTime)) {
-            $authenticationAccount->disableLoginRestriction($currentDateTime);
+        if ($authenticationAccount->canUnlocking($currentDateTime)) {
+            $authenticationAccount->unlocking($currentDateTime);
         }
 
         if ($authenticationAccount->password()->equals($inputedPassword)) {
@@ -70,8 +70,8 @@ class LoginApplicationService implements LoginInputBoundary
         }
 
         $authenticationAccount->addFailedLoginCount($currentDateTime);
-        if ($authenticationAccount->canEnableLoginRestriction()) {
-            $authenticationAccount->enableLoginRestriction($currentDateTime);
+        if ($authenticationAccount->canLocking()) {
+            $authenticationAccount->locking($currentDateTime);
         }
         $this->authenticationAccountRepository->save($authenticationAccount);
 
