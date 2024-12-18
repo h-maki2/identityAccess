@@ -22,12 +22,12 @@ use packages\application\authentication\login\LoginOutputBoundary;
 use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailApplicationService;
 use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailInputBoundary;
 use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailOutputBoundary;
-use packages\application\authentication\verifiedUpdate\display\DisplayVerifiedUpdatePageApplicationService;
-use packages\application\authentication\verifiedUpdate\display\DisplayVerifiedUpdatePageInputBoundary;
-use packages\application\authentication\verifiedUpdate\display\DisplayVerifiedUpdatePageOutputBoundary;
-use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateApplicationService;
-use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateInputBoundary;
-use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateOutputBoundary;
+use packages\application\authentication\definitiveRegistrationCompleted\display\DisplayDefinitiveRegistrationCompletedPageApplicationService;
+use packages\application\authentication\definitiveRegistrationCompleted\display\DisplayDefinitiveRegistrationCompletedPageInputBoundary;
+use packages\application\authentication\definitiveRegistrationCompleted\display\DisplayDefinitiveRegistrationCompletedPageOutputBoundary;
+use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompletedApplicationService;
+use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompletedInputBoundary;
+use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompletedOutputBoundary;
 use packages\application\userProfile\fetch\FetchUserProfileApplicationService;
 use packages\application\userProfile\fetch\FetchUserProfileInputBoundary;
 use packages\application\userProfile\register\RegisterUserProfileApplicationService;
@@ -75,7 +75,7 @@ class AppServiceProvider extends ServiceProvider
         // アプリケーションサービス
         $this->app->bind(LoginInputBoundary::class, LoginApplicationService::class);
         $this->app->bind(ResendRegistrationConfirmationEmailInputBoundary::class, ResendRegistrationConfirmationEmailApplicationService::class);
-        $this->app->bind(VerifiedUpdateInputBoundary::class, VerifiedUpdateApplicationService::class);
+        $this->app->bind(DefinitiveRegistrationCompletedInputBoundary::class, DefinitiveRegistrationCompletedApplicationService::class);
         $this->app->bind(UserRegistrationInputBoundary::class, UserRegistrationApplicationService::class);
         $this->app->bind(RegisterUserProfileInputBoundary::class, RegisterUserProfileApplicationService::class);
         $this->app->bind(FetchUserProfileInputBoundary::class, FetchUserProfileApplicationService::class);

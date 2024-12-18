@@ -7,14 +7,14 @@ use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenExpirat
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\authenticationAccount\VerificationStatus;
-use packages\domain\service\verifiedUpdate\VerifiedUpdate;
+use packages\domain\service\definitiveRegistrationCompleted\definitiveRegistrationCompleted;
 use packages\test\helpers\definitiveRegistrationConfirmation\definitiveRegistrationConfirmationTestDataCreator;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\authenticationAccount\authenticationAccountTestDataFactory;
 use packages\test\helpers\transactionManage\TestTransactionManage;
 use PHPUnit\Framework\TestCase;
 
-class VerifiedUpdateTest extends TestCase
+class DefinitiveRegistrationCompletedTest extends TestCase
 {
     private InMemoryDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
@@ -45,14 +45,14 @@ class VerifiedUpdateTest extends TestCase
             userId: $userId
         );
 
-        $verifiedUpdate = new VerifiedUpdate(
+        $DefinitiveRegistrationCompleted = new DefinitiveRegistrationCompleted(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage
         );
 
         // when
-        $verifiedUpdate->handle(
+        $DefinitiveRegistrationCompleted->handle(
             $definitiveRegistrationConfirmation->oneTimeToken()->tokenValue(), 
             $definitiveRegistrationConfirmation->oneTimePassword()
         );
@@ -83,7 +83,7 @@ class VerifiedUpdateTest extends TestCase
             oneTimePassword: $oneTimePassword
         );
 
-        $verifiedUpdate = new VerifiedUpdate(
+        $DefinitiveRegistrationCompleted = new DefinitiveRegistrationCompleted(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage
@@ -93,7 +93,7 @@ class VerifiedUpdateTest extends TestCase
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('認証アカウントを確認済みに更新できませんでした。');
         $invalidOneTimePassword = OneTimePassword::reconstruct('654321');
-        $verifiedUpdate->handle(
+        $DefinitiveRegistrationCompleted->handle(
             $definitiveRegistrationConfirmation->oneTimeToken()->tokenValue(), 
             $invalidOneTimePassword
         );
@@ -116,7 +116,7 @@ class VerifiedUpdateTest extends TestCase
             oneTimeTokenExpiration: $oneTimeTokenExpiration
         );
 
-        $verifiedUpdate = new VerifiedUpdate(
+        $DefinitiveRegistrationCompleted = new DefinitiveRegistrationCompleted(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage
@@ -125,7 +125,7 @@ class VerifiedUpdateTest extends TestCase
         // when・then
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('認証アカウントを確認済みに更新できませんでした。');
-        $verifiedUpdate->handle(
+        $DefinitiveRegistrationCompleted->handle(
             $definitiveRegistrationConfirmation->oneTimeToken()->tokenValue(), 
             $definitiveRegistrationConfirmation->oneTimePassword()
         );

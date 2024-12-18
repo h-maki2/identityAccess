@@ -11,7 +11,7 @@ use packages\test\helpers\definitiveRegistrationConfirmation\definitiveRegistrat
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use Tests\TestCase;
 
-class VerifiedUpdateControllerTest extends TestCase
+class DefinitiveRegistrationCompletedControllerTest extends TestCase
 {
     private EloquentDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private EloquentAuthenticationAccountRepository $authenticationAccountRepository;
@@ -44,7 +44,7 @@ class VerifiedUpdateControllerTest extends TestCase
 
         // when
         // 確認済み更新を行う
-        $response = $this->post('/verifiedUpdate', [
+        $response = $this->post('/DefinitiveRegistrationCompleted', [
             'oneTimeToken' => $definitiveRegistrationConfirmation->oneTimeToken()->tokenValue()->value,
             'oneTimePassword' => $definitiveRegistrationConfirmation->oneTimePassword()->value
         ]);
@@ -79,7 +79,7 @@ class VerifiedUpdateControllerTest extends TestCase
         // 確認済み更新を行う
         $invalidOneTimeTokenValue = str_repeat('b', 26);
         $invalidOneTimePassword = '654321';
-        $response = $this->post('/verifiedUpdate', [
+        $response = $this->post('/DefinitiveRegistrationCompleted', [
             'oneTimeToken' => $invalidOneTimeTokenValue,
             'oneTimePassword' => $invalidOneTimePassword
         ]);

@@ -1,23 +1,23 @@
 <?php
 
-namespace packages\adapter\presenter\authentication\verifiedUpdate\blade;
+namespace packages\adapter\presenter\authentication\definitiveRegistrationCompleted\blade;
 
-use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateResult;
+use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompletedResult;
 
-class BladeVerifiedUpdatePresenter
+class BladeDefinitiveRegistrationCompletedPresenter
 {
-    private VerifiedUpdateResult $verifiedUpdateResult;
+    private DefinitiveRegistrationCompletedResult $DefinitiveRegistrationCompletedResult;
 
-    public function __construct(VerifiedUpdateResult $verifiedUpdateResult)
+    public function __construct(DefinitiveRegistrationCompletedResult $DefinitiveRegistrationCompletedResult)
     {
-        $this->verifiedUpdateResult = $verifiedUpdateResult;
+        $this->DefinitiveRegistrationCompletedResult = $DefinitiveRegistrationCompletedResult;
     }
 
     public function responseDate(): array
     {
-        if ($this->verifiedUpdateResult->validationError) {
+        if ($this->DefinitiveRegistrationCompletedResult->validationError) {
             return [
-                'validationErrorMessage' => $this->verifiedUpdateResult->validationErrorMessage
+                'validationErrorMessage' => $this->DefinitiveRegistrationCompletedResult->validationErrorMessage
             ];
         }
 
@@ -26,6 +26,6 @@ class BladeVerifiedUpdatePresenter
 
     public function isValidationError(): bool
     {
-        return $this->verifiedUpdateResult->validationError;
+        return $this->DefinitiveRegistrationCompletedResult->validationError;
     }
 }

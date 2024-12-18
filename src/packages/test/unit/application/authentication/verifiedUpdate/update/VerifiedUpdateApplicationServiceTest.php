@@ -2,36 +2,36 @@
 
 use packages\adapter\persistence\inMemory\InMemoryDefinitiveRegistrationConfirmationRepository;
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationAccountRepository;
-use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateApplicationService;
-use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateOutputBoundary;
-use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateResult;
+use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompletedApplicationService;
+use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompletedOutputBoundary;
+use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompletedResult;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\authenticationAccount\VerificationStatus;
-use packages\domain\service\verifiedUpdate\VerifiedUpdate;
+use packages\domain\service\definitiveRegistrationCompleted\definitiveRegistrationCompleted;
 use packages\test\helpers\definitiveRegistrationConfirmation\definitiveRegistrationConfirmationTestDataCreator;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\transactionManage\TestTransactionManage;
 use PHPUnit\Framework\TestCase;
 
-class VerifiedUpdateApplicationServiceTest extends TestCase
+class DefinitiveRegistrationCompletedApplicationServiceTest extends TestCase
 {
     private InMemoryDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
-    private VerifiedUpdate $verifiedUpdate;
+    private DefinitiveRegistrationCompleted $DefinitiveRegistrationCompleted;
     private TestTransactionManage $transactionManage;
     private DefinitiveRegistrationConfirmationTestDataCreator $definitiveRegistrationConfirmationTestDataCreator;
     private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
-    private VerifiedUpdateApplicationService $verifiedUpdateApplicationService;
-    private VerifiedUpdateResult $capturedResult;
+    private DefinitiveRegistrationCompletedApplicationService $DefinitiveRegistrationCompletedApplicationService;
+    private DefinitiveRegistrationCompletedResult $capturedResult;
 
     public function setUp(): void
     {
         $this->definitiveRegistrationConfirmationRepository = new InMemoryDefinitiveRegistrationConfirmationRepository();
         $this->authenticationAccountRepository = new InMemoryAuthenticationAccountRepository();
         $this->transactionManage = new TestTransactionManage();
-        $this->verifiedUpdate = new VerifiedUpdate(
+        $this->DefinitiveRegistrationCompleted = new DefinitiveRegistrationCompleted(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage
@@ -39,7 +39,7 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
         $this->definitiveRegistrationConfirmationTestDataCreator = new DefinitiveRegistrationConfirmationTestDataCreator($this->definitiveRegistrationConfirmationRepository, $this->authenticationAccountRepository);
         $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($this->authenticationAccountRepository);
 
-        $this->verifiedUpdateApplicationService = new VerifiedUpdateApplicationService(
+        $this->DefinitiveRegistrationCompletedApplicationService = new DefinitiveRegistrationCompletedApplicationService(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage
@@ -66,7 +66,7 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
 
         // when
         // 正しいワンタイムトークンとワンタイムパスワードを入力する
-        $result = $this->verifiedUpdateApplicationService->verifiedUpdate($oneTimeTokenValue->value, $oneTimePassword->value);
+        $result = $this->DefinitiveRegistrationCompletedApplicationService->DefinitiveRegistrationCompleted($oneTimeTokenValue->value, $oneTimePassword->value);
 
         // then
         // バリデーションエラーが発生していないことを確認
@@ -103,7 +103,7 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
         // when
         // 存在しないワンタイムトークンを生成
         $invalidOneTimeTokenValue = OneTimeTokenValue::reconstruct('aaaaaaaaaaaaaaaaaaaaaaaaaa');
-        $result = $this->verifiedUpdateApplicationService->verifiedUpdate($invalidOneTimeTokenValue->value, $oneTimePassword->value);
+        $result = $this->DefinitiveRegistrationCompletedApplicationService->DefinitiveRegistrationCompleted($invalidOneTimeTokenValue->value, $oneTimePassword->value);
 
         // then
         // バリデーションエラーが発生していることを確認
@@ -132,7 +132,7 @@ class VerifiedUpdateApplicationServiceTest extends TestCase
         // when
         // 正しくないワンタイムパスワードを入力する
         $invalidOneTimePassword = OneTimePassword::reconstruct('654321');
-        $result = $this->verifiedUpdateApplicationService->verifiedUpdate($oneTimeTokenValue->value, $invalidOneTimePassword->value);
+        $result = $this->DefinitiveRegistrationCompletedApplicationService->DefinitiveRegistrationCompleted($oneTimeTokenValue->value, $invalidOneTimePassword->value);
 
         // then
         // バリデーションエラーが発生していることを確認

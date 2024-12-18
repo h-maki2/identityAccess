@@ -1,14 +1,14 @@
 <?php
 
-namespace packages\adapter\view\authentication\verifiedUpdate\blade;
+namespace packages\adapter\view\authentication\definitiveRegistrationCompleted\blade;
 
-use packages\adapter\presenter\authentication\verifiedUpdate\blade\BladeVerifiedUpdatePresenter;
+use packages\adapter\presenter\authentication\definitiveRegistrationCompleted\blade\BladeDefinitiveRegistrationCompletedPresenter;
 
-class BladeVerifiedUpdateView
+class BladeDefinitiveRegistrationCompletedView
 {
-    private BladeVerifiedUpdatePresenter $presenter;
+    private BladeDefinitiveRegistrationCompletedPresenter $presenter;
 
-    public function __construct(BladeVerifiedUpdatePresenter $presenter)
+    public function __construct(BladeDefinitiveRegistrationCompletedPresenter $presenter)
     {
         $this->presenter = $presenter;
     }
@@ -24,7 +24,7 @@ class BladeVerifiedUpdateView
 
     public function successResponse()
     {
-        return view('authentication.verifiedUpdate.verifiedUpdateComplete');
+        return view('authentication.DefinitiveRegistrationCompleted.DefinitiveRegistrationCompletedComplete');
     }
 
     public function faildResponse()

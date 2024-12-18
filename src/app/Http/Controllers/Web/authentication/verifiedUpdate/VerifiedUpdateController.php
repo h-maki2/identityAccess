@@ -1,35 +1,35 @@
 <?php
 
-namespace App\Http\Controllers\Web\authentication\verifiedUpdate;
+namespace App\Http\Controllers\Web\authentication\definitiveRegistrationCompleted;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use packages\adapter\presenter\authentication\verifiedUpdate\blade\BladeVerifiedUpdatePresenter;
-use packages\adapter\presenter\authentication\verifiedUpdate\json\JsonVerifiedUpdatePresenter;
-use packages\adapter\view\authentication\verifiedUpdate\blade\BladeVerifiedUpdateView;
-use packages\application\authentication\verifiedUpdate\update\VerifiedUpdateInputBoundary;
+use packages\adapter\presenter\authentication\definitiveRegistrationCompleted\blade\BladeDefinitiveRegistrationCompletedPresenter;
+use packages\adapter\presenter\authentication\definitiveRegistrationCompleted\json\JsonDefinitiveRegistrationCompletedPresenter;
+use packages\adapter\view\authentication\definitiveRegistrationCompleted\blade\BladeDefinitiveRegistrationCompletedView;
+use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompletedInputBoundary;
 
-class VerifiedUpdateController extends Controller
+class DefinitiveRegistrationCompletedController extends Controller
 {
-    public function verifiedUpdateForm(Request $request)
+    public function DefinitiveRegistrationCompletedForm(Request $request)
     {
-        return view('authentication.verifiedUpdate.verifiedUpdateForm', [
+        return view('authentication.DefinitiveRegistrationCompleted.DefinitiveRegistrationCompletedForm', [
             'oneTimeToken' => $request->query('token', ''),
         ]);
     }
 
-    public function verifiedUpdate(
+    public function DefinitiveRegistrationCompleted(
         Request $request,
-        VerifiedUpdateInputBoundary $verifiedUpdateInputBoundary
+        DefinitiveRegistrationCompletedInputBoundary $DefinitiveRegistrationCompletedInputBoundary
     )
     {
-        $output = $verifiedUpdateInputBoundary->verifiedUpdate(
+        $output = $DefinitiveRegistrationCompletedInputBoundary->DefinitiveRegistrationCompleted(
             $request->input('oneTimeToken') ?? '',
             $request->input('oneTimePassword') ?? ''
         );
 
-        $presenter = new BladeVerifiedUpdatePresenter($output);
-        $view = new BladeVerifiedUpdateView($presenter);
+        $presenter = new BladeDefinitiveRegistrationCompletedPresenter($output);
+        $view = new BladeDefinitiveRegistrationCompletedView($presenter);
         return $view->response();
     }
 }
