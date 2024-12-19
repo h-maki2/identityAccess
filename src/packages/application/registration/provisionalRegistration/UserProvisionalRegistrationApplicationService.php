@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\application\registration\userProvisionalRegistration;
+namespace packages\application\registration\provisionalRegistration;
 
 use Exception;
 use packages\application\common\exception\TransactionException;
@@ -15,8 +15,8 @@ use packages\domain\model\authenticationAccount\validation\UserPasswordConfirmat
 use packages\domain\model\authenticationAccount\validation\UserPasswordValidation;
 use packages\domain\model\common\transactionManage\TransactionManage;
 use packages\domain\model\common\validator\ValidationHandler;
-use packages\domain\service\registration\provisionalRegistration\UserProvisionalRegistration;
 use packages\domain\model\email\IEmailSender;
+use packages\domain\service\registration\provisionalRegistration\UserProvisionalRegistrationUpdate;
 
 /**
  * ユーザー登録のアプリケーションサービス
@@ -25,7 +25,7 @@ class UserProvisionalRegistrationApplicationService implements UserProvisionalRe
 {
     private IAuthenticationAccountRepository $authenticationAccountRepository;
     private IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
-    private UserProvisionalRegistration $userProvisionalRegistration;
+    private UserProvisionalRegistrationUpdate $userProvisionalRegistration;
 
     public function __construct(
         IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository,
@@ -36,7 +36,7 @@ class UserProvisionalRegistrationApplicationService implements UserProvisionalRe
     {
         $this->authenticationAccountRepository = $authenticationAccountRepository;
         $this->definitiveRegistrationConfirmationRepository = $definitiveRegistrationConfirmationRepository;
-        $this->userProvisionalRegistration = new UserProvisionalRegistration(
+        $this->userProvisionalRegistration = new UserProvisionalRegistrationUpdate(
             $authenticationAccountRepository,
             $definitiveRegistrationConfirmationRepository,
             $transactionManage,

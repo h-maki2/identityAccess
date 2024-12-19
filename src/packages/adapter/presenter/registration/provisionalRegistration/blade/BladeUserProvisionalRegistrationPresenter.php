@@ -2,7 +2,7 @@
 
 namespace packages\adapter\presenter\registration\UserProvisionalRegistration\blade;
 
-use packages\application\registration\userProvisionalRegistration\UserProvisionalRegistrationResult;
+use packages\application\registration\provisionalRegistration\UserProvisionalRegistrationResult;
 
 class BladeUserProvisionalRegistrationPresenter
 {

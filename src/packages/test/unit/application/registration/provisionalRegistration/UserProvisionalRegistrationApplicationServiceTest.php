@@ -4,7 +4,7 @@ use packages\adapter\persistence\inMemory\InMemoryDefinitiveRegistrationConfirma
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationAccountRepository;
 use packages\domain\model\email\SendEmailDto;
 use packages\application\common\validation\ValidationErrorMessageData;
-use packages\application\registration\userProvisionalRegistration\UserProvisionalRegistrationApplicationService;
+use packages\application\registration\provisionalRegistration\UserProvisionalRegistrationApplicationService;
 use packages\domain\model\email\IEmailSender;
 use packages\test\helpers\transactionManage\TestTransactionManage;
 use PHPUnit\Framework\TestCase;
@@ -57,7 +57,7 @@ class UserProvisionalRegistrationApplicationServiceTest extends TestCase
         $this->assertEmpty($result->validationErrorMessageList);
 
         // メール送信するデータが正しいことを確認
-        $this->assertNotEmpty($this->capturedSendEmailDto->templateVariables['UserDefinitiveRegistrationUpdateUrl']);
+        $this->assertNotEmpty($this->capturedSendEmailDto->templateVariables['definitiveRegistrationConfirmationUpdateUrl']);
         $this->assertEquals($userEmailString, $this->capturedSendEmailDto->toAddress);
         $this->assertNotEmpty($this->capturedSendEmailDto->templateVariables['oneTimePassword']);
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\application\registration\userProvisionalRegistration;
+namespace packages\application\registration\provisionalRegistration;
 
 interface UserProvisionalRegistrationInputBoundary
 {
