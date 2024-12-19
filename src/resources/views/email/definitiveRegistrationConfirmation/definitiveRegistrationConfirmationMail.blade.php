@@ -4,10 +4,6 @@
     <title>本登録確認メール</title>
 </head>
 <body>
-    <p>下記のURLにアクセスして、本登録済みの更新を行ってください。</p>
-    <p><a href="{{$definitiveRegistrationConfirmationUpdateUrl}}">{{ $definitiveRegistrationConfirmationUpdateUrl }}</a><p>
-    <p>ワンタイムパスワード: {{ $oneTimePassword }}</p>
-
     このたびは会員登録いただき、誠にありがとうございます。<br>
     以下のURLにアクセスして、本登録を完了してください。<br><br>
 
@@ -19,6 +15,6 @@
 
     ワンタイムパスワード: {{ $oneTimePassword }}<br><br>
 
-    ※ワンタイムパスワードの有効期限は {{ $expirationHours }} までとなります。期限を過ぎると無効となりますので、ご注意ください。
+    ※ワンタイムパスワードの有効期限は{{ $expirationHours }}までとなります。期限を過ぎると無効となりますので、ご注意ください。
 </body>
 </html>
