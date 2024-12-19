@@ -4,7 +4,7 @@ namespace packages\domain\model\authenticationAccount\validation;
 
 class UserEmailFormatChecker
 {
-    private const MIN_LENGTH = 255;
+    private const MAX_LENGTH = 255;
 
     public static function invalidEmailLength(string $email): bool
     {
@@ -12,7 +12,7 @@ class UserEmailFormatChecker
             return true;
         }
 
-        return mb_strlen($email, 'UTF-8') > self::MIN_LENGTH;
+        return mb_strlen($email, 'UTF-8') > self::MAX_LENGTH;
     }
 
     public static function invalidEmail(string $email): bool
