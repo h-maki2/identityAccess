@@ -8,17 +8,17 @@ use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedStatus;
 use packages\domain\model\email\IEmailSender;
-use packages\domain\service\registration\provisionalRegistration\UserProvisionalRegistration;
+use packages\domain\service\registration\provisionalRegistration\UserProvisionalRegistrationUpdate;
 use packages\test\helpers\transactionManage\TestTransactionManage;
 use PHPUnit\Framework\TestCase;
 
-class UserProvisionalRegistrationTest extends TestCase
+class UserProvisionalRegistrationUpdateTest extends TestCase
 {
     private InMemoryDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
     private TestTransactionManage $transactionManage;
     private SendEmailDto $capturedSendEmailDto;
-    private UserProvisionalRegistration $userProvisionalRegistration;
+    private UserProvisionalRegistrationUpdate $userProvisionalRegistration;
     private IEmailSender $emailSender;
 
     public function setUp(): void
@@ -36,7 +36,7 @@ class UserProvisionalRegistrationTest extends TestCase
             }));
         $this->emailSender = $emailSender;
 
-        $this->userProvisionalRegistration = new UserProvisionalRegistration(
+        $this->userProvisionalRegistration = new UserProvisionalRegistrationUpdate(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage,

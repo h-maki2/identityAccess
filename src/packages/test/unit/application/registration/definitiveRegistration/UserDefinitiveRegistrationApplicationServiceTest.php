@@ -2,45 +2,34 @@
 
 use packages\adapter\persistence\inMemory\InMemoryDefinitiveRegistrationConfirmationRepository;
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationAccountRepository;
-use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompleteApplicationService;
-use packages\application\authentication\definitiveRegistrationCompleted\UserDefinitiveRegistrationUpdateOutputBoundary;
-use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompleteResult;
+use packages\application\registration\definitiveRegistration\UserDefinitiveRegistrationApplicationService;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedStatus;
-use packages\domain\service\registration\definitiveRegistration\definitiveRegistrationCompleted;
-use packages\domain\service\registration\definitiveRegistration\UserDefinitiveRegistrationUpdate;
 use packages\test\helpers\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmationTestDataCreator;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\transactionManage\TestTransactionManage;
 use PHPUnit\Framework\TestCase;
 
-class DefinitiveRegistrationCompleteApplicationServiceTest extends TestCase
+class UserDefinitiveRegistrationApplicationServiceTest extends TestCase
 {
     private InMemoryDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
-    private UserDefinitiveRegistrationUpdate $UserDefinitiveRegistrationUpdate;
     private TestTransactionManage $transactionManage;
     private DefinitiveRegistrationConfirmationTestDataCreator $definitiveRegistrationConfirmationTestDataCreator;
     private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
-    private DefinitiveRegistrationCompleteApplicationService $DefinitiveRegistrationCompleteApplicationService;
-    private DefinitiveRegistrationCompleteResult $capturedResult;
+    private UserDefinitiveRegistrationApplicationService $DefinitiveRegistrationCompleteApplicationService;
 
     public function setUp(): void
     {
         $this->definitiveRegistrationConfirmationRepository = new InMemoryDefinitiveRegistrationConfirmationRepository();
         $this->authenticationAccountRepository = new InMemoryAuthenticationAccountRepository();
         $this->transactionManage = new TestTransactionManage();
-        $this->UserDefinitiveRegistrationUpdate = new UserDefinitiveRegistrationUpdate(
-            $this->authenticationAccountRepository,
-            $this->definitiveRegistrationConfirmationRepository,
-            $this->transactionManage
-        );
         $this->definitiveRegistrationConfirmationTestDataCreator = new DefinitiveRegistrationConfirmationTestDataCreator($this->definitiveRegistrationConfirmationRepository, $this->authenticationAccountRepository);
         $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($this->authenticationAccountRepository);
 
-        $this->DefinitiveRegistrationCompleteApplicationService = new DefinitiveRegistrationCompleteApplicationService(
+        $this->DefinitiveRegistrationCompleteApplicationService = new UserDefinitiveRegistrationApplicationService(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage

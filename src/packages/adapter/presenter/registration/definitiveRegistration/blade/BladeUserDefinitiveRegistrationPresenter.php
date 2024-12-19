@@ -4,7 +4,7 @@ namespace packages\adapter\presenter\registration\definitiveRegistration\blade;
 
 // packages\adapter\presenter\registration\definitiveRegistration\blade
 
-use packages\application\authentication\UserDefinitiveRegistration\UserDefinitiveRegistrationResult;
+use packages\application\registration\definitiveRegistration\UserDefinitiveRegistrationResult;
 
 class BladeUserDefinitiveRegistrationPresenter
 {

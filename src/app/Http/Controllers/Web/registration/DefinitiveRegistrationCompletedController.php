@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use packages\adapter\presenter\registration\definitiveRegistration\blade\BladeUserDefinitiveRegistrationPresenter;
 use packages\adapter\view\registration\definitiveRegistration\blade\BladeUserDefinitiveRegistrationView;
-use packages\application\authentication\UserDefinitiveRegistration\UserDefinitiveRegistrationInputBoundary;
+use packages\application\registration\definitiveRegistration\UserDefinitiveRegistrationInputBoundary;
 
 class UserDefinitiveRegistrationController extends Controller
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\application\authentication\UserDefinitiveRegistration;
+namespace packages\application\registration\definitiveRegistration;
 
 use DateTimeImmutable;
 use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
