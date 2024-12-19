@@ -8,6 +8,8 @@ class OneTimeTokenExpiration
 {
     private DateTimeImmutable $value;
 
+    private const EXPIRATION_HOURS = 24;
+
     private function __construct(DateTimeImmutable $value)
     {
         $this->value = $value;
@@ -15,12 +17,17 @@ class OneTimeTokenExpiration
 
     public static function create(): self
     {
-        return new self(new DateTimeImmutable('+24 hours'));
+        return new self(new DateTimeImmutable('+' . self::EXPIRATION_HOURS . ' hours'));
     }
 
     public static function reconstruct(DateTimeImmutable $value): self
     {
         return new self($value);
+    }
+
+    public static function expirationHours(): int
+    {
+        return self::EXPIRATION_HOURS;
     }
 
     public function formattedValue(): string
