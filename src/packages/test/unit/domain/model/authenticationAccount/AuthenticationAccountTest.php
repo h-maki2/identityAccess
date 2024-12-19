@@ -49,7 +49,7 @@ class AuthenticationAccountTest extends TestCase
         );
 
         // then
-        $this->assertEquals(DefinitiveRegistrationCompletedStatus::Incomplete, $authenticationAccount->DefinitiveRegistrationCompletedStatus());
+        $this->assertEquals(DefinitiveRegistrationCompletedStatus::Incomplete, $authenticationAccount->definitiveRegistrationCompletedStatus());
         $this->assertEquals(LoginRestrictionStatus::Unrestricted->value, $authenticationAccount->LoginRestriction()->loginRestrictionStatus());
         $this->assertEquals(0, $authenticationAccount->LoginRestriction()->failedLoginCount());
         $this->assertEquals(null, $authenticationAccount->LoginRestriction()->nextLoginAllowedAt());
@@ -108,7 +108,7 @@ class AuthenticationAccountTest extends TestCase
         $this->assertEquals($email, $authenticationAccount->email());
         $this->assertEquals($userId, $authenticationAccount->id());
         $this->assertEquals($password, $authenticationAccount->password());
-        $this->assertEquals($DefinitiveRegistrationCompletedStatus, $authenticationAccount->DefinitiveRegistrationCompletedStatus());
+        $this->assertEquals($DefinitiveRegistrationCompletedStatus, $authenticationAccount->definitiveRegistrationCompletedStatus());
         $this->assertEquals($LoginRestriction, $authenticationAccount->LoginRestriction());
     }
 
@@ -125,7 +125,7 @@ class AuthenticationAccountTest extends TestCase
         $authenticationAccount->updateVerified();
 
         // then
-        $this->assertEquals(DefinitiveRegistrationCompletedStatus::Completed, $authenticationAccount->DefinitiveRegistrationCompletedStatus());
+        $this->assertEquals(DefinitiveRegistrationCompletedStatus::Completed, $authenticationAccount->definitiveRegistrationCompletedStatus());
     }
 
     public function test_認証ステータスが本登録済みの場合、パスワードの変更が行える()

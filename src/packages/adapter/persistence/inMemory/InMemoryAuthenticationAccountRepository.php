@@ -97,7 +97,7 @@ class InMemoryAuthenticationAccountRepository implements IAuthenticationAccountR
             'user_id' => $authenticationAccount->id()->value,
             'email' => $authenticationAccount->email()->value,
             'password' => $authenticationAccount->password()->hashedValue,
-            'verification_status' => $authenticationAccount->DefinitiveRegistrationCompletedStatus()->value,
+            'verification_status' => $authenticationAccount->definitiveRegistrationCompletedStatus()->value,
             'failed_login_count' => $authenticationAccount->LoginRestriction()->failedLoginCount(),
             'next_login_allowed_at' => $authenticationAccount->LoginRestriction()->nextLoginAllowedAt(),
             'login_restriction_status' => $authenticationAccount->LoginRestriction()->loginRestrictionStatus(),

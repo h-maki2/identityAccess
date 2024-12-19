@@ -59,7 +59,7 @@ class EloquentAuthenticationAccountRepository implements IAuthenticationAccountR
             [
                 'email' => $authenticationAccount->email()->value,
                 'password' => $authenticationAccount->password()->hashedValue,
-                'verification_status' => $authenticationAccount->DefinitiveRegistrationCompletedStatus()->value,
+                'verification_status' => $authenticationAccount->definitiveRegistrationCompletedStatus()->value,
                 'failed_login_count' => $authenticationAccount->loginRestriction()->failedLoginCount(),
                 'login_restriction_status' => $authenticationAccount->loginRestriction()->loginRestrictionStatus(),
                 'next_login_allowed_at' => $authenticationAccount->loginRestriction()->nextLoginAllowedAt()

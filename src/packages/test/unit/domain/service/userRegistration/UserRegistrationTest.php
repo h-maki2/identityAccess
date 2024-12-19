@@ -57,7 +57,7 @@ class UserRegistrationTest extends TestCase
         // then
         // ユーザーが未認証状態で登録されていることを確認
         $actualAuthInfo = $this->authenticationAccountRepository->findByEmail($userEmail);
-        $this->assertEquals(DefinitiveRegistrationCompletedStatus::Incomplete, $actualAuthInfo->DefinitiveRegistrationCompletedStatus());
+        $this->assertEquals(DefinitiveRegistrationCompletedStatus::Incomplete, $actualAuthInfo->definitiveRegistrationCompletedStatus());
         $this->assertEquals($userPassword, $actualAuthInfo->password());
 
         // 本登録確認情報が保存されていることを確認
