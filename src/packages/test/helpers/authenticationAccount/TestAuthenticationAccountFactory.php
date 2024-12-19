@@ -16,7 +16,7 @@ class TestAuthenticationAccountFactory
     public static function create(
         ?UserEmail $email = null,
         ?UserPassword $password = null,
-        ?DefinitiveRegistrationCompletedStatus $DefinitiveRegistrationCompletedStatus = null,
+        ?DefinitiveRegistrationCompletedStatus $definitiveRegistrationCompletedStatus = null,
         ?UserId $id = null,
         ?LoginRestriction $loginRestriction = null,
         ?UnsubscribeStatus $unsubscribeStatus = null
@@ -27,7 +27,7 @@ class TestAuthenticationAccountFactory
             $id ?? $authInfoRepository->nextUserId(),
             $email ?? TestUserEmailFactory::create(),
             $password ?? UserPassword::create('ABCabc123_'),
-            $DefinitiveRegistrationCompletedStatus ?? DefinitiveRegistrationCompletedStatus::Completed,
+            $definitiveRegistrationCompletedStatus ?? definitiveRegistrationCompletedStatus::Completed,
             $loginRestriction ?? LoginRestriction::initialization(),
             $unsubscribeStatus ?? UnsubscribeStatus::Subscribed
         );

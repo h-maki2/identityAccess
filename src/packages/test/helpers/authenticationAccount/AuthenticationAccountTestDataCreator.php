@@ -24,7 +24,7 @@ class AuthenticationAccountTestDataCreator
     public function create(
         ?UserEmail $email = null,
         ?UserPassword $password = null,
-        ?DefinitiveRegistrationCompletedStatus $DefinitiveRegistrationCompletedStatus = null,
+        ?DefinitiveRegistrationCompletedStatus $definitiveRegistrationCompletedStatus = null,
         ?UserId $id = null,
         ?LoginRestriction $LoginRestriction = null,
         ?UnsubscribeStatus $unsubscribeStatus = null
@@ -33,7 +33,7 @@ class AuthenticationAccountTestDataCreator
         $authenticationAccount = TestAuthenticationAccountFactory::create(
             $email,
             $password,
-            $DefinitiveRegistrationCompletedStatus,
+            $definitiveRegistrationCompletedStatus,
             $id,
             $LoginRestriction,
             $unsubscribeStatus

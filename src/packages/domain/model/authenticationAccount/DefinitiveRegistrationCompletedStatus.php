@@ -2,7 +2,7 @@
 
 namespace packages\domain\model\authenticationAccount;
 
-enum DefinitiveRegistrationCompletedStatus: string
+enum definitiveRegistrationCompletedStatus: string
 {
     case Completed = '1';
     case Incomplete = '0';

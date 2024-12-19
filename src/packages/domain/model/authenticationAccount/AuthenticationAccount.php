@@ -53,7 +53,7 @@ class AuthenticationAccount
             $userId,
             $userEmail,
             $userPassword,
-            DefinitiveRegistrationCompletedStatus::Incomplete,
+            definitiveRegistrationCompletedStatus::Incomplete,
             LoginRestriction::initialization(),
             UnsubscribeStatus::Subscribed
         );
@@ -110,7 +110,7 @@ class AuthenticationAccount
 
     public function updateVerified(): void
     {
-        $this->definitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Completed;
+        $this->definitiveRegistrationCompletedStatus = definitiveRegistrationCompletedStatus::Completed;
     }
 
     public function updateUnsubscribed(): void

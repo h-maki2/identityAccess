@@ -54,7 +54,7 @@ class UserDefinitiveRegistrationUpdateTest extends TestCase
         // given
         // 認証アカウントと本登録確認情報を作成する
         $authInfo = $this->authenticationAccountTestDataCreator->create(
-            DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
+            definitiveRegistrationCompletedStatus: definitiveRegistrationCompletedStatus::Incomplete
         );
         $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create($authInfo->id());
 
@@ -79,7 +79,7 @@ class UserDefinitiveRegistrationUpdateTest extends TestCase
         // given
         // 認証アカウントと本登録確認情報を作成する
         $authInfo = $this->authenticationAccountTestDataCreator->create(
-            DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
+            definitiveRegistrationCompletedStatus: definitiveRegistrationCompletedStatus::Incomplete
         );
         $oneTimePassword = OneTimePassword::create('111111');
         $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create(
@@ -103,7 +103,7 @@ class UserDefinitiveRegistrationUpdateTest extends TestCase
         // given
         // 認証アカウントと本登録確認情報を作成する
         $authInfo = $this->authenticationAccountTestDataCreator->create(
-            DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
+            definitiveRegistrationCompletedStatus: definitiveRegistrationCompletedStatus::Incomplete
         );
         // 有効期限が切れているワンタイムトークンを生成
         $oneTimeTokenExpiration = OneTimeTokenExpiration::reconstruct(new DateTimeImmutable('-1 day'));

@@ -36,7 +36,7 @@ class ResendRegistrationConfirmationEmailControllerTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             email: $userEmail, 
             id: $userId,
-            DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
+            definitiveRegistrationCompletedStatus: definitiveRegistrationCompletedStatus::Incomplete
         );
 
         // 認証確認を作成して保存する

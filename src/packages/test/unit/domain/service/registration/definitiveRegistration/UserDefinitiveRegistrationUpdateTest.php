@@ -38,7 +38,7 @@ class UserDefinitiveRegistrationUpdateTest extends TestCase
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
-            DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
+            definitiveRegistrationCompletedStatus: definitiveRegistrationCompletedStatus::Incomplete
         );
         // 本登録確認情報を保存しておく
         $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create(
@@ -60,7 +60,7 @@ class UserDefinitiveRegistrationUpdateTest extends TestCase
         // then
         // 認証アカウントが本登録済みになっていることを確認
         $updatedAuthenticationAccount = $this->authenticationAccountRepository->findById($userId, UnsubscribeStatus::Subscribed);
-        $this->assertEquals(DefinitiveRegistrationCompletedStatus::Completed, $updatedAuthenticationAccount->definitiveRegistrationCompletedStatus());
+        $this->assertEquals(definitiveRegistrationCompletedStatus::Completed, $updatedAuthenticationAccount->definitiveRegistrationCompletedStatus());
 
         // 本登録確認情報が削除されていることを確認
         $deletedDefinitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationRepository->findByTokenValue($definitiveRegistrationConfirmation->oneTimeToken()->tokenValue());
@@ -74,7 +74,7 @@ class UserDefinitiveRegistrationUpdateTest extends TestCase
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
-            DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
+            definitiveRegistrationCompletedStatus: definitiveRegistrationCompletedStatus::Incomplete
         );
         // 本登録確認情報を保存しておく
         $oneTimePassword = OneTimePassword::reconstruct('123456');
@@ -106,7 +106,7 @@ class UserDefinitiveRegistrationUpdateTest extends TestCase
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
-            DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
+            definitiveRegistrationCompletedStatus: definitiveRegistrationCompletedStatus::Incomplete
         );
 
         // 有効期限が切れているワンタイムトークンを生成

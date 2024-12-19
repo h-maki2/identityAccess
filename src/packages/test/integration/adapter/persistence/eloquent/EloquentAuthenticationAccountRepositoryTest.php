@@ -38,7 +38,7 @@ class EloquentAuthenticationAccountRepositoryTest extends TestCase
         // 認証アカウントを作成する
         $userEmail = new UserEmail('test@example.com');
         $userPassword = UserPassword::create('abcABC123!');
-        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Completed;
+        $DefinitiveRegistrationCompletedStatus = definitiveRegistrationCompletedStatus::Completed;
         $userId = $this->authenticationAccountRepository->nextUserId();
         $loginRestriction = LoginRestriction::initialization();
         $unsubscribeStatus = UnsubscribeStatus::Subscribed;
@@ -70,7 +70,7 @@ class EloquentAuthenticationAccountRepositoryTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
             password: $userPassword,
-            DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Completed
+            definitiveRegistrationCompletedStatus: definitiveRegistrationCompletedStatus::Completed
         );
 
         // when

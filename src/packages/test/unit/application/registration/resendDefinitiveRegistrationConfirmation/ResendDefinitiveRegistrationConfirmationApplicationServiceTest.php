@@ -56,7 +56,7 @@ class ResendDefinitiveRegistrationConfirmationApplicationServiceTest extends Tes
         $userEmail = new UserEmail('test@example.com');
         $authenticationAccount = $this->authenticationAccountTestDataCreator->create(
             email: $userEmail,
-            DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete // 本登録済みではない
+            definitiveRegistrationCompletedStatus: definitiveRegistrationCompletedStatus::Incomplete // 本登録済みではない
         );
 
         // 認証確認を作成して保存する
@@ -117,7 +117,7 @@ class ResendDefinitiveRegistrationConfirmationApplicationServiceTest extends Tes
         $userEmail = new UserEmail('test@example.com');
         $authenticationAccount = $this->authenticationAccountTestDataCreator->create(
             email: $userEmail,
-            DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Completed // 本登録済み
+            definitiveRegistrationCompletedStatus: definitiveRegistrationCompletedStatus::Completed // 本登録済み
         );
 
         // 認証確認を作成して保存する
@@ -145,7 +145,7 @@ class ResendDefinitiveRegistrationConfirmationApplicationServiceTest extends Tes
         $userEmail = new UserEmail('test@example.com');
         $authenticationAccount = $this->authenticationAccountTestDataCreator->create(
             email: $userEmail,
-            DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete // 本登録済みではない
+            definitiveRegistrationCompletedStatus: definitiveRegistrationCompletedStatus::Incomplete // 本登録済みではない
         );
 
         // when・then

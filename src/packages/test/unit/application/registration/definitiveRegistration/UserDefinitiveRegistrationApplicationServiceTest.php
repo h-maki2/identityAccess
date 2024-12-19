@@ -43,7 +43,7 @@ class UserDefinitiveRegistrationApplicationServiceTest extends TestCase
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
-            DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
+            definitiveRegistrationCompletedStatus: definitiveRegistrationCompletedStatus::Incomplete
         );
         // 本登録確認情報を保存しておく
         $oneTimePassword = OneTimePassword::create();
@@ -65,7 +65,7 @@ class UserDefinitiveRegistrationApplicationServiceTest extends TestCase
 
         // 認証アカウントが本登録済みになっていることを確認
         $updatedAuthenticationAccount = $this->authenticationAccountRepository->findById($userId, UnsubscribeStatus::Subscribed);
-        $this->assertEquals(DefinitiveRegistrationCompletedStatus::Completed, $updatedAuthenticationAccount->definitiveRegistrationCompletedStatus());
+        $this->assertEquals(definitiveRegistrationCompletedStatus::Completed, $updatedAuthenticationAccount->definitiveRegistrationCompletedStatus());
 
         // 本登録確認情報が削除されていることを確認
         $deletedDefinitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationRepository->findByTokenValue($oneTimeTokenValue);
@@ -79,7 +79,7 @@ class UserDefinitiveRegistrationApplicationServiceTest extends TestCase
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
-            DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
+            definitiveRegistrationCompletedStatus: definitiveRegistrationCompletedStatus::Incomplete
         );
         // 本登録確認情報を保存しておく
         $oneTimePassword = OneTimePassword::reconstruct('123456');
@@ -108,7 +108,7 @@ class UserDefinitiveRegistrationApplicationServiceTest extends TestCase
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
-            DefinitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
+            definitiveRegistrationCompletedStatus: definitiveRegistrationCompletedStatus::Incomplete
         );
         // 本登録確認情報を保存しておく
         $oneTimePassword = OneTimePassword::reconstruct('123456');
