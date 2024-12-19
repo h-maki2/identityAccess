@@ -16,12 +16,13 @@ use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedStatus;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\service\registration\provisionalRegistration\UserProvisionalRegistration;
+use packages\domain\service\registration\provisionalRegistration\UserProvisionalRegistrationUpdate;
 use packages\test\helpers\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmationTestDataCreator;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\transactionManage\TestTransactionManage;
 use Tests\TestCase;
 
-class UserProvisionalRegistrationTest extends TestCase
+class UserProvisionalRegistrationUpdateTest extends TestCase
 {
     private EloquentDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private EloquentAuthenticationAccountRepository $authenticationAccountRepository;
@@ -29,7 +30,7 @@ class UserProvisionalRegistrationTest extends TestCase
     private DefinitiveRegistrationConfirmationTestDataCreator $definitiveRegistrationConfirmationTestDataCreator;
     private IEmailSender $emailSender;
     private SendEmailDto $capturedSendEmailDto;
-    private UserProvisionalRegistration $userProvisionalRegistration;
+    private UserProvisionalRegistrationUpdate $userProvisionalRegistration;
 
     use DatabaseTransactions;
 
@@ -51,7 +52,7 @@ class UserProvisionalRegistrationTest extends TestCase
             }));
         $this->emailSender = $emailSender;
 
-        $this->userProvisionalRegistration = new UserProvisionalRegistration(
+        $this->userProvisionalRegistration = new UserProvisionalRegistrationUpdate(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage,
