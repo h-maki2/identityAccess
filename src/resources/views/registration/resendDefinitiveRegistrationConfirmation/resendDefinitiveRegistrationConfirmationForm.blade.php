@@ -8,7 +8,7 @@
 <body>
     <h1>本登録確認メール再送</h1>
     <p>登録したメールアドレスを入力してください。</p>
-    <form action="/definitiveRegister" method="post">
+    <form action="/resend" method="post">
         @csrf
         <div><input type="text" name="メールアドレス" placeholder="ワンタイムパスワード" value="{{ old('oneTimePassword', '') }}"></div>
         @if ($errors->has('validationErrorMessage'))

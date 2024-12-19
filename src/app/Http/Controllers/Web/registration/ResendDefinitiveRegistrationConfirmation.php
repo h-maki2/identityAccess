@@ -13,16 +13,16 @@ use packages\application\registration\resendDefinitiveRegistrationConfirmation\R
 
 class ResendRegistrationConfirmationEmailController extends Controller
 {
-    private ResendDefinitiveRegistrationConfirmationInputBoundary $resendDefinitiveRegistrationConfirmationInputBoundary;
-
-    public function __construct(ResendDefinitiveRegistrationConfirmationInputBoundary $resendDefinitiveRegistrationConfirmationInputBoundary)
+    public function resendDefinitiveRegistrationConfirmationForm()
     {
-        $this->resendDefinitiveRegistrationConfirmationInputBoundary = $resendDefinitiveRegistrationConfirmationInputBoundary;
+        return view('registration.resendDefinitiveRegistrationConfirmation.resendDefinitiveRegistrationConfirmationForm');
     }
 
-    public function resendRegistrationConfirmationEmail(Request $request)
-    {
-        $output = $this->resendDefinitiveRegistrationConfirmationInputBoundary->handle(
+    public function resendDefinitiveRegistrationConfirmation(
+        Request $request, 
+        ResendDefinitiveRegistrationConfirmationInputBoundary $resendDefinitiveRegistrationConfirmationInputBoundary
+    ) {
+        $output = $resendDefinitiveRegistrationConfirmationInputBoundary->handle(
             $request->input('email') ?? ''
         );
 
