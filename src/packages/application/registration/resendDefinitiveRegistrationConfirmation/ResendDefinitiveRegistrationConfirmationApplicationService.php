@@ -7,6 +7,7 @@ use packages\domain\model\definitiveRegistrationConfirmation\DefinitiveRegistrat
 use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
 use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
 use packages\domain\model\authenticationAccount\UserEmail;
+use packages\domain\model\authenticationAccount\validation\UserEmailFormatChecker;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\service\registration\oneTimeTokenAndPasswordRegeneration\OneTimeTokenAndPasswordRegeneration;
 use RuntimeException;
@@ -41,6 +42,11 @@ class ResendDefinitiveRegistrationConfirmationApplicationService implements Rese
         string $userEmailString
     ): ResendDefinitiveRegistrationConfirmationResult
     {
+        $emailChecker = new UserEmailFormatChecker();
+        if (!$emailChecker->validate($userEmailString)) {
+            return ResendDefinitiveRegistrationConfirmationResult::createWhenValidationError('無効なメールアドレスです。');
+        }
+
         $userEmail = new UserEmail($userEmailString);
         $authenticationAccount = $this->authenticationAccountRepository->findByEmail($userEmail);
         if ($authenticationAccount === null) {

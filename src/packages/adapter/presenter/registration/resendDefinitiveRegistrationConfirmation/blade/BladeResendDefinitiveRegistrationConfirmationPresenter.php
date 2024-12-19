@@ -2,7 +2,7 @@
 
 namespace packages\adapter\presenter\registration\resendDefinitiveRegistrationConfirmation\blade;
 
-use packages\application\authentication\resendRegistrationConfirmationEmail\ResendDefinitiveRegistrationConfirmationResult;
+use packages\application\registration\resendDefinitiveRegistrationConfirmation\ResendDefinitiveRegistrationConfirmationResult;
 
 class BladeResendDefinitiveRegistrationConfirmationPresenter
 {

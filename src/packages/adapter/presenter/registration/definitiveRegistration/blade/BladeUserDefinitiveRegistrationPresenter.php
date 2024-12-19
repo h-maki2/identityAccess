@@ -13,7 +13,7 @@ class BladeUserDefinitiveRegistrationPresenter
         $this->result = $result;
     }
 
-    public function responseDate(): array
+    public function responseData(): array
     {
         if ($this->result->validationError) {
             return [

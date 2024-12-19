@@ -31,7 +31,7 @@ class BladeUserDefinitiveRegistrationView
     {
         return redirect()
                 ->back()
-                ->withErrors($this->presenter->responseDate())
+                ->withErrors($this->presenter->responseData())
                 ->withInput();
     }
 }
