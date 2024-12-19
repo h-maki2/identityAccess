@@ -8,7 +8,7 @@ use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistra
 use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
 use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\email\IEmailSender;
-use packages\domain\service\oneTimeTokenAndPasswordRegeneration\OneTimeTokenAndPasswordRegeneration;
+use packages\domain\service\registration\oneTimeTokenAndPasswordRegeneration\OneTimeTokenAndPasswordRegeneration;
 use RuntimeException;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\domain\service\oneTimeTokenAndPasswordRegeneration;
+namespace packages\domain\service\registration\oneTimeTokenAndPasswordRegeneration;
 
 use packages\domain\model\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmation;
 use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
