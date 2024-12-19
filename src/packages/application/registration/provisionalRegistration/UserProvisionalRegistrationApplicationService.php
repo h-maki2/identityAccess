@@ -15,7 +15,7 @@ use packages\domain\model\authenticationAccount\validation\UserPasswordConfirmat
 use packages\domain\model\authenticationAccount\validation\UserPasswordValidation;
 use packages\domain\model\common\transactionManage\TransactionManage;
 use packages\domain\model\common\validator\ValidationHandler;
-use packages\domain\service\UserProvisionalRegistration\UserProvisionalRegistration;
+use packages\domain\service\registration\provisionalRegistration\UserProvisionalRegistration;
 use packages\domain\model\email\IEmailSender;
 
 /**

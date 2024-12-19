@@ -57,7 +57,7 @@ class UserProvisionalRegistrationApplicationServiceTest extends TestCase
         $this->assertEmpty($result->validationErrorMessageList);
 
         // メール送信するデータが正しいことを確認
-        $this->assertNotEmpty($this->capturedSendEmailDto->templateVariables['DefinitiveRegistrationCompletedUpdateUrl']);
+        $this->assertNotEmpty($this->capturedSendEmailDto->templateVariables['UserDefinitiveRegistrationUpdateUrl']);
         $this->assertEquals($userEmailString, $this->capturedSendEmailDto->toAddress);
         $this->assertNotEmpty($this->capturedSendEmailDto->templateVariables['oneTimePassword']);
     }

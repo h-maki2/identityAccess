@@ -16,7 +16,7 @@ use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\authenticationAccount\AuthenticationAccount;
 use packages\domain\model\authenticationAccount\LoginRestrictionStatus;
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
-use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedStatus;
+use packages\domain\model\authenticationAccount\UserDefinitiveRegistrationStatus;
 use Ramsey\Uuid\Uuid;
 use RuntimeException;
 use UnexpectedValueException;
@@ -59,7 +59,7 @@ class EloquentAuthenticationAccountRepository implements IAuthenticationAccountR
             [
                 'email' => $authenticationAccount->email()->value,
                 'password' => $authenticationAccount->password()->hashedValue,
-                'verification_status' => $authenticationAccount->definitiveRegistrationCompletedStatus()->value,
+                'verification_status' => $authenticationAccount->UserDefinitiveRegistrationStatus()->value,
                 'failed_login_count' => $authenticationAccount->loginRestriction()->failedLoginCount(),
                 'login_restriction_status' => $authenticationAccount->loginRestriction()->loginRestrictionStatus(),
                 'next_login_allowed_at' => $authenticationAccount->loginRestriction()->nextLoginAllowedAt()
@@ -94,7 +94,7 @@ class EloquentAuthenticationAccountRepository implements IAuthenticationAccountR
             new UserId($eloquentUser->id),
             new UserEmail($eloquentAuthenticationInformation->email),
             UserPassword::reconstruct($eloquentAuthenticationInformation->password),
-            DefinitiveRegistrationCompletedStatus::from($eloquentAuthenticationInformation->verification_status),
+            UserDefinitiveRegistrationStatus::from($eloquentAuthenticationInformation->verification_status),
             LoginRestriction::reconstruct(
                 FailedLoginCount::reconstruct($eloquentAuthenticationInformation->failed_login_count),
                 LoginRestrictionStatus::from($eloquentAuthenticationInformation->login_restriction_status),

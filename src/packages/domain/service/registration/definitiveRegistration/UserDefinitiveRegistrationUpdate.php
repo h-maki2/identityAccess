@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\domain\service\definitiveRegistrationCompleted;
+namespace packages\domain\service\registration\definitiveRegistration;
 
 use Carbon\Unit;
 use DateTimeImmutable;
@@ -18,7 +18,7 @@ use RuntimeException;
 /**
  * 認証アカウントを本登録済みに更新するサービス
  */
-class DefinitiveRegistrationCompletedUpdate
+class UserDefinitiveRegistrationUpdate
 {
     private IAuthenticationAccountRepository $authenticationAccountRepository;
     private IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;

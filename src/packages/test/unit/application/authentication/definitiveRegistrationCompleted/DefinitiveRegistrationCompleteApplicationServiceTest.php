@@ -3,14 +3,14 @@
 use packages\adapter\persistence\inMemory\InMemoryDefinitiveRegistrationConfirmationRepository;
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationAccountRepository;
 use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompleteApplicationService;
-use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompletedUpdateOutputBoundary;
+use packages\application\authentication\definitiveRegistrationCompleted\UserDefinitiveRegistrationUpdateOutputBoundary;
 use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompleteResult;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedStatus;
-use packages\domain\service\definitiveRegistrationCompleted\definitiveRegistrationCompleted;
-use packages\domain\service\definitiveRegistrationCompleted\DefinitiveRegistrationCompletedUpdate;
+use packages\domain\service\registration\definitiveRegistration\definitiveRegistrationCompleted;
+use packages\domain\service\registration\definitiveRegistration\UserDefinitiveRegistrationUpdate;
 use packages\test\helpers\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmationTestDataCreator;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\transactionManage\TestTransactionManage;
@@ -20,7 +20,7 @@ class DefinitiveRegistrationCompleteApplicationServiceTest extends TestCase
 {
     private InMemoryDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
-    private DefinitiveRegistrationCompletedUpdate $definitiveRegistrationCompletedUpdate;
+    private UserDefinitiveRegistrationUpdate $UserDefinitiveRegistrationUpdate;
     private TestTransactionManage $transactionManage;
     private DefinitiveRegistrationConfirmationTestDataCreator $definitiveRegistrationConfirmationTestDataCreator;
     private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
@@ -32,7 +32,7 @@ class DefinitiveRegistrationCompleteApplicationServiceTest extends TestCase
         $this->definitiveRegistrationConfirmationRepository = new InMemoryDefinitiveRegistrationConfirmationRepository();
         $this->authenticationAccountRepository = new InMemoryAuthenticationAccountRepository();
         $this->transactionManage = new TestTransactionManage();
-        $this->definitiveRegistrationCompletedUpdate = new DefinitiveRegistrationCompletedUpdate(
+        $this->UserDefinitiveRegistrationUpdate = new UserDefinitiveRegistrationUpdate(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage

@@ -8,7 +8,7 @@ use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedStatus;
 use packages\domain\model\email\IEmailSender;
-use packages\domain\service\UserProvisionalRegistration\UserProvisionalRegistration;
+use packages\domain\service\registration\provisionalRegistration\UserProvisionalRegistration;
 use packages\test\helpers\transactionManage\TestTransactionManage;
 use PHPUnit\Framework\TestCase;
 
@@ -67,6 +67,6 @@ class UserProvisionalRegistrationTest extends TestCase
         // メール送信する内容が正しいことを確認する
         $this->assertEquals($userEmail->value, $this->capturedSendEmailDto->toAddress);
         $this->assertEquals($actualDefinitiveRegistrationConfirmation->oneTimePassword()->value, $this->capturedSendEmailDto->templateVariables['oneTimePassword']);
-        $this->assertStringContainsString($actualDefinitiveRegistrationConfirmation->oneTimeToken()->tokenValue()->value, $this->capturedSendEmailDto->templateVariables['DefinitiveRegistrationCompletedUpdateUrl']);
+        $this->assertStringContainsString($actualDefinitiveRegistrationConfirmation->oneTimeToken()->tokenValue()->value, $this->capturedSendEmailDto->templateVariables['UserDefinitiveRegistrationUpdateUrl']);
     }
 }

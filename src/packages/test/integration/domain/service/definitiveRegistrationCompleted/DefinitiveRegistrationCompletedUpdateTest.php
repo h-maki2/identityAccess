@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\domain\service\definitiveRegistrationCompleted;
+namespace packages\domain\service\registration\definitiveRegistration;
 
 use App\Models\AuthenticationInformation as EloquentAuthenticationInformation;
 use App\Models\User as EloquentUser;
@@ -19,13 +19,13 @@ use packages\test\helpers\definitiveRegistrationConfirmation\DefinitiveRegistrat
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use Tests\TestCase;
 
-class DefinitiveRegistrationCompletedUpdateTest extends TestCase
+class UserDefinitiveRegistrationUpdateTest extends TestCase
 {
     private EloquentDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private EloquentAuthenticationAccountRepository $authenticationAccountRepository;
     private DefinitiveRegistrationConfirmationTestDataCreator $definitiveRegistrationConfirmationTestDataCreator;
     private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
-    private DefinitiveRegistrationCompletedUpdate $definitiveRegistrationCompletedUpdate;
+    private UserDefinitiveRegistrationUpdate $UserDefinitiveRegistrationUpdate;
 
     use DatabaseTransactions;
 
@@ -37,7 +37,7 @@ class DefinitiveRegistrationCompletedUpdateTest extends TestCase
         $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($this->authenticationAccountRepository);
         $this->definitiveRegistrationConfirmationTestDataCreator = new DefinitiveRegistrationConfirmationTestDataCreator($this->definitiveRegistrationConfirmationRepository, $this->authenticationAccountRepository);
         $transactionManage = new EloquentTransactionManage();
-        $this->definitiveRegistrationCompletedUpdate = new DefinitiveRegistrationCompletedUpdate(
+        $this->UserDefinitiveRegistrationUpdate = new UserDefinitiveRegistrationUpdate(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $transactionManage
@@ -63,7 +63,7 @@ class DefinitiveRegistrationCompletedUpdateTest extends TestCase
         $oneTimePassword = $definitiveRegistrationConfirmation->oneTimePassword();
 
         // when
-        $this->definitiveRegistrationCompletedUpdate->handle($oneTimeTokenValue, $oneTimePassword);
+        $this->UserDefinitiveRegistrationUpdate->handle($oneTimeTokenValue, $oneTimePassword);
 
         // then
         // 認証アカウントが本登録済みに更新されていることを確認
@@ -95,7 +95,7 @@ class DefinitiveRegistrationCompletedUpdateTest extends TestCase
         // when・then
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('認証アカウントを本登録済みに更新できませんでした。');
-        $this->definitiveRegistrationCompletedUpdate->handle($oneTimeTokenValue, $oneTimePassword);
+        $this->UserDefinitiveRegistrationUpdate->handle($oneTimeTokenValue, $oneTimePassword);
     }
 
     public function test_ワンタイムトークンの有効期限が切れている場合に、認証アカウントを本登録済みに更新できない()
@@ -119,6 +119,6 @@ class DefinitiveRegistrationCompletedUpdateTest extends TestCase
         // when
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('認証アカウントを本登録済みに更新できませんでした。');
-        $this->definitiveRegistrationCompletedUpdate->handle($oneTimeTokenValue, $oneTimePassword);
+        $this->UserDefinitiveRegistrationUpdate->handle($oneTimeTokenValue, $oneTimePassword);
     }
 }
