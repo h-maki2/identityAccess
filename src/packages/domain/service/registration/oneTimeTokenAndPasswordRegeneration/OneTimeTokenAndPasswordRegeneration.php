@@ -27,11 +27,11 @@ class OneTimeTokenAndPasswordRegeneration
      * ワンタイムトークンとワンタイムパスワードの再生成を行う
      * 再生成後に本登録確認メールメールを再送する
      */
-    public function handle(AuthenticationAccount $authInfo)
+    public function handle(AuthenticationAccount $authAccount)
     {
-        $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationRepository->findById($authInfo->id());
+        $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationRepository->findById($authAccount->id());
         if ($definitiveRegistrationConfirmation === null) {
-            throw new RuntimeException('認証アカウントが存在しません。userId: ' . $authInfo->id()->value);
+            throw new RuntimeException('認証アカウントが存在しません。userId: ' . $authAccount->id()->value);
         }
 
         $definitiveRegistrationConfirmation->reObtain();
@@ -39,7 +39,7 @@ class OneTimeTokenAndPasswordRegeneration
 
         $this->emailSender->send(
             DefinitiveRegistrationConfirmationEmailDtoFactory::create(
-                $authInfo->email(),
+                $authAccount->email(),
                 $definitiveRegistrationConfirmation->oneTimeToken(),
                 $definitiveRegistrationConfirmation->oneTimePassword()
             )
