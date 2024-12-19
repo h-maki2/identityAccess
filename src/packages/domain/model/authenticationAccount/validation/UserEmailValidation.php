@@ -24,7 +24,8 @@ class UserEmailValidation extends Validator
 
     public function validate(): bool
     {
-        if (UserEmailFormatChecker::invalidEmailLength($this->email) || UserEmailFormatChecker::invalidEmail($this->email)) {
+        $emailChecker = new UserEmailFormatChecker();
+        if (!$emailChecker->validate($this->email)) {
             $this->setErrorMessage('不正なメールアドレスです。');
             return false;
         }
