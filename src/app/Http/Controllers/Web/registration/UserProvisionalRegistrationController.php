@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Web\UserProvisionalRegistration;
+namespace App\Http\Controllers\Web\registration;
+
+// App\Http\Controllers\Web\registration
 
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
@@ -13,7 +15,7 @@ class UserProvisionalRegistrationController extends Controller
 {
     public function userRegisterForm(): View
     {
-        return view('UserProvisionalRegistration.UserProvisionalRegistrationForm');
+        return view('registration.provisionalRegistration.userProvisionalRegistrationForm');
     }
 
     public function userRegister(

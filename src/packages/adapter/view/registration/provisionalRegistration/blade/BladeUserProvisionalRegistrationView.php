@@ -25,7 +25,7 @@ class BladeUserProvisionalRegistrationView
 
     private function successResponse(): View
     {
-        return view('UserProvisionalRegistration.UserProvisionalRegistrationComplete');
+        return view('registration.provisionalRegistration.userProvisionalRegistrationComplete');
     }
 
     private function faildResponse()
