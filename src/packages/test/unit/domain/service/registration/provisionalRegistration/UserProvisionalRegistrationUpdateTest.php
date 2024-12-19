@@ -67,6 +67,6 @@ class UserProvisionalRegistrationUpdateTest extends TestCase
         // メール送信する内容が正しいことを確認する
         $this->assertEquals($userEmail->value, $this->capturedSendEmailDto->toAddress);
         $this->assertEquals($actualDefinitiveRegistrationConfirmation->oneTimePassword()->value, $this->capturedSendEmailDto->templateVariables['oneTimePassword']);
-        $this->assertStringContainsString($actualDefinitiveRegistrationConfirmation->oneTimeToken()->tokenValue()->value, $this->capturedSendEmailDto->templateVariables['UserDefinitiveRegistrationUpdateUrl']);
+        $this->assertStringContainsString($actualDefinitiveRegistrationConfirmation->oneTimeToken()->tokenValue()->value, $this->capturedSendEmailDto->templateVariables['definitiveRegistrationConfirmationUpdateUrl']);
     }
 }
