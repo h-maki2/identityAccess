@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>ユーザー登録</h1>
-    <form action="/userRegistration" method="post">
+    <form action="/UserProvisionalRegistration" method="post">
         @csrf
         <div><input type="text" name="email" placeholder="メールアドレス" value="{{ old('email', '') }}"></div>
         @if ($errors->has('email'))

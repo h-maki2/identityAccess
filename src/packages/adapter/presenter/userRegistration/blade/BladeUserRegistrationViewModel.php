@@ -1,8 +1,8 @@
 <?php
 
-namespace packages\adapter\presenter\userRegistration\blade;
+namespace packages\adapter\presenter\UserProvisionalRegistration\blade;
 
-class BladeUserRegistrationViewModel
+class BladeUserProvisionalRegistrationViewModel
 {
     readonly array $validationErrorList;
     readonly bool $isValidationError;

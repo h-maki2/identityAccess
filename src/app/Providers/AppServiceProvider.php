@@ -33,9 +33,9 @@ use packages\application\userProfile\fetch\FetchUserProfileInputBoundary;
 use packages\application\userProfile\register\RegisterUserProfileApplicationService;
 use packages\application\userProfile\register\RegisterUserProfileInputBoundary;
 use packages\application\userProfile\register\RegisterUserProfileOutputBoundary;
-use packages\application\userRegistration\UserRegistrationApplicationService;
-use packages\application\userRegistration\UserRegistrationInputBoundary;
-use packages\application\userRegistration\UserRegistrationOutputBoundary;
+use packages\application\registration\userProvisionalRegistration\UserProvisionalRegistrationApplicationService;
+use packages\application\registration\userProvisionalRegistration\UserProvisionalRegistrationInputBoundary;
+use packages\application\registration\userProvisionalRegistration\UserProvisionalRegistrationOutputBoundary;
 use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
 use packages\domain\model\authenticationAccount\AuthenticationService;
 use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
@@ -76,7 +76,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(LoginInputBoundary::class, LoginApplicationService::class);
         $this->app->bind(ResendRegistrationConfirmationEmailInputBoundary::class, ResendRegistrationConfirmationEmailApplicationService::class);
         $this->app->bind(DefinitiveRegistrationCompleteInputBoundary::class, DefinitiveRegistrationCompleteApplicationService::class);
-        $this->app->bind(UserRegistrationInputBoundary::class, UserRegistrationApplicationService::class);
+        $this->app->bind(UserProvisionalRegistrationInputBoundary::class, UserProvisionalRegistrationApplicationService::class);
         $this->app->bind(RegisterUserProfileInputBoundary::class, RegisterUserProfileApplicationService::class);
         $this->app->bind(FetchUserProfileInputBoundary::class, FetchUserProfileApplicationService::class);
 

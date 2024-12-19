@@ -1,10 +1,10 @@
 <?php
 
-namespace packages\domain\service\userRegistration;
+namespace packages\domain\service\UserProvisionalRegistration;
 
 use packages\application\common\exception\TransactionException;
 use packages\domain\model\email\SendEmailDto;
-use packages\domain\service\userRegistration\IUserRegistrationCompletionEmail;
+use packages\domain\service\UserProvisionalRegistration\IUserProvisionalRegistrationCompletionEmail;
 use packages\domain\model\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmation;
 use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimeToken;
@@ -19,7 +19,7 @@ use packages\domain\model\email\DefinitiveRegistrationConfirmationEmailDtoFactor
 use packages\domain\service\definitiveRegistrationConfirmation\OneTimeTokenExistsService;
 use packages\domain\service\authenticationAccount\AuthenticationAccountService;
 
-class UserRegistration
+class UserProvisionalRegistration
 {
     private IAuthenticationAccountRepository $authenticationAccountRepository;
     private IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;

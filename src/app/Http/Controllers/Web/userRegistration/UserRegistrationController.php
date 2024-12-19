@@ -1,34 +1,34 @@
 <?php
 
-namespace App\Http\Controllers\Web\userRegistration;
+namespace App\Http\Controllers\Web\UserProvisionalRegistration;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use packages\adapter\presenter\userRegistration\blade\BladeUserRegistrationPresenter;
-use packages\adapter\view\userRegistration\blade\BladeUserRegistrationView;
-use packages\application\userRegistration\UserRegistrationInputBoundary;
+use packages\adapter\presenter\UserProvisionalRegistration\blade\BladeUserProvisionalRegistrationPresenter;
+use packages\adapter\view\UserProvisionalRegistration\blade\BladeUserProvisionalRegistrationView;
+use packages\application\registration\userProvisionalRegistration\UserProvisionalRegistrationInputBoundary;
 
-class UserRegistrationController extends Controller
+class UserProvisionalRegistrationController extends Controller
 {
     public function userRegisterForm(): View
     {
-        return view('userRegistration.userRegistrationForm');
+        return view('UserProvisionalRegistration.UserProvisionalRegistrationForm');
     }
 
     public function userRegister(
         Request $request,
-        UserRegistrationInputBoundary $userRegistrationInputBoundary
+        UserProvisionalRegistrationInputBoundary $userProvisionalRegistrationInputBoundary
     )
     {
-        $output = $userRegistrationInputBoundary->userRegister(
+        $output = $userProvisionalRegistrationInputBoundary->userRegister(
             $request->input('email') ?? '',
             $request->input('password') ?? '',
             $request->input('passwordConfirmation') ?? ''
         );
 
-        $presenter = new BladeUserRegistrationPresenter($output);
-        $view = new BladeUserRegistrationView($presenter->viewResponse());
+        $presenter = new BladeUserProvisionalRegistrationPresenter($output);
+        $view = new BladeUserProvisionalRegistrationView($presenter->viewResponse());
         return $view->response();
     }
 }

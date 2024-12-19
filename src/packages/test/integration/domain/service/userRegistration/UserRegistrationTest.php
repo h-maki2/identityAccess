@@ -15,13 +15,13 @@ use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedStatus;
 use packages\domain\model\email\IEmailSender;
-use packages\domain\service\userRegistration\UserRegistration;
+use packages\domain\service\UserProvisionalRegistration\UserProvisionalRegistration;
 use packages\test\helpers\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmationTestDataCreator;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\transactionManage\TestTransactionManage;
 use Tests\TestCase;
 
-class UserRegistrationTest extends TestCase
+class UserProvisionalRegistrationTest extends TestCase
 {
     private EloquentDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private EloquentAuthenticationAccountRepository $authenticationAccountRepository;
@@ -29,7 +29,7 @@ class UserRegistrationTest extends TestCase
     private DefinitiveRegistrationConfirmationTestDataCreator $definitiveRegistrationConfirmationTestDataCreator;
     private IEmailSender $emailSender;
     private SendEmailDto $capturedSendEmailDto;
-    private UserRegistration $userRegistration;
+    private UserProvisionalRegistration $userProvisionalRegistration;
 
     use DatabaseTransactions;
 
@@ -51,7 +51,7 @@ class UserRegistrationTest extends TestCase
             }));
         $this->emailSender = $emailSender;
 
-        $this->userRegistration = new UserRegistration(
+        $this->userProvisionalRegistration = new UserProvisionalRegistration(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage,
@@ -73,7 +73,7 @@ class UserRegistrationTest extends TestCase
 
         // when
         // ユーザー登録を行う
-        $this->userRegistration->handle($userEmail, $userPassword, $oneTimeToken);
+        $this->userProvisionalRegistration->handle($userEmail, $userPassword, $oneTimeToken);
 
         // then
         // 未認証状態の認証アカウントが登録されていることを確認する

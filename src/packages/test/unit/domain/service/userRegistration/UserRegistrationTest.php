@@ -8,17 +8,17 @@ use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedStatus;
 use packages\domain\model\email\IEmailSender;
-use packages\domain\service\userRegistration\UserRegistration;
+use packages\domain\service\UserProvisionalRegistration\UserProvisionalRegistration;
 use packages\test\helpers\transactionManage\TestTransactionManage;
 use PHPUnit\Framework\TestCase;
 
-class UserRegistrationTest extends TestCase
+class UserProvisionalRegistrationTest extends TestCase
 {
     private InMemoryDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
     private TestTransactionManage $transactionManage;
     private SendEmailDto $capturedSendEmailDto;
-    private UserRegistration $userRegistration;
+    private UserProvisionalRegistration $userProvisionalRegistration;
     private IEmailSender $emailSender;
 
     public function setUp(): void
@@ -36,7 +36,7 @@ class UserRegistrationTest extends TestCase
             }));
         $this->emailSender = $emailSender;
 
-        $this->userRegistration = new UserRegistration(
+        $this->userProvisionalRegistration = new UserProvisionalRegistration(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage,
@@ -52,7 +52,7 @@ class UserRegistrationTest extends TestCase
         $oneTimeToken = OneTimeToken::create();
 
         // when
-        $this->userRegistration->handle($userEmail, $userPassword, $oneTimeToken);
+        $this->userProvisionalRegistration->handle($userEmail, $userPassword, $oneTimeToken);
 
         // then
         // ユーザーが未認証状態で登録されていることを確認

@@ -1,21 +1,21 @@
 <?php
 
-namespace packages\adapter\presenter\userRegistration\blade;
+namespace packages\adapter\presenter\UserProvisionalRegistration\blade;
 
-use packages\application\userRegistration\UserRegistrationResult;
+use packages\application\registration\userProvisionalRegistration\UserProvisionalRegistrationResult;
 
-class BladeUserRegistrationPresenter
+class BladeUserProvisionalRegistrationPresenter
 {
-    private UserRegistrationResult $result;
+    private UserProvisionalRegistrationResult $result;
 
-    public function __construct(UserRegistrationResult $result)
+    public function __construct(UserProvisionalRegistrationResult $result)
     {
         $this->result = $result;
     }
 
-    public function viewResponse(): BladeUserRegistrationViewModel
+    public function viewResponse(): BladeUserProvisionalRegistrationViewModel
     {
-        return new BladeUserRegistrationViewModel(
+        return new BladeUserProvisionalRegistrationViewModel(
             $this->responseData(), 
             $this->result->validationError
         );

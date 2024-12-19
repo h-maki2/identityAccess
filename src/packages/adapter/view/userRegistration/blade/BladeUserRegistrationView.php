@@ -1,15 +1,15 @@
 <?php
 
-namespace packages\adapter\view\userRegistration\blade;
+namespace packages\adapter\view\UserProvisionalRegistration\blade;
 
 use Illuminate\Contracts\View\View;
-use packages\adapter\presenter\userRegistration\blade\BladeUserRegistrationViewModel;
+use packages\adapter\presenter\UserProvisionalRegistration\blade\BladeUserProvisionalRegistrationViewModel;
 
-class BladeUserRegistrationView
+class BladeUserProvisionalRegistrationView
 {
-    private BladeUserRegistrationViewModel $viewModel;
+    private BladeUserProvisionalRegistrationViewModel $viewModel;
 
-    public function __construct(BladeUserRegistrationViewModel $viewModel)
+    public function __construct(BladeUserProvisionalRegistrationViewModel $viewModel)
     {
         $this->viewModel = $viewModel;
     }
@@ -25,7 +25,7 @@ class BladeUserRegistrationView
 
     private function successResponse(): View
     {
-        return view('userRegistration.userRegistrationComplete');
+        return view('UserProvisionalRegistration.UserProvisionalRegistrationComplete');
     }
 
     private function faildResponse()

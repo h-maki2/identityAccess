@@ -3,7 +3,7 @@
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
-class UserRegistrationTest extends TestCase
+class UserProvisionalRegistrationTest extends TestCase
 {
     use DatabaseTransactions;
 
@@ -15,7 +15,7 @@ class UserRegistrationTest extends TestCase
         $userPasswordConfirmation = 'abcABC123!';
 
         // when
-        $response = $this->post('/userRegistration', [
+        $response = $this->post('/UserProvisionalRegistration', [
             'email' => $userEmail,
             'password' => $userPassword,
             'passwordConfirmation' => $userPasswordConfirmation
@@ -36,7 +36,7 @@ class UserRegistrationTest extends TestCase
         $userPasswordConfirmation = 'abcABC123';
 
         // when
-        $response = $this->post('/userRegistration', [
+        $response = $this->post('/UserProvisionalRegistration', [
             'email' => $userEmail,
             'password' => $userPassword,
             'passwordConfirmation' => $userPasswordConfirmation

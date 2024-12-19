@@ -4,18 +4,18 @@ use packages\adapter\persistence\inMemory\InMemoryDefinitiveRegistrationConfirma
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationAccountRepository;
 use packages\domain\model\email\SendEmailDto;
 use packages\application\common\validation\ValidationErrorMessageData;
-use packages\application\userRegistration\UserRegistrationApplicationService;
+use packages\application\registration\userProvisionalRegistration\UserProvisionalRegistrationApplicationService;
 use packages\domain\model\email\IEmailSender;
 use packages\test\helpers\transactionManage\TestTransactionManage;
 use PHPUnit\Framework\TestCase;
 
-class UserRegistrationApplicationServiceTest extends TestCase
+class UserProvisionalRegistrationApplicationServiceTest extends TestCase
 {
     private InMemoryDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
     private TestTransactionManage $transactionManage;
     private SendEmailDto $capturedSendEmailDto;
-    private UserRegistrationApplicationService $userRegistrationApplicationService;
+    private UserProvisionalRegistrationApplicationService $userProvisionalRegistrationApplicationService;
     private IEmailSender $emailSender;
 
     public function setUp(): void
@@ -33,7 +33,7 @@ class UserRegistrationApplicationServiceTest extends TestCase
             }));
         $this->emailSender = $emailSender;
 
-        $this->userRegistrationApplicationService = new UserRegistrationApplicationService(
+        $this->userProvisionalRegistrationApplicationService = new UserProvisionalRegistrationApplicationService(
             $this->definitiveRegistrationConfirmationRepository,
             $this->authenticationAccountRepository,
             $this->transactionManage,
@@ -49,7 +49,7 @@ class UserRegistrationApplicationServiceTest extends TestCase
         $userPasswordConfirmationString = 'ABCabc123_';
 
         // when
-        $result = $this->userRegistrationApplicationService->userRegister($userEmailString, $userPasswordString, $userPasswordConfirmationString);
+        $result = $this->userProvisionalRegistrationApplicationService->userRegister($userEmailString, $userPasswordString, $userPasswordConfirmationString);
 
         // then
         // バリデーションエラーがないことを確認
@@ -73,7 +73,7 @@ class UserRegistrationApplicationServiceTest extends TestCase
         $userPasswordConfirmationString = 'ABCabc123_';
 
         // when
-        $result = $this->userRegistrationApplicationService->userRegister($userEmailString, $userPasswordString, $userPasswordConfirmationString);
+        $result = $this->userProvisionalRegistrationApplicationService->userRegister($userEmailString, $userPasswordString, $userPasswordConfirmationString);
 
         // then
         // バリデーションエラーがあることを確認

@@ -1,6 +1,8 @@
 <?php
 
-namespace packages\application\userRegistration;
+namespace packages\application\registration\userProvisionalRegistration;
+
+// packages\application\registration\userProvisionalRegistration
 
 use Exception;
 use packages\application\common\exception\TransactionException;
@@ -15,17 +17,17 @@ use packages\domain\model\authenticationAccount\validation\UserPasswordConfirmat
 use packages\domain\model\authenticationAccount\validation\UserPasswordValidation;
 use packages\domain\model\common\transactionManage\TransactionManage;
 use packages\domain\model\common\validator\ValidationHandler;
-use packages\domain\service\userRegistration\UserRegistration;
+use packages\domain\service\UserProvisionalRegistration\UserProvisionalRegistration;
 use packages\domain\model\email\IEmailSender;
 
 /**
  * ユーザー登録のアプリケーションサービス
  */
-class UserRegistrationApplicationService implements UserRegistrationInputBoundary
+class UserProvisionalRegistrationApplicationService implements UserProvisionalRegistrationInputBoundary
 {
     private IAuthenticationAccountRepository $authenticationAccountRepository;
     private IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
-    private UserRegistration $userRegistration;
+    private UserProvisionalRegistration $userProvisionalRegistration;
 
     public function __construct(
         IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository,
@@ -36,7 +38,7 @@ class UserRegistrationApplicationService implements UserRegistrationInputBoundar
     {
         $this->authenticationAccountRepository = $authenticationAccountRepository;
         $this->definitiveRegistrationConfirmationRepository = $definitiveRegistrationConfirmationRepository;
-        $this->userRegistration = new UserRegistration(
+        $this->userProvisionalRegistration = new UserProvisionalRegistration(
             $authenticationAccountRepository,
             $definitiveRegistrationConfirmationRepository,
             $transactionManage,
@@ -51,7 +53,7 @@ class UserRegistrationApplicationService implements UserRegistrationInputBoundar
         string $inputedEmail, 
         string $inputedPassword,
         string $inputedPasswordConfirmation
-    ): UserRegistrationResult
+    ): UserProvisionalRegistrationResult
     {
         $validationHandler = new ValidationHandler();
         $validationHandler->addValidator(new UserEmailValidation($inputedEmail, $this->authenticationAccountRepository));
@@ -62,7 +64,7 @@ class UserRegistrationApplicationService implements UserRegistrationInputBoundar
         $validationHandler->addValidator(new OneTimeTokenValidation($this->definitiveRegistrationConfirmationRepository, $oneTimeToken));
         
         if (!$validationHandler->validate()) {
-            return UserRegistrationResult::createWhenValidationError(
+            return UserProvisionalRegistrationResult::createWhenValidationError(
                 $validationHandler->errorMessages()
             );
         }
@@ -70,11 +72,11 @@ class UserRegistrationApplicationService implements UserRegistrationInputBoundar
         $userEmail = new UserEmail($inputedEmail);
         $userPassword = UserPassword::create($inputedPassword);
         try {
-            $this->userRegistration->handle($userEmail, $userPassword, $oneTimeToken);
+            $this->userProvisionalRegistration->handle($userEmail, $userPassword, $oneTimeToken);
         } catch (Exception $e) {
             throw new TransactionException($e->getMessage());
         }
 
-        return UserRegistrationResult::createWhenSuccess();
+        return UserProvisionalRegistrationResult::createWhenSuccess();
     }
 }

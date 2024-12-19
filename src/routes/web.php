@@ -1,11 +1,11 @@
 <?php
 
 use App\Http\Controllers\Web\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompletedController;
-use App\Http\Controllers\Web\userRegistration\UserRegistrationController;
+use App\Http\Controllers\Web\UserProvisionalRegistration\UserProvisionalRegistrationController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/userRegistration', [UserRegistrationController::class, 'userRegisterForm']);
-Route::post('/userRegistration', [UserRegistrationController::class, 'userRegister']);
+Route::get('/UserProvisionalRegistration', [UserProvisionalRegistrationController::class, 'userRegisterForm']);
+Route::post('/UserProvisionalRegistration', [UserProvisionalRegistrationController::class, 'userRegister']);
 
 Route::get('/definitiveRegistrationComplete', [DefinitiveRegistrationCompletedController::class, 'definitiveRegistrationCompletedForm']);
 Route::post('/definitiveRegistrationComplete', [DefinitiveRegistrationCompletedController::class, 'definitiveRegistrationCompleted']);

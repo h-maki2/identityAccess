@@ -1,10 +1,10 @@
 <?php
 
-namespace packages\application\userRegistration;
+namespace packages\application\registration\userProvisionalRegistration;
 
 use packages\application\common\validation\ValidationErrorMessageData;
 
-class UserRegistrationResult
+class UserProvisionalRegistrationResult
 {
     readonly bool $validationError;
     readonly array $validationErrorMessageList; // ValidationErrorMessageData[]
