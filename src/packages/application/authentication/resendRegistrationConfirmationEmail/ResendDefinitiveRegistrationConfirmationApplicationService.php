@@ -2,7 +2,7 @@
 
 namespace packages\application\authentication\resendRegistrationConfirmationEmail;
 
-use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailResult;
+use packages\application\authentication\resendRegistrationConfirmationEmail\ResendDefinitiveRegistrationConfirmationResult;
 use packages\domain\model\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmation;
 use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
 use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
@@ -14,7 +14,7 @@ use RuntimeException;
 /**
  * 本登録確認メール再送のアプリケーションサービス
  */
-class ResendRegistrationConfirmationEmailApplicationService implements ResendRegistrationConfirmationEmailInputBoundary
+class ResendDefinitiveRegistrationConfirmationApplicationService implements ResendDefinitiveRegistrationConfirmationInputBoundary
 {
     private IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private IAuthenticationAccountRepository $authenticationAccountRepository;
@@ -39,20 +39,20 @@ class ResendRegistrationConfirmationEmailApplicationService implements ResendReg
      */
     public function resendRegistrationConfirmationEmail(
         string $userEmailString
-    ): ResendRegistrationConfirmationEmailResult
+    ): ResendDefinitiveRegistrationConfirmationResult
     {
         $userEmail = new UserEmail($userEmailString);
         $authenticationAccount = $this->authenticationAccountRepository->findByEmail($userEmail);
         if ($authenticationAccount === null) {
-            return ResendRegistrationConfirmationEmailResult::createWhenValidationError('メールアドレスが登録されていません。');
+            return ResendDefinitiveRegistrationConfirmationResult::createWhenValidationError('メールアドレスが登録されていません。');
         }
 
         if ($authenticationAccount->hasCompletedRegistration()) {
-            return ResendRegistrationConfirmationEmailResult::createWhenValidationError('既にアカウントが本登録済みです。');
+            return ResendDefinitiveRegistrationConfirmationResult::createWhenValidationError('既にアカウントが本登録済みです。');
         }
 
         $this->oneTimeTokenAndPasswordRegeneration->handle($authenticationAccount);
 
-        return ResendRegistrationConfirmationEmailResult::createWhenSuccess();
+        return ResendDefinitiveRegistrationConfirmationResult::createWhenSuccess();
     }
 }

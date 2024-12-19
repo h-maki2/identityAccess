@@ -17,8 +17,8 @@ use packages\adapter\service\laravel\LaravelAuthenticationService;
 use packages\adapter\transactionManage\EloquentTransactionManage;
 use packages\application\authentication\login\LoginApplicationService;
 use packages\application\authentication\login\LoginInputBoundary;
-use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailApplicationService;
-use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailInputBoundary;
+use packages\application\authentication\resendRegistrationConfirmationEmail\ResendDefinitiveRegistrationConfirmationApplicationService;
+use packages\application\authentication\resendRegistrationConfirmationEmail\ResendDefinitiveRegistrationConfirmationInputBoundary;
 use packages\application\registration\definitiveRegistration\UserDefinitiveRegistrationApplicationService;
 use packages\application\registration\definitiveRegistration\UserDefinitiveRegistrationInputBoundary;
 use packages\application\userProfile\fetch\FetchUserProfileApplicationService;
@@ -64,7 +64,7 @@ class AppServiceProvider extends ServiceProvider
 
         // アプリケーションサービス
         $this->app->bind(LoginInputBoundary::class, LoginApplicationService::class);
-        $this->app->bind(ResendRegistrationConfirmationEmailInputBoundary::class, ResendRegistrationConfirmationEmailApplicationService::class);
+        $this->app->bind(ResendDefinitiveRegistrationConfirmationInputBoundary::class, ResendDefinitiveRegistrationConfirmationApplicationService::class);
         $this->app->bind(UserDefinitiveRegistrationInputBoundary::class, UserDefinitiveRegistrationApplicationService::class);
         $this->app->bind(UserProvisionalRegistrationInputBoundary::class, UserProvisionalRegistrationApplicationService::class);
         $this->app->bind(RegisterUserProfileInputBoundary::class, RegisterUserProfileApplicationService::class);

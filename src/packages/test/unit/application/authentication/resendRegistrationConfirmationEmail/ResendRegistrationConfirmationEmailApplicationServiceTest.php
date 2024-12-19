@@ -2,9 +2,9 @@
 
 use packages\adapter\persistence\inMemory\InMemoryDefinitiveRegistrationConfirmationRepository;
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationAccountRepository;
-use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailApplicationService;
+use packages\application\authentication\resendRegistrationConfirmationEmail\ResendDefinitiveRegistrationConfirmationApplicationService;
 use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailOutputBoundary;
-use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailResult;
+use packages\application\authentication\resendRegistrationConfirmationEmail\ResendDefinitiveRegistrationConfirmationResult;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationAccount\UserEmail;
@@ -15,14 +15,14 @@ use packages\test\helpers\definitiveRegistrationConfirmation\DefinitiveRegistrat
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use PHPUnit\Framework\TestCase;
 
-class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
+class ResendDefinitiveRegistrationConfirmationApplicationServiceTest extends TestCase
 {
     private InMemoryDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
-    private ResendRegistrationConfirmationEmailApplicationService $resendRegistrationConfirmationEmailApplicationService;
+    private ResendDefinitiveRegistrationConfirmationApplicationService $resendDefinitiveRegistrationConfirmationApplicationService;
     private DefinitiveRegistrationConfirmationTestDataCreator $definitiveRegistrationConfirmationTestDataCreator;
     private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
-    private ResendRegistrationConfirmationEmailResult $catchedResult;
+    private ResendDefinitiveRegistrationConfirmationResult $catchedResult;
     private IEmailSender $emailSender;
     private SendEmailDto $catchedSendEmailDto;
 
@@ -40,7 +40,7 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
             }));
         $this->emailSender = $emailSender;
 
-        $this->resendRegistrationConfirmationEmailApplicationService = new ResendRegistrationConfirmationEmailApplicationService(
+        $this->resendDefinitiveRegistrationConfirmationApplicationService = new ResendDefinitiveRegistrationConfirmationApplicationService(
             $this->definitiveRegistrationConfirmationRepository,
             $this->authenticationAccountRepository,
             $this->emailSender
@@ -69,7 +69,7 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
         );
 
         // when
-        $result = $this->resendRegistrationConfirmationEmailApplicationService->resendRegistrationConfirmationEmail($userEmail->value);
+        $result = $this->resendDefinitiveRegistrationConfirmationApplicationService->resendRegistrationConfirmationEmail($userEmail->value);
 
         // then
         // バリデーションエラーが発生していないことを確認
@@ -102,7 +102,7 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
 
         // when
         $正しくないメールアドレス = 'other@example.com';
-        $result = $this->resendRegistrationConfirmationEmailApplicationService->resendRegistrationConfirmationEmail($正しくないメールアドレス);
+        $result = $this->resendDefinitiveRegistrationConfirmationApplicationService->resendRegistrationConfirmationEmail($正しくないメールアドレス);
 
         // then
         // バリデーションエラーが発生していることを確認
@@ -130,7 +130,7 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
         );
 
         // when
-        $result = $this->resendRegistrationConfirmationEmailApplicationService->resendRegistrationConfirmationEmail($userEmail->value);
+        $result = $this->resendDefinitiveRegistrationConfirmationApplicationService->resendRegistrationConfirmationEmail($userEmail->value);
 
         // then
         // バリデーションエラーが発生していることを確認
@@ -151,6 +151,6 @@ class ResendRegistrationConfirmationEmailApplicationServiceTest extends TestCase
         // when・then
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('認証アカウントが存在しません。userId: ' . $authenticationAccount->id()->value);
-        $this->resendRegistrationConfirmationEmailApplicationService->resendRegistrationConfirmationEmail($userEmail->value);
+        $this->resendDefinitiveRegistrationConfirmationApplicationService->resendRegistrationConfirmationEmail($userEmail->value);
     }
 }

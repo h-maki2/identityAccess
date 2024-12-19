@@ -2,7 +2,7 @@
 
 namespace packages\application\authentication\resendRegistrationConfirmationEmail;
 
-class ResendRegistrationConfirmationEmailResult
+class ResendDefinitiveRegistrationConfirmationResult
 {
     readonly bool $validationError;
     readonly string $validationErrorMessage;

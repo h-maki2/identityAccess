@@ -6,20 +6,20 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use packages\adapter\presenter\authentication\resendRegistrationConfirmationEmail\json\JsonResendRegistrationConfirmationEmailPresenter;
-use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailInputBoundary;
+use packages\application\authentication\resendRegistrationConfirmationEmail\ResendDefinitiveRegistrationConfirmationInputBoundary;
 
 class ResendRegistrationConfirmationEmailController extends Controller
 {
-    private ResendRegistrationConfirmationEmailInputBoundary $ResendRegistrationConfirmationEmailInputBoundary;
+    private ResendDefinitiveRegistrationConfirmationInputBoundary $resendDefinitiveRegistrationConfirmationInputBoundary;
 
-    public function __construct(ResendRegistrationConfirmationEmailInputBoundary $ResendRegistrationConfirmationEmailInputBoundary)
+    public function __construct(ResendDefinitiveRegistrationConfirmationInputBoundary $resendDefinitiveRegistrationConfirmationInputBoundary)
     {
-        $this->ResendRegistrationConfirmationEmailInputBoundary = $ResendRegistrationConfirmationEmailInputBoundary;
+        $this->resendDefinitiveRegistrationConfirmationInputBoundary = $resendDefinitiveRegistrationConfirmationInputBoundary;
     }
 
     public function resendRegistrationConfirmationEmail(Request $request): JsonResponse
     {
-        $output = $this->ResendRegistrationConfirmationEmailInputBoundary->resendRegistrationConfirmationEmail(
+        $output = $this->resendDefinitiveRegistrationConfirmationInputBoundary->resendRegistrationConfirmationEmail(
             $request->input('email')
         );
 
