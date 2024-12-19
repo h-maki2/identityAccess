@@ -4,5 +4,5 @@ namespace packages\application\authentication\resendDefinitiveRegistrationConfir
 
 interface ResendDefinitiveRegistrationConfirmationInputBoundary
 {
-    public function resendRegistrationConfirmationEmail(string $email): ResendDefinitiveRegistrationConfirmationResult;
+    public function handle(string $email): ResendDefinitiveRegistrationConfirmationResult;
 }

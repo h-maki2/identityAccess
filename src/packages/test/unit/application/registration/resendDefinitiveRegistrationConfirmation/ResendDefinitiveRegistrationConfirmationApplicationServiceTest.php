@@ -69,7 +69,7 @@ class ResendDefinitiveRegistrationConfirmationApplicationServiceTest extends Tes
         );
 
         // when
-        $result = $this->resendDefinitiveRegistrationConfirmationApplicationService->resendRegistrationConfirmationEmail($userEmail->value);
+        $result = $this->resendDefinitiveRegistrationConfirmationApplicationService->handle($userEmail->value);
 
         // then
         // バリデーションエラーが発生していないことを確認
@@ -102,7 +102,7 @@ class ResendDefinitiveRegistrationConfirmationApplicationServiceTest extends Tes
 
         // when
         $正しくないメールアドレス = 'other@example.com';
-        $result = $this->resendDefinitiveRegistrationConfirmationApplicationService->resendRegistrationConfirmationEmail($正しくないメールアドレス);
+        $result = $this->resendDefinitiveRegistrationConfirmationApplicationService->handle($正しくないメールアドレス);
 
         // then
         // バリデーションエラーが発生していることを確認
@@ -130,7 +130,7 @@ class ResendDefinitiveRegistrationConfirmationApplicationServiceTest extends Tes
         );
 
         // when
-        $result = $this->resendDefinitiveRegistrationConfirmationApplicationService->resendRegistrationConfirmationEmail($userEmail->value);
+        $result = $this->resendDefinitiveRegistrationConfirmationApplicationService->handle($userEmail->value);
 
         // then
         // バリデーションエラーが発生していることを確認
@@ -151,6 +151,6 @@ class ResendDefinitiveRegistrationConfirmationApplicationServiceTest extends Tes
         // when・then
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('認証アカウントが存在しません。userId: ' . $authenticationAccount->id()->value);
-        $this->resendDefinitiveRegistrationConfirmationApplicationService->resendRegistrationConfirmationEmail($userEmail->value);
+        $this->resendDefinitiveRegistrationConfirmationApplicationService->handle($userEmail->value);
     }
 }

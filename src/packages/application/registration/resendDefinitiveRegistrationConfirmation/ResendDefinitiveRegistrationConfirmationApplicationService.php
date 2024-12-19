@@ -39,7 +39,7 @@ class ResendDefinitiveRegistrationConfirmationApplicationService implements Rese
     /**
      * 本人確認メールの再送を行う
      */
-    public function resendRegistrationConfirmationEmail(
+    public function handle(
         string $userEmailString
     ): ResendDefinitiveRegistrationConfirmationResult
     {
