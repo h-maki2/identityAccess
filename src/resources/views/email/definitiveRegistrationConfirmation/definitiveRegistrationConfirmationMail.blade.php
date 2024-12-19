@@ -8,7 +8,7 @@
     以下のURLにアクセスして、本登録を完了してください。<br><br>
 
     本登録確認URL:<br>
-    <p><a href="{{$definitiveRegistrationConfirmationUpdateUrl}}">{{ $definitiveRegistrationConfirmationUpdateUrl }}</a><p>
+    <p><a href="{{$definitiveRegisterUrl}}">{{ $definitiveRegisterUrl }}</a><p>
 
     上記のURLにアクセスすると、ワンタイムパスワードの入力画面が表示されます。<br>
     以下のワンタイムパスワードを入力してください。<br><br>

@@ -13,7 +13,7 @@ use packages\domain\model\email\SendEmailDto;
  */
 class DefinitiveRegistrationConfirmationEmailDtoFactory
 {
-    private const DefinitiveRegistrationConfirmationUpdateUrl = 'http://localhost:8080/definitiveRegistrationComplete';
+    private const DefinitiveRegisterUrl = 'http://localhost:8080/definitiveRegister';
         
     public static function create(
         UserEmail $toAddress,
@@ -22,7 +22,7 @@ class DefinitiveRegistrationConfirmationEmailDtoFactory
     ): SendEmailDto
     {
         $templateValiables = [
-            'definitiveRegistrationConfirmationUpdateUrl' => self::DefinitiveRegistrationConfirmationUpdateUrl . '?token=' . $oneTimeToken->tokenValue()->value,
+            'definitiveRegisterUrl' => self::DefinitiveRegisterUrl . '?token=' . $oneTimeToken->tokenValue()->value,
             'oneTimePassword' => $oneTimePassword->value,
             'expirationHours' => OneTimeTokenExpiration::expirationHours() . '時間後'
         ];

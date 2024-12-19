@@ -15,7 +15,7 @@ class UserProvisionalRegistrationTest extends TestCase
         $userPasswordConfirmation = 'abcABC123!';
 
         // when
-        $response = $this->post('/UserProvisionalRegistration', [
+        $response = $this->post('/register', [
             'email' => $userEmail,
             'password' => $userPassword,
             'passwordConfirmation' => $userPasswordConfirmation
@@ -36,7 +36,7 @@ class UserProvisionalRegistrationTest extends TestCase
         $userPasswordConfirmation = 'abcABC123';
 
         // when
-        $response = $this->post('/UserProvisionalRegistration', [
+        $response = $this->post('/register', [
             'email' => $userEmail,
             'password' => $userPassword,
             'passwordConfirmation' => $userPasswordConfirmation
