@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\adapter\view\UserProvisionalRegistration\blade;
+namespace packages\adapter\view\registration\UserProvisionalRegistration\blade;
 
 use Illuminate\Contracts\View\View;
 use packages\adapter\presenter\registration\UserProvisionalRegistration\blade\BladeUserProvisionalRegistrationViewModel;
