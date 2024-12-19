@@ -1,6 +1,8 @@
 <?php
 
-namespace packages\adapter\presenter\authentication\UserDefinitiveRegistration\blade;
+namespace packages\adapter\presenter\registration\definitiveRegistration\blade;
+
+// packages\adapter\presenter\registration\definitiveRegistration\blade
 
 use packages\application\authentication\UserDefinitiveRegistration\UserDefinitiveRegistrationResult;
 

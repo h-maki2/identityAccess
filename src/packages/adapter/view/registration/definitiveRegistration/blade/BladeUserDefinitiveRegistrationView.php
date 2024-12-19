@@ -1,8 +1,8 @@
 <?php
 
-namespace packages\adapter\view\authentication\UserDefinitiveRegistration\blade;
+namespace packages\adapter\view\registration\definitiveRegistration\blade;
 
-use packages\adapter\presenter\authentication\UserDefinitiveRegistration\blade\BladeUserDefinitiveRegistrationPresenter;
+use packages\adapter\presenter\registration\definitiveRegistration\blade\BladeUserDefinitiveRegistrationPresenter;
 
 class BladeUserDefinitiveRegistrationView
 {
@@ -24,7 +24,7 @@ class BladeUserDefinitiveRegistrationView
 
     public function successResponse()
     {
-        return view('authentication.UserDefinitiveRegistration.UserDefinitiveRegistration');
+        return view('registration.definitiveRegistration.userDefinitiveRegistrationCompleted');
     }
 
     public function faildResponse()
