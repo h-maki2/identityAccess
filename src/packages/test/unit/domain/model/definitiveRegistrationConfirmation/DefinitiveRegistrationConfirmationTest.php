@@ -5,7 +5,7 @@ use packages\domain\model\definitiveRegistrationConfirmation\DefinitiveRegistrat
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimeToken;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenExpiration;
-use packages\domain\service\definitiveRegistrationConfirmation\OneTimeTokenExistsService;
+use packages\domain\service\registration\definitiveRegistration\OneTimeTokenExistsService;
 use packages\test\helpers\definitiveRegistrationConfirmation\TestDefinitiveRegistrationConfirmationFactory;
 use packages\test\helpers\definitiveRegistrationConfirmation\TestOneTimeTokenFactory;
 use packages\test\helpers\authenticationAccount\TestUserIdFactory;

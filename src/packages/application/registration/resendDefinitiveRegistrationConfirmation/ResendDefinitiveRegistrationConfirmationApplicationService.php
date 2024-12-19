@@ -2,8 +2,6 @@
 
 namespace packages\application\registration\resendDefinitiveRegistrationConfirmation;
 
-// packages\application\registration\resendDefinitiveRegistrationConfirmation
-
 use packages\application\registration\resendDefinitiveRegistrationConfirmation\ResendDefinitiveRegistrationConfirmationResult;
 use packages\domain\model\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmation;
 use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;

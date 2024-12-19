@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\domain\service\definitiveRegistrationConfirmation;
+namespace packages\domain\service\registration\definitiveRegistration;
 
 use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;

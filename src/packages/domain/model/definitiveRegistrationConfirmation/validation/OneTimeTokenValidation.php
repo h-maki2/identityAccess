@@ -5,7 +5,7 @@ namespace packages\domain\model\definitiveRegistrationConfirmation\validation;
 use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimeToken;
 use packages\domain\model\common\validator\Validator;
-use packages\domain\service\definitiveRegistrationConfirmation\OneTimeTokenExistsService;
+use packages\domain\service\registration\definitiveRegistration\OneTimeTokenExistsService;
 
 class OneTimeTokenValidation extends Validator
 {

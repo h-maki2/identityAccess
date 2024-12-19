@@ -5,7 +5,7 @@ namespace packages\domain\model\definitiveRegistrationConfirmation;
 use DateTimeImmutable;
 use InvalidArgumentException;
 use packages\domain\model\authenticationAccount\UserId;
-use packages\domain\service\definitiveRegistrationConfirmation\OneTimeTokenExistsService;
+use packages\domain\service\registration\definitiveRegistration\OneTimeTokenExistsService;
 
 class DefinitiveRegistrationConfirmation
 {
