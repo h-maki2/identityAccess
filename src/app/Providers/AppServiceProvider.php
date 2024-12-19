@@ -14,32 +14,21 @@ use packages\adapter\persistence\eloquent\EloquentDefinitiveRegistrationConfirma
 use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
 use packages\adapter\persistence\eloquent\EloquentUserProfileRepository;
 use packages\adapter\service\laravel\LaravelAuthenticationService;
-use packages\adapter\service\laravel\LaravelSessionAuthentication;
 use packages\adapter\transactionManage\EloquentTransactionManage;
 use packages\application\authentication\login\LoginApplicationService;
 use packages\application\authentication\login\LoginInputBoundary;
-use packages\application\authentication\login\LoginOutputBoundary;
 use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailApplicationService;
 use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailInputBoundary;
-use packages\application\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailOutputBoundary;
-use packages\application\authentication\definitiveRegistrationCompleted\display\DisplayUserDefinitiveRegistrationUpdatePageApplicationService;
-use packages\application\authentication\definitiveRegistrationCompleted\display\DisplayUserDefinitiveRegistrationUpdatePageInputBoundary;
-use packages\application\authentication\definitiveRegistrationCompleted\display\DisplayUserDefinitiveRegistrationUpdatePageOutputBoundary;
-use packages\application\authentication\definitiveRegistrationCompleted\DefinitiveRegistrationCompleteApplicationService;
-use packages\application\authentication\definitiveRegistrationCompleted\UserDefinitiveRegistrationInputBoundary;
-use packages\application\authentication\definitiveRegistrationCompleted\UserDefinitiveRegistrationUpdateOutputBoundary;
+use packages\application\registration\definitiveRegistration\UserDefinitiveRegistrationApplicationService;
+use packages\application\registration\definitiveRegistration\UserDefinitiveRegistrationInputBoundary;
 use packages\application\userProfile\fetch\FetchUserProfileApplicationService;
 use packages\application\userProfile\fetch\FetchUserProfileInputBoundary;
 use packages\application\userProfile\register\RegisterUserProfileApplicationService;
 use packages\application\userProfile\register\RegisterUserProfileInputBoundary;
-use packages\application\userProfile\register\RegisterUserProfileOutputBoundary;
 use packages\application\registration\userProvisionalRegistration\UserProvisionalRegistrationApplicationService;
 use packages\application\registration\userProvisionalRegistration\UserProvisionalRegistrationInputBoundary;
-use packages\application\registration\userProvisionalRegistration\UserProvisionalRegistrationOutputBoundary;
 use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
-use packages\domain\model\authenticationAccount\AuthenticationService;
 use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
-use packages\domain\model\authenticationAccount\SessionAuthentication;
 use packages\domain\model\common\transactionManage\TransactionManage;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\model\oauth\authToken\IAccessTokenDeactivationService;
@@ -47,6 +36,7 @@ use packages\domain\model\oauth\authToken\IRefreshTokenDeactivationService;
 use packages\domain\model\oauth\client\IClientFetcher;
 use packages\domain\model\oauth\scope\IScopeAuthorizationChecker;
 use packages\domain\model\userProfile\IUserProfileRepository;
+use packages\domain\service\authenticationAccount\AuthenticationService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -75,7 +65,7 @@ class AppServiceProvider extends ServiceProvider
         // アプリケーションサービス
         $this->app->bind(LoginInputBoundary::class, LoginApplicationService::class);
         $this->app->bind(ResendRegistrationConfirmationEmailInputBoundary::class, ResendRegistrationConfirmationEmailApplicationService::class);
-        $this->app->bind(UserDefinitiveRegistrationInputBoundary::class, DefinitiveRegistrationCompleteApplicationService::class);
+        $this->app->bind(UserDefinitiveRegistrationInputBoundary::class, UserDefinitiveRegistrationApplicationService::class);
         $this->app->bind(UserProvisionalRegistrationInputBoundary::class, UserProvisionalRegistrationApplicationService::class);
         $this->app->bind(RegisterUserProfileInputBoundary::class, RegisterUserProfileApplicationService::class);
         $this->app->bind(FetchUserProfileInputBoundary::class, FetchUserProfileApplicationService::class);

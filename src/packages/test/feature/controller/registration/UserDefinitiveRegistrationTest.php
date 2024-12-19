@@ -11,7 +11,7 @@ use packages\test\helpers\definitiveRegistrationConfirmation\DefinitiveRegistrat
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use Tests\TestCase;
 
-class DefinitiveRegistrationCompleteTest extends TestCase
+class UserDefinitiveRegistrationTest extends TestCase
 {
     private EloquentDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private EloquentAuthenticationAccountRepository $authenticationAccountRepository;

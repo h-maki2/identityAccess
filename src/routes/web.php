@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Web\authentication\definitiveRegistrationCompleted\UserDefinitiveRegistrationController;
+use App\Http\Controllers\Web\registration\UserDefinitiveRegistrationController;
 use App\Http\Controllers\Web\registration\UserProvisionalRegistrationController;
 use Illuminate\Support\Facades\Route;
 

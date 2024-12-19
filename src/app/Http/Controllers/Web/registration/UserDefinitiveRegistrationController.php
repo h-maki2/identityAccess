@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Web\authentication\definitiveRegistrationCompleted;
+namespace App\Http\Controllers\Web\registration;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
