@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Web\UserProvisionalRegistration;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use packages\adapter\presenter\UserProvisionalRegistration\blade\BladeUserProvisionalRegistrationPresenter;
+use packages\adapter\presenter\registration\UserProvisionalRegistration\blade\BladeUserProvisionalRegistrationPresenter;
 use packages\adapter\view\UserProvisionalRegistration\blade\BladeUserProvisionalRegistrationView;
 use packages\application\registration\userProvisionalRegistration\UserProvisionalRegistrationInputBoundary;
 

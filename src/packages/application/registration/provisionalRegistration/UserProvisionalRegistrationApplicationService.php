@@ -2,8 +2,6 @@
 
 namespace packages\application\registration\userProvisionalRegistration;
 
-// packages\application\registration\userProvisionalRegistration
-
 use Exception;
 use packages\application\common\exception\TransactionException;
 use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;

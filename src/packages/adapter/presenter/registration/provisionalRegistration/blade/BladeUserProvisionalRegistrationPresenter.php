@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\adapter\presenter\UserProvisionalRegistration\blade;
+namespace packages\adapter\presenter\registration\UserProvisionalRegistration\blade;
 
 use packages\application\registration\userProvisionalRegistration\UserProvisionalRegistrationResult;
 
