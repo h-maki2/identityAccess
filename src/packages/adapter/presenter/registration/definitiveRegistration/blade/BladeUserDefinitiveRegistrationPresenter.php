@@ -2,24 +2,22 @@
 
 namespace packages\adapter\presenter\registration\definitiveRegistration\blade;
 
-// packages\adapter\presenter\registration\definitiveRegistration\blade
-
 use packages\application\registration\definitiveRegistration\UserDefinitiveRegistrationResult;
 
 class BladeUserDefinitiveRegistrationPresenter
 {
-    private UserDefinitiveRegistrationResult $UserDefinitiveRegistrationResult;
+    private UserDefinitiveRegistrationResult $result;
 
-    public function __construct(UserDefinitiveRegistrationResult $UserDefinitiveRegistrationResult)
+    public function __construct(UserDefinitiveRegistrationResult $result)
     {
-        $this->UserDefinitiveRegistrationResult = $UserDefinitiveRegistrationResult;
+        $this->result = $result;
     }
 
     public function responseDate(): array
     {
-        if ($this->UserDefinitiveRegistrationResult->validationError) {
+        if ($this->result->validationError) {
             return [
-                'validationErrorMessage' => $this->UserDefinitiveRegistrationResult->validationErrorMessage
+                'validationErrorMessage' => $this->result->validationErrorMessage
             ];
         }
 
@@ -28,6 +26,6 @@ class BladeUserDefinitiveRegistrationPresenter
 
     public function isValidationError(): bool
     {
-        return $this->UserDefinitiveRegistrationResult->validationError;
+        return $this->result->validationError;
     }
 }
