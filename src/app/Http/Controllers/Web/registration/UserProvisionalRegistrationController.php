@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Web\registration;
 
-// App\Http\Controllers\Web\registration
-
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
