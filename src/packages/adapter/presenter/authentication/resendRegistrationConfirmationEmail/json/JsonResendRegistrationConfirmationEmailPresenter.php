@@ -5,7 +5,7 @@ namespace packages\adapter\presenter\authentication\resendRegistrationConfirmati
 use packages\adapter\presenter\common\json\HttpStatus;
 use packages\adapter\presenter\common\json\JsonPresenter;
 use packages\adapter\presenter\common\json\JsonResponseData;
-use packages\application\authentication\resendRegistrationConfirmationEmail\ResendDefinitiveRegistrationConfirmationResult;
+use packages\application\authentication\resendDefinitiveRegistrationConfirmation\ResendDefinitiveRegistrationConfirmationResult;
 
 class JsonResendRegistrationConfirmationEmailPresenter implements JsonPresenter
 {

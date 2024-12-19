@@ -1,8 +1,10 @@
 <?php
 
-namespace packages\application\authentication\resendRegistrationConfirmationEmail;
+namespace packages\application\authentication\resendDefinitiveRegistrationConfirmation;
 
-use packages\application\authentication\resendRegistrationConfirmationEmail\ResendDefinitiveRegistrationConfirmationResult;
+// packages\application\authentication\resendDefinitiveRegistrationConfirmation
+
+use packages\application\authentication\resendDefinitiveRegistrationConfirmation\ResendDefinitiveRegistrationConfirmationResult;
 use packages\domain\model\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmation;
 use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
 use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;

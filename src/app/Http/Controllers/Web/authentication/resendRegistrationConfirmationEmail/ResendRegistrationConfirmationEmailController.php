@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use packages\adapter\presenter\authentication\resendRegistrationConfirmationEmail\json\JsonResendRegistrationConfirmationEmailPresenter;
-use packages\application\authentication\resendRegistrationConfirmationEmail\ResendDefinitiveRegistrationConfirmationInputBoundary;
+use packages\application\authentication\resendDefinitiveRegistrationConfirmation\ResendDefinitiveRegistrationConfirmationInputBoundary;
 
 class ResendRegistrationConfirmationEmailController extends Controller
 {
