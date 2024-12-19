@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\adapter\presenter\registration\UserProvisionalRegistration\blade;
+namespace packages\adapter\presenter\registration\provisionalRegistration\blade;
 
 class BladeUserProvisionalRegistrationViewModel
 {
