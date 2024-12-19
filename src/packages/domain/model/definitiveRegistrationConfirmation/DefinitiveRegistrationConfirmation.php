@@ -61,7 +61,7 @@ class DefinitiveRegistrationConfirmation
     }
 
     /**
-     * 認証確認の再取得を行う
+     * 本登録確認の再取得を行う
      * ワンタイムトークンとワンタイムパスワードを再生成する
      */
     public function reObtain(): void

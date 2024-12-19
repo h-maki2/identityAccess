@@ -59,7 +59,7 @@ class ResendDefinitiveRegistrationConfirmationApplicationServiceTest extends Tes
             definitiveRegistrationCompletedStatus: definitiveRegistrationCompletedStatus::Incomplete // 本登録済みではない
         );
 
-        // 認証確認を作成して保存する
+        // 本登録確認を作成して保存する
         $oneTimeTokenValue = OneTimeTokenValue::create();
         $oneTimePasword = OneTimePassword::create();
         $this->definitiveRegistrationConfirmationTestDataCreator->create(
@@ -78,7 +78,7 @@ class ResendDefinitiveRegistrationConfirmationApplicationServiceTest extends Tes
 
         // 正しいデータで本登録確認メールが送信できていることを確認
         $actualDefinitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationRepository->findById($authenticationAccount->id());
-        $this->assertStringContainsString($actualDefinitiveRegistrationConfirmation->oneTimeToken()->tokenValue()->value, $this->catchedSendEmailDto->templateVariables['UserDefinitiveRegistrationUpdateUrl']);
+        $this->assertStringContainsString($actualDefinitiveRegistrationConfirmation->oneTimeToken()->tokenValue()->value, $this->catchedSendEmailDto->templateVariables['definitiveRegisterUrl']);
         $this->assertEquals($this->catchedSendEmailDto->templateVariables['oneTimePassword'], $actualDefinitiveRegistrationConfirmation->oneTimePassword()->value);
     }
 
@@ -91,7 +91,7 @@ class ResendDefinitiveRegistrationConfirmationApplicationServiceTest extends Tes
             email: $userEmail
         );
 
-        // 認証確認を作成して保存する
+        // 本登録確認を作成して保存する
         $oneTimeTokenValue = OneTimeTokenValue::create();
         $oneTimePasword = OneTimePassword::create();
         $this->definitiveRegistrationConfirmationTestDataCreator->create(
@@ -120,7 +120,7 @@ class ResendDefinitiveRegistrationConfirmationApplicationServiceTest extends Tes
             definitiveRegistrationCompletedStatus: definitiveRegistrationCompletedStatus::Completed // 本登録済み
         );
 
-        // 認証確認を作成して保存する
+        // 本登録確認を作成して保存する
         $oneTimeTokenValue = OneTimeTokenValue::create();
         $oneTimePasword = OneTimePassword::create();
         $this->definitiveRegistrationConfirmationTestDataCreator->create(

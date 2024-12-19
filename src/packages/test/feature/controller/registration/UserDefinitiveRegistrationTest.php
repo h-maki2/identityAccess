@@ -39,7 +39,7 @@ class UserDefinitiveRegistrationTest extends TestCase
             definitiveRegistrationCompletedStatus: definitiveRegistrationCompletedStatus::Incomplete
         );
 
-        // 認証確認を作成して保存する
+        // 本登録確認を作成して保存する
         $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create(userId: $userId);
 
         // when
@@ -66,7 +66,7 @@ class UserDefinitiveRegistrationTest extends TestCase
             definitiveRegistrationCompletedStatus: definitiveRegistrationCompletedStatus::Incomplete
         );
 
-        // 認証確認を作成して保存する
+        // 本登録確認を作成して保存する
         $oneTimeTokenValue = OneTimeTokenValue::reconstruct(str_repeat('a', 26));
         $oneTimePassword = OneTimePassword::reconstruct('123456');
         $this->definitiveRegistrationConfirmationTestDataCreator->create(
