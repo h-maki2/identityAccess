@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\application\authentication\resendDefinitiveRegistrationConfirmation;
+namespace packages\application\registration\resendDefinitiveRegistrationConfirmation;
 
 class ResendDefinitiveRegistrationConfirmationResult
 {
