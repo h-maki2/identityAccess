@@ -25,7 +25,7 @@ package "認証アカウント集約(Aggregation)" {
     }
 
     class "DefinitiveRegistrationCompletedStatus\n本登録済みステータス" as DefinitiveRegistrationCompletedStatus {
-        + value: Enum { verified(本登録済み), unverified(未確認)}
+        + value: Enum { verified(本登録済み), unverified(未登録)}
     }
 
     class "LoginRestriction\nログイン制限" as LoginRestriction {
@@ -51,7 +51,7 @@ package "認証アカウント集約(Aggregation)" {
     }
 
     note bottom of AuthenticationAccount
-        ・「本登録済みの有無」が「本登録済み」の場合のみ、ログインが行える
+        ・本登録済みステータスが本登録済みの場合のみ、ログインが行える
         ・退会の場合、ユーザーIDと退会済みステータス以外のデータが削除される
     end note
 
@@ -63,15 +63,18 @@ package "認証アカウント集約(Aggregation)" {
         本登録確認メールでの確認が済んだら「本登録済み」になる 
     end note
 
-    note bottom of Password
+    note bottom of UserPassword
         ・ステータスが「本登録済み」の場合のみパスワードの変更が行える
         ・ログイン制限中はパスワードの変更が行えない
+        ・パスワードは8文字以上の文字列
+        ・パスワードは大文字、小文字、数字、記号をそれぞれ1文字以上含める必要がある
         ・nextTask: パスワードを変更したときにメールを送信する
     end note
 
-    note bottom of Email
+    note bottom of UserEmail
         ・重複したメールアドレスは存在しない
         ・255文字以内
+        ・メールアドレスの形式
     end note
 
     note bottom of FailedLoginCount
@@ -90,52 +93,21 @@ package "認証アカウント集約(Aggregation)" {
         ・ログイン制限が解除された場合、ログイン制限ステータスが「制限なし」になる
     end note
 
-    end bottom of UnsubscribeStatus
+    note bottom of UnsubscribeStatus
         ・ログイン制限中は退会済みに更新できない
-        ・確認ステータスが未確認の場合は、退会済みに更新できない
+        ・本登録済みステータスが未登録の場合は、退会済みに更新できない
     end note
 
     AuthenticationAccount *-down- UserId
-    AuthenticationAccount *-down- UserName
     AuthenticationAccount *-down- UserEmail
     AuthenticationAccount *-down- UserPassword
     AuthenticationAccount *-down- DefinitiveRegistrationCompletedStatus
-}
+    AuthenticationAccount *-down- LoginRestriction
+    AuthenticationAccount *-down- UnsubscribeStatus
 
-package "認証確認(AuthenticationConfirmation)" {
-    class "AuthenticationConfirmation\n認証確認" as AuthenticationConfirmation {
-        userId: UserId
-        OneTimeToken: OneTimeToken
-        authenticationCode: AuthenticationCode
-    }
-
-    class "AuthenticationCode\n認証コード" as AuthenticationCode {
-        - value: string
-    }
-
-    class "OneTimeToken\n一時トークン" as OneTimeToken {
-        - value: string
-        - OneTimeTokenExpiration: OneTimeTokenExpiration
-    }
-
-    class "OneTimeTokenExpiration\n一時トークンの有効期限" as OneTimeTokenExpiration {
-        - value: DatetimeImutable
-    }
-
-    note bottom of AuthenticationCode
-        ・ランダムな6文字の数字
-    end note
-
-    note bottom of OneTimeToken
-        ・認証確認URLのクエリパラメータに追加される
-        ・認証確認が済んだら削除する
-        ・有効期限は24時間
-        ・有効期限が切れた場合は、再度新しい一時トークンを発行する
-        ・ランダムな24文字の文字列
-    end note
-
-    AuthenticationConfirmation *-down- OneTimeToken
-    AuthenticationConfirmation -down-> AuthenticationAccount.UserId
+    LoginRestriction *-down- FailedLoginCount
+    LoginRestriction *-down- LoginRestrictionStatus
+    LoginRestriction *-down- NextLoginAllowedAt
 }
 
 @enduml

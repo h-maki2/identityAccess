@@ -1,0 +1,59 @@
+@startuml 本登録確認集約
+
+title 本登録確認集約
+
+package "本登録確認集約\nDefinitiveRegistrationConfirmation" {
+    class "DefinitiveRegistrationConfirmation\n本登録確認" as DefinitiveRegistrationConfirmation << (R,red) RootEntity >> {
+        userId: UserId
+        oneTimeToken: OneTimeToken
+        oneTimePassword: OneTimePassword
+    }
+
+    class OneTimePassword {
+        - value: string
+    }
+
+    class OneTimeToken {
+        - oneTimeTokenValue: OneTimeTokenValue
+        - oneTimeTokenExpiration: OneTimeTokenExpiration
+    }
+
+    class "OneTimeTokenExpiration\nワンタイムトークンの有効期限" as OneTimeTokenExpiration {
+        - value: DatetimeImutable
+    }
+
+    class "OneTimeTokenValue\nワンタイムトークン値" as OneTimeTokenValue {
+        - value: string
+    }
+
+    note bottom of DefinitiveRegistrationConfirmation
+        ・本登録確認が済んだら削除する
+        ・認証アカウント集約と紐づいている
+    end note
+
+    note bottom of OneTimePassword
+        ランダムな6文字の数字
+    end note
+
+    note bottom of OneTimeToken
+        有効期限が切れた場合は、新しいワンタイムトークンを発行できる
+    end note
+
+    note bottom of OneTimeTokenExpiration
+        ワンタイムトークンの有効期限は24時間
+    end note
+
+    note bottom of OneTimeTokenValue
+        ・ランダムな24文字の文字列
+        ・重複しないように生成する
+        ・本登録確認URLのクエリパラメータに追加される
+    end note
+
+    DefinitiveRegistrationConfirmation *-down- OneTimeToken
+    DefinitiveRegistrationConfirmation *-down- OneTimePassword
+    OneTimeToken *-down- OneTimeTokenValue
+    OneTimeToken *-down- OneTimeTokenExpiration
+    DefinitiveRegistrationConfirmation -down-> AuthenticationAccount.UserId
+}
+
+@enduml
