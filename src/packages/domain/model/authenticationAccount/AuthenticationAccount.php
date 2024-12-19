@@ -53,7 +53,7 @@ class AuthenticationAccount
             $userId,
             $userEmail,
             $userPassword,
-            definitiveRegistrationCompletedStatus::Incomplete,
+            DefinitiveRegistrationCompletedStatus::Incomplete,
             LoginRestriction::initialization(),
             UnsubscribeStatus::Subscribed
         );
