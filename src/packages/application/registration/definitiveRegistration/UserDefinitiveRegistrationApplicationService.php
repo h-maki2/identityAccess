@@ -9,7 +9,7 @@ use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
 use packages\domain\model\definitiveRegistrationConfirmation\validation\DefinitiveRegistrationConfirmationValidation;
 use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
 use packages\domain\model\common\transactionManage\TransactionManage;
-use packages\domain\service\registration\definitiveRegistration\UserDefinitiveRegistrationUpdate;
+use packages\domain\service\registration\definitiveRegistration\DefinitiveRegistrationUpdate;
 
 /**
  * 本登録済み更新を行うアプリケーションサービス
@@ -17,7 +17,7 @@ use packages\domain\service\registration\definitiveRegistration\UserDefinitiveRe
 class UserDefinitiveRegistrationApplicationService implements UserDefinitiveRegistrationInputBoundary
 {
     private IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
-    private UserDefinitiveRegistrationUpdate $UserDefinitiveRegistrationUpdate;
+    private DefinitiveRegistrationUpdate $definitiveRegistrationUpdate;
     private DefinitiveRegistrationConfirmationValidation $definitiveRegistrationConfirmationValidation;
 
     public function __construct(
@@ -27,7 +27,7 @@ class UserDefinitiveRegistrationApplicationService implements UserDefinitiveRegi
     )
     {
         $this->definitiveRegistrationConfirmationRepository = $definitiveRegistrationConfirmationRepository;
-        $this->UserDefinitiveRegistrationUpdate = new UserDefinitiveRegistrationUpdate(
+        $this->definitiveRegistrationUpdate = new DefinitiveRegistrationUpdate(
             $authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $transactionManage
@@ -46,7 +46,7 @@ class UserDefinitiveRegistrationApplicationService implements UserDefinitiveRegi
 
         $oneTimeTokenValue = OneTimeTokenValue::reconstruct($oneTimeTokenValueString);
         $oneTimePassword = OneTimePassword::reconstruct($oneTimePasswordString);
-        $this->UserDefinitiveRegistrationUpdate->handle($oneTimeTokenValue, $oneTimePassword);
+        $this->definitiveRegistrationUpdate->handle($oneTimeTokenValue, $oneTimePassword);
 
         return UserDefinitiveRegistrationResult::createWhenSuccess();
     }

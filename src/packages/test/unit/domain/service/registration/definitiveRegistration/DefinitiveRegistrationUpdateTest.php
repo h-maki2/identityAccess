@@ -7,14 +7,14 @@ use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenExpirat
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedStatus;
-use packages\domain\service\registration\definitiveRegistration\UserDefinitiveRegistrationUpdate;
+use packages\domain\service\registration\definitiveRegistration\DefinitiveRegistrationUpdate;
 use packages\test\helpers\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmationTestDataCreator;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\authenticationAccount\authenticationAccountTestDataFactory;
 use packages\test\helpers\transactionManage\TestTransactionManage;
 use PHPUnit\Framework\TestCase;
 
-class UserDefinitiveRegistrationUpdateTest extends TestCase
+class DefinitiveRegistrationUpdateTest extends TestCase
 {
     private InMemoryDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
@@ -45,14 +45,14 @@ class UserDefinitiveRegistrationUpdateTest extends TestCase
             userId: $userId
         );
 
-        $UserDefinitiveRegistrationUpdate = new UserDefinitiveRegistrationUpdate(
+        $definitiveRegistrationUpdate = new DefinitiveRegistrationUpdate(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage
         );
 
         // when
-        $UserDefinitiveRegistrationUpdate->handle(
+        $definitiveRegistrationUpdate->handle(
             $definitiveRegistrationConfirmation->oneTimeToken()->tokenValue(), 
             $definitiveRegistrationConfirmation->oneTimePassword()
         );

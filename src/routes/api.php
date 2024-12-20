@@ -6,10 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['api.version'])->group(function () {
-    Route::post('/UserDefinitiveRegistrationUpdate', function (Request $request, ApiVersionResolver $resolver, Container $container) {
+    Route::post('/DefinitiveRegistrationUpdate', function (Request $request, ApiVersionResolver $resolver, Container $container) {
         $version = $request->attributes->get('api_version');
         $controller = $resolver->resolve($version, 'authentication\definitiveRegistrationCompleted\UserDefinitiveRegistrationController');
-        return $container->call([$controller, 'UserDefinitiveRegistrationUpdate']);
+        return $container->call([$controller, 'DefinitiveRegistrationUpdate']);
     });
 
     Route::post('/login', function (Request $request, ApiVersionResolver $resolver, Container $container) {

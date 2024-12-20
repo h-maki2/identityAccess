@@ -16,7 +16,7 @@ use packages\domain\model\authenticationAccount\validation\UserPasswordValidatio
 use packages\domain\model\common\transactionManage\TransactionManage;
 use packages\domain\model\common\validator\ValidationHandler;
 use packages\domain\model\email\IEmailSender;
-use packages\domain\service\registration\provisionalRegistration\UserProvisionalRegistrationUpdate;
+use packages\domain\service\registration\provisionalRegistration\ProvisionalRegistrationUpdate;
 
 /**
  * ユーザー登録のアプリケーションサービス
@@ -25,7 +25,7 @@ class UserProvisionalRegistrationApplicationService implements UserProvisionalRe
 {
     private IAuthenticationAccountRepository $authenticationAccountRepository;
     private IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
-    private UserProvisionalRegistrationUpdate $userProvisionalRegistration;
+    private ProvisionalRegistrationUpdate $provisionalRegistrationUpdate;
 
     public function __construct(
         IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository,
@@ -36,7 +36,7 @@ class UserProvisionalRegistrationApplicationService implements UserProvisionalRe
     {
         $this->authenticationAccountRepository = $authenticationAccountRepository;
         $this->definitiveRegistrationConfirmationRepository = $definitiveRegistrationConfirmationRepository;
-        $this->userProvisionalRegistration = new UserProvisionalRegistrationUpdate(
+        $this->provisionalRegistrationUpdate = new ProvisionalRegistrationUpdate(
             $authenticationAccountRepository,
             $definitiveRegistrationConfirmationRepository,
             $transactionManage,
@@ -70,7 +70,7 @@ class UserProvisionalRegistrationApplicationService implements UserProvisionalRe
         $userEmail = new UserEmail($inputedEmail);
         $userPassword = UserPassword::create($inputedPassword);
         try {
-            $this->userProvisionalRegistration->handle($userEmail, $userPassword, $oneTimeToken);
+            $this->provisionalRegistrationUpdate->handle($userEmail, $userPassword, $oneTimeToken);
         } catch (Exception $e) {
             throw new TransactionException($e->getMessage());
         }

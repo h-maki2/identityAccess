@@ -15,7 +15,7 @@ class UserProvisionalRegistrationApplicationServiceTest extends TestCase
     private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
     private TestTransactionManage $transactionManage;
     private SendEmailDto $capturedSendEmailDto;
-    private UserProvisionalRegistrationApplicationService $userProvisionalRegistrationApplicationService;
+    private UserProvisionalRegistrationApplicationService $provisionalRegistrationUpdateApplicationService;
     private IEmailSender $emailSender;
 
     public function setUp(): void
@@ -33,7 +33,7 @@ class UserProvisionalRegistrationApplicationServiceTest extends TestCase
             }));
         $this->emailSender = $emailSender;
 
-        $this->userProvisionalRegistrationApplicationService = new UserProvisionalRegistrationApplicationService(
+        $this->provisionalRegistrationUpdateApplicationService = new UserProvisionalRegistrationApplicationService(
             $this->definitiveRegistrationConfirmationRepository,
             $this->authenticationAccountRepository,
             $this->transactionManage,
@@ -49,7 +49,7 @@ class UserProvisionalRegistrationApplicationServiceTest extends TestCase
         $userPasswordConfirmationString = 'ABCabc123_';
 
         // when
-        $result = $this->userProvisionalRegistrationApplicationService->userRegister($userEmailString, $userPasswordString, $userPasswordConfirmationString);
+        $result = $this->provisionalRegistrationUpdateApplicationService->userRegister($userEmailString, $userPasswordString, $userPasswordConfirmationString);
 
         // then
         // バリデーションエラーがないことを確認
@@ -73,7 +73,7 @@ class UserProvisionalRegistrationApplicationServiceTest extends TestCase
         $userPasswordConfirmationString = 'ABCabc123_';
 
         // when
-        $result = $this->userProvisionalRegistrationApplicationService->userRegister($userEmailString, $userPasswordString, $userPasswordConfirmationString);
+        $result = $this->provisionalRegistrationUpdateApplicationService->userRegister($userEmailString, $userPasswordString, $userPasswordConfirmationString);
 
         // then
         // バリデーションエラーがあることを確認

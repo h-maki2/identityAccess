@@ -19,7 +19,7 @@ use packages\domain\model\email\DefinitiveRegistrationConfirmationEmailDtoFactor
 use packages\domain\service\registration\definitiveRegistration\OneTimeTokenExistsService;
 use packages\domain\service\authenticationAccount\AuthenticationAccountService;
 
-class UserProvisionalRegistrationUpdate
+class ProvisionalRegistrationUpdate
 {
     private IAuthenticationAccountRepository $authenticationAccountRepository;
     private IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;

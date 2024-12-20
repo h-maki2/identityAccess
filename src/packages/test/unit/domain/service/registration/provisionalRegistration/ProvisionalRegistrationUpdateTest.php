@@ -8,17 +8,17 @@ use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedStatus;
 use packages\domain\model\email\IEmailSender;
-use packages\domain\service\registration\provisionalRegistration\UserProvisionalRegistrationUpdate;
+use packages\domain\service\registration\provisionalRegistration\ProvisionalRegistrationUpdate;
 use packages\test\helpers\transactionManage\TestTransactionManage;
 use PHPUnit\Framework\TestCase;
 
-class UserProvisionalRegistrationUpdateTest extends TestCase
+class ProvisionalRegistrationUpdateTest extends TestCase
 {
     private InMemoryDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
     private TestTransactionManage $transactionManage;
     private SendEmailDto $capturedSendEmailDto;
-    private UserProvisionalRegistrationUpdate $userProvisionalRegistration;
+    private ProvisionalRegistrationUpdate $provisionalRegistrationUpdate;
     private IEmailSender $emailSender;
 
     public function setUp(): void
@@ -36,7 +36,7 @@ class UserProvisionalRegistrationUpdateTest extends TestCase
             }));
         $this->emailSender = $emailSender;
 
-        $this->userProvisionalRegistration = new UserProvisionalRegistrationUpdate(
+        $this->provisionalRegistrationUpdate = new ProvisionalRegistrationUpdate(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage,
@@ -52,7 +52,7 @@ class UserProvisionalRegistrationUpdateTest extends TestCase
         $oneTimeToken = OneTimeToken::create();
 
         // when
-        $this->userProvisionalRegistration->handle($userEmail, $userPassword, $oneTimeToken);
+        $this->provisionalRegistrationUpdate->handle($userEmail, $userPassword, $oneTimeToken);
 
         // then
         // ユーザーが未認証状態で登録されていることを確認

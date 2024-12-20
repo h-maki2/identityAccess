@@ -16,13 +16,13 @@ use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedStatus;
 use packages\domain\model\email\IEmailSender;
 use packages\domain\service\registration\provisionalRegistration\UserProvisionalRegistration;
-use packages\domain\service\registration\provisionalRegistration\UserProvisionalRegistrationUpdate;
+use packages\domain\service\registration\provisionalRegistration\ProvisionalRegistrationUpdate;
 use packages\test\helpers\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmationTestDataCreator;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\transactionManage\TestTransactionManage;
 use Tests\TestCase;
 
-class UserProvisionalRegistrationUpdateTest extends TestCase
+class ProvisionalRegistrationUpdateTest extends TestCase
 {
     private EloquentDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private EloquentAuthenticationAccountRepository $authenticationAccountRepository;
@@ -30,7 +30,7 @@ class UserProvisionalRegistrationUpdateTest extends TestCase
     private DefinitiveRegistrationConfirmationTestDataCreator $definitiveRegistrationConfirmationTestDataCreator;
     private IEmailSender $emailSender;
     private SendEmailDto $capturedSendEmailDto;
-    private UserProvisionalRegistrationUpdate $userProvisionalRegistration;
+    private ProvisionalRegistrationUpdate $provisionalRegistrationUpdate;
 
     use DatabaseTransactions;
 
@@ -52,7 +52,7 @@ class UserProvisionalRegistrationUpdateTest extends TestCase
             }));
         $this->emailSender = $emailSender;
 
-        $this->userProvisionalRegistration = new UserProvisionalRegistrationUpdate(
+        $this->provisionalRegistrationUpdate = new ProvisionalRegistrationUpdate(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage,
@@ -74,7 +74,7 @@ class UserProvisionalRegistrationUpdateTest extends TestCase
 
         // when
         // ユーザー登録を行う
-        $this->userProvisionalRegistration->handle($userEmail, $userPassword, $oneTimeToken);
+        $this->provisionalRegistrationUpdate->handle($userEmail, $userPassword, $oneTimeToken);
 
         // then
         // 未認証状態の認証アカウントが登録されていることを確認する

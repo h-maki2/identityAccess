@@ -18,10 +18,10 @@ class UserProvisionalRegistrationController extends Controller
 
     public function userRegister(
         Request $request,
-        UserProvisionalRegistrationInputBoundary $userProvisionalRegistrationInputBoundary
+        UserProvisionalRegistrationInputBoundary $provisionalRegistrationUpdateInputBoundary
     )
     {
-        $output = $userProvisionalRegistrationInputBoundary->userRegister(
+        $output = $provisionalRegistrationUpdateInputBoundary->userRegister(
             $request->input('email') ?? '',
             $request->input('password') ?? '',
             $request->input('passwordConfirmation') ?? ''
