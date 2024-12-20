@@ -4,7 +4,7 @@ namespace packages\application\registration\provisionalRegistration;
 
 use packages\application\common\validation\ValidationErrorMessageData;
 
-class UserProvisionalRegistrationResult
+class ProvisionalRegistrationResult
 {
     readonly bool $validationError;
     readonly array $validationErrorMessageList; // ValidationErrorMessageData[]

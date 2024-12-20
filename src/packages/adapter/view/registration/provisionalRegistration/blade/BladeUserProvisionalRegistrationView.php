@@ -3,13 +3,13 @@
 namespace packages\adapter\view\registration\provisionalRegistration\blade;
 
 use Illuminate\Contracts\View\View;
-use packages\adapter\presenter\registration\provisionalRegistration\blade\BladeUserProvisionalRegistrationViewModel;
+use packages\adapter\presenter\registration\provisionalRegistration\blade\BladeProvisionalRegistrationViewModel;
 
-class BladeUserProvisionalRegistrationView
+class BladeProvisionalRegistrationView
 {
-    private BladeUserProvisionalRegistrationViewModel $viewModel;
+    private BladeProvisionalRegistrationViewModel $viewModel;
 
-    public function __construct(BladeUserProvisionalRegistrationViewModel $viewModel)
+    public function __construct(BladeProvisionalRegistrationViewModel $viewModel)
     {
         $this->viewModel = $viewModel;
     }
@@ -25,7 +25,7 @@ class BladeUserProvisionalRegistrationView
 
     private function successResponse(): View
     {
-        return view('registration.provisionalRegistration.userProvisionalRegistrationComplete');
+        return view('registration.provisionalRegistration.ProvisionalRegistrationComplete');
     }
 
     private function faildResponse()

@@ -4,18 +4,18 @@ use packages\adapter\persistence\inMemory\InMemoryDefinitiveRegistrationConfirma
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationAccountRepository;
 use packages\domain\model\email\SendEmailDto;
 use packages\application\common\validation\ValidationErrorMessageData;
-use packages\application\registration\provisionalRegistration\UserProvisionalRegistrationApplicationService;
+use packages\application\registration\provisionalRegistration\ProvisionalRegistrationApplicationService;
 use packages\domain\model\email\IEmailSender;
 use packages\test\helpers\transactionManage\TestTransactionManage;
 use PHPUnit\Framework\TestCase;
 
-class UserProvisionalRegistrationApplicationServiceTest extends TestCase
+class ProvisionalRegistrationApplicationServiceTest extends TestCase
 {
     private InMemoryDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
     private TestTransactionManage $transactionManage;
     private SendEmailDto $capturedSendEmailDto;
-    private UserProvisionalRegistrationApplicationService $provisionalRegistrationUpdateApplicationService;
+    private ProvisionalRegistrationApplicationService $provisionalRegistrationUpdateApplicationService;
     private IEmailSender $emailSender;
 
     public function setUp(): void
@@ -33,7 +33,7 @@ class UserProvisionalRegistrationApplicationServiceTest extends TestCase
             }));
         $this->emailSender = $emailSender;
 
-        $this->provisionalRegistrationUpdateApplicationService = new UserProvisionalRegistrationApplicationService(
+        $this->provisionalRegistrationUpdateApplicationService = new ProvisionalRegistrationApplicationService(
             $this->definitiveRegistrationConfirmationRepository,
             $this->authenticationAccountRepository,
             $this->transactionManage,

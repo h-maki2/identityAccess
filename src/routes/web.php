@@ -2,11 +2,11 @@
 
 use App\Http\Controllers\Api\V1\authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailController;
 use App\Http\Controllers\Web\registration\UserDefinitiveRegistrationController;
-use App\Http\Controllers\Web\registration\UserProvisionalRegistrationController;
+use App\Http\Controllers\Web\registration\ProvisionalRegistrationController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/register', [UserProvisionalRegistrationController::class, 'userRegisterForm']);
-Route::post('/register', [UserProvisionalRegistrationController::class, 'userRegister']);
+Route::get('/register', [ProvisionalRegistrationController::class, 'userRegisterForm']);
+Route::post('/register', [ProvisionalRegistrationController::class, 'userRegister']);
 
 Route::get('/definitiveRegister', [UserDefinitiveRegistrationController::class, 'definitiveRegistrationCompletedForm']);
 Route::post('/definitiveRegister', [UserDefinitiveRegistrationController::class, 'definitiveRegistrationCompleted']);

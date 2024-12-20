@@ -5,20 +5,20 @@ namespace App\Http\Controllers\Web\registration;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use packages\adapter\presenter\registration\provisionalRegistration\blade\BladeUserProvisionalRegistrationPresenter;
-use packages\adapter\view\registration\provisionalRegistration\blade\BladeUserProvisionalRegistrationView;
-use packages\application\registration\provisionalRegistration\UserProvisionalRegistrationInputBoundary;
+use packages\adapter\presenter\registration\provisionalRegistration\blade\BladeProvisionalRegistrationPresenter;
+use packages\adapter\view\registration\provisionalRegistration\blade\BladeProvisionalRegistrationView;
+use packages\application\registration\provisionalRegistration\ProvisionalRegistrationInputBoundary;
 
-class UserProvisionalRegistrationController extends Controller
+class ProvisionalRegistrationController extends Controller
 {
     public function userRegisterForm(): View
     {
-        return view('registration.provisionalRegistration.userProvisionalRegistrationForm');
+        return view('registration.provisionalRegistration.ProvisionalRegistrationForm');
     }
 
     public function userRegister(
         Request $request,
-        UserProvisionalRegistrationInputBoundary $provisionalRegistrationUpdateInputBoundary
+        ProvisionalRegistrationInputBoundary $provisionalRegistrationUpdateInputBoundary
     )
     {
         $output = $provisionalRegistrationUpdateInputBoundary->userRegister(
@@ -27,8 +27,8 @@ class UserProvisionalRegistrationController extends Controller
             $request->input('passwordConfirmation') ?? ''
         );
 
-        $presenter = new BladeUserProvisionalRegistrationPresenter($output);
-        $view = new BladeUserProvisionalRegistrationView($presenter->viewResponse());
+        $presenter = new BladeProvisionalRegistrationPresenter($output);
+        $view = new BladeProvisionalRegistrationView($presenter->viewResponse());
         return $view->response();
     }
 }

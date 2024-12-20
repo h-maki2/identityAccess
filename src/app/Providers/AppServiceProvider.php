@@ -25,8 +25,8 @@ use packages\application\userProfile\fetch\FetchUserProfileApplicationService;
 use packages\application\userProfile\fetch\FetchUserProfileInputBoundary;
 use packages\application\userProfile\register\RegisterUserProfileApplicationService;
 use packages\application\userProfile\register\RegisterUserProfileInputBoundary;
-use packages\application\registration\provisionalRegistration\UserProvisionalRegistrationApplicationService;
-use packages\application\registration\provisionalRegistration\UserProvisionalRegistrationInputBoundary;
+use packages\application\registration\provisionalRegistration\ProvisionalRegistrationApplicationService;
+use packages\application\registration\provisionalRegistration\ProvisionalRegistrationInputBoundary;
 use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
 use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
 use packages\domain\model\common\transactionManage\TransactionManage;
@@ -66,7 +66,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(LoginInputBoundary::class, LoginApplicationService::class);
         $this->app->bind(ResendDefinitiveRegistrationConfirmationInputBoundary::class, ResendDefinitiveRegistrationConfirmationApplicationService::class);
         $this->app->bind(UserDefinitiveRegistrationInputBoundary::class, UserDefinitiveRegistrationApplicationService::class);
-        $this->app->bind(UserProvisionalRegistrationInputBoundary::class, UserProvisionalRegistrationApplicationService::class);
+        $this->app->bind(ProvisionalRegistrationInputBoundary::class, ProvisionalRegistrationApplicationService::class);
         $this->app->bind(RegisterUserProfileInputBoundary::class, RegisterUserProfileApplicationService::class);
         $this->app->bind(FetchUserProfileInputBoundary::class, FetchUserProfileApplicationService::class);
 

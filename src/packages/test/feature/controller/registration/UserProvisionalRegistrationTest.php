@@ -3,7 +3,7 @@
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
-class UserProvisionalRegistrationTest extends TestCase
+class ProvisionalRegistrationTest extends TestCase
 {
     use DatabaseTransactions;
 

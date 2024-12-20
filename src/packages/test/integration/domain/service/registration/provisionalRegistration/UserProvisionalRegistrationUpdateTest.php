@@ -15,7 +15,7 @@ use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedStatus;
 use packages\domain\model\email\IEmailSender;
-use packages\domain\service\registration\provisionalRegistration\UserProvisionalRegistration;
+use packages\domain\service\registration\provisionalRegistration\ProvisionalRegistration;
 use packages\domain\service\registration\provisionalRegistration\ProvisionalRegistrationUpdate;
 use packages\test\helpers\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmationTestDataCreator;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;

@@ -4,7 +4,7 @@ namespace packages\domain\service\registration\provisionalRegistration;
 
 use packages\application\common\exception\TransactionException;
 use packages\domain\model\email\SendEmailDto;
-use packages\domain\service\registration\provisionalRegistration\IUserProvisionalRegistrationCompletionEmail;
+use packages\domain\service\registration\provisionalRegistration\IProvisionalRegistrationCompletionEmail;
 use packages\domain\model\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmation;
 use packages\domain\model\definitiveRegistrationConfirmation\IDefinitiveRegistrationConfirmationRepository;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimeToken;

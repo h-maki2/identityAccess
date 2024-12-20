@@ -2,7 +2,7 @@
 
 namespace packages\adapter\presenter\registration\provisionalRegistration\blade;
 
-class BladeUserProvisionalRegistrationViewModel
+class BladeProvisionalRegistrationViewModel
 {
     readonly array $validationErrorList;
     readonly bool $isValidationError;

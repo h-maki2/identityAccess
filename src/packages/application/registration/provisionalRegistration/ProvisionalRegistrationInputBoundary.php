@@ -2,11 +2,11 @@
 
 namespace packages\application\registration\provisionalRegistration;
 
-interface UserProvisionalRegistrationInputBoundary
+interface ProvisionalRegistrationInputBoundary
 {
     public function userRegister(
         string $email,
         string $password,
         string $passwordConfirmation
-    ): UserProvisionalRegistrationResult;
+    ): ProvisionalRegistrationResult;
 }

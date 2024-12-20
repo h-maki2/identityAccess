@@ -21,7 +21,7 @@ use packages\domain\service\registration\provisionalRegistration\ProvisionalRegi
 /**
  * ユーザー登録のアプリケーションサービス
  */
-class UserProvisionalRegistrationApplicationService implements UserProvisionalRegistrationInputBoundary
+class ProvisionalRegistrationApplicationService implements ProvisionalRegistrationInputBoundary
 {
     private IAuthenticationAccountRepository $authenticationAccountRepository;
     private IDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
@@ -51,7 +51,7 @@ class UserProvisionalRegistrationApplicationService implements UserProvisionalRe
         string $inputedEmail, 
         string $inputedPassword,
         string $inputedPasswordConfirmation
-    ): UserProvisionalRegistrationResult
+    ): ProvisionalRegistrationResult
     {
         $validationHandler = new ValidationHandler();
         $validationHandler->addValidator(new UserEmailValidation($inputedEmail, $this->authenticationAccountRepository));
@@ -62,7 +62,7 @@ class UserProvisionalRegistrationApplicationService implements UserProvisionalRe
         $validationHandler->addValidator(new OneTimeTokenValidation($this->definitiveRegistrationConfirmationRepository, $oneTimeToken));
         
         if (!$validationHandler->validate()) {
-            return UserProvisionalRegistrationResult::createWhenValidationError(
+            return ProvisionalRegistrationResult::createWhenValidationError(
                 $validationHandler->errorMessages()
             );
         }
@@ -75,6 +75,6 @@ class UserProvisionalRegistrationApplicationService implements UserProvisionalRe
             throw new TransactionException($e->getMessage());
         }
 
-        return UserProvisionalRegistrationResult::createWhenSuccess();
+        return ProvisionalRegistrationResult::createWhenSuccess();
     }
 }
