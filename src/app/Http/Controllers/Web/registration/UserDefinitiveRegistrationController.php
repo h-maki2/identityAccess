@@ -4,31 +4,31 @@ namespace App\Http\Controllers\Web\registration;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use packages\adapter\presenter\registration\definitiveRegistration\blade\BladeUserDefinitiveRegistrationPresenter;
-use packages\adapter\view\registration\definitiveRegistration\blade\BladeUserDefinitiveRegistrationView;
-use packages\application\registration\definitiveRegistration\UserDefinitiveRegistrationInputBoundary;
+use packages\adapter\presenter\registration\definitiveRegistration\blade\BladeDefinitiveRegistrationPresenter;
+use packages\adapter\view\registration\definitiveRegistration\blade\BladeDefinitiveRegistrationView;
+use packages\application\registration\definitiveRegistration\DefinitiveRegistrationInputBoundary;
 
-class UserDefinitiveRegistrationController extends Controller
+class DefinitiveRegistrationController extends Controller
 {
     public function definitiveRegistrationCompletedForm(Request $request)
     {
-        return view('registration.definitiveRegistration.userDefinitiveRegistrationCompletedForm', [
+        return view('registration.definitiveRegistration.DefinitiveRegistrationCompletedForm', [
             'oneTimeToken' => $request->query('token', ''),
         ]);
     }
 
     public function definitiveRegistrationCompleted(
         Request $request,
-        UserDefinitiveRegistrationInputBoundary $userDefinitiveRegistrationInputBoundary
+        DefinitiveRegistrationInputBoundary $definitiveRegistrationInputBoundary
     )
     {
-        $output = $userDefinitiveRegistrationInputBoundary->handle(
+        $output = $definitiveRegistrationInputBoundary->handle(
             $request->input('oneTimeToken') ?? '',
             $request->input('oneTimePassword') ?? ''
         );
 
-        $presenter = new BladeUserDefinitiveRegistrationPresenter($output);
-        $view = new BladeUserDefinitiveRegistrationView($presenter);
+        $presenter = new BladeDefinitiveRegistrationPresenter($output);
+        $view = new BladeDefinitiveRegistrationView($presenter);
         return $view->response();
     }
 }

@@ -2,10 +2,10 @@
 
 namespace packages\application\registration\definitiveRegistration;
 
-interface UserDefinitiveRegistrationInputBoundary
+interface DefinitiveRegistrationInputBoundary
 {
     public function handle(
         string $oneTimeTokenValueString,
         string $oneTimePasswordString
-    ): UserDefinitiveRegistrationResult;
+    ): DefinitiveRegistrationResult;
 }

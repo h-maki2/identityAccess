@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['api.version'])->group(function () {
     Route::post('/DefinitiveRegistrationUpdate', function (Request $request, ApiVersionResolver $resolver, Container $container) {
         $version = $request->attributes->get('api_version');
-        $controller = $resolver->resolve($version, 'authentication\definitiveRegistrationCompleted\UserDefinitiveRegistrationController');
+        $controller = $resolver->resolve($version, 'authentication\definitiveRegistrationCompleted\DefinitiveRegistrationController');
         return $container->call([$controller, 'DefinitiveRegistrationUpdate']);
     });
 

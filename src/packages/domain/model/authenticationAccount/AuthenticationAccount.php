@@ -66,7 +66,7 @@ class AuthenticationAccount
         UserId $userId,
         UserEmail $userEmail,
         UserPassword $userPassword,
-        DefinitiveRegistrationCompletedStatus $DefinitiveRegistrationCompletedStatus,
+        DefinitiveRegistrationCompletedStatus $definitiveRegistrationCompletedStatus,
         LoginRestriction $LoginRestriction,
         UnsubscribeStatus $unsubscribeStatus
     ): self
@@ -75,7 +75,7 @@ class AuthenticationAccount
             $userId,
             $userEmail,
             $userPassword,
-            $DefinitiveRegistrationCompletedStatus,
+            $definitiveRegistrationCompletedStatus,
             $LoginRestriction,
             $unsubscribeStatus
         );

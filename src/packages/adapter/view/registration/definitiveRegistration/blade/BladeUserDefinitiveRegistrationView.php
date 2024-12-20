@@ -2,13 +2,13 @@
 
 namespace packages\adapter\view\registration\definitiveRegistration\blade;
 
-use packages\adapter\presenter\registration\definitiveRegistration\blade\BladeUserDefinitiveRegistrationPresenter;
+use packages\adapter\presenter\registration\definitiveRegistration\blade\BladeDefinitiveRegistrationPresenter;
 
-class BladeUserDefinitiveRegistrationView
+class BladeDefinitiveRegistrationView
 {
-    private BladeUserDefinitiveRegistrationPresenter $presenter;
+    private BladeDefinitiveRegistrationPresenter $presenter;
 
-    public function __construct(BladeUserDefinitiveRegistrationPresenter $presenter)
+    public function __construct(BladeDefinitiveRegistrationPresenter $presenter)
     {
         $this->presenter = $presenter;
     }
@@ -24,7 +24,7 @@ class BladeUserDefinitiveRegistrationView
 
     public function successResponse()
     {
-        return view('registration.definitiveRegistration.userDefinitiveRegistrationCompleted');
+        return view('registration.definitiveRegistration.DefinitiveRegistrationCompleted');
     }
 
     public function faildResponse()

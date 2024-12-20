@@ -38,14 +38,14 @@ class EloquentAuthenticationAccountRepositoryTest extends TestCase
         // 認証アカウントを作成する
         $userEmail = new UserEmail('test@example.com');
         $userPassword = UserPassword::create('abcABC123!');
-        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Completed;
+        $definitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Completed;
         $userId = $this->authenticationAccountRepository->nextUserId();
         $loginRestriction = LoginRestriction::initialization();
         $unsubscribeStatus = UnsubscribeStatus::Subscribed;
         $authenticationAccount = TestAuthenticationAccountFactory::create(
             $userEmail,
             $userPassword,
-            $DefinitiveRegistrationCompletedStatus,
+            $definitiveRegistrationCompletedStatus,
             $userId,
             $loginRestriction,
             $unsubscribeStatus

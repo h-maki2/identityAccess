@@ -2,7 +2,7 @@
 
 use packages\adapter\persistence\inMemory\InMemoryDefinitiveRegistrationConfirmationRepository;
 use packages\adapter\persistence\inMemory\InMemoryAuthenticationAccountRepository;
-use packages\application\registration\definitiveRegistration\UserDefinitiveRegistrationApplicationService;
+use packages\application\registration\definitiveRegistration\DefinitiveRegistrationApplicationService;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
 use packages\domain\model\definitiveRegistrationConfirmation\OneTimeTokenValue;
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
@@ -12,14 +12,14 @@ use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCre
 use packages\test\helpers\transactionManage\TestTransactionManage;
 use PHPUnit\Framework\TestCase;
 
-class UserDefinitiveRegistrationApplicationServiceTest extends TestCase
+class DefinitiveRegistrationApplicationServiceTest extends TestCase
 {
     private InMemoryDefinitiveRegistrationConfirmationRepository $definitiveRegistrationConfirmationRepository;
     private InMemoryAuthenticationAccountRepository $authenticationAccountRepository;
     private TestTransactionManage $transactionManage;
     private DefinitiveRegistrationConfirmationTestDataCreator $definitiveRegistrationConfirmationTestDataCreator;
     private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
-    private UserDefinitiveRegistrationApplicationService $DefinitiveRegistrationCompleteApplicationService;
+    private DefinitiveRegistrationApplicationService $definitiveRegistrationCompleteApplicationService;
 
     public function setUp(): void
     {
@@ -29,7 +29,7 @@ class UserDefinitiveRegistrationApplicationServiceTest extends TestCase
         $this->definitiveRegistrationConfirmationTestDataCreator = new DefinitiveRegistrationConfirmationTestDataCreator($this->definitiveRegistrationConfirmationRepository, $this->authenticationAccountRepository);
         $this->authenticationAccountTestDataCreator = new AuthenticationAccountTestDataCreator($this->authenticationAccountRepository);
 
-        $this->DefinitiveRegistrationCompleteApplicationService = new UserDefinitiveRegistrationApplicationService(
+        $this->definitiveRegistrationCompleteApplicationService = new DefinitiveRegistrationApplicationService(
             $this->authenticationAccountRepository,
             $this->definitiveRegistrationConfirmationRepository,
             $this->transactionManage
@@ -56,7 +56,7 @@ class UserDefinitiveRegistrationApplicationServiceTest extends TestCase
 
         // when
         // 正しいワンタイムトークンとワンタイムパスワードを入力する
-        $result = $this->DefinitiveRegistrationCompleteApplicationService->handle($oneTimeTokenValue->value, $oneTimePassword->value);
+        $result = $this->definitiveRegistrationCompleteApplicationService->handle($oneTimeTokenValue->value, $oneTimePassword->value);
 
         // then
         // バリデーションエラーが発生していないことを確認
@@ -93,7 +93,7 @@ class UserDefinitiveRegistrationApplicationServiceTest extends TestCase
         // when
         // 存在しないワンタイムトークンを生成
         $invalidOneTimeTokenValue = OneTimeTokenValue::reconstruct('aaaaaaaaaaaaaaaaaaaaaaaaaa');
-        $result = $this->DefinitiveRegistrationCompleteApplicationService->handle($invalidOneTimeTokenValue->value, $oneTimePassword->value);
+        $result = $this->definitiveRegistrationCompleteApplicationService->handle($invalidOneTimeTokenValue->value, $oneTimePassword->value);
 
         // then
         // バリデーションエラーが発生していることを確認
@@ -122,7 +122,7 @@ class UserDefinitiveRegistrationApplicationServiceTest extends TestCase
         // when
         // 正しくないワンタイムパスワードを入力する
         $invalidOneTimePassword = OneTimePassword::reconstruct('654321');
-        $result = $this->DefinitiveRegistrationCompleteApplicationService->handle($oneTimeTokenValue->value, $invalidOneTimePassword->value);
+        $result = $this->definitiveRegistrationCompleteApplicationService->handle($oneTimeTokenValue->value, $invalidOneTimePassword->value);
 
         // then
         // バリデーションエラーが発生していることを確認

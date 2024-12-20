@@ -2,7 +2,7 @@
 
 namespace packages\application\registration\definitiveRegistration;
 
-class UserDefinitiveRegistrationResult
+class DefinitiveRegistrationResult
 {
     readonly bool $validationError;
     readonly string $validationErrorMessage;
@@ -13,13 +13,13 @@ class UserDefinitiveRegistrationResult
         $this->validationErrorMessage = $validationErrorMessage;
     }
 
-    public static function createWhenValidationError(string $validationErrorMessage): UserDefinitiveRegistrationResult
+    public static function createWhenValidationError(string $validationErrorMessage): DefinitiveRegistrationResult
     {
-        return new UserDefinitiveRegistrationResult(true, $validationErrorMessage);
+        return new DefinitiveRegistrationResult(true, $validationErrorMessage);
     }
 
-    public static function createWhenSuccess(): UserDefinitiveRegistrationResult
+    public static function createWhenSuccess(): DefinitiveRegistrationResult
     {
-        return new UserDefinitiveRegistrationResult(false, '');
+        return new DefinitiveRegistrationResult(false, '');
     }
 }

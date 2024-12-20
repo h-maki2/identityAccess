@@ -2,13 +2,13 @@
 
 namespace packages\adapter\presenter\registration\definitiveRegistration\blade;
 
-use packages\application\registration\definitiveRegistration\UserDefinitiveRegistrationResult;
+use packages\application\registration\definitiveRegistration\DefinitiveRegistrationResult;
 
-class BladeUserDefinitiveRegistrationPresenter
+class BladeDefinitiveRegistrationPresenter
 {
-    private UserDefinitiveRegistrationResult $result;
+    private DefinitiveRegistrationResult $result;
 
-    public function __construct(UserDefinitiveRegistrationResult $result)
+    public function __construct(DefinitiveRegistrationResult $result)
     {
         $this->result = $result;
     }
