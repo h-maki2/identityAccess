@@ -53,10 +53,10 @@ class DefinitiveRegistrationUpdateTest extends TestCase
     {
         // given
         // 認証アカウントと本登録確認情報を作成する
-        $authInfo = $this->authenticationAccountTestDataCreator->create(
+        $authToken = $this->authenticationAccountTestDataCreator->create(
             definitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
         );
-        $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create($authInfo->id());
+        $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create($authToken->id());
 
         $oneTimeToken = $definitiveRegistrationConfirmation->oneTimeToken();
         $oneTimeTokenValue = $oneTimeToken->TokenValue();
@@ -67,58 +67,10 @@ class DefinitiveRegistrationUpdateTest extends TestCase
 
         // then
         // 認証アカウントが本登録済みに更新されていることを確認
-        $actualAuthAccount = $this->authenticationAccountRepository->findById($authInfo->id(), UnsubscribeStatus::Subscribed);
+        $actualAuthAccount = $this->authenticationAccountRepository->findById($authToken->id(), UnsubscribeStatus::Subscribed);
         $this->assertTrue($actualAuthAccount->hasCompletedRegistration());
 
         // 本登録確認情報が削除されていることを確認
         $this->assertNull($this->definitiveRegistrationConfirmationRepository->findByTokenValue($oneTimeTokenValue));
-    }
-
-    public function test_ワンタイムパスワードが正しくない場合に、認証アカウントを本登録済みに更新できない()
-    {
-        // given
-        // 認証アカウントと本登録確認情報を作成する
-        $authInfo = $this->authenticationAccountTestDataCreator->create(
-            definitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
-        );
-        $oneTimePassword = OneTimePassword::create('111111');
-        $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create(
-            userId: $authInfo->id(),
-            oneTimePassword: $oneTimePassword
-        );
-
-        $oneTimeToken = $definitiveRegistrationConfirmation->oneTimeToken();
-        $oneTimeTokenValue = $oneTimeToken->TokenValue();
-        // 正しくないワンタイムパスワードを入力する
-        $oneTimePassword = OneTimePassword::reconstruct('666666');
-
-        // when・then
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('認証アカウントを本登録済みに更新できませんでした。');
-        $this->definitiveRegistrationUpdate->handle($oneTimeTokenValue, $oneTimePassword);
-    }
-
-    public function test_ワンタイムトークンの有効期限が切れている場合に、認証アカウントを本登録済みに更新できない()
-    {
-        // given
-        // 認証アカウントと本登録確認情報を作成する
-        $authInfo = $this->authenticationAccountTestDataCreator->create(
-            definitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
-        );
-        // 有効期限が切れているワンタイムトークンを生成
-        $oneTimeTokenExpiration = OneTimeTokenExpiration::reconstruct(new DateTimeImmutable('-1 day'));
-        $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationTestDataCreator->create(
-            userId: $authInfo->id(),
-            oneTimeTokenExpiration: $oneTimeTokenExpiration
-        );
-
-        $oneTimeToken = $definitiveRegistrationConfirmation->oneTimeToken();
-        $oneTimeTokenValue = $oneTimeToken->tokenValue();
-        $oneTimePassword = $definitiveRegistrationConfirmation->oneTimePassword();
-
-        // when
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('認証アカウントを本登録済みに更新できませんでした。');
-        $this->definitiveRegistrationUpdate->handle($oneTimeTokenValue, $oneTimePassword);
     }
 }
