@@ -8,7 +8,7 @@ class DefinitiveRegistrationCompletedStatusTest extends TestCase
     public function test_ステータスが本登録済みの場合は、isCompletedメソッドの戻り値がtrueを返す()
     {
         // given
-        $DefinitiveRegistrationCompletedStatus = definitiveRegistrationCompletedStatus::Completed;
+        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Completed;
 
         // when
         $result = $DefinitiveRegistrationCompletedStatus->isCompleted();
@@ -20,7 +20,7 @@ class DefinitiveRegistrationCompletedStatusTest extends TestCase
     public function test_ステータスが未認証の場合に、isCompletedメソッドの戻り値がfalseを返す()
     {
         // given
-        $DefinitiveRegistrationCompletedStatus = definitiveRegistrationCompletedStatus::Incomplete;
+        $DefinitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Incomplete;
 
         // when
         $result = $DefinitiveRegistrationCompletedStatus->isCompleted();

@@ -69,7 +69,7 @@ class LoginApplicationServiceTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             $email,
             $password,
-            definitiveRegistrationCompletedStatus::Completed,
+            DefinitiveRegistrationCompletedStatus::Completed,
             $userId
         );
         
@@ -124,7 +124,7 @@ class LoginApplicationServiceTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             $email,
             $password,
-            definitiveRegistrationCompletedStatus::Completed
+            DefinitiveRegistrationCompletedStatus::Completed
         );
 
         // when
@@ -167,7 +167,7 @@ class LoginApplicationServiceTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             $email,
             $password,
-            definitiveRegistrationCompletedStatus::Completed
+            DefinitiveRegistrationCompletedStatus::Completed
         );
 
         // when
@@ -216,7 +216,7 @@ class LoginApplicationServiceTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             $email,
             $password,
-            definitiveRegistrationCompletedStatus::Completed,
+            DefinitiveRegistrationCompletedStatus::Completed,
             $userId,
             $loginRestriction
         );
@@ -269,7 +269,7 @@ class LoginApplicationServiceTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             $email,
             $password,
-            definitiveRegistrationCompletedStatus::Completed,
+            DefinitiveRegistrationCompletedStatus::Completed,
             $userId,
             $loginRestriction
         );
@@ -330,7 +330,7 @@ class LoginApplicationServiceTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             $email,
             $password,
-            definitiveRegistrationCompletedStatus::Completed,
+            DefinitiveRegistrationCompletedStatus::Completed,
             null,
             $loginRestriction
         );
@@ -379,7 +379,7 @@ class LoginApplicationServiceTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             $email,
             $password,
-            definitiveRegistrationCompletedStatus::Completed,
+            DefinitiveRegistrationCompletedStatus::Completed,
             null,
             $loginRestriction
         );

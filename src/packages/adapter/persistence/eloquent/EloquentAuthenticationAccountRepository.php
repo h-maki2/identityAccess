@@ -94,7 +94,7 @@ class EloquentAuthenticationAccountRepository implements IAuthenticationAccountR
             new UserId($eloquentUser->id),
             new UserEmail($eloquentAuthenticationInformation->email),
             UserPassword::reconstruct($eloquentAuthenticationInformation->password),
-            definitiveRegistrationCompletedStatus::from($eloquentAuthenticationInformation->verification_status),
+            DefinitiveRegistrationCompletedStatus::from($eloquentAuthenticationInformation->verification_status),
             LoginRestriction::reconstruct(
                 FailedLoginCount::reconstruct($eloquentAuthenticationInformation->failed_login_count),
                 LoginRestrictionStatus::from($eloquentAuthenticationInformation->login_restriction_status),

@@ -106,7 +106,7 @@ class LoginControllerTest extends TestCase
         $this->authenticationAccountTestDataCreator->create(
             email: new UserEmail($emailString),
             password: UserPassword::create($passwordString),
-            definitiveRegistrationCompletedStatus: definitiveRegistrationCompletedStatus::Completed // 本登録済み
+            definitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Completed // 本登録済み
         );
 
         // クライアントを作成する

@@ -27,7 +27,7 @@ class TestAuthenticationAccountFactory
             $id ?? $authInfoRepository->nextUserId(),
             $email ?? TestUserEmailFactory::create(),
             $password ?? UserPassword::create('ABCabc123_'),
-            $definitiveRegistrationCompletedStatus ?? definitiveRegistrationCompletedStatus::Completed,
+            $definitiveRegistrationCompletedStatus ?? DefinitiveRegistrationCompletedStatus::Completed,
             $loginRestriction ?? LoginRestriction::initialization(),
             $unsubscribeStatus ?? UnsubscribeStatus::Subscribed
         );

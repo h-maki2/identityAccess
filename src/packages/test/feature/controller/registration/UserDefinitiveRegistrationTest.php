@@ -36,7 +36,7 @@ class UserDefinitiveRegistrationTest extends TestCase
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
-            definitiveRegistrationCompletedStatus: definitiveRegistrationCompletedStatus::Incomplete
+            definitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
         );
 
         // 本登録確認を作成して保存する
@@ -63,7 +63,7 @@ class UserDefinitiveRegistrationTest extends TestCase
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(
             id: $userId,
-            definitiveRegistrationCompletedStatus: definitiveRegistrationCompletedStatus::Incomplete
+            definitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete
         );
 
         // 本登録確認を作成して保存する

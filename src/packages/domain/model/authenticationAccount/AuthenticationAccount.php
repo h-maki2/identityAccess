@@ -121,14 +121,14 @@ class AuthenticationAccount
     ): void
     {
         if (!$this->id()->equals($definitiveRegistrationConfirmation->userId)) {
-            throw new InvalidArgumentException('ユーザーIDが一致しません。');
+            throw new InvalidArgumentException('認証アカウントに紐づいていない本登録確認情報です。');
         }
 
         if (!$definitiveRegistrationConfirmation->canUpdatConfirmed($enterdOneTimePassword, $currentDateTime)) {
             throw new DomainException('ワンタイムパスワードが一致しません。');
         }
 
-        $this->definitiveRegistrationCompletedStatus = definitiveRegistrationCompletedStatus::Completed;
+        $this->definitiveRegistrationCompletedStatus = DefinitiveRegistrationCompletedStatus::Completed;
     }
 
     public function updateUnsubscribed(DateTimeImmutable $currentDateTime): void

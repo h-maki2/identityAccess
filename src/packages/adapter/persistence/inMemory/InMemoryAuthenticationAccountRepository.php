@@ -81,7 +81,7 @@ class InMemoryAuthenticationAccountRepository implements IAuthenticationAccountR
             new UserId($authenticationAccountObj->user_id),
             new UserEmail($authenticationAccountObj->email),
             UserPassword::reconstruct($authenticationAccountObj->password),
-            definitiveRegistrationCompletedStatus::from($authenticationAccountObj->verification_status),
+            DefinitiveRegistrationCompletedStatus::from($authenticationAccountObj->verification_status),
             LoginRestriction::reconstruct(
                 FailedLoginCount::reconstruct($authenticationAccountObj->failed_login_count),
                 LoginRestrictionStatus::from($authenticationAccountObj->login_restriction_status),
