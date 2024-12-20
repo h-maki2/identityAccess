@@ -22,7 +22,7 @@ class UserId
         $this->value = $value;
     }
 
-    public function euqals(UserId $userId): bool
+    public function equals(UserId $userId): bool
     {
         return $this->value === $userId->value;
     }

@@ -70,7 +70,7 @@ class UserIdTest extends TestCase
         $otherUserId = new UserId($userIdString);
 
         // when
-        $result = $userId->euqals($otherUserId);
+        $result = $userId->equals($otherUserId);
 
         // then
         $this->assertTrue($result);
@@ -83,7 +83,7 @@ class UserIdTest extends TestCase
         $otherUserId = new UserId('0188b2a6-bd94-7ccf-9666-1df7e26ac6b9');
 
         // when
-        $result = $userId->euqals($otherUserId);
+        $result = $userId->equals($otherUserId);
 
         // then
         $this->assertFalse($result);

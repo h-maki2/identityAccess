@@ -42,12 +42,12 @@ class UserDefinitiveRegistrationUpdate
     {
         $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationRepository->findByTokenValue($oneTimeTokenValue);
 
-        if (!$definitiveRegistrationConfirmation->canUpdatConfirmed($oneTimePassword, new DateTimeImmutable())) {
-            throw new DomainException('認証アカウントを本登録済みに更新できませんでした。');
-        } 
-
         $authAccount = $this->authenticationAccountRepository->findById($definitiveRegistrationConfirmation->userId, UnsubscribeStatus::Subscribed);
-        $authAccount->updateVerified();
+        $authAccount->updateVerified(
+            $definitiveRegistrationConfirmation,
+            $oneTimePassword,
+            new DateTimeImmutable()
+        );
 
         try {
             $this->transactionManage->performTransaction(function () use ($authAccount) {

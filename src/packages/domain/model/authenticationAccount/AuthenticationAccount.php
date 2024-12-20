@@ -4,7 +4,10 @@ namespace packages\domain\model\authenticationAccount;
 
 use DateTimeImmutable;
 use DomainException;
+use InvalidArgumentException;
 use Laravel\Passport\Exceptions\InvalidAuthTokenException;
+use packages\domain\model\definitiveRegistrationConfirmation\DefinitiveRegistrationConfirmation;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
 use packages\domain\service\authenticationAccount\AuthenticationAccountService;
 
 class AuthenticationAccount
@@ -108,13 +111,33 @@ class AuthenticationAccount
         return $this->unsubscribeStatus;
     }
 
-    public function updateVerified(): void
+    public function updateVerified(
+        DefinitiveRegistrationConfirmation $definitiveRegistrationConfirmation,
+        OneTimePassword $enterdOneTimePassword,
+        DateTimeImmutable $currentDateTime
+    ): void
     {
+        if (!$this->id()->equals($definitiveRegistrationConfirmation->userId)) {
+            throw new InvalidArgumentException('ユーザーIDが一致しません。');
+        }
+
+        if (!$definitiveRegistrationConfirmation->canUpdatConfirmed($enterdOneTimePassword, $currentDateTime)) {
+            throw new DomainException('ワンタイムパスワードが一致しません。');
+        }
+
         $this->definitiveRegistrationCompletedStatus = definitiveRegistrationCompletedStatus::Completed;
     }
 
-    public function updateUnsubscribed(): void
+    public function updateUnsubscribed(DateTimeImmutable $currentDateTime): void
     {
+        if (!$this->hasCompletedRegistration()) {
+            throw new DomainException('本登録済みのユーザーではありません。');
+        }
+
+        if (!$this->canLoggedIn($currentDateTime)) {
+            throw new DomainException('アカウントがロックされています。');
+        }
+
         $this->unsubscribeStatus = UnsubscribeStatus::Unsubscribed;
     }
 
