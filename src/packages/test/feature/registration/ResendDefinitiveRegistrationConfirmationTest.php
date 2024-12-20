@@ -9,7 +9,7 @@ use packages\test\helpers\definitiveRegistrationConfirmation\DefinitiveRegistrat
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use Tests\TestCase;
 
-class ResendRegistrationConfirmationEmailControllerTest extends TestCase
+class ResendDefinitiveRegistrationConfirmationTest extends TestCase
 {
     private EloquentAuthenticationAccountRepository $eloquentAuthenticationAccountRepository;
     private EloquentDefinitiveRegistrationConfirmationRepository $eloquentDefinitiveRegistrationConfirmationRepository;
@@ -44,7 +44,7 @@ class ResendRegistrationConfirmationEmailControllerTest extends TestCase
 
         // when
         // 本登録確認メールを再送信する
-        $response = $this->post('/api//resendRegistrationConfirmationEmail', ['email' => $userEmail->value]);
+        $response = $this->post('/resend', ['email' => $userEmail->value]);
 
         // then
         $response->assertStatus(200);

@@ -21,7 +21,7 @@ Route::middleware(['api.version'])->group(function () {
 
     Route::post('/resendRegistrationConfirmationEmail', function (Request $request, ApiVersionResolver $resolver, Container $container) {
         $version = $request->attributes->get('api_version');
-        $controller = $resolver->resolve($version, 'authentication\resendRegistrationConfirmationEmail\ResendRegistrationConfirmationEmailController');
+        $controller = $resolver->resolve($version, 'authentication\resendRegistrationConfirmationEmail\ResendDefinitiveRegistrationConfirmation');
 
         return $container->call([$controller, 'resendRegistrationConfirmationEmail']);
     });

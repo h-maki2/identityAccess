@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\authentication\resendRegistrationConfirmationEmail;
+namespace App\Http\Controllers\Web\registration;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -11,7 +11,7 @@ use packages\adapter\presenter\registration\resendDefinitiveRegistrationConfirma
 use packages\adapter\view\registration\resendDefinitiveRegistrationConfirmation\BladeResendDefinitiveRegistrationConfirmationView;
 use packages\application\registration\resendDefinitiveRegistrationConfirmation\ResendDefinitiveRegistrationConfirmationInputBoundary;
 
-class ResendRegistrationConfirmationEmailController extends Controller
+class ResendDefinitiveRegistrationConfirmation extends Controller
 {
     public function resendDefinitiveRegistrationConfirmationForm()
     {
