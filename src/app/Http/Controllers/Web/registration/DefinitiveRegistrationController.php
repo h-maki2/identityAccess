@@ -12,7 +12,7 @@ class DefinitiveRegistrationController extends Controller
 {
     public function definitiveRegistrationCompletedForm(Request $request)
     {
-        return view('registration.definitiveRegistration.DefinitiveRegistrationCompletedForm', [
+        return view('registration.definitiveRegistration.definitiveRegistrationCompletedForm', [
             'oneTimeToken' => $request->query('token', ''),
         ]);
     }

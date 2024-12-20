@@ -24,7 +24,7 @@ class BladeDefinitiveRegistrationView
 
     public function successResponse()
     {
-        return view('registration.definitiveRegistration.DefinitiveRegistrationCompleted');
+        return view('registration.definitiveRegistration.definitiveRegistrationCompleted');
     }
 
     public function faildResponse()

@@ -13,7 +13,7 @@ class ProvisionalRegistrationController extends Controller
 {
     public function userRegisterForm(): View
     {
-        return view('registration.provisionalRegistration.ProvisionalRegistrationForm');
+        return view('registration.provisionalRegistration.provisionalRegistrationForm');
     }
 
     public function userRegister(

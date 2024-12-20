@@ -5,8 +5,8 @@ use App\Http\Controllers\Web\registration\DefinitiveRegistrationController;
 use App\Http\Controllers\Web\registration\ProvisionalRegistrationController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/register', [ProvisionalRegistrationController::class, 'userRegisterForm']);
-Route::post('/register', [ProvisionalRegistrationController::class, 'userRegister']);
+Route::get('/provisionalRegister', [ProvisionalRegistrationController::class, 'userRegisterForm']);
+Route::post('/provisionalRegister', [ProvisionalRegistrationController::class, 'userRegister']);
 
 Route::get('/definitiveRegister', [DefinitiveRegistrationController::class, 'definitiveRegistrationCompletedForm']);
 Route::post('/definitiveRegister', [DefinitiveRegistrationController::class, 'definitiveRegistrationCompleted']);
