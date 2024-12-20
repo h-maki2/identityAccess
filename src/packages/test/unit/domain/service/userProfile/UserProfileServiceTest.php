@@ -34,7 +34,7 @@ class UserProfileServiceTest extends TestCase
         $userId = $this->authenticationAccountRepository->nextUserId();
         $this->authenticationAccountTestDataCreator->create(id: $userId);
 
-        // ユーザープロフィールを作成して保存する
+        // 認証アカウントを作成して保存する
         $userName = new UserName('test user');
         $this->userProfileTestDataCreator->create(userId: $userId, userName: $userName);
 

@@ -111,7 +111,10 @@ class AuthenticationAccount
         return $this->unsubscribeStatus;
     }
 
-    public function updateVerified(
+    /**
+     * 本登録確認済みに更新する
+     */
+    public function updateDefinitiveRegistrationCompleted(
         DefinitiveRegistrationConfirmation $definitiveRegistrationConfirmation,
         OneTimePassword $enterdOneTimePassword,
         DateTimeImmutable $currentDateTime

@@ -64,7 +64,7 @@ class EloquentUserProfileRepository implements IUserProfileRepository
         $eloquentUserProfile = EloquentUserProfile::find($id->value);
 
         if ($eloquentUserProfile === null) {
-            throw new RuntimeException('ユーザープロフィールが存在しません。user_profile_id: ' . $id->value);
+            throw new RuntimeException('認証アカウントが存在しません。user_profile_id: ' . $id->value);
         }
 
         $eloquentUserProfile->delete();

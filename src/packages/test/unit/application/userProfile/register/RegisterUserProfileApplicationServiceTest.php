@@ -35,7 +35,7 @@ class RegisterUserProfileApplicationServiceTest extends TestCase
         );
     }
 
-    public function test_ユーザープロフィールの登録が完了する()
+    public function test_認証アカウントの登録が完了する()
     {
         // given
         $userNameString = 'test_user_name';
@@ -45,7 +45,7 @@ class RegisterUserProfileApplicationServiceTest extends TestCase
         $result = $this->registerUserProfileApplicationService->register($userNameString, $selfIntroductionTextString);
 
         // then
-        // ユーザープロフィールが登録されていることを確認
+        // 認証アカウントが登録されていることを確認
         $userName = new UserName($userNameString);
         $actualUserProfile = $this->userProfileRepository->findByUserName($userName);
         $this->assertEquals($selfIntroductionTextString, $actualUserProfile->selfIntroductionText()->value);
@@ -55,7 +55,7 @@ class RegisterUserProfileApplicationServiceTest extends TestCase
         $this->assertEmpty($result->validationErrorMessageList);
     }
 
-    public function test_ユーザープロフィール登録の際にバリデーションエラーが発生する()
+    public function test_認証アカウント登録の際にバリデーションエラーが発生する()
     {
         // given
         // ユーザー名が空文字列の場合

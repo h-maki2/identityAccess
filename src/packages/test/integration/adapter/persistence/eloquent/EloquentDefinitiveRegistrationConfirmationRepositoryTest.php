@@ -42,7 +42,7 @@ class EloquentDefinitiveRegistrationConfirmationRepositoryTest extends TestCase
         );
 
         // 本登録確認情報を作成する
-        $definitiveRegistrationConfirmation = TestDefinitiveRegistrationConfirmationFactory::createDefinitiveRegistrationConfirmation(
+        $definitiveRegistrationConfirmation = TestDefinitiveRegistrationConfirmationFactory::create(
             userId: $userId
         );
 

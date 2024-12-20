@@ -62,7 +62,7 @@ class InMemoryUserProfileRepository implements IUserProfileRepository
     {
         $userProfile = $this->userProfiles[$userProfile->profileId()->value] ?? null;
         if ($userProfile === null) {
-            throw new RuntimeException('削除対象のユーザープロフィールが存在しません。');
+            throw new RuntimeException('削除対象の認証アカウントが存在しません。');
         }
         unset($this->userProfiles[$userProfile->profileId()->value]);
     }

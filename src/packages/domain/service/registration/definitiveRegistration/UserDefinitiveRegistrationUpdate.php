@@ -43,7 +43,7 @@ class UserDefinitiveRegistrationUpdate
         $definitiveRegistrationConfirmation = $this->definitiveRegistrationConfirmationRepository->findByTokenValue($oneTimeTokenValue);
 
         $authAccount = $this->authenticationAccountRepository->findById($definitiveRegistrationConfirmation->userId, UnsubscribeStatus::Subscribed);
-        $authAccount->updateVerified(
+        $authAccount->updateDefinitiveRegistrationCompleted(
             $definitiveRegistrationConfirmation,
             $oneTimePassword,
             new DateTimeImmutable()

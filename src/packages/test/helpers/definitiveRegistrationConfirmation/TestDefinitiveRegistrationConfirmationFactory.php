@@ -10,7 +10,7 @@ use packages\test\helpers\authenticationAccount\TestUserIdFactory;
 
 class TestDefinitiveRegistrationConfirmationFactory
 {
-    public static function createDefinitiveRegistrationConfirmation(
+    public static function create(
         ?UserId $userId = null, 
         ?OneTimeToken $oneTimeToken = null, 
         ?OneTimePassword $oneTimePassword = null

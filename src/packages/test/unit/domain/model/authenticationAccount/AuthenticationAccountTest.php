@@ -13,9 +13,12 @@ use packages\domain\model\authenticationAccount\AuthenticationAccount;
 use packages\domain\model\authenticationAccount\LoginRestrictionStatus;
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedStatus;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimePassword;
+use packages\domain\model\definitiveRegistrationConfirmation\OneTimeToken;
 use packages\domain\service\authenticationAccount\AuthenticationAccountService;
 use packages\test\helpers\authenticationAccount\TestAuthenticationAccountFactory;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
+use packages\test\helpers\definitiveRegistrationConfirmation\TestDefinitiveRegistrationConfirmationFactory;
 use PHPUnit\Framework\TestCase;
 
 class AuthenticationAccountTest extends TestCase
@@ -27,7 +30,7 @@ class AuthenticationAccountTest extends TestCase
         $this->authenticationAccountRepository = new InMemoryAuthenticationAccountRepository();
     }
 
-    public function test_重複したメールアドレスを持つユーザーが存在しない場合、ユーザープロフィールを初期化できる()
+    public function test_重複したメールアドレスを持つユーザーが存在しない場合、認証アカウントを初期化できる()
     {
         // given
         // user@example.comのアドレスを持つユーザーをあらかじめ作成しておく
@@ -60,7 +63,7 @@ class AuthenticationAccountTest extends TestCase
         $this->assertEquals($password, $authenticationAccount->password());
     }
 
-    public function test_重複したメールアドレスを持つユーザーが既に存在する場合、ユーザープロフィールを初期化できない()
+    public function test_重複したメールアドレスを持つユーザーが既に存在する場合、認証アカウントを初期化できない()
     {
         // given
         // user@example.comのアドレスを持つユーザーをあらかじめ作成しておく
@@ -85,7 +88,7 @@ class AuthenticationAccountTest extends TestCase
         );
     }
 
-    public function test_ユーザープロフィールを再構築できる()
+    public function test_認証アカウントを再構築できる()
     {
         // given
         $email = new UserEmail('otheruser@example.com');
@@ -115,14 +118,21 @@ class AuthenticationAccountTest extends TestCase
     public function 認証ステータスを本登録済みに更新できる()
     {
         // given
-        // 本登録済みステータスが未認証のユーザープロフィールを作成
-        $DefinitiveRegistrationCompletedStatus = definitiveRegistrationCompletedStatus::Incomplete;
+        // 本登録済みステータスが未認証の認証アカウントを作成
+        $definitiveRegistrationCompletedStatus = definitiveRegistrationCompletedStatus::Incomplete;
         $authenticationAccount = TestAuthenticationAccountFactory::create(
-            definitiveRegistrationCompletedStatus: $DefinitiveRegistrationCompletedStatus
+            definitiveRegistrationCompletedStatus: $definitiveRegistrationCompletedStatus
+        );
+
+        // 認証アカウントに紐づく本登録確認情報を作成
+        $oneTimePassword = OneTimePassword::create();
+        $definitiveRegistrationConfirmation = TestDefinitiveRegistrationConfirmationFactory::create(
+            userId: $authenticationAccount->id(),
+            oneTimePassword: $oneTimePassword
         );
 
         // when
-        $authenticationAccount->updateVerified();
+        $authenticationAccount->updateDefinitiveRegistrationCompleted($definitiveRegistrationConfirmation, $oneTimePassword, new DateTimeImmutable());
 
         // then
         $this->assertEquals(definitiveRegistrationCompletedStatus::Completed, $authenticationAccount->definitiveRegistrationCompletedStatus());
@@ -131,7 +141,7 @@ class AuthenticationAccountTest extends TestCase
     public function test_認証ステータスが本登録済みの場合、パスワードの変更が行える()
     {
         // given
-        // 本登録済みステータスが本登録済みのユーザープロフィールを作成
+        // 本登録済みステータスが本登録済みの認証アカウントを作成
         $DefinitiveRegistrationCompletedStatus = definitiveRegistrationCompletedStatus::Completed;
         $password = UserPassword::create('124abcABC!');
         $authenticationAccount = TestAuthenticationAccountFactory::create(
@@ -167,7 +177,7 @@ class AuthenticationAccountTest extends TestCase
     public function test_アカウントがロックされている場合、パスワードの変更が行えない()
     {
         // given
-        // アカウントがロックされているユーザープロフィールを作成
+        // アカウントがロックされている認証アカウントを作成
         $DefinitiveRegistrationCompletedStatus = definitiveRegistrationCompletedStatus::Completed;
         $password = UserPassword::create('124abcABC!');
         $loginRestriction = LoginRestriction::reconstruct(

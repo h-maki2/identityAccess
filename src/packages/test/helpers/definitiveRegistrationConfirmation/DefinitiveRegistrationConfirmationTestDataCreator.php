@@ -38,7 +38,7 @@ class DefinitiveRegistrationConfirmationTestDataCreator
             throw new \RuntimeException('認証アカウントを事前に作成してください。');
         }
         $oneTimeToken = TestOneTimeTokenFactory::createOneTimeToken($oneTimeTokenValue, $oneTimeTokenExpiration);
-        $definitiveRegistrationConfirmation = TestDefinitiveRegistrationConfirmationFactory::createDefinitiveRegistrationConfirmation($userId, $oneTimeToken, $oneTimePassword);
+        $definitiveRegistrationConfirmation = TestDefinitiveRegistrationConfirmationFactory::create($userId, $oneTimeToken, $oneTimePassword);
         $this->definitiveRegistrationConfirmationRepository->save($definitiveRegistrationConfirmation);
         return $definitiveRegistrationConfirmation;
     }

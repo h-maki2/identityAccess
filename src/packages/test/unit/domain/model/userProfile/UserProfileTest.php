@@ -27,7 +27,7 @@ class UserProfileTest extends TestCase
         $this->userProfileService = new UserProfileService($this->userProfileRepository);
     }
 
-    public function test_ユーサー名が既に登録されていない場合にユーザープロフィールを作成できる()
+    public function test_ユーサー名が既に登録されていない場合に認証アカウントを作成できる()
     {
         // given
         // 認証アカウントを作成して保存しておく
@@ -37,7 +37,7 @@ class UserProfileTest extends TestCase
         $profileId = $this->userProfileRepository->nextUserProfileId();
         $userName = new UserName('user_name');
         $selfIntroductionText = new SelfIntroductionText('self_introduction_text');
-        // ユーザープロフィールを作成する
+        // 認証アカウントを作成する
         $userProfile = UserProfile::create(
             $authInfo->id(),
             $profileId,
@@ -54,20 +54,20 @@ class UserProfileTest extends TestCase
         $this->assertEquals($selfIntroductionText, $userProfile->selfIntroductionText());
     }
 
-    public function test_既に登録されているユーザー名でユーザープロフィールを作成すると例外が発生する()
+    public function test_既に登録されているユーザー名で認証アカウントを作成すると例外が発生する()
     {
         // given
         // 認証アカウントを作成して保存しておく
         $authInfo = $this->authenticationAccountTestDataCreator->create();
 
-        // ユーザープロフィールを作成して保存する
+        // 認証アカウントを作成して保存する
         $userName = new UserName('user_name');
         $this->userProfileTestDataCreator->create(userId: $authInfo->id(), userName: $userName);
 
         // when・then
         $profileId = $this->userProfileRepository->nextUserProfileId();
         $selfIntroductionText = new SelfIntroductionText('self_introduction_text');
-        // 既に登録されているユーザー名でユーザープロフィールを作成すると例外が発生することを確認する
+        // 既に登録されているユーザー名で認証アカウントを作成すると例外が発生することを確認する
         $this->expectException(DomainException::class);
         UserProfile::create(
             $authInfo->id(),
@@ -84,7 +84,7 @@ class UserProfileTest extends TestCase
         // 認証アカウントを作成して保存しておく
         $authInfo = $this->authenticationAccountTestDataCreator->create();
 
-        // ユーザープロフィールを作成して保存する
+        // 認証アカウントを作成して保存する
         $selfIntroductionText = new SelfIntroductionText('自己紹介文');
         $userProfile = $this->userProfileTestDataCreator->create(userId: $authInfo->id(), selfIntroductionText: $selfIntroductionText);
 
@@ -104,7 +104,7 @@ class UserProfileTest extends TestCase
         // 認証アカウントを作成して保存しておく
         $authInfo = $this->authenticationAccountTestDataCreator->create();
 
-        // ユーザープロフィールを作成して保存する
+        // 認証アカウントを作成して保存する
         $userName = new UserName('user_name');
         $userProfile = $this->userProfileTestDataCreator->create(userId: $authInfo->id(), userName: $userName);
 
@@ -125,7 +125,7 @@ class UserProfileTest extends TestCase
         // 認証アカウントを作成して保存しておく
         $authInfo = $this->authenticationAccountTestDataCreator->create();
 
-        // ユーザープロフィールを作成して保存する
+        // 認証アカウントを作成して保存する
         $userName = new UserName('user_name');
         $userProfile = $this->userProfileTestDataCreator->create(userId: $authInfo->id(), userName: $userName);
 
