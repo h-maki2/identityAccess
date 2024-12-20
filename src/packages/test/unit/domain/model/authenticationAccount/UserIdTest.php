@@ -61,4 +61,31 @@ class UserIdTest extends TestCase
         $this->expectExceptionMessage('適切な形式になっていません。');
         new UserId($userIdString);
     }
+
+    public function test_UserId同士が等しいかどうかを判定できる()
+    {
+        // given
+        $userIdString = '0188b2a6-bd94-7ccf-9666-1df7e26ac6b8';
+        $userId = new UserId($userIdString);
+        $otherUserId = new UserId($userIdString);
+
+        // when
+        $result = $userId->euqals($otherUserId);
+
+        // then
+        $this->assertTrue($result);
+    }
+
+    public function test_UserId同士が等しくない場合を判定できる()
+    {
+        // given
+        $userId = new UserId('0188b2a6-bd94-7ccf-9666-1df7e26ac6b8');
+        $otherUserId = new UserId('0188b2a6-bd94-7ccf-9666-1df7e26ac6b9');
+
+        // when
+        $result = $userId->euqals($otherUserId);
+
+        // then
+        $this->assertFalse($result);
+    }
 }

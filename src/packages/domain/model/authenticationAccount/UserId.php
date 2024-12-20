@@ -21,4 +21,9 @@ class UserId
 
         $this->value = $value;
     }
+
+    public function euqals(UserId $userId): bool
+    {
+        return $this->value === $userId->value;
+    }
 }
