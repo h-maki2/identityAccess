@@ -29,8 +29,7 @@ class BladeResendDefinitiveRegistrationConfirmationView
 
     private function faildResponse()
     {
-        return redirect()
-                ->back()
+        return redirect('/resend')
                 ->withErrors($this->presenter->responseData())
                 ->withInput();
     }

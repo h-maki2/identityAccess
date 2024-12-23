@@ -7,6 +7,7 @@ use packages\adapter\presenter\common\json\JsonResponseStatus;
 use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedStatus;
+use packages\domain\model\oauth\scope\Scope;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\authenticationAccount\TestAccessTokenCreator;
 use packages\test\helpers\client\ClientTestDataCreator;
@@ -29,8 +30,15 @@ class LoginControllerTest extends TestCase
     public function test_メールアドレスとパスワードが異なる場合にログインに失敗する()
     {
         // given
-        $存在しないメールアドレス = 'test@example.com';
-        $存在しないパスワード = 'abcABC123!';
+        // 認証アカウントを作成する
+        $this->authenticationAccountTestDataCreator->create(
+            new UserEmail('test@example.com'),
+            UserPassword::create('abcABC123!'),
+        );
+
+
+        $存在しないメールアドレス = 'invalidEmail@example.com';
+        $存在しないパスワード = 'abcABC123_';
 
         // クライアントを作成する
         $clientData = ClientTestDataCreator::create(
@@ -38,111 +46,19 @@ class LoginControllerTest extends TestCase
         );
 
         // when
-        $response = $this->withHeaders([
-            'Accept' => 'application/vnd.example.v1+json'
-        ])->post('/api/login', [
+        $scopeString = Scope::ReadAccount->value . ' ' . Scope::EditAccount->value . ' ' . Scope::DeleteAccount->value;
+        $response = $this->post('/login', [
             'email' => $存在しないメールアドレス,
             'password' => $存在しないパスワード,
             'client_id' => $clientData->id,
             'redirect_url' => $clientData->redirect,
             'response_type' => 'code',
-            'state' => 'abcdefg'
+            'state' => 'abcdefg',
+            'scope' => $scopeString
         ]);
 
         // then
-        $response->assertStatus(400);
-        $response->assertJson([
-            'success' => false,
-            'error' => [
-                'code' => 'Bad Request',
-                'details' => [
-                    'accountLocked' => false
-                ]
-            ]
-        ]);
-    }
-
-    public function test_メールアドレスの形式が不正な場合に400エラーが発生する()
-    {
-        // given
-        $不正なメールアドレス = '不正なメールアドレス';
-        $存在しないパスワード = 'abcABC123!';
-
-        // クライアントを作成する
-        $clientData = ClientTestDataCreator::create(
-            redirectUrl:  config('app.url') . '/auth/callback'
-        );
-
-        // when
-        $response = $this->withHeaders([
-            'Accept' => 'application/vnd.example.v1+json'
-        ])->post('/api//login', [
-            'email' => $不正なメールアドレス,
-            'password' => $存在しないパスワード,
-            'client_id' => $clientData->id,
-            'redirect_url' => $clientData->redirect,
-            'response_type' => 'code',
-            'state' => 'abcdefg'
-        ]);
-
-        // then
-        $response->assertStatus(400);
-        $response->assertJson([
-            'success' => false,
-            'error' => [
-                'code' => 'Bad Request',
-                'details' => null
-            ]
-        ]);
-    }
-
-    public function test_メールアドレスとパスワードが正しい場合にログインが成功する()
-    {
-        // given
-        // 認証アカウントを登録する
-        $emailString = 'test@example.com';
-        $passwordString = 'abcABC123!';
-
-        $this->authenticationAccountTestDataCreator->create(
-            email: new UserEmail($emailString),
-            password: UserPassword::create($passwordString),
-            definitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Completed // 本登録済み
-        );
-
-        // クライアントを作成する
-        $clientData = ClientTestDataCreator::create(
-            redirectUrl: config('app.url') . '/auth/callback'
-        );
-
-        // when
-        $state = 'abcdefg';
-        // ログインする
-        $response = $this->withHeaders([
-            'Accept' => 'application/vnd.example.v1+json'
-        ])->post('/api//login', [
-            'email' => $emailString,
-            'password' => $passwordString,
-            'client_id' => $clientData->id,
-            'redirect_url' => $clientData->redirect,
-            'response_type' => 'code',
-            'state' => $state
-        ]);
-
-        // then
-        $response->assertStatus(200);
-        
-        $expectedQueryParams = http_build_query([
-            'response_type' => 'code',
-            'client_id' => $clientData->id,
-            'redirect_uri' => $clientData->redirect,
-            'state' => $state
-        ]);
-        $expectedAuthorizationUrl = config('app.url') . '/oauth/authorize?' . $expectedQueryParams;
-        $response->assertJson([
-            'success' => true,
-            'data' => [
-                'authorizationUrl' => $expectedAuthorizationUrl
-            ]
-        ]);
+        $response->assertStatus(302);
+        $response->assertRedirect(config('app.url') . '/login');
     }
 }

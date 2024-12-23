@@ -29,8 +29,7 @@ class BladeLoginView
 
     private function faildResponse()
     {
-        return redirect()
-                ->back()
+        return redirect('/login')
                 ->withErrors($this->presenter->faildResponse())
                 ->withInput();
     }
