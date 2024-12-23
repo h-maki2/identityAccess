@@ -38,6 +38,14 @@ abstract class AClientData
     }
 
     /**
+     * リダイレクトURIが入力されたリダイレクトURIと一致しているか判定する
+     */
+    public function hasRedirectUrlEntered(RedirectUrl $enteredRedirectUrl): bool
+    {
+        return $this->redirectUrl->equals($enteredRedirectUrl);
+    }
+
+    /**
      * 認可コード取得URLを作成する
      * レスポンスタイプとリダイレクトURLが正しくない場合は例外を投げる
      */
@@ -64,14 +72,6 @@ abstract class AClientData
             'state' => $state,
             'scope' => $scopeList->stringValue()
         ]);
-    }
-
-    /**
-     * リダイレクトURIが入力されたリダイレクトURIと一致しているか判定する
-     */
-    protected function hasRedirectUrlEntered(RedirectUrl $enteredRedirectUrl): bool
-    {
-        return $this->redirectUrl->equals($enteredRedirectUrl);
     }
 
     abstract protected function baseUrl(): string;
