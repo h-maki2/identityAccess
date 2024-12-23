@@ -26,7 +26,7 @@ class AuthenticationAccountTestDataCreator
         ?UserPassword $password = null,
         ?DefinitiveRegistrationCompletedStatus $definitiveRegistrationCompletedStatus = null,
         ?UserId $id = null,
-        ?LoginRestriction $LoginRestriction = null,
+        ?LoginRestriction $loginRestriction = null,
         ?UnsubscribeStatus $unsubscribeStatus = null
     ): AuthenticationAccount
     {
@@ -35,7 +35,7 @@ class AuthenticationAccountTestDataCreator
             $password,
             $definitiveRegistrationCompletedStatus,
             $id,
-            $LoginRestriction,
+            $loginRestriction,
             $unsubscribeStatus
         );
 

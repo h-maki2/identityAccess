@@ -13,6 +13,7 @@ use packages\domain\model\authenticationAccount\UserEmail;
 use packages\domain\model\authenticationAccount\UserId;
 use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedStatus;
+use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\oauth\client\IClientFetcher;
 use packages\domain\model\oauth\client\RedirectUrl;
 use packages\domain\model\oauth\scope\Scope;
@@ -430,5 +431,96 @@ class LoginApplicationServiceTest extends TestCase
         $this->assertNotNull($authenticationAccount->loginRestriction()->nextLoginAllowedAt());
         $this->assertEquals(10, $authenticationAccount->loginRestriction()->failedLoginCount());
         $this->assertTrue($result->accountLocked);
+    }
+
+    public function test_本登録済みではない場合は、正しいメールアドレスとパスワードを入力してもログインできない()
+    {
+        // given
+        // 本登録済みではない認証アカウントを作成する
+        $email = new UserEmail('test@example.com');
+        $password = UserPassword::create('ABCabc123_');
+        // ログイン制限はされていない
+        $loginRestriction = LoginRestriction::initialization();
+        $this->authenticationAccountTestDataCreator->create(
+            email: $email,
+            password: $password,
+            definitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Incomplete, // 本登録済みではない
+            loginRestriction: $loginRestriction
+        );
+
+        // when
+        $enterdEmail = 'test@example.com';
+        $enterdPassword = 'ABCabc123_';
+        $clientId = '1';
+        $responseType = 'code';
+        $state = 'abcdefg';
+        $scopeString = Scope::ReadAccount->value . ' ' . Scope::EditAccount->value . ' ' . Scope::DeleteAccount->value;
+
+        $loginApplicationService = new LoginApplicationService(
+            $this->authenticationAccountRepository,
+            $this->authenticationService,
+            $this->clientFetcher,
+        );
+
+        $result = $loginApplicationService->login(
+            $enterdEmail, 
+            $enterdPassword, 
+            $clientId,
+            self::REDIRECT_URL,
+            $responseType,
+            $state,
+            $scopeString
+        );
+
+        // then
+        // ログインが失敗していることを確認する
+        $this->assertFalse($result->loginSucceeded);
+        $this->assertEmpty($result->authorizationUrl);
+    }
+
+    public function test_退会済みの場合はログインに失敗する()
+    {
+        // given
+        // 退会済みの認証アカウントを作成する
+        $email = new UserEmail('test@example.com');
+        $password = UserPassword::create('ABCabc123_');
+        // ログイン制限はされていない
+        $loginRestriction = LoginRestriction::initialization();
+        $this->authenticationAccountTestDataCreator->create(
+            email: $email,
+            password: $password,
+            definitiveRegistrationCompletedStatus: DefinitiveRegistrationCompletedStatus::Completed,
+            loginRestriction: $loginRestriction,
+            unsubscribeStatus: UnsubscribeStatus::Unsubscribed // 退会済み
+        );
+
+        // when
+        $enterdEmail = 'test@example.com';
+        $enterdPassword = 'ABCabc123_';
+        $clientId = '1';
+        $responseType = 'code';
+        $state = 'abcdefg';
+        $scopeString = Scope::ReadAccount->value . ' ' . Scope::EditAccount->value . ' ' . Scope::DeleteAccount->value;
+
+        $loginApplicationService = new LoginApplicationService(
+            $this->authenticationAccountRepository,
+            $this->authenticationService,
+            $this->clientFetcher,
+        );
+
+        $result = $loginApplicationService->login(
+            $enterdEmail, 
+            $enterdPassword, 
+            $clientId,
+            self::REDIRECT_URL,
+            $responseType,
+            $state,
+            $scopeString
+        );
+
+        // then
+        // ログインが失敗していることを確認する
+        $this->assertFalse($result->loginSucceeded);
+        $this->assertEmpty($result->authorizationUrl);
     }
 }
