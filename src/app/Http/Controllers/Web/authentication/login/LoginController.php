@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\authentication\login;
+namespace App\Http\Controllers\Web\authentication\login;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -12,16 +12,14 @@ use packages\application\authentication\login\LoginInputBoundary;
 
 class LoginController extends Controller
 {
-    private LoginInputBoundary $loginInputBoundary;
-
-    public function __construct(LoginInputBoundary $loginInputBoundary)
+    public function displayLoginForm()
     {
-        $this->loginInputBoundary = $loginInputBoundary;
+        return view('authentication.login');
     }
 
-    public function login(Request $request)
+    public function login(Request $request, LoginInputBoundary $loginInputBoundary)
     {
-        $result = $this->loginInputBoundary->login(
+        $result = $loginInputBoundary->login(
             $request->input('email', ''),
             $request->input('password', ''),
             $request->input('client_id', ''),

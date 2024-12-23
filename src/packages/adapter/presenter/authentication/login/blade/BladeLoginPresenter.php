@@ -28,6 +28,7 @@ class BladeLoginPresenter
     public function faildResponse(): array
     {
         return [
+            'loginFaild' => true,
             'accountLocked' => $this->result->accountLocked
         ];
     }
