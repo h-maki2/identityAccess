@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api\V1\authentication\login;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use packages\adapter\presenter\authentication\login\blade\BladeLoginPresenter;
 use packages\adapter\presenter\authentication\login\json\JsonLoginPresenter;
+use packages\adapter\view\authentication\login\blade\BladeLoginView;
 use packages\application\authentication\login\LoginInputBoundary;
 
 class LoginController extends Controller
@@ -17,9 +19,9 @@ class LoginController extends Controller
         $this->loginInputBoundary = $loginInputBoundary;
     }
 
-    public function login(Request $request): JsonResponse
+    public function login(Request $request)
     {
-        $output = $this->loginInputBoundary->login(
+        $result = $this->loginInputBoundary->login(
             $request->input('email', ''),
             $request->input('password', ''),
             $request->input('client_id', ''),
@@ -29,8 +31,8 @@ class LoginController extends Controller
             $request->input('scope', '')
         );
 
-        $presenter = new JsonLoginPresenter($output);
-        $jsonResponseData = $presenter->jsonResponseData();
-        return response()->json($jsonResponseData->value, $jsonResponseData->httpStatusCode());
+        $presenter = new BladeLoginPresenter($result);
+        $view = new BladeLoginView($presenter);
+        return $view->response();
     }
 }
