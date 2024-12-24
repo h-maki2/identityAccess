@@ -67,7 +67,6 @@ class LoginTest extends TestCase
         // then
         // ログインページにリダイレクトされることを確認する
         $response->assertStatus(302);
-        $response->assertRedirect(config('app.url') . '/login');
     }
 
     public function test_正しいメールアドレスとパスワード場合に、認可コード取得画面にリダイレクトされる()

@@ -16,8 +16,8 @@
             <p style="color: red;">アカウントがロックされています。<br>少し時間を空けてお試しください。</p>
         @endif
         <div><input type="text" name="email" placeholder="メールアドレス" value="{{ old('email', '') }}"></div>
-        <div><input type="password" name="password" placeholder="パスワード" value="{{ old('password', '') }}"><div>
-        <input type="hidden" name="client_id" value="{{ old('client_id', $cleintId) }}">
+        <div><input type="password" name="password" placeholder="パスワード" value="{{ old('password', '') }}"></div>
+        <input type="hidden" name="client_id" value="{{ old('client_id', $clientId) }}">
         <input type="hidden" name="redirect_url" value="{{ old('redirect_url', $redirectUrl) }}">
         <input type="hidden" name="response_type" value="{{ old('response_type', $responseType) }}">
         <input type="hidden" name="state" value="{{ old('state', $state) }}">

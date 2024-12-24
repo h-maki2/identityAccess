@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use packages\domain\model\oauth\client\IClientFetcher;
 use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
 use packages\domain\model\authenticationAccount\UserEmail;
+use packages\domain\model\authenticationAccount\validation\UserEmailFormatChecker;
 use packages\domain\model\oauth\client\ClientId;
 use packages\domain\model\oauth\client\RedirectUrl;
 use packages\domain\model\oauth\scope\ScopeList;
@@ -39,6 +40,11 @@ class LoginApplicationService implements LoginInputBoundary
         string $scopes
     ): LoginResult
     {
+        $emailFormatChecker = new UserEmailFormatChecker();
+        if (!$emailFormatChecker->validate($inputedEmail)) {
+            return LoginResult::createWhenLoginFailed(false);
+        }
+
         $email = new UserEmail($inputedEmail);
         $authenticationAccount = $this->authenticationAccountRepository->findByEmail($email);
 

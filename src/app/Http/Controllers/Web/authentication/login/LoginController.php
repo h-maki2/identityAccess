@@ -34,13 +34,13 @@ class LoginController extends Controller
     public function login(Request $request, LoginInputBoundary $loginInputBoundary)
     {
         $result = $loginInputBoundary->login(
-            $request->input('email', ''),
-            $request->input('password', ''),
-            $request->input('client_id', ''),
-            $request->input('redirect_url', ''),
-            $request->input('response_type', ''),
-            $request->input('state', ''),
-            $request->input('scope', '')
+            $request->input('email') ?? '',
+            $request->input('password') ?? '',
+            $request->input('client_id') ?? '',
+            $request->input('redirect_url') ?? '',
+            $request->input('response_type') ?? '',
+            $request->input('state') ?? '',
+            $request->input('scope') ?? ''
         );
 
         $presenter = new BladeLoginPresenter($result);
