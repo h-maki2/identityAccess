@@ -18,11 +18,9 @@ class BladeLoginPresenter
         return $this->result->loginSucceeded;
     }
     
-    public function successResponse(): array
+    public function successResponse(): String
     {
-        return [
-            'authorizationUrl' => $this->result->authorizationUrl
-        ];
+        return $this->result->authorizationUrl;
     }
 
     public function faildResponse(): array

@@ -24,7 +24,7 @@ class BladeLoginView
 
     private function successResponse()
     {
-        return redirect($this->presenter->successResponse()['authorizationUrl']);
+        return redirect($this->presenter->successResponse());
     }
 
     private function faildResponse()

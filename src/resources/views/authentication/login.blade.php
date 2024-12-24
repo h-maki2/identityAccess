@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>ログイン</h1>
-    <form action="/definitiveRegister" method="post">
+    <form action="/login" method="post">
         @csrf
         @if ($errors->has('loginFaild'))
             <p style="color: red;">メールアドレスかパスワードが異なります。</p>
@@ -16,7 +16,12 @@
             <p style="color: red;">アカウントがロックされています。<br>少し時間を空けてお試しください。</p>
         @endif
         <div><input type="text" name="email" placeholder="メールアドレス" value="{{ old('email', '') }}"></div>
-        <input type="password" name="password" placeholder="パスワード" value="{{ old('password', '') }}">
+        <div><input type="password" name="password" placeholder="パスワード" value="{{ old('password', '') }}"><div>
+        <input type="hidden" name="client_id" value="{{ old('client_id', $cleintId) }}">
+        <input type="hidden" name="redirect_url" value="{{ old('redirect_url', $redirectUrl) }}">
+        <input type="hidden" name="response_type" value="{{ old('response_type', $responseType) }}">
+        <input type="hidden" name="state" value="{{ old('state', $state) }}">
+        <input type="hidden" name="scope" value="{{ old('scope', $scopes) }}">
         <div><input type="submit" value="ログイン"></div>
     </form>
 </body>

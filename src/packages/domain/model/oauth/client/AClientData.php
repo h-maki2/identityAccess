@@ -47,7 +47,6 @@ abstract class AClientData
 
     /**
      * 認可コード取得URLを作成する
-     * レスポンスタイプとリダイレクトURLが正しくない場合は例外を投げる
      */
     public function urlForObtainingAuthorizationCode(
         RedirectUrl $enteredRedirectUrl,

@@ -8,13 +8,27 @@ use Illuminate\Http\Request;
 use packages\adapter\presenter\authentication\login\blade\BladeLoginPresenter;
 use packages\adapter\presenter\authentication\login\json\JsonLoginPresenter;
 use packages\adapter\view\authentication\login\blade\BladeLoginView;
+use packages\application\authentication\displayLoginForm\DisplayLoginFormApplicationService;
 use packages\application\authentication\login\LoginInputBoundary;
 
 class LoginController extends Controller
 {
-    public function displayLoginForm()
+    public function displayLoginForm(Request $request, DisplayLoginFormApplicationService $displayLoginForm)
     {
-        return view('authentication.login');
+        $result = $displayLoginForm->handle(
+            $request->query('client_id', ''),
+            $request->query('redirect_url', ''),
+            $request->query('response_type', ''),
+            $request->query('state', ''),
+            $request->query('scope', '')
+        );
+        return view('authentication.login', [
+            'clientId' => $result->clientId,
+            'redirectUrl' => $result->redirectUrl,
+            'responseType' => $result->responseType,
+            'state' => $result->state,
+            'scopes' => $result->scopes
+        ]);
     }
 
     public function login(Request $request, LoginInputBoundary $loginInputBoundary)
