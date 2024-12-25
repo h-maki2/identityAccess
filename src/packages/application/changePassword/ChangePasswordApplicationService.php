@@ -19,7 +19,7 @@ use packages\domain\service\oauth\LoggedInUserIdFetcher;
 use packages\domain\service\oauth\ClientService;
 use RuntimeException;
 
-class ChangePasswordApplicationService
+class ChangePasswordApplicationService implements ChangePasswordApplicationInputBoundary
 {
     private IAuthenticationAccountRepository $authenticationAccountRepository;
     private LoggedInUserIdFetcher $loggedInUserIdFetcher;
