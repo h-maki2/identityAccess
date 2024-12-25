@@ -16,6 +16,7 @@ use packages\domain\model\authenticationAccount\DefinitiveRegistrationCompletedS
 use packages\domain\model\authenticationAccount\UnsubscribeStatus;
 use packages\domain\model\oauth\client\IClientFetcher;
 use packages\domain\model\oauth\client\RedirectUrl;
+use packages\domain\model\oauth\client\RedirectUrlList;
 use packages\domain\model\oauth\scope\Scope;
 use packages\domain\model\oauth\scope\ScopeList;
 use packages\domain\service\authenticationAccount\AuthenticationService;
@@ -53,7 +54,7 @@ class LoginApplicationServiceTest extends TestCase
 
         // fetchByIdメソッドが呼ばれた際に返すデータを設定する
         $this->expectedClientData = TestClientDataFactory::create(
-            redirectUri: new RedirectUrl(self::REDIRECT_URL)
+            redirectUriList: new RedirectUrlList(self::REDIRECT_URL)
         );
         $clientFetcher = $this->createMock(IClientFetcher::class);
         $clientFetcher->method('fetchById')->willReturn($this->expectedClientData);

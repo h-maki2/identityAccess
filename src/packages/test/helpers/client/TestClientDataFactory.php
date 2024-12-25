@@ -6,19 +6,20 @@ use packages\domain\model\oauth\client\ClientData;
 use packages\domain\model\oauth\client\ClientId;
 use packages\domain\model\oauth\client\ClientSecret;
 use packages\domain\model\oauth\client\RedirectUrl;
+use packages\domain\model\oauth\client\RedirectUrlList;
 
 class TestClientDataFactory
 {
     public static function create(
         ?ClientId $clientId = null,
         ?ClientSecret $clientSecret = null,
-        ?RedirectUrl $redirectUri = null
+        ?RedirectUrlList $redirectUriList = null
     ): ClientDataForTest
     {
         $clientId = $clientId ?? new ClientId('1');
         $clientSecret = $clientSecret ?? new ClientSecret('client_secret');
-        $redirectUri = $redirectUri ?? new RedirectUrl('http://localhost:8080/callback');
+        $redirectUriList = $redirectUriList ?? new RedirectUrlList('http://localhost:8080/callback');
 
-        return new ClientDataForTest($clientId, $clientSecret, $redirectUri);
+        return new ClientDataForTest($clientId, $clientSecret, $redirectUriList);
     }
 }
