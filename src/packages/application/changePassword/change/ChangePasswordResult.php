@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\application\changePassword;
+namespace packages\application\changePassword\change;
 
 class ChangePasswordResult
 {

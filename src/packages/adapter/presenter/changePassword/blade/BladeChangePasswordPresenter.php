@@ -2,7 +2,7 @@
 
 namespace packages\adapter\presenter\changePassword\blade;
 
-use packages\application\changePassword\ChangePasswordResult;
+use packages\application\changePassword\change\ChangePasswordResult;
 
 class BladeChangePasswordPresenter
 {
