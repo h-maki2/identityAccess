@@ -15,14 +15,15 @@ use packages\domain\model\oauth\scope\IScopeAuthorizationChecker;
 use packages\domain\model\oauth\scope\Scope;
 use packages\domain\model\oauth\scope\ScopeList;
 use packages\domain\service\authenticationAccount\AuthenticationService;
-use packages\domain\service\authenticationAccount\LoggedInUserIdFetcher;
+use packages\domain\service\oauth\LoggedInUserIdFetcher;
+use packages\domain\service\oauth\ClientService;
 use RuntimeException;
 
 class ChangePasswordApplicationService
 {
     private IAuthenticationAccountRepository $authenticationAccountRepository;
     private LoggedInUserIdFetcher $loggedInUserIdFetcher;
-    private IClientFetcher $clientFetcher;
+    private ClientService $clientService;
 
     public function __construct(
         IAuthenticationAccountRepository $authenticationAccountRepository,
@@ -32,7 +33,7 @@ class ChangePasswordApplicationService
     ) {
         $this->authenticationAccountRepository = $authenticationAccountRepository;
         $this->loggedInUserIdFetcher = new LoggedInUserIdFetcher($authenticationService, $scopeAuthorizationChecker);
-        $this->clientFetcher = $clientFetcher;
+        $this->clientService = new ClientService($clientFetcher);
     }
 
     public function changePassword(
@@ -45,7 +46,7 @@ class ChangePasswordApplicationService
         $scope = Scope::from($scopeString);
         $userId = $this->loggedInUserIdFetcher->fetch($scope);
 
-        if (!$this->isRedirectUrlCorrect(
+        if (!$this->clientService->isCorrectRedirectUrl(
             new ClientId($clientId),
             new RedirectUrl($redirectUrl)
         )) {
@@ -66,16 +67,8 @@ class ChangePasswordApplicationService
         $authAccount->changePassword($password, new DateTimeImmutable());
         $this->authenticationAccountRepository->save($authAccount);
 
+        // 後でメール送信する処理を追加する
+
         return ChangePasswordResult::createWhenSuccess($redirectUrl);
-    }
-
-    private function isRedirectUrlCorrect(ClientId $clienId, RedirectUrl $redirectUrl): bool
-    {
-        $client = $this->clientFetcher->fetchById($clienId);
-        if ($client === null) {
-            throw new RuntimeException('クライアントが見つかりません');
-        }
-
-        return $client->hasEntereRedirectUrl($redirectUrl);
     }
 }

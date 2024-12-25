@@ -6,7 +6,7 @@ use packages\domain\model\authenticationAccount\AuthenticationService;
 use packages\domain\model\oauth\scope\IScopeAuthorizationChecker;
 use packages\domain\model\oauth\scope\Scope;
 use packages\domain\model\userProfile\IUserProfileRepository;
-use packages\domain\service\authenticationAccount\LoggedInUserIdFetcher;
+use packages\domain\service\oauth\LoggedInUserIdFetcher;
 
 class FetchUserProfileApplicationService implements FetchUserProfileInputBoundary
 {

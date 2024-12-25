@@ -13,7 +13,7 @@ use packages\domain\model\userProfile\UserName;
 use packages\domain\model\userProfile\UserProfile;
 use packages\domain\model\userProfile\validation\SelfIntroductionTextValidation;
 use packages\domain\model\userProfile\validation\UserNameValidation;
-use packages\domain\service\authenticationAccount\LoggedInUserIdFetcher;
+use packages\domain\service\oauth\LoggedInUserIdFetcher;
 use packages\domain\service\userProfile\UserProfileService;
 use RuntimeException;
 
