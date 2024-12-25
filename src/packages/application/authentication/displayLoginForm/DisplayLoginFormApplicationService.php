@@ -33,7 +33,7 @@ class DisplayLoginFormApplicationService
             throw new UnexpectedValueException('クライアントが見つかりません。');
         }
         $redirectUrl = new RedirectUrl($redirectUrlString);
-        if (!$clientData->hasRedirectUrlEntered($redirectUrl)) {
+        if (!$clientData->hasEntereRedirectUrl($redirectUrl)) {
             throw new UnexpectedValueException('リダイレクトURIが一致しません。');
         }
 

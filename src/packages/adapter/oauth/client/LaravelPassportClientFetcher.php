@@ -7,7 +7,7 @@ use packages\domain\model\oauth\client\ClientId;
 use packages\domain\model\oauth\client\IClientFetcher;
 use App\Models\Client as EloquentClient;
 use packages\domain\model\oauth\client\ClientSecret;
-use packages\domain\model\oauth\client\RedirectUrl;
+use packages\domain\model\oauth\client\RedirectUrlList;
 
 class LaravelPassportClientFetcher implements IClientFetcher
 {
@@ -26,7 +26,7 @@ class LaravelPassportClientFetcher implements IClientFetcher
         return new ClientData(
             new ClientId($client->id),
             new ClientSecret($client->secret),
-            new RedirectUrl($client->redirect)
+            new RedirectUrlList($client->redirect)
         );
     }
 }

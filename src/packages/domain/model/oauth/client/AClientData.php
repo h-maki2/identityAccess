@@ -9,17 +9,17 @@ abstract class AClientData
 {
     private ClientId $clientId;
     private ClientSecret $clientSecret;
-    private RedirectUrl $redirectUrl;
+    private RedirectUrlList $redirectUrlList;
 
     public function __construct(
         ClientId $clientId,
         ClientSecret $clientSecret,
-        RedirectUrl $redirectUrl
+        RedirectUrlList $redirectUrlList
     )
     {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
-        $this->redirectUrl = $redirectUrl;
+        $this->redirectUrlList = $redirectUrlList;
     }
 
     public function clientId(): string
@@ -32,17 +32,12 @@ abstract class AClientData
         return $this->clientSecret->value;
     }
 
-    public function redirectUrl(): string
-    {
-        return $this->redirectUrl->value;
-    }
-
     /**
      * リダイレクトURIが入力されたリダイレクトURIと一致しているか判定する
      */
-    public function hasRedirectUrlEntered(RedirectUrl $enteredRedirectUrl): bool
+    public function hasEntereRedirectUrl(RedirectUrl $enteredRedirectUrl): bool
     {
-        return $this->redirectUrl->equals($enteredRedirectUrl);
+        return $this->redirectUrlList->contains($enteredRedirectUrl);
     }
 
     /**
@@ -55,19 +50,23 @@ abstract class AClientData
         ScopeList $scopeList
     ): string
     {
-        if (!$this->hasRedirectUrlEntered($enteredRedirectUrl)) {
+        if (!$this->hasEntereRedirectUrl($enteredRedirectUrl)) {
             throw new InvalidArgumentException('リダイレクトURIが一致しません。');
         }
 
-        return $this->baseUrl() . '/oauth/authorize?' . $this->queryParam($reponseType, $state, $scopeList);
+        return $this->baseUrl() . '/oauth/authorize?' . $this->queryParam($reponseType, $state, $scopeList, $enteredRedirectUrl);
     }
 
-    protected function queryParam(string $reponseType, string $state, ScopeList $scopeList): string
+    protected function queryParam(
+        string $reponseType, 
+        string $state, 
+        ScopeList $scopeList, 
+        RedirectUrl $enteredRedirectUrl): string
     {
         return http_build_query([
             'response_type' => $reponseType,
             'client_id' => $this->clientId->value,
-            'redirect_uri' => $this->redirectUrl->value,
+            'redirect_uri' => $enteredRedirectUrl->value,
             'state' => $state,
             'scope' => $scopeList->stringValue()
         ]);
