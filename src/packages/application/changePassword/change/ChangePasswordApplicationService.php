@@ -44,7 +44,7 @@ class ChangePasswordApplicationService implements ChangePasswordApplicationInput
     ): ChangePasswordResult
     {
         $scope = Scope::from($scopeString);
-        $userId = $this->loggedInUserIdFetcher->fetch($scope);
+        $userId = $this->loggedInUserIdFetcher->fetchFromAuthHeader($scope);
 
         if (!$this->clientService->isCorrectRedirectUrl(
             new ClientId($clientId),

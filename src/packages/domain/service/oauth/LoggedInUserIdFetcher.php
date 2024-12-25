@@ -25,7 +25,7 @@ class LoggedInUserIdFetcher
         $this->scopeAuthorizationChecker = $scopeAuthorizationChecker;
     }
 
-    public function fetch(Scope $scope): UserId
+    public function fetchFromAuthHeader(Scope $scope): UserId
     {
         if (!$this->scopeAuthorizationChecker->isAuthorized($scope)) {
             throw new AuthenticationException('許可されていないリクエストです。');
