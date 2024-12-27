@@ -37,6 +37,9 @@ use packages\domain\model\oauth\client\IClientFetcher;
 use packages\domain\model\oauth\scope\IScopeAuthorizationChecker;
 use packages\domain\model\userProfile\IUserProfileRepository;
 use packages\domain\service\authenticationAccount\AuthenticationService;
+use packages\domain\service\oauth\ILoggedInUserIdFetcher;
+use packages\domain\service\oauth\LoggedInUserIdFetcherFromAuthHeader;
+use packages\domain\service\oauth\LoggedInUserIdFetcherFromCookie;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -44,6 +47,19 @@ class AppServiceProvider extends ServiceProvider
      * Register any application services.
      */
     public function register(): void
+    {
+       $this->registerCommonBindings();
+       
+        // リクエストがAPIかWebかでバインディングを切り替える
+        $request = $this->app->make('request');
+        if ($request->is('api/*')) {
+            $this->registerApiBindings();
+        } else {
+            $this->registerWebBindings();
+        }
+    }
+
+    protected function registerCommonBindings(): void
     {
         // リポジトリ
         $this->app->bind(IDefinitiveRegistrationConfirmationRepository::class, EloquentDefinitiveRegistrationConfirmationRepository::class);
@@ -59,9 +75,12 @@ class AppServiceProvider extends ServiceProvider
         // ユニットオブワーク
         $this->app->bind(TransactionManage::class, EloquentTransactionManage::class);
 
-        // サービス
-        $this->app->bind(AuthenticationService::class, LaravelAuthenticationService::class);
+        // メール送信
+        $this->app->bind(IEmailSender::class, LaravelEmailSender::class);
+    }
 
+    protected function registerWebBindings(): void
+    {
         // アプリケーションサービス
         $this->app->bind(LoginInputBoundary::class, LoginApplicationService::class);
         $this->app->bind(ResendDefinitiveRegistrationConfirmationInputBoundary::class, ResendDefinitiveRegistrationConfirmationApplicationService::class);
@@ -70,11 +89,20 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(RegisterUserProfileInputBoundary::class, RegisterUserProfileApplicationService::class);
         $this->app->bind(FetchUserProfileInputBoundary::class, FetchUserProfileApplicationService::class);
 
+        // サービス
+        $this->app->bind(AuthenticationService::class, LaravelAuthenticationService::class);
+
+        // 認証系
+        $this->app->bind(ILoggedInUserIdFetcher::class, LoggedInUserIdFetcherFromCookie::class);
+    }
+
+    protected function registerApiBindings(): void
+    {
         // その他　フレームワークに関する設定
         $this->app->bind(ApiVersionResolver::class, ApiVersionResolver::class);
 
-        // メール送信
-        $this->app->bind(IEmailSender::class, LaravelEmailSender::class);
+        // 認証系
+        $this->app->bind(ILoggedInUserIdFetcher::class, LoggedInUserIdFetcherFromAuthHeader::class);
     }
 
     /**
