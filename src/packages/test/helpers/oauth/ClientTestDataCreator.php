@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\test\helpers\client;
+namespace packages\test\helpers\oauth;
 
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\Client as PassportClient;

@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\test\helpers\client;
+namespace packages\test\helpers\oauth;
 
 use packages\domain\model\oauth\client\AClientData;
 

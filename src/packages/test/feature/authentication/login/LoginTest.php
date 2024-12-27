@@ -15,7 +15,7 @@ use packages\domain\model\oauth\scope\Scope;
 use packages\domain\model\oauth\scope\ScopeList;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\authenticationAccount\TestAccessTokenCreator;
-use packages\test\helpers\client\ClientTestDataCreator;
+use packages\test\helpers\oauth\ClientTestDataCreator;
 use Tests\TestCase;
 
 class LoginTest extends TestCase
