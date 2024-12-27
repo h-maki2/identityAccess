@@ -51,7 +51,7 @@ class ChangePasswordApplicationServiceTest extends TestCase
             redirectUriList: $redirectUrlList
         );
 
-        // テスト用のクライアントデータをセットする
+        // テスト用のクライアントデータをフェイクにセットする
         $this->clientFetcher->setTestClientData($testClient);
 
         // パスワード変更のアプリケーションサービスを作成する
@@ -75,11 +75,70 @@ class ChangePasswordApplicationServiceTest extends TestCase
         $this->assertFalse($result->isValidationError);
         $this->assertEmpty($result->validationErrorMessageList);
 
-        // パスワード変更後のリダイレクトURLを取得できることを確認する
+        // パスワード変更後のリダイレクト先URLを取得できることを確認する
         $this->assertEquals($redirectUrl, $result->redirectUrl);
 
         // パスワードが変更されていることを確認する
         $authAccount = $this->authAccountRepository->findById($authAccount->id(), UnsubscribeStatus::Subscribed);
         $this->assertTrue($authAccount->password()->equals($変更後のパスワード));
+    }
+
+    public function test_変更後のパスワードが適切な形式ではない場合に、バリデーションエラーが発生する()
+    {
+        // given
+        // 認証アカウントを作成する
+        $変更前のパスワード = 'acbABC123!';
+        $authAccount = $this->authAccountTestDataCreator->create(
+            password: UserPassword::create($変更前のパスワード)
+        );
+
+        // ログイン済みのuserIdを取得する処理をモック化する
+        $loggedInUserIdFetcher = $this->createMock(ILoggedInUserIdFetcher::class);
+        $loggedInUserIdFetcher->method('fetch')->willReturn($authAccount->id());
+
+        // oauthのクライアントを作成する
+        $clientId = new ClientId('1');
+        $redirectUrl = 'http://localhost:8080/callback';
+        $redirectUrlList = new RedirectUrlList($redirectUrl);
+        $testClient = $this->testClientDataFactory->create(
+            clientId: $clientId,
+            redirectUriList: $redirectUrlList
+        );
+
+        // テスト用のクライアントデータをフェイクにセットする
+        $this->clientFetcher->setTestClientData($testClient);
+
+        // パスワード変更のアプリケーションサービスを作成する
+        $changePasswordApplicationService = new ChangePasswordApplicationService(
+            $this->authAccountRepository,
+            $this->clientFetcher,
+            $loggedInUserIdFetcher
+        );
+
+        // when
+        // 適切な形式ではないパスワードを設定する
+        $変更後のパスワード = 'acb';
+        $result = $changePasswordApplicationService->changePassword(
+            'edit_account',
+            $変更後のパスワード,
+            $clientId->value,
+            $redirectUrl
+        );
+
+        // then
+        // バリデーションエラーが発生していることを確認する
+        $this->assertTrue($result->isValidationError);
+        $expectedValidationErrorMessageList = [
+            'パスワードは8文字以上で入力してください',
+            'パスワードは大文字、小文字、数字、記号をそれぞれ1文字以上含めてください'
+        ];
+        $this->assertEquals($expectedValidationErrorMessageList, $result->validationErrorMessageList);
+
+        // パスワード変更後のリダイレクト先URLが取得できないことを確認する
+        $this->assertEmpty($result->redirectUrl);
+
+        // パスワードが変更されていないことを確認する
+        $authAccount = $this->authAccountRepository->findById($authAccount->id(), UnsubscribeStatus::Subscribed);
+        $this->assertTrue($authAccount->password()->equals($変更前のパスワード));
     }
 }
