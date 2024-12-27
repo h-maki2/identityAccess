@@ -5,6 +5,7 @@ namespace packages\domain\model\oauth\authToken;
 use Firebase\JWT\Key;
 use Firebase\JWT\JWT;
 use InvalidArgumentException;
+use packages\domain\model\authenticationAccount\UserId;
 use stdClass;
 
 class AccessToken
@@ -23,6 +24,12 @@ class AccessToken
     {
         $decoded = $this->decodedValue();
         return $decoded->jti;
+    }
+
+    public function userId(): UserId
+    {
+        $decoded = $this->decodedValue();
+        return new UserId($decoded->sub);
     }
 
     private function decodedValue(): stdClass

@@ -11,31 +11,7 @@ use packages\domain\service\authenticationAccount\AuthenticationService;
 /**
  * ログイン済みのユーザーIDを取得する
  */
-class LoggedInUserIdFetcher
+interface LoggedInUserIdFetcher
 {
-    private AuthenticationService $authService;
-    private IScopeAuthorizationChecker $scopeAuthorizationChecker;
-
-    public function __construct(
-        AuthenticationService $authService,
-        IScopeAuthorizationChecker $scopeAuthorizationChecker
-    )
-    {
-        $this->authService = $authService;
-        $this->scopeAuthorizationChecker = $scopeAuthorizationChecker;
-    }
-
-    public function fetchFromAuthHeader(Scope $scope): UserId
-    {
-        if (!$this->scopeAuthorizationChecker->isAuthorized($scope)) {
-            throw new AuthenticationException('許可されていないリクエストです。');
-        }
-
-        $userId = $this->authService->loggedInUserId();
-        if ($userId === null) {
-            throw new AuthenticationException('ユーザーがログインしていません');
-        }
-
-        return $userId;
-    }
+    public function fetch(Scope $scope): UserId;
 }
