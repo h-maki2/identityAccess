@@ -15,25 +15,24 @@ use packages\domain\model\oauth\scope\IScopeAuthorizationChecker;
 use packages\domain\model\oauth\scope\Scope;
 use packages\domain\model\oauth\scope\ScopeList;
 use packages\domain\service\authenticationAccount\AuthenticationService;
-use packages\domain\service\oauth\LoggedInUserIdFetcher;
 use packages\domain\service\oauth\ClientService;
+use packages\domain\service\oauth\ILoggedInUserIdFetcher;
 use RuntimeException;
 
 class ChangePasswordApplicationService implements ChangePasswordApplicationInputBoundary
 {
     private IAuthenticationAccountRepository $authenticationAccountRepository;
-    private LoggedInUserIdFetcher $loggedInUserIdFetcher;
+    private ILoggedInUserIdFetcher $loggedInUserIdFetcher;
     private ClientService $clientService;
 
     public function __construct(
         IAuthenticationAccountRepository $authenticationAccountRepository,
-        AuthenticationService $authenticationService,
-        IScopeAuthorizationChecker $scopeAuthorizationChecker,
-        IClientFetcher $clientFetcher
+        IClientFetcher $clientFetcher,
+        ILoggedInUserIdFetcher $loggedInUserIdFetcher
     ) {
         $this->authenticationAccountRepository = $authenticationAccountRepository;
-        $this->loggedInUserIdFetcher = new LoggedInUserIdFetcher($authenticationService, $scopeAuthorizationChecker);
         $this->clientService = new ClientService($clientFetcher);
+        $this->loggedInUserIdFetcher = $loggedInUserIdFetcher;
     }
 
     public function changePassword(
@@ -44,7 +43,7 @@ class ChangePasswordApplicationService implements ChangePasswordApplicationInput
     ): ChangePasswordResult
     {
         $scope = Scope::from($scopeString);
-        $userId = $this->loggedInUserIdFetcher->fetchFromAuthHeader($scope);
+        $userId = $this->loggedInUserIdFetcher->fetch($scope);
 
         if (!$this->clientService->isCorrectRedirectUrl(
             new ClientId($clientId),

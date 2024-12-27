@@ -11,7 +11,7 @@ use packages\domain\service\authenticationAccount\AuthenticationService;
 /**
  * ログイン済みのユーザーIDを取得する
  */
-interface LoggedInUserIdFetcher
+interface ILoggedInUserIdFetcher
 {
     public function fetch(Scope $scope): UserId;
 }
