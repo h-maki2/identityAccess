@@ -4,7 +4,7 @@ namespace packages\adapter\view\changePassword\blade;
 
 use packages\adapter\presenter\changePassword\blade\BladeChangePasswordPresenter;
 
-class ChangePasswordView
+class BladeChangePasswordView
 {
     private BladeChangePasswordPresenter $presenter;
 
