@@ -37,8 +37,8 @@ use packages\domain\model\oauth\client\IClientFetcher;
 use packages\domain\model\oauth\scope\IScopeAuthorizationChecker;
 use packages\domain\model\userProfile\IUserProfileRepository;
 use packages\domain\service\authenticationAccount\AuthenticationService;
-use packages\domain\service\oauth\ILoggedInUserIdFetcher;
-use packages\domain\service\oauth\LoggedInUserIdFetcherFromAuthHeader;
+use packages\domain\service\oauth\LoggedInUserIdFetcher;
+use packages\domain\service\oauth\LoggedInUserIdFetcher;
 use packages\domain\service\oauth\LoggedInUserIdFetcherFromCookie;
 
 class AppServiceProvider extends ServiceProvider
@@ -93,7 +93,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(AuthenticationService::class, LaravelAuthenticationService::class);
 
         // 認証系
-        $this->app->bind(ILoggedInUserIdFetcher::class, LoggedInUserIdFetcherFromCookie::class);
+        $this->app->bind(LoggedInUserIdFetcher::class, LoggedInUserIdFetcherFromCookie::class);
     }
 
     protected function registerApiBindings(): void
@@ -102,7 +102,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ApiVersionResolver::class, ApiVersionResolver::class);
 
         // 認証系
-        $this->app->bind(ILoggedInUserIdFetcher::class, LoggedInUserIdFetcherFromAuthHeader::class);
+        $this->app->bind(LoggedInUserIdFetcher::class, LoggedInUserIdFetcher::class);
     }
 
     /**

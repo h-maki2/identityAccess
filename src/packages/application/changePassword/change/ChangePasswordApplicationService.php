@@ -16,19 +16,19 @@ use packages\domain\model\oauth\scope\Scope;
 use packages\domain\model\oauth\scope\ScopeList;
 use packages\domain\service\authenticationAccount\AuthenticationService;
 use packages\domain\service\oauth\ClientService;
-use packages\domain\service\oauth\ILoggedInUserIdFetcher;
+use packages\domain\service\oauth\LoggedInUserIdFetcher;
 use RuntimeException;
 
 class ChangePasswordApplicationService implements ChangePasswordApplicationInputBoundary
 {
     private IAuthenticationAccountRepository $authenticationAccountRepository;
-    private ILoggedInUserIdFetcher $loggedInUserIdFetcher;
+    private LoggedInUserIdFetcher $loggedInUserIdFetcher;
     private ClientService $clientService;
 
     public function __construct(
         IAuthenticationAccountRepository $authenticationAccountRepository,
         IClientFetcher $clientFetcher,
-        ILoggedInUserIdFetcher $loggedInUserIdFetcher
+        LoggedInUserIdFetcher $loggedInUserIdFetcher
     ) {
         $this->authenticationAccountRepository = $authenticationAccountRepository;
         $this->clientService = new ClientService($clientFetcher);
@@ -37,20 +37,11 @@ class ChangePasswordApplicationService implements ChangePasswordApplicationInput
 
     public function changePassword(
         string $scopeString,
-        string $passwordString,
-        string $clientId,
-        string $redirectUrl
+        string $passwordString
     ): ChangePasswordResult
     {
         $scope = Scope::from($scopeString);
         $userId = $this->loggedInUserIdFetcher->fetch($scope);
-
-        if (!$this->clientService->isCorrectRedirectUrl(
-            new ClientId($clientId),
-            new RedirectUrl($redirectUrl)
-        )) {
-            throw new RuntimeException('リダイレクトURLが正しくありません');
-        }
 
         $passwordValidation = new UserPasswordValidation($passwordString);
         if (!$passwordValidation->validate()) {
@@ -68,6 +59,6 @@ class ChangePasswordApplicationService implements ChangePasswordApplicationInput
 
         // 後でメール送信する処理を追加する
 
-        return ChangePasswordResult::createWhenSuccess($redirectUrl);
+        return ChangePasswordResult::createWhenSuccess();
     }
 }

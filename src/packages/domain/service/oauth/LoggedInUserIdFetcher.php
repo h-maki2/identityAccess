@@ -4,21 +4,24 @@ namespace packages\domain\service\oauth;
 
 use packages\domain\model\authenticationAccount\UserId;
 use packages\domain\model\common\exception\AuthenticationException;
-use packages\domain\model\oauth\authToken\IAccessTokenCookieService;
 use packages\domain\model\oauth\scope\IScopeAuthorizationChecker;
 use packages\domain\model\oauth\scope\Scope;
+use packages\domain\service\authenticationAccount\AuthenticationService;
 
-class LoggedInUserIdFetcherFromCookie implements ILoggedInUserIdFetcher
+/**
+ * ログイン済みのユーザーIDを取得する
+ */
+class LoggedInUserIdFetcher
 {
-    private IAccessTokenCookieService $accessTokenCookieService;
+    private AuthenticationService $authService;
     private IScopeAuthorizationChecker $scopeAuthorizationChecker;
 
     public function __construct(
-        IAccessTokenCookieService $accessTokenCookieService,
+        AuthenticationService $authService,
         IScopeAuthorizationChecker $scopeAuthorizationChecker
     )
     {
-        $this->accessTokenCookieService = $accessTokenCookieService;
+        $this->authService = $authService;
         $this->scopeAuthorizationChecker = $scopeAuthorizationChecker;
     }
 
@@ -28,8 +31,11 @@ class LoggedInUserIdFetcherFromCookie implements ILoggedInUserIdFetcher
             throw new AuthenticationException('許可されていないリクエストです。');
         }
 
-        $accessToken = $this->accessTokenCookieService->fetch();
+        $userId = $this->authService->loggedInUserId();
+        if ($userId === null) {
+            throw new AuthenticationException('ユーザーがログインしていません');
+        }
 
-        return $accessToken->userId();
+        return $userId;
     }
 }

@@ -6,26 +6,23 @@ class ChangePasswordResult
 {
     readonly array $validationErrorMessageList;
     readonly bool $isValidationError;
-    readonly string $redirectUrl;
 
     private function __construct(
         array $validationErrorMessageList,
-        bool $isValidationError,
-        string $redirectUrl
+        bool $isValidationError
     )
     {
         $this->validationErrorMessageList = $validationErrorMessageList;
         $this->isValidationError = $isValidationError;
-        $this->redirectUrl = $redirectUrl;
     }
 
     public static function createWhenFaild(array $validationErrorMessageList): self
     {
-        return new self($validationErrorMessageList, true, '');
+        return new self($validationErrorMessageList, true);
     }
 
-    public static function createWhenSuccess(string $redirectUrl): self
+    public static function createWhenSuccess(): self
     {
-        return new self([], false, $redirectUrl);
+        return new self([], false);
     }
 }

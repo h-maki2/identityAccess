@@ -8,7 +8,7 @@ use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\oauth\client\ClientId;
 use packages\domain\model\oauth\client\RedirectUrlList;
 use packages\domain\service\oauth\ClientService;
-use packages\domain\service\oauth\ILoggedInUserIdFetcher;
+use packages\domain\service\oauth\LoggedInUserIdFetcher;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\oauth\ClientTestDataCreator;
 use packages\test\helpers\oauth\InMemoryClientFetcher;
@@ -40,7 +40,7 @@ class ChangePasswordApplicationServiceTest extends TestCase
         $authAccount = $this->authAccountTestDataCreator->create(password: $変更前のパスワード);
 
         // ログイン済みのuserIdを取得する処理をモック化する
-        $loggedInUserIdFetcher = $this->createMock(ILoggedInUserIdFetcher::class);
+        $loggedInUserIdFetcher = $this->createMock(LoggedInUserIdFetcher::class);
         $loggedInUserIdFetcher->method('fetch')->willReturn($authAccount->id());
 
         // oauthのクライアントを作成する
@@ -94,7 +94,7 @@ class ChangePasswordApplicationServiceTest extends TestCase
         );
 
         // ログイン済みのuserIdを取得する処理をモック化する
-        $loggedInUserIdFetcher = $this->createMock(ILoggedInUserIdFetcher::class);
+        $loggedInUserIdFetcher = $this->createMock(LoggedInUserIdFetcher::class);
         $loggedInUserIdFetcher->method('fetch')->willReturn($authAccount->id());
 
         // oauthのクライアントを作成する
@@ -151,7 +151,7 @@ class ChangePasswordApplicationServiceTest extends TestCase
         $authAccount = $this->authAccountTestDataCreator->create(password: $変更前のパスワード);
 
         // ログイン済みのuserIdを取得する処理をモック化する
-        $loggedInUserIdFetcher = $this->createMock(ILoggedInUserIdFetcher::class);
+        $loggedInUserIdFetcher = $this->createMock(LoggedInUserIdFetcher::class);
         $loggedInUserIdFetcher->method('fetch')->willReturn($authAccount->id());
 
         // oauthのクライアントを作成する
@@ -192,7 +192,7 @@ class ChangePasswordApplicationServiceTest extends TestCase
         $不正なuserId = $this->authAccountRepository->nextUserId();
 
         // ログイン済みのuserIdを取得する処理をモック化する
-        $loggedInUserIdFetcher = $this->createMock(ILoggedInUserIdFetcher::class);
+        $loggedInUserIdFetcher = $this->createMock(LoggedInUserIdFetcher::class);
         $loggedInUserIdFetcher->method('fetch')->willReturn($不正なuserId);
 
         // oauthのクライアントを作成する

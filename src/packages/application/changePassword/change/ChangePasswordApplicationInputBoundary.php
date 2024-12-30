@@ -6,8 +6,6 @@ interface ChangePasswordApplicationInputBoundary
 {
     public function changePassword(
         string $scopeString,
-        string $passwordString,
-        string $clientId,
-        string $redirectUrl
+        string $passwordString
     ): ChangePasswordResult;
 }
