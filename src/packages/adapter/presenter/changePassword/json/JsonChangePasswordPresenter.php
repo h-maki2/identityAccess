@@ -4,7 +4,7 @@ namespace packages\adapter\presenter\changePassword\json;
 
 use packages\adapter\presenter\common\json\HttpStatus;
 use packages\adapter\presenter\common\json\JsonResponseData;
-use packages\application\changePassword\change\ChangePasswordResult;
+use packages\application\changePassword\ChangePasswordResult;
 
 class JsonChangePasswordPresenter
 {
