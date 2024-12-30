@@ -23,15 +23,12 @@ class ChangePasswordApplicationService implements ChangePasswordApplicationInput
 {
     private IAuthenticationAccountRepository $authenticationAccountRepository;
     private LoggedInUserIdFetcher $loggedInUserIdFetcher;
-    private ClientService $clientService;
 
     public function __construct(
         IAuthenticationAccountRepository $authenticationAccountRepository,
-        IClientFetcher $clientFetcher,
         LoggedInUserIdFetcher $loggedInUserIdFetcher
     ) {
         $this->authenticationAccountRepository = $authenticationAccountRepository;
-        $this->clientService = new ClientService($clientFetcher);
         $this->loggedInUserIdFetcher = $loggedInUserIdFetcher;
     }
 
