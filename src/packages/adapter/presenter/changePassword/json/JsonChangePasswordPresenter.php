@@ -22,7 +22,7 @@ class JsonChangePasswordPresenter
 
     private function responseData(): array
     {
-        if ($this->result->isValidationError) {
+        if (!$this->result->isValidationError) {
             return [];
         }
 

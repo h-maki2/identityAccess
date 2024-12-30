@@ -6,11 +6,11 @@ use Illuminate\Support\Facades\Auth;
 use packages\domain\model\authenticationAccount\UserId;
 use packages\domain\service\authenticationAccount\AuthenticationService;
 
-class LaravelApiAuthenticationService implements AuthenticationService
+class LaravelAuthenticationService implements AuthenticationService
 {
     public function markAsLoggedIn(UserId $userId): void
     {
-        Auth::guard('api')->loginUsingId($userId->value);
+        Auth::guard('web')->loginUsingId($userId->value);
     }
 
     public function loggedInUserId(): ?UserId
@@ -24,6 +24,6 @@ class LaravelApiAuthenticationService implements AuthenticationService
 
     public function logout(): void
     {
-        Auth::guard('api')->logout();
+        Auth::guard('web')->logout();
     }
 }

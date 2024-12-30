@@ -11,7 +11,7 @@ class ApiVersionResolver
     public function resolve(string $version, string $controllerName): Controller
     {
         // バージョンを解決し、該当するコントローラの完全修飾クラス名を返す
-        $namespace = self::CONTROLLER_NAMESPACE . '\\' . strtoupper($version);
+        $namespace = self::CONTROLLER_NAMESPACE . '\\' . $version;
         $controllerClass = $namespace . '\\' . $controllerName;
 
         if (!class_exists($controllerClass)) {

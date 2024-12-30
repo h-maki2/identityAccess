@@ -21,6 +21,7 @@ class ChangePasswordController extends Controller
         );
 
         $presenter = new JsonChangePasswordPresenter($result);
-        return response()->json($presenter->jsonResponseData());
+        $jsonResponseData = $presenter->jsonResponseData();
+        return response()->json($jsonResponseData->value, $jsonResponseData->httpStatusCode());
     }
 }
