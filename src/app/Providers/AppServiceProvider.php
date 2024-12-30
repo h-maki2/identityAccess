@@ -13,7 +13,8 @@ use packages\adapter\oauth\scope\LaravelPassportScopeAuthorizationChecker;
 use packages\adapter\persistence\eloquent\EloquentDefinitiveRegistrationConfirmationRepository;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
 use packages\adapter\persistence\eloquent\EloquentUserProfileRepository;
-use packages\adapter\service\laravel\LaravelAuthenticationService;
+use packages\adapter\service\laravel\LaravelApiAuthenticationService;
+use packages\adapter\service\laravel\LaravelWebAuthenticationService;
 use packages\adapter\transactionManage\EloquentTransactionManage;
 use packages\application\authentication\login\LoginApplicationService;
 use packages\application\authentication\login\LoginInputBoundary;
@@ -37,7 +38,6 @@ use packages\domain\model\oauth\client\IClientFetcher;
 use packages\domain\model\oauth\scope\IScopeAuthorizationChecker;
 use packages\domain\model\userProfile\IUserProfileRepository;
 use packages\domain\service\authenticationAccount\AuthenticationService;
-use packages\domain\service\oauth\LoggedInUserIdFetcher;
 use packages\domain\service\oauth\LoggedInUserIdFetcher;
 use packages\domain\service\oauth\LoggedInUserIdFetcherFromCookie;
 
@@ -90,10 +90,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(FetchUserProfileInputBoundary::class, FetchUserProfileApplicationService::class);
 
         // サービス
-        $this->app->bind(AuthenticationService::class, LaravelAuthenticationService::class);
-
-        // 認証系
-        $this->app->bind(LoggedInUserIdFetcher::class, LoggedInUserIdFetcherFromCookie::class);
+        $this->app->bind(AuthenticationService::class, LaravelWebAuthenticationService::class);
     }
 
     protected function registerApiBindings(): void
@@ -101,8 +98,8 @@ class AppServiceProvider extends ServiceProvider
         // その他　フレームワークに関する設定
         $this->app->bind(ApiVersionResolver::class, ApiVersionResolver::class);
 
-        // 認証系
-        $this->app->bind(LoggedInUserIdFetcher::class, LoggedInUserIdFetcher::class);
+        // サービス
+        $this->app->bind(AuthenticationService::class, LaravelApiAuthenticationService::class);
     }
 
     /**
