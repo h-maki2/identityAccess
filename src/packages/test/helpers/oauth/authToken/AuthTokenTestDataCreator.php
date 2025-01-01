@@ -4,7 +4,6 @@ namespace packages\domain\model\oauth\authToken;
 
 use Illuminate\Support\Facades\Http;
 use packages\domain\model\authenticationAccount\AuthenticationAccount;
-use packages\domain\model\authenticationAccount\IAuthenticationAccountRepository;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\authenticationAccount\TestAuthenticationAccountFactory;
 use packages\test\helpers\oauth\authToken\AuthTokenTestData;

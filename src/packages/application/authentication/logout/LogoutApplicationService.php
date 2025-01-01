@@ -9,6 +9,7 @@ use packages\domain\model\common\transactionManage\TransactionManage;
 use packages\domain\model\oauth\authToken\AccessToken;
 use packages\domain\model\oauth\authToken\IAccessTokenDeactivationService;
 use packages\domain\model\oauth\authToken\IRefreshTokenDeactivationService;
+use packages\domain\model\oauth\authToken\RefreshToken;
 use packages\domain\service\authenticationAccount\AuthenticationService;
 
 class LogoutApplicationService
@@ -31,14 +32,15 @@ class LogoutApplicationService
         $this->transactionManage = $transactionManage;
     }
 
-    public function logout(string $accessToken): void
+    public function logout(string $accessToken, string $refreshToken): void
     {
         $accessToken = new AccessToken($accessToken);
+        $refreshToken = new RefreshToken($refreshToken);
 
         try {
-            $this->transactionManage->performTransaction(function () use ($accessToken) {
+            $this->transactionManage->performTransaction(function () use ($accessToken, $refreshToken) {
                 $this->accessTokenDeactivationService->deactivate($accessToken);
-                $this->refreshTokenDeactivationService->deactivate($accessToken);
+                $this->refreshTokenDeactivationService->deactivate($refreshToken);
             });
         } catch (\Exception $e) {
             throw new TransactionException($e->getMessage());
