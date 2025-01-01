@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
 
-class AuthenticationInformation extends Model
+class AuthenticationInformation extends Authenticatable
 {
     use HasApiTokens, HasFactory;
     
@@ -27,6 +27,16 @@ class AuthenticationInformation extends Model
         'next_login_allowed_at',
         'verification_status',
     ];
+
+    public function getAuthIdentifierName()
+    {
+        return $this->primaryKey;
+    }
+
+    public static function findForPassport(string $username)
+    {
+        return static::where('email', $username)->first();
+    }
 
     public function user()
     {

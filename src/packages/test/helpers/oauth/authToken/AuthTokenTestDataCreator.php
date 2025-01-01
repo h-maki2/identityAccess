@@ -1,9 +1,15 @@
 <?php
 
-namespace packages\domain\model\oauth\authToken;
+namespace packages\test\helpers\oauth\authToken;
 
 use Illuminate\Support\Facades\Http;
+use Laravel\Passport\Passport;
+use League\OAuth2\Server\Grant\PasswordGrant;
 use packages\domain\model\authenticationAccount\AuthenticationAccount;
+use packages\domain\model\authenticationAccount\UserEmail;
+use packages\domain\model\authenticationAccount\UserPassword;
+use packages\domain\model\oauth\authToken\AccessToken;
+use packages\domain\model\oauth\authToken\RefreshToken;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
 use packages\test\helpers\authenticationAccount\TestAuthenticationAccountFactory;
 use packages\test\helpers\oauth\authToken\AuthTokenTestData;
@@ -20,10 +26,16 @@ class AuthTokenTestDataCreator
     }
 
     public function create(
-        ?AuthenticationAccount $authenticationAccount = null,
+        ?string $emailString = null,
+        ?string $passwordString = null
     ): AuthTokenTestData
     {
-        $authenticationAccount = $authenticationAccount ?? TestAuthenticationAccountFactory::create();
+        $emailString = $emailString ?? 'test@example.com';
+        $passwordString = $passwordString ?? 'abcABC123!';
+        $authenticationAccount = TestAuthenticationAccountFactory::create(
+            email: new UserEmail($emailString),
+            password: UserPassword::create($passwordString)
+        );
         $this->authenticationAccountTestDataCreator->create(
             $authenticationAccount->email(),
             $authenticationAccount->password(),
@@ -33,21 +45,27 @@ class AuthTokenTestDataCreator
             $authenticationAccount->unsubscribeStatus()
         );
 
-        $client = ClientTestDataCreator::create();
+        $client = ClientTestDataCreator::createPasswordGrantClient();
+
+        var_dump($authenticationAccount);
 
         // テスト用のアクセストークンとリフレッシュトークンを取得
-        $response = Http::asForm()->post(config('app.url') . '/oauth/token', [
+        $response = Http::asForm()->post('http://localhost/oauth/token', [
             'grant_type' => 'password',
-            'client_id' => $client->id,
-            'client_secret' => $client->secret,
+            'client_id' => '115',
+            'client_secret' => 'J5OkkhYr4GaFSkph9XFdo2o2FUDyNEqBBZ3Gk9ZR',
             'username' => $authenticationAccount->email()->value,
-            'password' => $authenticationAccount->password()->hashedValue,
+            'password' => $passwordString,
             'scope' => '',
         ]);
 
+        $tokens = $response->json();
+
+        var_dump($tokens);
+
         return new AuthTokenTestData(
-            new AccessToken($response['access_token']),
-            new RefreshToken($response['refresh_token'])
+            new AccessToken($tokens['access_token']),
+            new RefreshToken($tokens['refresh_token'])
         );
     }
 }

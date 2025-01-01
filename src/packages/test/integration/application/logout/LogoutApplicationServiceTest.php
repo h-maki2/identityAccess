@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Auth\Events\Logout;
+use Illuminate\Auth\Middleware\Authenticate;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Laravel\Passport\Passport;
 use packages\adapter\oauth\authToken\LaravelPassportAccessTokenDeactivationService;
 use packages\adapter\oauth\authToken\LaravelPassportRefreshokenDeactivationService;
 use packages\adapter\oauth\authToken\LaravelPassportRefreshTokenDeactivationService;
@@ -8,25 +11,29 @@ use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepositor
 use packages\adapter\service\laravel\LaravelAuthenticationService;
 use packages\adapter\transactionManage\EloquentTransactionManage;
 use packages\application\authentication\logout\LogoutApplicationService;
+use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
+use packages\test\helpers\oauth\authToken\AuthTokenTestDataCreator;
+use packages\test\helpers\oauth\authToken\TestAuthTokenService;
 use packages\test\helpers\oauth\client\AccessTokenTestDataCreator;
-use packages\test\helpers\oauth\client\TestAuthTokenService;
 use Tests\TestCase;
 
 class LogoutApplicationServiceTest extends TestCase
 {
+    use DatabaseTransactions;
+
     private EloquentAuthenticationAccountRepository $authAccountReposiotry;
-    private AccessTokenTestDataCreator $accessTokenTestDataCreator;
     private LaravelPassportAccessTokenDeactivationService $accessTokenDeactivationService;
     private LaravelPassportRefreshTokenDeactivationService $refreshTokenDeactivationService;
     private LogoutApplicationService $logoutApplicationService;
     private LaravelAuthenticationService $authService;
     private TestAuthTokenService $testAuthTokenService;
+    private AuthTokenTestDataCreator $authTokenTestDataCreator;
 
     public function setUp(): void
     {
         parent::setUp();
+
         $this->authAccountReposiotry = new EloquentAuthenticationAccountRepository();
-        $this->accessTokenTestDataCreator = new AccessTokenTestDataCreator();
         $this->accessTokenDeactivationService = new LaravelPassportAccessTokenDeactivationService();
         $this->refreshTokenDeactivationService = new LaravelPassportRefreshTokenDeactivationService();
         $this->authService = new LaravelAuthenticationService();
@@ -38,22 +45,29 @@ class LogoutApplicationServiceTest extends TestCase
             $this->authService,
             new EloquentTransactionManage()
         );
+
+        $this->authTokenTestDataCreator = new AuthTokenTestDataCreator(
+            new AuthenticationAccountTestDataCreator($this->authAccountReposiotry)
+        );
     }
 
     public function test_ログアウトするとアクセストークンとリフレッシュトークンが無効化される()
     {
         // given
-        // アクセストークンを作成
-        $accessToken = $this->accessTokenTestDataCreator->create();
+        // アクセストークンとリフレッシュトークンを作成
+        $authToken = $this->authTokenTestDataCreator->create();
 
         // when
-        $this->logoutApplicationService->logout($accessToken->value);
+        $this->logoutApplicationService->logout(
+            $authToken->accessToken->value, 
+            $authToken->refreshToken->value
+        );
 
         // then
         // アクセストークンが無効化されていることを確認
-        $this->assertTrue($this->testAuthTokenService->isAccessTokenDeactivated($accessToken));
+        $this->assertTrue($this->testAuthTokenService->isAccessTokenDeactivated($authToken->accessToken));
 
         // リフレッシュトークンが無効化されていることを確認
-        // $this->assertTrue($this->testAuthTokenService->isRefreshTokenDeactivated($accessToken));
+        $this->assertTrue($this->testAuthTokenService->isRefreshTokenDeactivated($authToken->refreshToken));
     }
 }

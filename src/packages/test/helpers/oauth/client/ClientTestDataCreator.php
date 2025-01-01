@@ -22,4 +22,17 @@ class ClientTestDataCreator
 
         return $client;
     }
+
+    public static function createPasswordGrantClient(): PassportClient
+    {
+        $clientRepository = new ClientRepository();
+
+        $client = $clientRepository->createPasswordGrantClient(
+            null,
+            'Password Grant Client',
+            'http://localhost:8080/callback'
+        );
+
+        return $client;
+    }
 }

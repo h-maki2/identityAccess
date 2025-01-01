@@ -5,6 +5,7 @@ use App\Http\Controllers\Web\registration\DefinitiveRegistrationController;
 use App\Http\Controllers\Web\registration\ProvisionalRegistrationController;
 use App\Http\Controllers\Web\registration\ResendDefinitiveRegistrationConfirmation;
 use Illuminate\Support\Facades\Route;
+use Laravel\Passport\Passport;
 
 Route::get('/provisionalRegister', [ProvisionalRegistrationController::class, 'userRegisterForm']);
 Route::post('/provisionalRegister', [ProvisionalRegistrationController::class, 'userRegister']);

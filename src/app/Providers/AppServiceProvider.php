@@ -10,6 +10,7 @@ use Laravel\Passport\Passport;
 use packages\adapter\email\LaravelEmailSender;
 use packages\adapter\oauth\authToken\LaravelPassportAccessTokenDeactivationService;
 use packages\adapter\oauth\authToken\LaravelPassportRefreshokenDeactivationService;
+use packages\adapter\oauth\authToken\LaravelPassportRefreshTokenDeactivationService;
 use packages\adapter\oauth\client\LaravelPassportClientFetcher;
 use packages\adapter\oauth\scope\LaravelPassportScopeAuthorizationChecker;
 use packages\adapter\persistence\eloquent\EloquentDefinitiveRegistrationConfirmationRepository;
@@ -61,7 +62,7 @@ class AppServiceProvider extends ServiceProvider
        // Laravel Passport
        $this->app->bind(IClientFetcher::class, LaravelPassportClientFetcher::class);
        $this->app->bind(IAccessTokenDeactivationService::class, LaravelPassportAccessTokenDeactivationService::class);
-       $this->app->bind(IRefreshTokenDeactivationService::class, LaravelPassportRefreshokenDeactivationService::class);
+       $this->app->bind(IRefreshTokenDeactivationService::class, LaravelPassportRefreshTokenDeactivationService::class);
        $this->app->bind(IScopeAuthorizationChecker::class, LaravelPassportScopeAuthorizationChecker::class);
 
        // ユニットオブワーク
@@ -86,6 +87,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Passport::enablePasswordGrant();
         Passport::tokensCan([
             'read_account' => 'read account information',
             'edit_account' => 'edit account information',

@@ -1,9 +1,10 @@
 <?php
 
-namespace packages\test\helpers\oauth\client;
+namespace packages\test\helpers\oauth\authToken;
 
 use Illuminate\Support\Facades\DB;
 use packages\domain\model\oauth\authToken\AccessToken;
+use packages\domain\model\oauth\authToken\RefreshToken;
 
 class TestAuthTokenService
 {
@@ -13,15 +14,15 @@ class TestAuthTokenService
             ->where('id', $accessToken->id())
             ->first();
         
-        return $token->revoked;
+        return $token === null;
     }
 
-    public function isRefreshTokenDeactivated(AccessToken $accessToken): bool
+    public function isRefreshTokenDeactivated(RefreshToken $refreshToken): bool
     {
         $token = DB::table('oauth_refresh_tokens')
-            ->where('access_token_id', $accessToken->id())
+            ->where('id', $refreshToken->id())
             ->first();
 
-        return $token->revoked;
+        return $token === null;
     }
 }
