@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\test\helpers\oauth;
+namespace packages\test\helpers\oauth\client;
 
 use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
 use packages\domain\model\authenticationAccount\UserId;
@@ -21,8 +21,17 @@ class AccessTokenTestDataCreator
         ?AuthenticationAccount $authAccount = null
     ): AccessToken
     {
+        $authAccountTestDataCreator = new AuthenticationAccountTestDataCreator(new EloquentAuthenticationAccountRepository());
         $scopesString = $scopeList ? $scopeList->stringValue() : '';
         $authAccount = $authAccount ?? TestAuthenticationAccountFactory::create();
+        $authAccountTestDataCreator->create(
+            $authAccount->email(),
+            $authAccount->password(),
+            $authAccount->definitiveRegistrationCompletedStatus(),
+            new UserId($authAccount->id()->value),
+            $authAccount->loginRestriction(),
+            $authAccount->unsubscribeStatus()
+        );
         $eloquentUser = EloquentUser::find($authAccount->id()->value);
         return new AccessToken($eloquentUser->createToken('Test Token', $this->scopeList($scopesString))->accessToken);
     }

@@ -10,9 +10,9 @@ use packages\domain\model\oauth\client\RedirectUrlList;
 use packages\domain\service\oauth\ClientService;
 use packages\domain\service\oauth\LoggedInUserIdFetcher;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
-use packages\test\helpers\oauth\ClientTestDataCreator;
-use packages\test\helpers\oauth\InMemoryClientFetcher;
-use packages\test\helpers\oauth\TestClientDataFactory;
+use packages\test\helpers\oauth\client\ClientTestDataCreator;
+use packages\test\helpers\oauth\client\InMemoryClientFetcher;
+use packages\test\helpers\oauth\client\TestClientDataFactory;
 use PHPUnit\Framework\TestCase;
 
 class ChangePasswordApplicationServiceTest extends TestCase

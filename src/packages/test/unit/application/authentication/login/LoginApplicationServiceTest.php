@@ -21,8 +21,8 @@ use packages\domain\model\oauth\scope\Scope;
 use packages\domain\model\oauth\scope\ScopeList;
 use packages\domain\service\authenticationAccount\AuthenticationService;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
-use packages\test\helpers\oauth\ClientDataForTest;
-use packages\test\helpers\oauth\TestClientDataFactory;
+use packages\test\helpers\oauth\client\ClientDataForTest;
+use packages\test\helpers\oauth\client\TestClientDataFactory;
 use PHPUnit\Framework\TestCase;
 
 class LoginApplicationServiceTest extends TestCase

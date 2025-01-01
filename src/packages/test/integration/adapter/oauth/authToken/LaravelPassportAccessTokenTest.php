@@ -3,8 +3,8 @@
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepository;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
-use packages\test\helpers\oauth\AccessTokenTestDataCreator;
-use packages\test\helpers\oauth\ClientTestDataCreator;
+use packages\test\helpers\oauth\client\AccessTokenTestDataCreator;
+use packages\test\helpers\oauth\client\ClientTestDataCreator;
 use Tests\TestCase;
 
 class LaravelPassportAccessTokenTest extends TestCase

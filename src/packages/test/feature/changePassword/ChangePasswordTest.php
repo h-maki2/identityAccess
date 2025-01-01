@@ -5,7 +5,7 @@ use packages\adapter\persistence\eloquent\EloquentAuthenticationAccountRepositor
 use packages\domain\model\authenticationAccount\UserPassword;
 use packages\domain\model\oauth\scope\ScopeList;
 use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCreator;
-use packages\test\helpers\oauth\AccessTokenTestDataCreator;
+use packages\test\helpers\oauth\client\AccessTokenTestDataCreator;
 use Tests\TestCase;
 
 class ChangePasswordTest extends TestCase
