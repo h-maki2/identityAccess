@@ -32,15 +32,13 @@ class LogoutApplicationService
         $this->transactionManage = $transactionManage;
     }
 
-    public function logout(string $accessToken, string $refreshToken): void
+    public function logout(string $accessToken): void
     {
         $accessToken = new AccessToken($accessToken);
-        $refreshToken = new RefreshToken($refreshToken);
-
         try {
-            $this->transactionManage->performTransaction(function () use ($accessToken, $refreshToken) {
+            $this->transactionManage->performTransaction(function () use ($accessToken) {
                 $this->accessTokenDeactivationService->deactivate($accessToken);
-                $this->refreshTokenDeactivationService->deactivate($refreshToken);
+                $this->refreshTokenDeactivationService->deactivate($accessToken);
             });
         } catch (\Exception $e) {
             throw new TransactionException($e->getMessage());

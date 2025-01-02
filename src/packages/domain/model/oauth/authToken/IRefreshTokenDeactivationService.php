@@ -7,5 +7,5 @@ interface IRefreshTokenDeactivationService
     /**
      * リフレッシュトークンを無効化する
      */
-    public function deactivate(RefreshToken $refreshToken): void;
+    public function deactivate(AccessToken $accessToken): void;
 }

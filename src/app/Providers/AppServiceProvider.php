@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\AuthenticationInformation;
 use App\Services\ApiVersionResolver;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
@@ -87,7 +88,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Passport::enablePasswordGrant();
         Passport::tokensCan([
             'read_account' => 'read account information',
             'edit_account' => 'edit account information',

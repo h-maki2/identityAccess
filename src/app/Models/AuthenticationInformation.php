@@ -33,11 +33,6 @@ class AuthenticationInformation extends Authenticatable
         return $this->primaryKey;
     }
 
-    public static function findForPassport(string $username)
-    {
-        return static::where('email', $username)->first();
-    }
-
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');

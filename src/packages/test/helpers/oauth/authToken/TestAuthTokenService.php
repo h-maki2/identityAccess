@@ -17,10 +17,10 @@ class TestAuthTokenService
         return $token === null;
     }
 
-    public function isRefreshTokenDeactivated(RefreshToken $refreshToken): bool
+    public function isRefreshTokenDeactivated(AccessToken $accessToken): bool
     {
         $token = DB::table('oauth_refresh_tokens')
-            ->where('id', $refreshToken->id())
+            ->where('access_token_id', $accessToken->id())
             ->first();
 
         return $token === null;

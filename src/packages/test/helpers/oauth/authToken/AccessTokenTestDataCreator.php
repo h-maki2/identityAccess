@@ -2,8 +2,13 @@
 
 namespace packages\test\helpers\oauth\authToken;
 
+use App\Models\AuthenticationInformation;
+use Firebase\JWT\JWT;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Laravel\Passport\Passport;
+use Laravel\Passport\RefreshToken as PassportRefreshToken;
 use League\OAuth2\Server\Grant\PasswordGrant;
 use packages\domain\model\authenticationAccount\AuthenticationAccount;
 use packages\domain\model\authenticationAccount\UserEmail;
@@ -14,8 +19,9 @@ use packages\test\helpers\authenticationAccount\AuthenticationAccountTestDataCre
 use packages\test\helpers\authenticationAccount\TestAuthenticationAccountFactory;
 use packages\test\helpers\oauth\authToken\AuthTokenTestData;
 use packages\test\helpers\oauth\client\ClientTestDataCreator;
+use Illuminate\Support\Str;
 
-class AuthTokenTestDataCreator
+class AccessTokenTestDataCreator
 {
     private AuthenticationAccountTestDataCreator $authenticationAccountTestDataCreator;
 
@@ -26,16 +32,11 @@ class AuthTokenTestDataCreator
     }
 
     public function create(
-        ?string $emailString = null,
-        ?string $passwordString = null
-    ): AuthTokenTestData
+        ?AuthenticationAccount $authenticationAccount = null,
+    ): AccessToken
     {
-        $emailString = $emailString ?? 'test@example.com';
-        $passwordString = $passwordString ?? 'abcABC123!';
-        $authenticationAccount = TestAuthenticationAccountFactory::create(
-            email: new UserEmail($emailString),
-            password: UserPassword::create($passwordString)
-        );
+        // 認証アカウントを作成
+        $authenticationAccount = $authenticationAccount ?? TestAuthenticationAccountFactory::create();
         $this->authenticationAccountTestDataCreator->create(
             $authenticationAccount->email(),
             $authenticationAccount->password(),
@@ -45,27 +46,17 @@ class AuthTokenTestDataCreator
             $authenticationAccount->unsubscribeStatus()
         );
 
-        $client = ClientTestDataCreator::createPasswordGrantClient();
-
-        var_dump($authenticationAccount);
-
-        // テスト用のアクセストークンとリフレッシュトークンを取得
-        $response = Http::asForm()->post('http://localhost/oauth/token', [
-            'grant_type' => 'password',
-            'client_id' => '115',
-            'client_secret' => 'J5OkkhYr4GaFSkph9XFdo2o2FUDyNEqBBZ3Gk9ZR',
-            'username' => $authenticationAccount->email()->value,
-            'password' => $passwordString,
-            'scope' => '',
+        // アクセストークンを作成
+        $authInfo = AuthenticationInformation::where('user_id', $authenticationAccount->id()->value)->first();
+        $accessToken = new AccessToken($authInfo->createToken('Test Access Token')->accessToken);
+        
+        // リフレッシュトークンも作成しておく
+        $refreshTokenString = PassportRefreshToken::create([
+            'id' => 'test_refresh_token_id',
+            'access_token_id' => $accessToken->id(),
+            'revoked' => false,
         ]);
-
-        $tokens = $response->json();
-
-        var_dump($tokens);
-
-        return new AuthTokenTestData(
-            new AccessToken($tokens['access_token']),
-            new RefreshToken($tokens['refresh_token'])
-        );
+        
+        return $accessToken;
     }
 }

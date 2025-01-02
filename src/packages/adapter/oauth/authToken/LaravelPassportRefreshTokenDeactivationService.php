@@ -3,18 +3,21 @@
 namespace packages\adapter\oauth\authToken;
 
 use Illuminate\Support\Facades\DB;
+use Laravel\Passport\RefreshToken as PassportRefreshToken;
 use packages\domain\model\oauth\authToken\AccessToken;
 use packages\domain\model\oauth\authToken\IRefreshTokenDeactivationService;
 use packages\domain\model\oauth\authToken\RefreshToken;
 
 class LaravelPassportRefreshTokenDeactivationService implements IRefreshTokenDeactivationService
 {
-    public function deactivate(RefreshToken $refreshToken): void
+    public function deactivate(AccessToken $accessToken): void
     {
-        $refreshToken = DB::table('oauth_refresh_tokens')
-            ->where('id', $refreshToken->id())
-            ->first();
-        
-        $refreshToken->delete();
+        $refreshTokenModel = PassportRefreshToken::where('access_token_id', $accessToken->id())->first();
+
+        if ($refreshTokenModel === null) {
+            return;
+        }
+
+        $refreshTokenModel->delete();
     }
 }

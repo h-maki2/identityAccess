@@ -3,6 +3,7 @@
 namespace packages\adapter\oauth\authToken;
 
 use Illuminate\Support\Facades\DB;
+use Laravel\Passport\Token;
 use packages\domain\model\oauth\authToken\AccessToken;
 use packages\domain\model\oauth\authToken\IAccessTokenDeactivationService;
 
@@ -10,10 +11,12 @@ class LaravelPassportAccessTokenDeactivationService implements IAccessTokenDeact
 {
     public function deactivate(AccessToken $accessToken): void
     {
-        $accessToken = DB::table('oauth_access_tokens')
-            ->where('id', $accessToken->id())
-            ->first();
-        
-        $accessToken->delete();
+        $token = Token::find($accessToken->id());
+
+        if ($token === null) {
+            return;
+        }
+    
+        $token->delete();
     }
 }

@@ -5,7 +5,7 @@ namespace packages\domain\service\common\hash;
 class Argon2Hash
 {
     private const HASH_OPTIONS = [
-        'memory_cost' => 1 << 17, // 128MB
+        'memory_cost' => 65536,
         'time_cost' => 4, // 4回のハッシュ化
         'threads' => 1 // 1スレッド
     ];
@@ -15,6 +15,6 @@ class Argon2Hash
      */
     public static function hashValue(string $value): string
     {
-        return password_hash($value, PASSWORD_ARGON2I, self::HASH_OPTIONS);
+        return password_hash($value, PASSWORD_ARGON2ID, self::HASH_OPTIONS);
     }
 }

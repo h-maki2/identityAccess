@@ -2,6 +2,7 @@
 
 namespace packages\domain\model\authenticationAccount;
 
+use Illuminate\Support\Facades\Hash;
 use InvalidArgumentException;
 use packages\domain\model\authenticationAccount\validation\UserPasswordValidation;
 use packages\domain\service\common\hash\Argon2Hash;
@@ -12,9 +13,9 @@ class UserPassword
 
     private function __construct(string $hashedValue)
     {
-        if (!str_starts_with($hashedValue, '$argon2')) {
-            throw new InvalidArgumentException('パスワードがハッシュ化されてません。');
-        }
+        // if (!str_starts_with($hashedValue, '$argon2')) {
+        //     throw new InvalidArgumentException('パスワードがハッシュ化されてません。');
+        // }
 
         $this->hashedValue = $hashedValue;
     }
@@ -26,7 +27,7 @@ class UserPassword
             throw new InvalidArgumentException('無効なパスワードです。');
         }
 
-        return new self(Argon2Hash::hashValue($value));
+        return new self(Hash::make($value));
     }
 
     public static function reconstruct($hashedValue): self
